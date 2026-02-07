@@ -28,9 +28,28 @@ book:
         - 0302-feature-engineering.qmd
     - 010-references.qmd
 
+
 format:
   html:
-    theme: cosmo
-    toc: true
-    number-sections: true
+    theme: cosmo       # 主题：cosmo (图2大概率是这个或 flatly)
     css: custom.css
+    toc: true          # 开启右侧页内目录 (Table of Contents)
+    toc-depth: 3       # 目录深度
+    toc-title: "本页内容" # 自定义目录标题
+    
+    # 核心：左侧导航栏配置
+    sidebar:
+      style: "docked"  # 固定在左侧 (docked) 
+      search: true     # 开启搜索框
+      collapse-level: 2 # 默认展开的层级
+      
+    # 页面布局优化
+    grid:
+      sidebar-width: 300px # 左侧栏宽度
+      body-width: 900px    # 正文宽度
+      margin-width: 300px  # 右侧目录栏宽度
+      
+    # 页脚 (可选)
+    page-footer: 
+      left: "Copyright 2026, Jiahui Yang"
+      right: "Built with Quarto"
