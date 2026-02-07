@@ -57,7 +57,7 @@ _book/
 _site/
 .quarto/
 site_libs/
-*.html
+# *.html
 *.pdf
 *.docx
 _freeze/
