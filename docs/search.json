@@ -1,0 +1,109 @@
+[
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "数据采集与预处理",
+    "section": "",
+    "text": "欢迎来到数据采集与预处理课程\n本课程旨在帮助学生掌握现代数据科学中最基础也最关键的一环：如何获取高质量数据。",
+    "crumbs": [
+      "欢迎来到数据采集与预处理课程"
+    ]
+  },
+  {
+    "objectID": "index.html#学习目标",
+    "href": "index.html#学习目标",
+    "title": "数据采集与预处理",
+    "section": "学习目标",
+    "text": "学习目标\n\n掌握 Python 爬虫框架（Requests, BeautifulSoup, Scrapy）。\n学习通过 API 获取结构化数据。\n熟练使用 Pandas 进行缺失值处理、重复项删除及格式转换。",
+    "crumbs": [
+      "欢迎来到数据采集与预处理课程"
+    ]
+  },
+  {
+    "objectID": "0101-python-basic.html",
+    "href": "0101-python-basic.html",
+    "title": "1  Python 编程基础",
+    "section": "",
+    "text": "2 Python 环境测试\n\nimport sys\nprint(f\"当前 Python 版本: {sys.version}\")\n\n当前 Python 版本: 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+    "crumbs": [
+      "第一阶段：环境与基础",
+      "<span class='chapter-number'>1</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0102-git-basic.html",
+    "href": "0102-git-basic.html",
+    "title": "2  Python 编程基础",
+    "section": "",
+    "text": "3 Python 环境测试\n\nprint(f\"git-basic\")\n\ngit-basic",
+    "crumbs": [
+      "第一阶段：环境与基础",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0201-web-scraping-intro.html",
+    "href": "0201-web-scraping-intro.html",
+    "title": "3  Python 编程基础",
+    "section": "",
+    "text": "4 Python 环境测试\n\nprint(f\"0201-web-scraping-intro\")\n\n0201-web-scraping-intro",
+    "crumbs": [
+      "第二阶段：数据采集实战",
+      "<span class='chapter-number'>3</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0202-api-interaction.html",
+    "href": "0202-api-interaction.html",
+    "title": "4  Python 编程基础",
+    "section": "",
+    "text": "5 Python 环境测试\n\nprint(f\"0202-api-interaction\")\n\n0202-api-interaction",
+    "crumbs": [
+      "第二阶段：数据采集实战",
+      "<span class='chapter-number'>4</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0203-advanced-crawling.html",
+    "href": "0203-advanced-crawling.html",
+    "title": "5  Python 编程基础",
+    "section": "",
+    "text": "6 Python 环境测试\n\nprint(f\"0203-advanced-crawling\")\n\n0203-advanced-crawling",
+    "crumbs": [
+      "第二阶段：数据采集实战",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0301-data-cleaning-pandas.html",
+    "href": "0301-data-cleaning-pandas.html",
+    "title": "6  Python 编程基础",
+    "section": "",
+    "text": "7 Python 环境测试\n\nprint(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
+    "crumbs": [
+      "第三阶段：数据预处理",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0302-feature-engineering.html",
+    "href": "0302-feature-engineering.html",
+    "title": "7  Python 编程基础",
+    "section": "",
+    "text": "8 Python 环境测试\n\nprint(f\"0302-feature-engineering\")\n\n0302-feature-engineering",
+    "crumbs": [
+      "第三阶段：数据预处理",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "010-references.html",
+    "href": "010-references.html",
+    "title": "8  Python 编程基础",
+    "section": "",
+    "text": "9 Python 环境测试\n\nprint(f\"010-references\")\n\n010-references",
+    "crumbs": [
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  }
+]

@@ -87,3 +87,5 @@ logs/
 
 # wandb
 wandb/
+
+**/*.quarto_ipynb

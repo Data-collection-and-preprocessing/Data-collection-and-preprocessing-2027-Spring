@@ -1,0 +1,36 @@
+project:
+  type: book
+  output-dir: docs  # 关键：指定输出到 docs 文件夹以适配 GitHub Pages
+
+execute:
+  freeze: auto
+
+book:
+  title: "数据采集与预处理"
+  subtitle: "从网页爬虫到数据清洗的实战指南"
+  author: "Jiahui Yang" # 参考你的系统账户名
+  date: now
+  
+  chapters:
+    - index.qmd
+    - part: 第一阶段：环境与基础
+      chapters:
+        - 0101-python-basic.qmd
+        - 0102-git-basic.qmd
+    - part: 第二阶段：数据采集实战
+      chapters:
+        - 0201-web-scraping-intro.qmd
+        - 0202-api-interaction.qmd
+        - 0203-advanced-crawling.qmd
+    - part: 第三阶段：数据预处理
+      chapters:
+        - 0301-data-cleaning-pandas.qmd
+        - 0302-feature-engineering.qmd
+    - 010-references.qmd
+
+format:
+  html:
+    theme: cosmo
+    toc: true
+    number-sections: true
+    css: custom.css

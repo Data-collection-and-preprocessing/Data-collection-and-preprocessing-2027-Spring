@@ -1,0 +1,16 @@
+---
+title: "Python 编程基础"
+execute:
+  warning: false
+  message: false
+---
+
+# Python 环境测试
+
+```{python}
+import sys
+print(f"当前 Python 版本: {sys.version}")
+```
+
+
+
