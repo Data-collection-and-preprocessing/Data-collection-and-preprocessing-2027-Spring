@@ -1,11 +1,5 @@
----
-title: "Python 编程基础"
-execute:
-  warning: false
-  message: false
----
 
-## Python 环境测试
+# 数据预处理方法2
 
 ```{python}
 print(f"0302-feature-engineering")

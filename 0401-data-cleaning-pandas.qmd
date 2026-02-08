@@ -1,11 +1,4 @@
----
-title: "Python 编程基础"
-execute:
-  warning: false
-  message: false
----
-
-## Python 环境测试
+# 数据采集与预处理实践项目1
 
 ```{python}
 print(f"0301-data-cleaning-pandas")

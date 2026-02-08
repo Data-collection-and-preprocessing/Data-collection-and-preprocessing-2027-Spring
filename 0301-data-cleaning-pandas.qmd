@@ -1,6 +1,6 @@
 
 
-# 数据采集与预处理实践项目1
+# 数据预处理方法1
 
 ```{python}
 print(f"0301-data-cleaning-pandas")

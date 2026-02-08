@@ -1,0 +1,49 @@
+/* 使用 .reveal::before 处理水印，.reveal::after 处理页眉，这样两者不会冲突。*/
+
+/* 页眉 */
+.reveal::after {
+    content: "数据驱动的可重复性研究";
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    text-align: center;
+    background: #333;
+    color: white;
+    padding: 5px 0;
+    font-size: 18px;
+    z-index: 1000;
+}
+
+/* 半透明水印 */
+.reveal::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    width: 80%;
+    height: 80%;
+    background: url("hzau-logo.png") no-repeat center center;
+    background-size: 63%;
+    transform: translate(-50%, -50%); /* 居中对齐 */
+    opacity: 0.05; /* 透明度 */
+    pointer-events: none; /* 避免影响交互 */
+    z-index: -1; /* 置于底层 */
+}
+
+
+.reveal h1 {
+    background: #43464B;
+    color: white; /* 让文字更清晰 */
+    padding: 10px; /* 添加内边距 */
+    border-radius: 5px; /* 圆角美化 */
+    display: inline-block; /* 让背景适应文本宽度 */
+}
+
+/* 自定义代码块样式 */
+.reveal pre code {
+    white-space: pre;       /* 保留换行符，禁止行内换行 */
+    overflow-x: auto;       /* 添加水平滚动条 */
+    display: block;         /* 确保代码块为块级元素 */
+    max-width: 100%;        /* 限制最大宽度 */
+}
