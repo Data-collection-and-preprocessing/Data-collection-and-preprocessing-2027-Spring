@@ -1,0 +1,767 @@
+% Options for packages loaded elsewhere
+% Options for packages loaded elsewhere
+\PassOptionsToPackage{unicode}{hyperref}
+\PassOptionsToPackage{hyphens}{url}
+\PassOptionsToPackage{dvipsnames,svgnames,x11names}{xcolor}
+%
+\documentclass[
+  10pt,
+  a4paper,
+  oneside]{ctexbook}
+\usepackage{xcolor}
+\usepackage{amsmath,amssymb}
+\setcounter{secnumdepth}{5}
+\usepackage{iftex}
+\ifPDFTeX
+  \usepackage[T1]{fontenc}
+  \usepackage[utf8]{inputenc}
+  \usepackage{textcomp} % provide euro and other symbols
+\else % if luatex or xetex
+  \usepackage{unicode-math} % this also loads fontspec
+  \defaultfontfeatures{Scale=MatchLowercase}
+  \defaultfontfeatures[\rmfamily]{Ligatures=TeX,Scale=1}
+\fi
+\usepackage{lmodern}
+\ifPDFTeX\else
+  % xetex/luatex font selection
+\fi
+% Use upquote if available, for straight quotes in verbatim environments
+\IfFileExists{upquote.sty}{\usepackage{upquote}}{}
+\IfFileExists{microtype.sty}{% use microtype if available
+  \usepackage[]{microtype}
+  \UseMicrotypeSet[protrusion]{basicmath} % disable protrusion for tt fonts
+}{}
+\makeatletter
+\@ifundefined{KOMAClassName}{% if non-KOMA class
+  \IfFileExists{parskip.sty}{%
+    \usepackage{parskip}
+  }{% else
+    \setlength{\parindent}{0pt}
+    \setlength{\parskip}{6pt plus 2pt minus 1pt}}
+}{% if KOMA class
+  \KOMAoptions{parskip=half}}
+\makeatother
+% Make \paragraph and \subparagraph free-standing
+\makeatletter
+\ifx\paragraph\undefined\else
+  \let\oldparagraph\paragraph
+  \renewcommand{\paragraph}{
+    \@ifstar
+      \xxxParagraphStar
+      \xxxParagraphNoStar
+  }
+  \newcommand{\xxxParagraphStar}[1]{\oldparagraph*{#1}\mbox{}}
+  \newcommand{\xxxParagraphNoStar}[1]{\oldparagraph{#1}\mbox{}}
+\fi
+\ifx\subparagraph\undefined\else
+  \let\oldsubparagraph\subparagraph
+  \renewcommand{\subparagraph}{
+    \@ifstar
+      \xxxSubParagraphStar
+      \xxxSubParagraphNoStar
+  }
+  \newcommand{\xxxSubParagraphStar}[1]{\oldsubparagraph*{#1}\mbox{}}
+  \newcommand{\xxxSubParagraphNoStar}[1]{\oldsubparagraph{#1}\mbox{}}
+\fi
+\makeatother
+
+\usepackage{color}
+\usepackage{fancyvrb}
+\newcommand{\VerbBar}{|}
+\newcommand{\VERB}{\Verb[commandchars=\\\{\}]}
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{commandchars=\\\{\}}
+% Add ',fontsize=\small' for more characters per line
+\usepackage{framed}
+\definecolor{shadecolor}{RGB}{241,243,245}
+\newenvironment{Shaded}{\begin{snugshade}}{\end{snugshade}}
+\newcommand{\AlertTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\AnnotationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\AttributeTok}[1]{\textcolor[rgb]{0.40,0.45,0.13}{#1}}
+\newcommand{\BaseNTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\BuiltInTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\CharTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\CommentTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\CommentVarTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ConstantTok}[1]{\textcolor[rgb]{0.56,0.35,0.01}{#1}}
+\newcommand{\ControlFlowTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\DataTypeTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DecValTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\DocumentationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+\newcommand{\ErrorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\ExtensionTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\FloatTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\FunctionTok}[1]{\textcolor[rgb]{0.28,0.35,0.67}{#1}}
+\newcommand{\ImportTok}[1]{\textcolor[rgb]{0.00,0.46,0.62}{#1}}
+\newcommand{\InformationTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\KeywordTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{\textbf{#1}}}
+\newcommand{\NormalTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\OperatorTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\OtherTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\PreprocessorTok}[1]{\textcolor[rgb]{0.68,0.00,0.00}{#1}}
+\newcommand{\RegionMarkerTok}[1]{\textcolor[rgb]{0.00,0.23,0.31}{#1}}
+\newcommand{\SpecialCharTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{#1}}
+\newcommand{\SpecialStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\StringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\VariableTok}[1]{\textcolor[rgb]{0.07,0.07,0.07}{#1}}
+\newcommand{\VerbatimStringTok}[1]{\textcolor[rgb]{0.13,0.47,0.30}{#1}}
+\newcommand{\WarningTok}[1]{\textcolor[rgb]{0.37,0.37,0.37}{\textit{#1}}}
+
+\usepackage{longtable,booktabs,array}
+\usepackage{calc} % for calculating minipage widths
+% Correct order of tables after \paragraph or \subparagraph
+\usepackage{etoolbox}
+\makeatletter
+\patchcmd\longtable{\par}{\if@noskipsec\mbox{}\fi\par}{}{}
+\makeatother
+% Allow footnotes in longtable head/foot
+\IfFileExists{footnotehyper.sty}{\usepackage{footnotehyper}}{\usepackage{footnote}}
+\makesavenoteenv{longtable}
+\usepackage{graphicx}
+\makeatletter
+\newsavebox\pandoc@box
+\newcommand*\pandocbounded[1]{% scales image to fit in text height/width
+  \sbox\pandoc@box{#1}%
+  \Gscale@div\@tempa{\textheight}{\dimexpr\ht\pandoc@box+\dp\pandoc@box\relax}%
+  \Gscale@div\@tempb{\linewidth}{\wd\pandoc@box}%
+  \ifdim\@tempb\p@<\@tempa\p@\let\@tempa\@tempb\fi% select the smaller of both
+  \ifdim\@tempa\p@<\p@\scalebox{\@tempa}{\usebox\pandoc@box}%
+  \else\usebox{\pandoc@box}%
+  \fi%
+}
+% Set default figure placement to htbp
+\def\fps@figure{htbp}
+\makeatother
+
+
+
+
+
+\setlength{\emergencystretch}{3em} % prevent overfull lines
+
+\providecommand{\tightlist}{%
+  \setlength{\itemsep}{0pt}\setlength{\parskip}{0pt}}
+
+
+
+ 
+
+
+\sloppy % 解决中英文混排的断行问题
+\usepackage{ctex} % 中文支持, 用于中文书籍排版
+\usepackage{amsthm,mathrsfs} % 数学支持, 数学字体
+\usepackage{fvextra} % 代码块支持, 代码块中支持断行
+\DefineVerbatimEnvironment{Highlighting}{Verbatim}{breaklines,commandchars=\\\{\}} % 代码块中支持断行
+\usepackage[version=4]{mhchem} % 化学方程式支持
+\usepackage{siunitx} % 国际单位支持
+\makeatletter
+\@ifpackageloaded{bookmark}{}{\usepackage{bookmark}}
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\AtBeginDocument{%
+\ifdefined\contentsname
+  \renewcommand*\contentsname{Table of contents}
+\else
+  \newcommand\contentsname{Table of contents}
+\fi
+\ifdefined\listfigurename
+  \renewcommand*\listfigurename{List of Figures}
+\else
+  \newcommand\listfigurename{List of Figures}
+\fi
+\ifdefined\listtablename
+  \renewcommand*\listtablename{List of Tables}
+\else
+  \newcommand\listtablename{List of Tables}
+\fi
+\ifdefined\figurename
+  \renewcommand*\figurename{Figure}
+\else
+  \newcommand\figurename{Figure}
+\fi
+\ifdefined\tablename
+  \renewcommand*\tablename{Table}
+\else
+  \newcommand\tablename{Table}
+\fi
+}
+\@ifpackageloaded{float}{}{\usepackage{float}}
+\floatstyle{ruled}
+\@ifundefined{c@chapter}{\newfloat{codelisting}{h}{lop}}{\newfloat{codelisting}{h}{lop}[chapter]}
+\floatname{codelisting}{Listing}
+\newcommand*\listoflistings{\listof{codelisting}{List of Listings}}
+\makeatother
+\makeatletter
+\makeatother
+\makeatletter
+\@ifpackageloaded{caption}{}{\usepackage{caption}}
+\@ifpackageloaded{subcaption}{}{\usepackage{subcaption}}
+\makeatother
+\usepackage{bookmark}
+\IfFileExists{xurl.sty}{\usepackage{xurl}}{} % add URL line breaks if available
+\urlstyle{same}
+\hypersetup{
+  pdftitle={数据采集与预处理},
+  pdfauthor={Hauqing Liu},
+  colorlinks=true,
+  linkcolor={blue},
+  filecolor={Maroon},
+  citecolor={Blue},
+  urlcolor={Blue},
+  pdfcreator={LaTeX via pandoc}}
+
+
+\title{数据采集与预处理}
+\usepackage{etoolbox}
+\makeatletter
+\providecommand{\subtitle}[1]{% add subtitle to \maketitle
+  \apptocmd{\@title}{\par {\large #1 \par}}{}{}
+}
+\makeatother
+\subtitle{从网页爬虫到数据清洗的实战指南}
+\author{Hauqing Liu}
+\date{2026-02-08}
+\begin{document}
+\frontmatter
+\maketitle
+
+\renewcommand*\contentsname{Table of contents}
+{
+\hypersetup{linkcolor=}
+\setcounter{tocdepth}{2}
+\tableofcontents
+}
+
+\mainmatter
+\bookmarksetup{startatroot}
+
+\chapter*{前言}\label{ux524dux8a00}
+\addcontentsline{toc}{chapter}{前言}
+
+\markboth{前言}{前言}
+
+《数据采集与预处理》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。
+
+\section*{课程目标}\label{ux8bfeux7a0bux76eeux6807}
+\addcontentsline{toc}{section}{课程目标}
+
+\markright{课程目标}
+
+\begin{itemize}
+\tightlist
+\item
+  理解数据驱动的可重复性研究的概念和重要性
+\item
+  掌握相关工具和技术，能够实施可重复性研究
+\item
+  培养数据分析和代码编写的能力，提高科研水平
+\end{itemize}
+
+\section*{课程特色}\label{ux8bfeux7a0bux7279ux8272}
+\addcontentsline{toc}{section}{课程特色}
+
+\markright{课程特色}
+
+\begin{itemize}
+\tightlist
+\item
+  强调数据和代码的规范化，确保可重复性
+\item
+  以项目为导向，关注实际应用场景
+\item
+  注重实践操作，强调动手能力
+\end{itemize}
+
+\section*{课堂组织形式}\label{ux8bfeux5802ux7ec4ux7ec7ux5f62ux5f0f}
+\addcontentsline{toc}{section}{课堂组织形式}
+
+\markright{课堂组织形式}
+
+因为选课场地限制，无法提供机房。请选课的同学自行准备电脑，并根据课程进度安排，确保电脑上安装了
+R、Python 等需要用到的软件。
+
+\begin{itemize}
+\tightlist
+\item
+  课堂讲解：介绍相关概念、方法和工具
+\item
+  实践操作：通过实际案例进行动手实践
+\item
+  小组讨论：学生之间进行交流与协作
+\item
+  课后作业：巩固所学知识，提高实践能力
+\end{itemize}
+
+\section*{如何分组？}\label{ux5982ux4f55ux5206ux7ec4}
+\addcontentsline{toc}{section}{如何分组？}
+
+\markright{如何分组？}
+
+\begin{itemize}
+\tightlist
+\item
+  请研究生们根据自己的实验室或者研究方向，自行分组，每组人数不超过 10
+  人。
+\item
+  在第二次课程开始前，请在雨课堂内确认分组。
+\end{itemize}
+
+\section*{如何考察？}\label{ux5982ux4f55ux8003ux5bdf}
+\addcontentsline{toc}{section}{如何考察？}
+
+\markright{如何考察？}
+
+\begin{itemize}
+\tightlist
+\item
+  使用课程中教授的技能，创建一个数据分析、软件开发、研究复现等类型的项目
+\item
+  3 - 5
+  人一组共创一个项目，将项目代码移交到\href{https://github.com/Data-collection-and-preprocessing}{课程仓库}（使用
+  transfer 的方法）
+\item
+  项目可以以课程建设为立足点，为\href{https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring}{课程课件}提出改进意见。
+\item
+  需要保证每个人在项目中都有贡献（通过 Git 追踪）。
+\end{itemize}
+
+\section*{联系方式}\label{ux8054ux7cfbux65b9ux5f0f}
+\addcontentsline{toc}{section}{联系方式}
+
+\markright{联系方式}
+
+如有任何问题或建议，请通过以下方式联系：
+
+\begin{itemize}
+\tightlist
+\item
+  项目
+  \href{https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring/issues}{Issue
+  板块}
+\item
+  邮箱：\href{mailto:huaqingliu@gxu.edu.cn}{联系老师}
+\item
+  QQ群：（公共群，加群时请说明来意）
+\end{itemize}
+
+\part{第一章：绪论}
+
+\chapter{什么是数据采集}\label{ux4ec0ux4e48ux662fux6570ux636eux91c7ux96c6}
+
+在当今科学研究领域中，可重复性已成为衡量研究可信度和推动科学进步的重要标志。本章旨在探讨如何构建一个标准化、跨平台的可重复性研究环境，从计算机硬件选择到软件工具安装与使用，全方位提供具体指导，确保数据处理和分析过程能够被他人重新实现和验证。
+
+\section{可重复性危机与其影响因素}\label{ux53efux91cdux590dux6027ux5371ux673aux4e0eux5176ux5f71ux54cdux56e0ux7d20}
+
+\subsection{科学研究中的可重复性问题}\label{ux79d1ux5b66ux7814ux7a76ux4e2dux7684ux53efux91cdux590dux6027ux95eeux9898}
+
+当前，许多研究因数据处理和分析过程中的多变性而存在可重复性问题。实验方法的不透明、数据预处理记录不完整以及代码注释的缺失，使得其他研究人员在尝试复现研究结果时面临巨大障碍。这种现象不仅影响研究的可靠性，也削弱了科学发现的信服力。
+
+\subsection{可重复性危机的成因}\label{ux53efux91cdux590dux6027ux5371ux673aux7684ux6210ux56e0}
+
+可重复性危机通常由以下原因引起：
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{实验设计不严谨}：缺乏详细的实验步骤描述和统一的协议，使得各实验室在操作过程中存在差异；
+\item
+  \textbf{数据管理不规范}：数据格式不统一、数据预处理方法不标准，导致信息在共享过程中丢失或变形；
+\item
+  \textbf{软件工具多样性}：使用不同版本的软件和依赖包，使得相同代码在不同平台上可能产生不同结果；
+\item
+  \textbf{透明度不足}：实验方法和分析流程未能充分公开，限制了同行对实验过程和结果的核查与复现。
+\end{itemize}
+
+\subsection{可重复性危机的后果}\label{ux53efux91cdux590dux6027ux5371ux673aux7684ux540eux679c}
+
+当研究结果不可重复时，容易导致错误结论的传播，进而浪费宝贵的研究资源，并最终损害公共对科学研究的信任。面对这一危机，构建标准化、透明化的研究流程已成为迫切需求。
+
+\section{可重复性研究的定义与重要性}\label{ux53efux91cdux590dux6027ux7814ux7a76ux7684ux5b9aux4e49ux4e0eux91cdux8981ux6027}
+
+可重复性研究要求研究者在实验设计、数据收集、数据预处理、数据分析及结果解释等环节中，采用统一标准和详细记录，确保他人能在相同或相似条件下重现整个研究过程，并验证研究结论。
+
+\subsection{实验设计与数据收集的可重复性}\label{ux5b9eux9a8cux8bbeux8ba1ux4e0eux6570ux636eux6536ux96c6ux7684ux53efux91cdux590dux6027}
+
+\subsubsection{实验方法标准化}\label{ux5b9eux9a8cux65b9ux6cd5ux6807ux51c6ux5316}
+
+为确保结果的一致性，必须将实验步骤细化，制定详细的操作协议。通过明确描述实验环境、仪器配置和操作流程，可以有效降低因方法学不确定性带来的偏差。
+
+\subsubsection{数据格式统一}\label{ux6570ux636eux683cux5f0fux7edfux4e00}
+
+采用通用且结构化的数据格式（如 CSV、JSON、XML
+等）可以提升数据共享和交流的效率。统一的数据格式不仅便于跨平台使用，还使得数据在预处理和分析过程中保持一致性，减少因格式转换带来的错误。
+
+下面是一个 csv 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{id,name,age}
+\NormalTok{1,张三,20}
+\NormalTok{2,李四,21}
+\NormalTok{3,王五,22}
+\end{Highlighting}
+\end{Shaded}
+
+下面是一个 json 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{[}
+  \FunctionTok{\{}
+    \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{1}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"张三"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{20}
+  \FunctionTok{\}}\OtherTok{,}
+  \FunctionTok{\{}
+    \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{2}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"李四"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{21}
+  \FunctionTok{\}}\OtherTok{,}
+  \FunctionTok{\{}
+  \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{3}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"王五"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{22}
+  \FunctionTok{\}}
+\OtherTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+下面是一个 xml 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}}\KeywordTok{data}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}1\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}张三\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}20\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}2\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}李四\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}21\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}3\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}王五\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}22\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{\textless{}/}\KeywordTok{data}\NormalTok{\textgreater{}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{数据预处理规范}\label{ux6570ux636eux9884ux5904ux7406ux89c4ux8303}
+
+数据预处理包括去除噪声、处理缺失值和变量标准化。规范化的预处理流程有助于确保数据质量，为后续的分析提供坚实基础，并使得不同研究人员在处理同一数据集时获得相似的初步结果。
+
+\subsection{数据分析与结果解释的可重复性}\label{ux6570ux636eux5206ux6790ux4e0eux7ed3ux679cux89e3ux91caux7684ux53efux91cdux590dux6027}
+
+\subsubsection{数据分析方法的透明化}\label{ux6570ux636eux5206ux6790ux65b9ux6cd5ux7684ux900fux660eux5316}
+
+在数据分析过程中，必须采用明确的方法和公开的算法，并辅以详尽的代码注释。利用开源软件和共享代码，不仅有助于同行验证分析过程，还能促进学术交流与合作。
+
+\subsubsection{结果解释与不确定性讨论}\label{ux7ed3ux679cux89e3ux91caux4e0eux4e0dux786eux5b9aux6027ux8ba8ux8bba}
+
+研究结果的呈现应科学严谨，同时对潜在的不确定性进行详细讨论。全面阐述结果的合理性和局限性，可以为后续研究提供改进方向，也有助于建立对研究结论的信任。
+
+\subsubsection{数据可视化的重要性}\label{ux6570ux636eux53efux89c6ux5316ux7684ux91cdux8981ux6027}
+
+高质量的数据可视化工具能直观地展示复杂数据，使得图表既具备良好的可读性，又能够清晰解释研究发现。精心设计的图表不仅能帮助读者理解数据，还能成为验证研究结果的重要依据。
+
+\section{构建跨平台可重复性研究环境的策略}\label{ux6784ux5efaux8de8ux5e73ux53f0ux53efux91cdux590dux6027ux7814ux7a76ux73afux5883ux7684ux7b56ux7565}
+
+为了构建一个标准化的、跨平台的可重复性研究环境，研究者需要从以下几个方面着手：
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{硬件与软件环境标准化}：选择性能稳定的计算机硬件，统一安装所需的软件和依赖包，确保各平台之间环境一致，减少因平台差异导致的误差。
+\item
+  \textbf{文档与代码管理}：建立详细的实验记录，包括实验设计、数据处理步骤、代码实现和结果讨论。借助版本控制工具（如
+  Git），记录每一次修改，确保过程透明可追溯。
+\item
+  \textbf{开放数据与代码共享}：践行开放科学理念，将实验数据和代码公开于可信赖的平台，使全球同行能够访问、检验和复现研究成果，从而推动科学研究的不断进步。
+\end{itemize}
+
+\section{结语}\label{ux7ed3ux8bed}
+
+在科学探索的道路上，确保研究结果的可重复性是提高研究质量和推动学术进步的基石。通过标准化实验设计、统一数据格式、规范数据预处理和透明数据分析，我们能够有效应对当前的可重复性危机。构建跨平台、标准化的研究环境不仅有助于验证现有结论，更为未来科学创新奠定了坚实基础。只有全社会共同推动可重复性研究的落实，才能在全球范围内建立起一个开放、透明且可信的科学研究生态。
+
+\chapter{什么是可重复性研究}\label{ux4ec0ux4e48ux662fux53efux91cdux590dux6027ux7814ux7a76}
+
+在当今科学研究领域中，可重复性已成为衡量研究可信度和推动科学进步的重要标志。本章旨在探讨如何构建一个标准化、跨平台的可重复性研究环境，从计算机硬件选择到软件工具安装与使用，全方位提供具体指导，确保数据处理和分析过程能够被他人重新实现和验证。
+
+\section{可重复性危机与其影响因素}\label{ux53efux91cdux590dux6027ux5371ux673aux4e0eux5176ux5f71ux54cdux56e0ux7d20-1}
+
+\subsection{科学研究中的可重复性问题}\label{ux79d1ux5b66ux7814ux7a76ux4e2dux7684ux53efux91cdux590dux6027ux95eeux9898-1}
+
+当前，许多研究因数据处理和分析过程中的多变性而存在可重复性问题。实验方法的不透明、数据预处理记录不完整以及代码注释的缺失，使得其他研究人员在尝试复现研究结果时面临巨大障碍。这种现象不仅影响研究的可靠性，也削弱了科学发现的信服力。
+
+\subsection{可重复性危机的成因}\label{ux53efux91cdux590dux6027ux5371ux673aux7684ux6210ux56e0-1}
+
+可重复性危机通常由以下原因引起：
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{实验设计不严谨}：缺乏详细的实验步骤描述和统一的协议，使得各实验室在操作过程中存在差异；
+\item
+  \textbf{数据管理不规范}：数据格式不统一、数据预处理方法不标准，导致信息在共享过程中丢失或变形；
+\item
+  \textbf{软件工具多样性}：使用不同版本的软件和依赖包，使得相同代码在不同平台上可能产生不同结果；
+\item
+  \textbf{透明度不足}：实验方法和分析流程未能充分公开，限制了同行对实验过程和结果的核查与复现。
+\end{itemize}
+
+\subsection{可重复性危机的后果}\label{ux53efux91cdux590dux6027ux5371ux673aux7684ux540eux679c-1}
+
+当研究结果不可重复时，容易导致错误结论的传播，进而浪费宝贵的研究资源，并最终损害公共对科学研究的信任。面对这一危机，构建标准化、透明化的研究流程已成为迫切需求。
+
+\section{可重复性研究的定义与重要性}\label{ux53efux91cdux590dux6027ux7814ux7a76ux7684ux5b9aux4e49ux4e0eux91cdux8981ux6027-1}
+
+可重复性研究要求研究者在实验设计、数据收集、数据预处理、数据分析及结果解释等环节中，采用统一标准和详细记录，确保他人能在相同或相似条件下重现整个研究过程，并验证研究结论。
+
+\subsection{实验设计与数据收集的可重复性}\label{ux5b9eux9a8cux8bbeux8ba1ux4e0eux6570ux636eux6536ux96c6ux7684ux53efux91cdux590dux6027-1}
+
+\subsubsection{实验方法标准化}\label{ux5b9eux9a8cux65b9ux6cd5ux6807ux51c6ux5316-1}
+
+为确保结果的一致性，必须将实验步骤细化，制定详细的操作协议。通过明确描述实验环境、仪器配置和操作流程，可以有效降低因方法学不确定性带来的偏差。
+
+\subsubsection{数据格式统一}\label{ux6570ux636eux683cux5f0fux7edfux4e00-1}
+
+采用通用且结构化的数据格式（如 CSV、JSON、XML
+等）可以提升数据共享和交流的效率。统一的数据格式不仅便于跨平台使用，还使得数据在预处理和分析过程中保持一致性，减少因格式转换带来的错误。
+
+下面是一个 csv 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{id,name,age}
+\NormalTok{1,张三,20}
+\NormalTok{2,李四,21}
+\NormalTok{3,王五,22}
+\end{Highlighting}
+\end{Shaded}
+
+下面是一个 json 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\OtherTok{[}
+  \FunctionTok{\{}
+    \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{1}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"张三"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{20}
+  \FunctionTok{\}}\OtherTok{,}
+  \FunctionTok{\{}
+    \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{2}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"李四"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{21}
+  \FunctionTok{\}}\OtherTok{,}
+  \FunctionTok{\{}
+  \DataTypeTok{"id"}\FunctionTok{:} \DecValTok{3}\FunctionTok{,}
+    \DataTypeTok{"name"}\FunctionTok{:} \StringTok{"王五"}\FunctionTok{,}
+    \DataTypeTok{"age"}\FunctionTok{:} \DecValTok{22}
+  \FunctionTok{\}}
+\OtherTok{]}
+\end{Highlighting}
+\end{Shaded}
+
+下面是一个 xml 文件的示例：
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\NormalTok{\textless{}}\KeywordTok{data}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}1\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}张三\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}20\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}2\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}李四\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}21\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{id}\NormalTok{\textgreater{}3\textless{}/}\KeywordTok{id}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{name}\NormalTok{\textgreater{}王五\textless{}/}\KeywordTok{name}\NormalTok{\textgreater{}}
+\NormalTok{    \textless{}}\KeywordTok{age}\NormalTok{\textgreater{}22\textless{}/}\KeywordTok{age}\NormalTok{\textgreater{}}
+\NormalTok{  \textless{}/}\KeywordTok{person}\NormalTok{\textgreater{}}
+\NormalTok{\textless{}/}\KeywordTok{data}\NormalTok{\textgreater{}}
+\end{Highlighting}
+\end{Shaded}
+
+\subsubsection{数据预处理规范}\label{ux6570ux636eux9884ux5904ux7406ux89c4ux8303-1}
+
+数据预处理包括去除噪声、处理缺失值和变量标准化。规范化的预处理流程有助于确保数据质量，为后续的分析提供坚实基础，并使得不同研究人员在处理同一数据集时获得相似的初步结果。
+
+\subsection{数据分析与结果解释的可重复性}\label{ux6570ux636eux5206ux6790ux4e0eux7ed3ux679cux89e3ux91caux7684ux53efux91cdux590dux6027-1}
+
+\subsubsection{数据分析方法的透明化}\label{ux6570ux636eux5206ux6790ux65b9ux6cd5ux7684ux900fux660eux5316-1}
+
+在数据分析过程中，必须采用明确的方法和公开的算法，并辅以详尽的代码注释。利用开源软件和共享代码，不仅有助于同行验证分析过程，还能促进学术交流与合作。
+
+\subsubsection{结果解释与不确定性讨论}\label{ux7ed3ux679cux89e3ux91caux4e0eux4e0dux786eux5b9aux6027ux8ba8ux8bba-1}
+
+研究结果的呈现应科学严谨，同时对潜在的不确定性进行详细讨论。全面阐述结果的合理性和局限性，可以为后续研究提供改进方向，也有助于建立对研究结论的信任。
+
+\subsubsection{数据可视化的重要性}\label{ux6570ux636eux53efux89c6ux5316ux7684ux91cdux8981ux6027-1}
+
+高质量的数据可视化工具能直观地展示复杂数据，使得图表既具备良好的可读性，又能够清晰解释研究发现。精心设计的图表不仅能帮助读者理解数据，还能成为验证研究结果的重要依据。
+
+\section{构建跨平台可重复性研究环境的策略}\label{ux6784ux5efaux8de8ux5e73ux53f0ux53efux91cdux590dux6027ux7814ux7a76ux73afux5883ux7684ux7b56ux7565-1}
+
+为了构建一个标准化的、跨平台的可重复性研究环境，研究者需要从以下几个方面着手：
+
+\begin{itemize}
+\tightlist
+\item
+  \textbf{硬件与软件环境标准化}：选择性能稳定的计算机硬件，统一安装所需的软件和依赖包，确保各平台之间环境一致，减少因平台差异导致的误差。
+\item
+  \textbf{文档与代码管理}：建立详细的实验记录，包括实验设计、数据处理步骤、代码实现和结果讨论。借助版本控制工具（如
+  Git），记录每一次修改，确保过程透明可追溯。
+\item
+  \textbf{开放数据与代码共享}：践行开放科学理念，将实验数据和代码公开于可信赖的平台，使全球同行能够访问、检验和复现研究成果，从而推动科学研究的不断进步。
+\end{itemize}
+
+\section{结语}\label{ux7ed3ux8bed-1}
+
+在科学探索的道路上，确保研究结果的可重复性是提高研究质量和推动学术进步的基石。通过标准化实验设计、统一数据格式、规范数据预处理和透明数据分析，我们能够有效应对当前的可重复性危机。构建跨平台、标准化的研究环境不仅有助于验证现有结论，更为未来科学创新奠定了坚实基础。只有全社会共同推动可重复性研究的落实，才能在全球范围内建立起一个开放、透明且可信的科学研究生态。
+
+\chapter{R 环境测试2}\label{r-ux73afux5883ux6d4bux8bd52}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 1111}
+\end{Highlighting}
+\end{Shaded}
+
+\chapter{R 环境测试2}\label{r-ux73afux5883ux6d4bux8bd52-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\CommentTok{\# 2222}
+\end{Highlighting}
+\end{Shaded}
+
+\part{第二章：数据采集方法}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840}
+
+\section{Python 环境测试}\label{python-ux73afux5883ux6d4bux8bd5}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0201{-}web{-}scraping{-}intro"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0201-web-scraping-intro
+\end{verbatim}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840-1}
+
+\section{Python 环境测试}\label{python-ux73afux5883ux6d4bux8bd5-1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0202{-}api{-}interaction"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0202-api-interaction
+\end{verbatim}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840-2}
+
+\section{Python 环境测试}\label{python-ux73afux5883ux6d4bux8bd5-2}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0203{-}advanced{-}crawling"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0203-advanced-crawling
+\end{verbatim}
+
+\part{第三章：数据预处理方法}
+
+\chapter{数据采集与预处理实践项目1}\label{ux6570ux636eux91c7ux96c6ux4e0eux9884ux5904ux7406ux5b9eux8df5ux9879ux76ee1}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0301{-}data{-}cleaning{-}pandas"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0301-data-cleaning-pandas
+\end{verbatim}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840-3}
+
+\section{Python 环境测试}\label{python-ux73afux5883ux6d4bux8bd5-3}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0302{-}feature{-}engineering"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0302-feature-engineering
+\end{verbatim}
+
+\part{第四章：数据采集实战}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840-4}
+
+\section{Python 环境测试}\label{python-ux73afux5883ux6d4bux8bd5-4}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0301{-}data{-}cleaning{-}pandas"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0301-data-cleaning-pandas
+\end{verbatim}
+
+\chapter{数据采集与预处理实践项目2}\label{ux6570ux636eux91c7ux96c6ux4e0eux9884ux5904ux7406ux5b9eux8df5ux9879ux76ee2}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"0301{-}data{-}cleaning{-}pandas"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+0301-data-cleaning-pandas
+\end{verbatim}
+
+\bookmarksetup{startatroot}
+
+\chapter{Python 编程基础}\label{python-ux7f16ux7a0bux57faux7840-5}
+
+\section{Reference}\label{reference}
+
+\begin{Shaded}
+\begin{Highlighting}[]
+\BuiltInTok{print}\NormalTok{(}\SpecialStringTok{f"010{-}references"}\NormalTok{)}
+\end{Highlighting}
+\end{Shaded}
+
+\begin{verbatim}
+010-references
+\end{verbatim}
+
+
+\backmatter
+
+
+\end{document}
