@@ -51,5 +51,5 @@ format:
       
     # 页脚 (可选)
     page-footer: 
-      left: "Copyright 2026, Jiahui Yang"
+      left: "Copyright 2026, Huaqing Liu"
       right: "Built with Quarto"
