@@ -11,11 +11,10 @@ if ($LASTEXITCODE -ne 0) {
 
 # 3. Render Slides (Step 2)
 # This forces Quarto to look into the slides folder
-Write-Host "Step 2: Rendering Slides..." -ForegroundColor Magenta
-quarto render slides/
-if ($LASTEXITCODE -ne 0) { 
-    Write-Host "Slides Render FAILED! Aborting." -ForegroundColor Red
-    exit 
+Write-Host "Step 2: Rendering All Slides..." -ForegroundColor Magenta
+Get-ChildItem "slides/*.qmd" | ForEach-Object {
+    Write-Host "  Processing: $($_.Name)"
+    quarto render $_.FullName
 }
 
 # 4. Git Push
