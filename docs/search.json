@@ -24,7 +24,7 @@
     "href": "0101-python-basic.html",
     "title": "1  Python 编程基础",
     "section": "",
-    "text": "2 Python 环境测试\n\nimport sys\nprint(f\"当前 Python 版本: {sys.version}\")\n\n当前 Python 版本: 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
+    "text": "1.1 Python 环境测试\nimport sys\nprint(f\"当前 Python 版本: {sys.version}\")\n\n当前 Python 版本: 3.13.7 (tags/v3.13.7:bcee1c3, Aug 14 2025, 14:15:11) [MSC v.1944 64 bit (AMD64)]",
     "crumbs": [
       "第一阶段：环境与基础",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -35,7 +35,18 @@
     "href": "0102-git-basic.html",
     "title": "2  Python 编程基础",
     "section": "",
-    "text": "3 R 环境测试2\n\n# 1111\n\n\n\n4 R 环境测试2\n\n# 2222",
+    "text": "2.1 R 环境测试2\n# 1111",
+    "crumbs": [
+      "第一阶段：环境与基础",
+      "<span class='chapter-number'>2</span>  <span class='chapter-title'>Python 编程基础</span>"
+    ]
+  },
+  {
+    "objectID": "0102-git-basic.html#r-环境测试2-1",
+    "href": "0102-git-basic.html#r-环境测试2-1",
+    "title": "2  Python 编程基础",
+    "section": "2.2 R 环境测试2",
+    "text": "2.2 R 环境测试2\n\n# 2222",
     "crumbs": [
       "第一阶段：环境与基础",
       "<span class='chapter-number'>2</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -46,7 +57,7 @@
     "href": "0201-web-scraping-intro.html",
     "title": "3  Python 编程基础",
     "section": "",
-    "text": "4 Python 环境测试\n\nprint(f\"0201-web-scraping-intro\")\n\n0201-web-scraping-intro",
+    "text": "3.1 Python 环境测试\nprint(f\"0201-web-scraping-intro\")\n\n0201-web-scraping-intro",
     "crumbs": [
       "第二阶段：数据采集实战",
       "<span class='chapter-number'>3</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -57,7 +68,7 @@
     "href": "0202-api-interaction.html",
     "title": "4  Python 编程基础",
     "section": "",
-    "text": "5 Python 环境测试\n\nprint(f\"0202-api-interaction\")\n\n0202-api-interaction",
+    "text": "4.1 Python 环境测试\nprint(f\"0202-api-interaction\")\n\n0202-api-interaction",
     "crumbs": [
       "第二阶段：数据采集实战",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -68,7 +79,7 @@
     "href": "0203-advanced-crawling.html",
     "title": "5  Python 编程基础",
     "section": "",
-    "text": "6 Python 环境测试\n\nprint(f\"0203-advanced-crawling\")\n\n0203-advanced-crawling",
+    "text": "5.1 Python 环境测试\nprint(f\"0203-advanced-crawling\")\n\n0203-advanced-crawling",
     "crumbs": [
       "第二阶段：数据采集实战",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -79,7 +90,7 @@
     "href": "0301-data-cleaning-pandas.html",
     "title": "6  Python 编程基础",
     "section": "",
-    "text": "7 Python 环境测试\n\nprint(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
+    "text": "6.1 Python 环境测试\nprint(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第三阶段：数据预处理",
       "<span class='chapter-number'>6</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -90,7 +101,7 @@
     "href": "0302-feature-engineering.html",
     "title": "7  Python 编程基础",
     "section": "",
-    "text": "8 Python 环境测试\n\nprint(f\"0302-feature-engineering\")\n\n0302-feature-engineering",
+    "text": "7.1 Python 环境测试\nprint(f\"0302-feature-engineering\")\n\n0302-feature-engineering",
     "crumbs": [
       "第三阶段：数据预处理",
       "<span class='chapter-number'>7</span>  <span class='chapter-title'>Python 编程基础</span>"
@@ -101,7 +112,7 @@
     "href": "010-references.html",
     "title": "8  Python 编程基础",
     "section": "",
-    "text": "9 Python 环境测试\n\nprint(f\"010-references\")\n\n010-references",
+    "text": "8.1 Reference\nprint(f\"010-references\")\n\n010-references",
     "crumbs": [
       "<span class='chapter-number'>8</span>  <span class='chapter-title'>Python 编程基础</span>"
     ]
