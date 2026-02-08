@@ -1,16 +1,13 @@
 ---
-title: "Python 编程基础"
+title: "数据采集与预处理概述"
 execute:
   warning: false
   message: false
 ---
 
-## Python 环境测试
+## 什么是数据采集
+数据采集是以各种方式采集数据并保存备用。
 
-```{python}
-import sys
-print(f"当前 Python 版本: {sys.version}")
-```
-
-
+## 什么是数据预处理
+数据预处理是对采集得到的数据进行处理以供分析。
 
