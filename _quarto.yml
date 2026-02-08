@@ -3,7 +3,7 @@ project:
   output-dir: docs  # 关键：指定输出到 docs 文件夹以适配 GitHub Pages
   render:
     - "*.qmd"
-    - "slides/"
+    - "slides/*.qmd"
 
 execute:
   freeze: auto
