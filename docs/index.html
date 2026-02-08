@@ -32,7 +32,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0101-python-basic.html" rel="next">
+<link href="./0101-what-is-data-collection.html" rel="next">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -129,14 +129,20 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0101-python-basic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">数据采集与预处理概述</span></span></a>
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是可重复性研究</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0102-git-basic.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是可重复性研究</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-introduction.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R 环境测试2</span></span></a>
   </div>
 </li>
       </ul>
@@ -153,19 +159,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0201-web-scraping-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./0202-api-interaction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0203-advanced-crawling.html" class="sidebar-item-text sidebar-link">
+  <a href="./0202-api-interaction.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-advanced-crawling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
       </ul>
@@ -182,13 +188,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
       </ul>
@@ -196,7 +202,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
     </ul>
@@ -258,7 +264,7 @@ ul.task-list li input[type="checkbox"] {
 
 <section id="前言" class="level1 unnumbered">
 <h1 class="unnumbered">前言</h1>
-<p>《数据驱动的可重复性研究》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。</p>
+<p>《数据采集与预处理》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。</p>
 <section id="课程目标" class="level2">
 <h2 class="anchored" data-anchor-id="课程目标">课程目标</h2>
 <ul>
@@ -296,8 +302,8 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="如何考察">如何考察？</h2>
 <ul>
 <li>使用课程中教授的技能，创建一个数据分析、软件开发、研究复现等类型的项目</li>
-<li>3 - 5 人一组共创一个项目，将项目代码移交到<a href="https://github.com/D2RS-2025spring">课程仓库</a>（使用 transfer 的方法）</li>
-<li>项目可以以课程建设为立足点，为<a href="https://github.com/D2RS-2025spring/data-driven-reproducible-study">课程课件</a>提出改进意见。</li>
+<li>3 - 5 人一组共创一个项目，将项目代码移交到<a href="https://github.com/Data-collection-and-preprocessing">课程仓库</a>（使用 transfer 的方法）</li>
+<li>项目可以以课程建设为立足点，为<a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring">课程课件</a>提出改进意见。</li>
 <li>需要保证每个人在项目中都有贡献（通过 Git 追踪）。</li>
 </ul>
 </section>
@@ -305,9 +311,9 @@ ul.task-list li input[type="checkbox"] {
 <h2 class="anchored" data-anchor-id="联系方式">联系方式</h2>
 <p>如有任何问题或建议，请通过以下方式联系：</p>
 <ul>
-<li>项目 <a href="https://github.com/D2RS-2025spring/data-driven-reproducible-study/issues">Issue 板块</a></li>
-<li>邮箱：<a href="mailto:gaoch@mail.hzau.edu.cn">联系老师</a></li>
-<li>QQ群：759598173（公共群，加群时请说明来意）</li>
+<li>项目 <a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring/issues">Issue 板块</a></li>
+<li>邮箱：<a href="mailto:huaqingliu@gxu.edu.cn">联系老师</a></li>
+<li>QQ群：（公共群，加群时请说明来意）</li>
 </ul>
 
 
@@ -719,8 +725,8 @@ ul.task-list li input[type="checkbox"] {
   <div class="nav-page nav-page-previous">
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0101-python-basic.html" class="pagination-link" aria-label="数据采集与预处理概述">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">数据采集与预处理概述</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="什么是可重复性研究">
+        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是可重复性研究</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

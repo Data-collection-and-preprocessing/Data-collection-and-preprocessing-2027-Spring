@@ -15,8 +15,9 @@ book:
     - index.qmd
     - part: 第一阶段：环境与基础
       chapters:
-        - 0101-python-basic.qmd
-        - 0102-git-basic.qmd
+        - 0101-what-is-data-collection.qmd
+        - 0102-what-is-data-preprocessing.qmd
+        - 0103-introduction.qmd
     - part: 第二阶段：数据采集实战
       chapters:
         - 0201-web-scraping-intro.qmd

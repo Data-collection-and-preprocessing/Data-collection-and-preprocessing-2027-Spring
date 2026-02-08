@@ -1,6 +1,6 @@
 # 前言 {.unnumbered}
 
-《数据驱动的可重复性研究》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。
+《数据采集与预处理》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。
 
 ## 课程目标
 
@@ -31,14 +31,14 @@
 ## 如何考察？
 
 -   使用课程中教授的技能，创建一个数据分析、软件开发、研究复现等类型的项目
--   3 - 5 人一组共创一个项目，将项目代码移交到[课程仓库](https://github.com/D2RS-2025spring)（使用 transfer 的方法）
--   项目可以以课程建设为立足点，为[课程课件](https://github.com/D2RS-2025spring/data-driven-reproducible-study)提出改进意见。
+-   3 - 5 人一组共创一个项目，将项目代码移交到[课程仓库](https://github.com/Data-collection-and-preprocessing)（使用 transfer 的方法）
+-   项目可以以课程建设为立足点，为[课程课件](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)提出改进意见。
 -   需要保证每个人在项目中都有贡献（通过 Git 追踪）。
 
 ## 联系方式
 
 如有任何问题或建议，请通过以下方式联系：
 
-- 项目 [Issue 板块](https://github.com/D2RS-2025spring/data-driven-reproducible-study/issues)
-- 邮箱：[联系老师](mailto:gaoch@mail.hzau.edu.cn)
-- QQ群：759598173（公共群，加群时请说明来意）
+- 项目 [Issue 板块](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring/issues)
+- 邮箱：[联系老师](mailto:huaqingliu@gxu.edu.cn)
+- QQ群：（公共群，加群时请说明来意）
