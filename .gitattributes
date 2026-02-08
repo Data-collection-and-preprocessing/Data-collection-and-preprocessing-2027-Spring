@@ -1,0 +1,8 @@
+# 自动处理文本文件换行符
+* text=auto
+
+# 强制这些文件使用 LF 换行（网页标准），避免 Git 在 Windows 上自动转换
+*.html text eol=lf
+*.css text eol=lf
+*.js text eol=lf
+*.json text eol=lf
