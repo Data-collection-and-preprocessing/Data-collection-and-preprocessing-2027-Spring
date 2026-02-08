@@ -13,30 +13,31 @@ book:
   
   chapters:
     - index.qmd
-    - part: 第一章：绪论
+    - part: "第一部分：绪论"
       chapters:
         - 0101-what-is-data-collection.qmd
         - 0102-what-is-data-preprocessing.qmd
         - 0103-introduction.qmd
-    - part: 第二章：数据采集方法
+    - part: "第二部分：数据采集方法"
       chapters:
         - 0201-web-scraping-intro.qmd
         - 0202-api-interaction.qmd
         - 0203-advanced-crawling.qmd
-    - part: 第三章：数据预处理方法
+    - part: "第三部分：数据预处理方法"
       chapters:
         - 0301-data-cleaning-pandas.qmd
         - 0302-feature-engineering.qmd
-    - part: 第四章：数据采集实战
+    - part: "第四部分：数据采集实战"
       chapters:
         - 0401-data-cleaning-pandas.qmd
         - 0402-feature-engineering.qmd
     - 010-references.qmd
-
 format:
   html:
     theme: cosmo
     css: custom.css
+    number-sections: true
+    number-depth: 3
     toc: true          # 开启右侧页内目录 (Table of Contents)
     toc-depth: 3       # 目录深度
     toc-title: "本页内容" # 自定义目录标题
