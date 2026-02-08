@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Jiahui Yang">
-<meta name="dcterms.date" content="2026-02-07">
 
-<title>数据采集与预处理</title>
+<title>8&nbsp; Python 编程基础 – 数据采集与预处理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -22,6 +20,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -32,7 +65,7 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0101-python-basic.html" rel="next">
+<link href="./0302-feature-engineering.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -85,7 +118,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">欢迎来到数据采集与预处理课程</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-references.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Python 编程基础</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,7 +147,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">欢迎来到数据采集与预处理课程</span></a>
   </div>
 </li>
@@ -195,7 +228,7 @@ ul.task-list li input[type="checkbox"] {
   </li>
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
@@ -209,10 +242,7 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#欢迎来到数据采集与预处理课程" id="toc-欢迎来到数据采集与预处理课程" class="nav-link active" data-scroll-target="#欢迎来到数据采集与预处理课程">欢迎来到数据采集与预处理课程</a>
-  <ul class="collapse">
-  <li><a href="#学习目标" id="toc-学习目标" class="nav-link" data-scroll-target="#学习目标">学习目标</a></li>
-  </ul></li>
+  <li><a href="#python-环境测试" id="toc-python-环境测试" class="nav-link active" data-scroll-target="#python-环境测试"><span class="header-section-number">9</span> Python 环境测试</a></li>
   </ul>
 </nav>
     </div>
@@ -221,27 +251,14 @@ ul.task-list li input[type="checkbox"] {
 
 <header id="title-block-header" class="quarto-title-block default">
 <div class="quarto-title">
-<h1 class="title">数据采集与预处理</h1>
-<p class="subtitle lead">从网页爬虫到数据清洗的实战指南</p>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">Python 编程基础</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Jiahui Yang </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 7, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -251,19 +268,16 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="欢迎来到数据采集与预处理课程" class="level1 unnumbered">
-<h1 class="unnumbered">欢迎来到数据采集与预处理课程</h1>
-<p>本课程旨在帮助学生掌握现代数据科学中最基础也最关键的一环：<strong>如何获取高质量数据</strong>。</p>
-<section id="学习目标" class="level2">
-<h2 class="anchored" data-anchor-id="学习目标">学习目标</h2>
-<ul>
-<li>掌握 Python 爬虫框架（Requests, BeautifulSoup, Scrapy）。</li>
-<li>学习通过 API 获取结构化数据。</li>
-<li>熟练使用 Pandas 进行缺失值处理、重复项删除及格式转换。</li>
-</ul>
+<section id="python-环境测试" class="level1" data-number="9">
+<h1 data-number="9"><span class="header-section-number">9</span> Python 环境测试</h1>
+<div id="69652684" class="cell" data-execution_count="1">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"010-references"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell-output cell-output-stdout">
+<pre><code>010-references</code></pre>
+</div>
+</div>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -669,11 +683,11 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./0302-feature-engineering.html" class="pagination-link" aria-label="Python 编程基础">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0101-python-basic.html" class="pagination-link" aria-label="Python 编程基础">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span> <i class="bi bi-arrow-right-short"></i>
-      </a>
   </div>
 </nav>
 </div> <!-- /content -->

@@ -12,7 +12,5 @@ import sys
 print(f"当前 Python 版本: {sys.version}")
 ```
 
-# R 环境测试
-```{r}
-print("R测试环境")
-```
+
+

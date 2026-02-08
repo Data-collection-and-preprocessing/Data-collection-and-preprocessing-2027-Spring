@@ -5,8 +5,8 @@ execute:
   message: false
 ---
 
-# Python 环境测试
+# R 环境测试
 
-```{python}
-print(f"git-basic")
+```{r}
+# 1111
 ```

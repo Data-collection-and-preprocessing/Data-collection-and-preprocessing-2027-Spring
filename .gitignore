@@ -56,8 +56,8 @@ temp/          # 临时文件目录
 _book/
 _site/
 .quarto/
-# site_libs/
-# *.html
+ site_libs/
+ *.html
 *.pdf
 *.docx
 _freeze/

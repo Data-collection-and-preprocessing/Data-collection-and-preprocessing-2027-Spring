@@ -8,7 +8,7 @@ execute:
 book:
   title: "数据采集与预处理"
   subtitle: "从网页爬虫到数据清洗的实战指南"
-  author: "Jiahui Yang" # 参考你的系统账户名
+  author: "Hauqing Liu"
   date: now
   
   chapters:
