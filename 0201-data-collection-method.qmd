@@ -7,25 +7,46 @@ execute:
 
 ## 生态学研究中的数据采集方法
 
-::: {.callout-note}
+::: {.callout}
 **Observation**
+
 Which species lives here?
+
 How many individuals of each species are there in a community?
+
 What happens if a particular species is removed from a community?
+
 How will organisms respond to climate changes?
 :::
 
-::: {.callout-note}
+::: {.callout}
 **Experimentation**
+
 Designed to test hypotheses by gathering data that support or reject those hypotheses.
+
 Some ecological experiments carefully monitor conditions in selected parts of natural environments (difficult to control variables).
+
 Some ecologists may design artificial environments to carefully control variables in order to test the association of organisms and those variables.
 :::
 
-::: {.callout-note}
+::: {.callout}
 **Modeling**
+
 Many ecological processes, such as climate change, occur over long periods of time or occur over areas as large as our entire planet.
+
 Models help ecologists to understand these phenomenon.
 :::
 
-Reference: Gathering Ecological Data | Youtube
+::: {.callout}
+**Public data**
+
+Ecology related database
+
+Social media data
+:::
+
+
+
+
+
+:::Reference: Gathering Ecological Data | Youtube
