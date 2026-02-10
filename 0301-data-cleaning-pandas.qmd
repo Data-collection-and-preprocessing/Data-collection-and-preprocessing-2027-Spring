@@ -2,6 +2,7 @@
 
 # 数据预处理方法1
 
-```{python}
-print(f"0301-data-cleaning-pandas")
-```
+
+为生态学研究人员和专家提出了一个实用和可操作的框架，以实现构建从单个研究项目到生产级分析管道的分析程序的最佳实践[@Royaux_2025_Guidanceframeworkapply]。
+
+

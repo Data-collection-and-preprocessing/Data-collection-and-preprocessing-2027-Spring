@@ -6,6 +6,7 @@
 ### 学术讲座
 **Gathering Ecological Data | Youtube**  
 This video outlines three methods of ecological data collection, including observation, experimentation, and modeling.
+{{< video https://www.youtube.com/watch?v=ySqLxk1q1So >}}
 
 
 ### 免费课程
