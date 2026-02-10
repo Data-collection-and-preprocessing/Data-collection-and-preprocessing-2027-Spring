@@ -1,12 +1,46 @@
 ---
-title: "Python 编程基础"
+title: "数据采集"
 execute:
   warning: false
   message: false
 ---
 
-## Python 环境测试
+## 相关教程文件
 
-```{python}
-print(f"0202-api-interaction")
-```
+### 学术讲座
+**Gathering Ecological Data | Youtube**
+This video outlines three methods of ecological data collection, including observation, experimentation, and modeling.
+
+
+### 免费课程
+**4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube**
+{{< video https://www.youtube.com/watch?v=4ub10unSjro&list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I&index=19 >}}
+
+### 付费培训课程
+**[Machine Learning Bootcamp: Python, Projects & Deployment](https://www.udemy.com/course/machine-learning-bootcamp-python-projects-deployment/?couponCode=SID-ML-FEBRUARY-26)**
+
+**Section 7. Data Collection**
+7.1. ML Project Workflow - Recap 9:27
+7.2. ML Dataset & Data Collection 19:30
+7.3. Load CSV, Excel and Parquet Files 33:15
+7.4. Load Kaggle and UCI Datasets 32:30
+7.5. Load Data from Database 20:11
+Assignment - Section 7. Data Collection 0:50
+**Section 8. EDA and Visualization**
+8.1. Exploratory Data Analysis - Intro 6:27
+8.2. Data Quality Checks 1:50:21
+8.3. Univariate Analysis 49:10
+8.4. Bivariate Analysis 59:52
+8.5. Multivariate Analysis 33:20
+8.6. Outlier Detection 37:40
+Activity - 8.7. Full EDA Project 1:01:00
+Assignment - Section 8. EDA and Visualization 0:50
+**Section 9. Data Preprocessing**
+9.1. Data Preprocessing Overview 8:38
+9.2. Train Test Split 55:12
+9.3. Handling Missing Values 1:02:27
+9.4. Encoding Categorical Features 1:06:32
+9.5. Outlier Treatment 30:23
+9.6. Handling Imbalanced Data 29:59
+9.7. Standardization and Normalization 23:00
+Activity - 9.8. Full Data Preprocessing Project 46:39
