@@ -1,5 +1,5 @@
 ---
-title: "数据采集"
+title: "生态学模型"
 execute:
   warning: false
   message: false
@@ -8,5 +8,5 @@ execute:
 ## Python 环境测试
 
 ```{python}
-print(f"0201-web-scraping-intro")
+print(f"0204-modeling")
 ```

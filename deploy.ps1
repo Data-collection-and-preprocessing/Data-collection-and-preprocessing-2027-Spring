@@ -1,5 +1,6 @@
 # 1. Set Python Path
 $env:QUARTO_PYTHON = "D:\Python\Python313\python.exe"
+$env:PYTHONUTF8 = "1"
 
 # 2. Render Book (Step 1)
 Write-Host "Step 1: Rendering Book..." -ForegroundColor Cyan

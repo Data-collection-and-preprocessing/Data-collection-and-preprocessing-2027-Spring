@@ -23,9 +23,11 @@ book:
         - 0103-introduction.qmd
     - part: "第二部分：数据采集方法"
       chapters:
-        - 0201-web-scraping-intro.qmd
-        - 0202-api-interaction.qmd
-        - 0203-advanced-crawling.qmd
+        - 0201-data-collection-method.qmd
+        - 0202-observation.qmd
+        - 0203-experimentation.qmd
+        - 0204-modeling.qmd
+        - 0205-references.qmd
     - part: "第三部分：数据预处理方法"
       chapters:
         - 0301-data-cleaning-pandas.qmd

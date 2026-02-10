@@ -1,0 +1,12 @@
+---
+title: "数据采集方法"
+execute:
+  warning: false
+  message: false
+---
+
+## Python 环境测试
+
+```{python}
+print(f"0201-web-scraping-intro")
+```

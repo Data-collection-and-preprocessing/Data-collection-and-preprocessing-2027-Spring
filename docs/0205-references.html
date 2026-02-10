@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; 数据预处理方法1 – 数据采集与预处理</title>
+<title>8&nbsp; 参考文献 – 数据采集与预处理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,8 +30,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0302-feature-engineering.html" rel="next">
-<link href="./0205-references.html" rel="prev">
+<link href="./0301-data-cleaning-pandas.html" rel="next">
+<link href="./0204-modeling.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -136,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning-pandas.html">第三部分：数据预处理方法</a></li><li class="breadcrumb-item"><a href="./0301-data-cleaning-pandas.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0205-references.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">参考文献</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -233,7 +198,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0205-references.html" class="sidebar-item-text sidebar-link">
+  <a href="./0205-references.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
   </div>
 </li>
@@ -250,7 +215,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link active">
+  <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
   </div>
 </li>
@@ -296,15 +261,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </nav>
 <div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
 <!-- margin-sidebar -->
-    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar zindex-bottom">
-        
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#相关教程文件" id="toc-相关教程文件" class="nav-link active" data-scroll-target="#相关教程文件"><span class="header-section-number">8.1</span> 相关教程文件</a>
+  <ul class="collapse">
+  <li><a href="#学术讲座" id="toc-学术讲座" class="nav-link" data-scroll-target="#学术讲座"><span class="header-section-number">8.1.1</span> 学术讲座</a></li>
+  <li><a href="#免费课程" id="toc-免费课程" class="nav-link" data-scroll-target="#免费课程"><span class="header-section-number">8.1.2</span> 免费课程</a></li>
+  <li><a href="#付费培训课程" id="toc-付费培训课程" class="nav-link" data-scroll-target="#付费培训课程"><span class="header-section-number">8.1.3</span> 付费培训课程</a></li>
+  </ul></li>
+  </ul>
+</nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning-pandas.html">第三部分：数据预处理方法</a></li><li class="breadcrumb-item"><a href="./0301-data-cleaning-pandas.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0205-references.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">参考文献</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></h1>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">参考文献</span></h1>
 </div>
 
 
@@ -321,14 +297,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<div id="8f05ceaf" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"0301-data-cleaning-pandas"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0301-data-cleaning-pandas</code></pre>
-</div>
-</div>
+<section id="相关教程文件" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="相关教程文件"><span class="header-section-number">8.1</span> 相关教程文件</h2>
+<section id="学术讲座" class="level3" data-number="8.1.1">
+<h3 data-number="8.1.1" class="anchored" data-anchor-id="学术讲座"><span class="header-section-number">8.1.1</span> 学术讲座</h3>
+<p><strong>Gathering Ecological Data | Youtube</strong><br>
+This video outlines three methods of ecological data collection, including observation, experimentation, and modeling.</p>
+</section>
+<section id="免费课程" class="level3" data-number="8.1.2">
+<h3 data-number="8.1.2" class="anchored" data-anchor-id="免费课程"><span class="header-section-number">8.1.2</span> 免费课程</h3>
+<p><strong>4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube</strong><br>
+</p><div class="quarto-video ratio ratio-16x9"><iframe data-external="1" src="https://www.youtube.com/embed/4ub10unSjro" title="" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen=""></iframe></div><p></p>
+</section>
+<section id="付费培训课程" class="level3" data-number="8.1.3">
+<h3 data-number="8.1.3" class="anchored" data-anchor-id="付费培训课程"><span class="header-section-number">8.1.3</span> 付费培训课程</h3>
+<p><strong><a href="https://www.udemy.com/course/machine-learning-bootcamp-python-projects-deployment/?couponCode=SID-ML-FEBRUARY-26">Machine Learning Bootcamp: Python, Projects &amp; Deployment</a></strong></p>
+<ul>
+<li><strong>Section 7. Data Collection</strong>
+<ul>
+<li>7.1. ML Project Workflow - Recap 9:27</li>
+<li>7.2. ML Dataset &amp; Data Collection 19:30</li>
+<li>7.3. Load CSV, Excel and Parquet Files 33:15</li>
+<li>7.4. Load Kaggle and UCI Datasets 32:30</li>
+<li>7.5. Load Data from Database 20:11</li>
+<li>Assignment - Section 7. Data Collection 0:50</li>
+</ul></li>
+<li><strong>Section 8. EDA and Visualization</strong>
+<ul>
+<li>8.1. Exploratory Data Analysis - Intro 6:27</li>
+<li>8.2. Data Quality Checks 1:50:21</li>
+<li>8.3. Univariate Analysis 49:10</li>
+<li>8.4. Bivariate Analysis 59:52</li>
+<li>8.5. Multivariate Analysis 33:20</li>
+<li>8.6. Outlier Detection 37:40</li>
+<li>Activity - 8.7. Full EDA Project 1:01:00</li>
+<li>Assignment - Section 8. EDA and Visualization 0:50</li>
+</ul></li>
+<li><strong>Section 9. Data Preprocessing</strong>
+<ul>
+<li>9.1. Data Preprocessing Overview 8:38</li>
+<li>9.2. Train Test Split 55:12</li>
+<li>9.3. Handling Missing Values 1:02:27</li>
+<li>9.4. Encoding Categorical Features 1:06:32</li>
+<li>9.5. Outlier Treatment 30:23</li>
+<li>9.6. Handling Imbalanced Data 29:59</li>
+<li>9.7. Standardization and Normalization 23:00</li>
+<li>Activity - 9.8. Full Data Preprocessing Project 46:39</li>
+</ul></li>
+</ul>
 
 
+</section>
+</section>
 
 </main> <!-- /main -->
 <script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
@@ -736,13 +756,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0205-references.html" class="pagination-link" aria-label="参考文献">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">参考文献</span></span>
+      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0302-feature-engineering.html" class="pagination-link" aria-label="数据预处理方法2">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0301-data-cleaning-pandas.html" class="pagination-link" aria-label="数据预处理方法1">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
