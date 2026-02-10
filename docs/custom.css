@@ -5,7 +5,7 @@
     margin: auto;
 }
 
-/* 针对带有 .hide-chapter-number 类的 H1 标题，隐藏其编号 */
-h1.hide-chapter-number .header-section-number {
+/* 选中 .hide-chapter-number 容器下的 直接子级 H1 的编号 */
+section.hide-chapter-number > h1 .header-section-number {
   display: none;
 }
