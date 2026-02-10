@@ -4,3 +4,8 @@
     display: block;
     margin: auto;
 }
+
+/* 针对带有 .hide-chapter-number 类的 H1 标题，隐藏其编号 */
+h1.hide-chapter-number .header-section-number {
+  display: none;
+}

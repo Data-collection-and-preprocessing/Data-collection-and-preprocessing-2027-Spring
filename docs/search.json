@@ -248,77 +248,77 @@
   {
     "objectID": "0205-references.html",
     "href": "0205-references.html",
-    "title": "参考文献",
+    "title": "8  扩展阅读",
     "section": "",
-    "text": "相关教程文件",
+    "text": "8.1 相关教程文件",
     "crumbs": [
       "第二部分：数据采集方法",
-      "参考文献"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>扩展阅读</span>"
     ]
   },
   {
     "objectID": "0205-references.html#相关教程文件",
     "href": "0205-references.html#相关教程文件",
-    "title": "参考文献",
+    "title": "8  扩展阅读",
     "section": "",
-    "text": "学术讲座\nGathering Ecological Data | Youtube\nThis video outlines three methods of ecological data collection, including observation, experimentation, and modeling.\n\n\n免费课程\n4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube\n\n\n\n付费培训课程\nMachine Learning Bootcamp: Python, Projects & Deployment\n\nSection 7. Data Collection\n\n7.1. ML Project Workflow - Recap 9:27\n7.2. ML Dataset & Data Collection 19:30\n7.3. Load CSV, Excel and Parquet Files 33:15\n7.4. Load Kaggle and UCI Datasets 32:30\n7.5. Load Data from Database 20:11\nAssignment - Section 7. Data Collection 0:50\n\nSection 8. EDA and Visualization\n\n8.1. Exploratory Data Analysis - Intro 6:27\n8.2. Data Quality Checks 1:50:21\n8.3. Univariate Analysis 49:10\n8.4. Bivariate Analysis 59:52\n8.5. Multivariate Analysis 33:20\n8.6. Outlier Detection 37:40\nActivity - 8.7. Full EDA Project 1:01:00\nAssignment - Section 8. EDA and Visualization 0:50\n\nSection 9. Data Preprocessing\n\n9.1. Data Preprocessing Overview 8:38\n9.2. Train Test Split 55:12\n9.3. Handling Missing Values 1:02:27\n9.4. Encoding Categorical Features 1:06:32\n9.5. Outlier Treatment 30:23\n9.6. Handling Imbalanced Data 29:59\n9.7. Standardization and Normalization 23:00\nActivity - 9.8. Full Data Preprocessing Project 46:39",
+    "text": "8.1.1 学术讲座\nGathering Ecological Data | Youtube\nThis video outlines three methods of ecological data collection, including observation, experimentation, and modeling.\n\n\n8.1.2 免费课程\n4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube\n\n\n\n8.1.3 付费培训课程\nMachine Learning Bootcamp: Python, Projects & Deployment\n\nSection 7. Data Collection\n\n7.1. ML Project Workflow - Recap 9:27\n7.2. ML Dataset & Data Collection 19:30\n7.3. Load CSV, Excel and Parquet Files 33:15\n7.4. Load Kaggle and UCI Datasets 32:30\n7.5. Load Data from Database 20:11\nAssignment - Section 7. Data Collection 0:50\n\nSection 8. EDA and Visualization\n\n8.1. Exploratory Data Analysis - Intro 6:27\n8.2. Data Quality Checks 1:50:21\n8.3. Univariate Analysis 49:10\n8.4. Bivariate Analysis 59:52\n8.5. Multivariate Analysis 33:20\n8.6. Outlier Detection 37:40\nActivity - 8.7. Full EDA Project 1:01:00\nAssignment - Section 8. EDA and Visualization 0:50\n\nSection 9. Data Preprocessing\n\n9.1. Data Preprocessing Overview 8:38\n9.2. Train Test Split 55:12\n9.3. Handling Missing Values 1:02:27\n9.4. Encoding Categorical Features 1:06:32\n9.5. Outlier Treatment 30:23\n9.6. Handling Imbalanced Data 29:59\n9.7. Standardization and Normalization 23:00\nActivity - 9.8. Full Data Preprocessing Project 46:39",
     "crumbs": [
       "第二部分：数据采集方法",
-      "参考文献"
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>扩展阅读</span>"
     ]
   },
   {
     "objectID": "0301-data-cleaning-pandas.html",
     "href": "0301-data-cleaning-pandas.html",
-    "title": "8  数据预处理方法1",
+    "title": "9  数据预处理方法1",
     "section": "",
     "text": "print(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第三部分：数据预处理方法",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据预处理方法1</span>"
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据预处理方法1</span>"
     ]
   },
   {
     "objectID": "0302-feature-engineering.html",
     "href": "0302-feature-engineering.html",
-    "title": "9  数据预处理方法2",
+    "title": "10  数据预处理方法2",
     "section": "",
     "text": "print(f\"0302-feature-engineering\")\n\n0302-feature-engineering",
     "crumbs": [
       "第三部分：数据预处理方法",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据预处理方法2</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>数据预处理方法2</span>"
     ]
   },
   {
     "objectID": "0401-data-cleaning-pandas.html",
     "href": "0401-data-cleaning-pandas.html",
-    "title": "10  数据采集与预处理实践项目1",
+    "title": "11  数据采集与预处理实践项目1",
     "section": "",
     "text": "print(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第四部分：数据采集实战",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>数据采集与预处理实践项目1</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>数据采集与预处理实践项目1</span>"
     ]
   },
   {
     "objectID": "0402-feature-engineering.html",
     "href": "0402-feature-engineering.html",
-    "title": "11  数据采集与预处理实践项目2",
+    "title": "12  数据采集与预处理实践项目2",
     "section": "",
     "text": "print(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第四部分：数据采集实战",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>数据采集与预处理实践项目2</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>数据采集与预处理实践项目2</span>"
     ]
   },
   {
     "objectID": "010-references.html",
     "href": "010-references.html",
-    "title": "12  Python 编程基础",
+    "title": "13  Python 编程基础",
     "section": "",
-    "text": "12.1 Reference\nprint(f\"010-references\")\n\n010-references",
+    "text": "13.1 Reference\nprint(f\"010-references\")\n\n010-references",
     "crumbs": [
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>Python 编程基础</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Python 编程基础</span>"
     ]
   }
 ]
