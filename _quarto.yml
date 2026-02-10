@@ -30,7 +30,8 @@ book:
         - 0202-observation.qmd
         - 0203-experimentation.qmd
         - 0204-modeling.qmd
-        - 0205-references.qmd
+        - 0205-public-data.qmd
+        - 0206-references.qmd
     - part: "第三部分：数据预处理方法"
       chapters:
         - 0301-data-cleaning-pandas.qmd
@@ -77,4 +78,4 @@ format:
     # 页脚 (可选)
     page-footer: 
       left: "Copyright 2026, Huaqing Liu"
-      right: "Built with Quarto" 
+      right: "Built with Quarto"

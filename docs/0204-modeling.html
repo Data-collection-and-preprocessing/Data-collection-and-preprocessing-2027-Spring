@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; 生态学模型 – 数据采集与预处理</title>
+<title>7&nbsp; 生态学模型采集数据方法 – 数据采集与预处理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -20,41 +20,6 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
-}
 </style>
 
 
@@ -65,7 +30,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0205-references.html" rel="next">
+<link href="./0205-public-data.html" rel="next">
 <link href="./0203-experimentation.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
@@ -136,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -216,25 +181,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0205-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
   </div>
 </li>
       </ul>
@@ -251,13 +222,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span></a>
   </div>
 </li>
       </ul>
@@ -274,13 +245,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0401-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0402-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目2</span></span></a>
   </div>
 </li>
       </ul>
@@ -288,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
     </ul>
@@ -301,16 +272,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#python-环境测试" id="toc-python-环境测试" class="nav-link active" data-scroll-target="#python-环境测试"><span class="header-section-number">7.1</span> Python 环境测试</a></li>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">7.1</span> 引言</a></li>
+  <li><a href="#模型作为数据生成器" id="toc-模型作为数据生成器" class="nav-link" data-scroll-target="#模型作为数据生成器"><span class="header-section-number">7.2</span> 模型作为“数据生成器”</a></li>
+  <li><a href="#主要的生态学模型类型" id="toc-主要的生态学模型类型" class="nav-link" data-scroll-target="#主要的生态学模型类型"><span class="header-section-number">7.3</span> 主要的生态学模型类型</a>
+  <ul class="collapse">
+  <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">7.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
+  <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">7.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
+  <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">7.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
+  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">7.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
+  </ul></li>
+  <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">7.4</span> 模型数据的生成流程</a></li>
+  <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">7.5</span> 模型数据的验证与不确定性</a></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">7.6</span> 总结</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></h1>
+<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></h1>
 </div>
 
 
@@ -327,14 +309,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="python-环境测试" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="python-环境测试"><span class="header-section-number">7.1</span> Python 环境测试</h2>
-<div id="6d3ca670" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"0204-modeling"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0204-modeling</code></pre>
-</div>
-</div>
+<section id="引言" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">7.1</span> 引言</h2>
+<p>在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来 100 年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，<strong>生态学模型（Ecological Modeling）</strong>成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的“数据生成器”，它能够产生跨越时空限制的虚拟数据，帮助我们探索“如果……会怎样”的情景。</p>
+</section>
+<section id="模型作为数据生成器" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="模型作为数据生成器"><span class="header-section-number">7.2</span> 模型作为“数据生成器”</h2>
+<p>模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。 * <strong>输入数据</strong>：模型需要真实的观测或实验数据作为初始条件和参数。 * <strong>输出数据</strong>：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。</p>
+</section>
+<section id="主要的生态学模型类型" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">7.3</span> 主要的生态学模型类型</h2>
+<section id="统计模型-statistical-models" class="level3" data-number="7.3.1">
+<h3 data-number="7.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">7.3.1</span> 1. 统计模型 (Statistical Models)</h3>
+<p>利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。 * <strong>特点</strong>：侧重于相关性，对历史数据依赖性强。 * <strong>应用</strong>：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。</p>
+</section>
+<section id="机理模型-process-based-models" class="level3" data-number="7.3.2">
+<h3 data-number="7.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">7.3.2</span> 2. 机理模型 (Process-based Models)</h3>
+<p>基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。 * <strong>特点</strong>：具有较强的生物学解释力，能够预测超出历史经验范围的情景。 * <strong>应用</strong>：植被动态模型（DGVMs），模拟全球植被对大气 CO2 浓度升高的响应。</p>
+</section>
+<section id="个体为本模型-agent-based-models-abm" class="level3" data-number="7.3.3">
+<h3 data-number="7.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">7.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
+<p>模拟大量具有独立决策能力的个体（如动物、植物或人类）及其相互作用。 * <strong>特点</strong>：能够观察到从微观行为中“涌现”出的宏观群体模式。 * <strong>应用</strong>：动物迁徙路径模拟、流行病在野生动物种群中的传播。</p>
+</section>
+<section id="地球系统模型-earth-system-models" class="level3" data-number="7.3.4">
+<h3 data-number="7.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">7.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
+<p>集成大气、海洋、陆地生态系统的超大规模数值模拟系统。 * <strong>特点</strong>：处理全球尺度的复杂反馈关系。 * <strong>应用</strong>：IPCC 气候变化评估报告中的生态系统响应预测。</p>
+</section>
+</section>
+<section id="模型数据的生成流程" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="模型数据的生成流程"><span class="header-section-number">7.4</span> 模型数据的生成流程</h2>
+<ol type="1">
+<li><strong>参数化 (Parameterization)</strong>：利用实测数据确定模型中的关键参数（如生长速率、死亡率）。</li>
+<li><strong>模拟运行 (Simulation)</strong>：设定初始状态和驱动因子（如气象数据），运行模型生成模拟数据。</li>
+<li><strong>情景分析 (Scenario Analysis)</strong>：通过改变输入条件（如不同的减排情景），生成多组对比数据，评估不同政策或环境变化的影响。</li>
+</ol>
+</section>
+<section id="模型数据的验证与不确定性" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="模型数据的验证与不确定性"><span class="header-section-number">7.5</span> 模型数据的验证与不确定性</h2>
+<p>模型生成的数据并非“真实”数据，其可靠性取决于： * <strong>模型校准 (Calibration)</strong>：调整参数使模型输出尽可能接近已知的观测值。 * <strong>模型验证 (Validation)</strong>：使用未参与建模的独立数据集来检验模型的预测准确性。 * <strong>不确定性分析</strong>：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。</p>
+</section>
+<section id="总结" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="总结"><span class="header-section-number">7.6</span> 总结</h2>
+<p>模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家乔治·博克斯所言：“所有模型都是错的，但有些是有用的。”在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。</p>
 
 
 </section>
@@ -745,13 +761,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0203-experimentation.html" class="pagination-link" aria-label="生态学实验">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></span>
+      <a href="./0203-experimentation.html" class="pagination-link" aria-label="生态学实验采集数据方法">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0205-references.html" class="pagination-link" aria-label="数据采集方法扩展阅读">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0205-public-data.html" class="pagination-link" aria-label="生态学公共数据采集数据方法">
+        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

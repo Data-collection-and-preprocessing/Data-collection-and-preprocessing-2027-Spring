@@ -6,10 +6,8 @@
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
-<meta name="author" content="Hauqing Liu">
-<meta name="dcterms.date" content="2026-02-10">
 
-<title>数据采集与预处理</title>
+<title>8&nbsp; 生态学公共数据采集数据方法 – 数据采集与预处理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -32,7 +30,8 @@ ul.task-list li input[type="checkbox"] {
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0101-what-is-data-collection.html" rel="next">
+<link href="./0206-references.html" rel="next">
+<link href="./0204-modeling.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
@@ -102,7 +101,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">前言</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0205-public-data.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -131,7 +130,7 @@ ul.task-list li input[type="checkbox"] {
     <ul class="list-unstyled mt-1">
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text">前言</span></a>
   </div>
 </li>
@@ -199,7 +198,7 @@ ul.task-list li input[type="checkbox"] {
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
   </div>
 </li>
@@ -273,44 +272,39 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#前言" id="toc-前言" class="nav-link active" data-scroll-target="#前言">前言</a>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">8.1</span> 引言</a></li>
+  <li><a href="#公共数据的主要类型" id="toc-公共数据的主要类型" class="nav-link" data-scroll-target="#公共数据的主要类型"><span class="header-section-number">8.2</span> 公共数据的主要类型</a>
   <ul class="collapse">
-  <li><a href="#课程目标" id="toc-课程目标" class="nav-link" data-scroll-target="#课程目标">课程目标</a></li>
-  <li><a href="#课程特色" id="toc-课程特色" class="nav-link" data-scroll-target="#课程特色">课程特色</a></li>
-  <li><a href="#课堂组织形式" id="toc-课堂组织形式" class="nav-link" data-scroll-target="#课堂组织形式">课堂组织形式</a></li>
-  <li><a href="#如何分组" id="toc-如何分组" class="nav-link" data-scroll-target="#如何分组">如何分组？</a></li>
-  <li><a href="#如何考察" id="toc-如何考察" class="nav-link" data-scroll-target="#如何考察">如何考察？</a></li>
-  <li><a href="#联系方式" id="toc-联系方式" class="nav-link" data-scroll-target="#联系方式">联系方式</a></li>
+  <li><a href="#生物多样性与分布数据" id="toc-生物多样性与分布数据" class="nav-link" data-scroll-target="#生物多样性与分布数据"><span class="header-section-number">8.2.1</span> 1. 生物多样性与分布数据</a></li>
+  <li><a href="#遥感与地理信息数据" id="toc-遥感与地理信息数据" class="nav-link" data-scroll-target="#遥感与地理信息数据"><span class="header-section-number">8.2.2</span> 2. 遥感与地理信息数据</a></li>
+  <li><a href="#气象与环境监测数据" id="toc-气象与环境监测数据" class="nav-link" data-scroll-target="#气象与环境监测数据"><span class="header-section-number">8.2.3</span> 3. 气象与环境监测数据</a></li>
+  <li><a href="#分子生态学数据" id="toc-分子生态学数据" class="nav-link" data-scroll-target="#分子生态学数据"><span class="header-section-number">8.2.4</span> 4. 分子生态学数据</a></li>
   </ul></li>
+  <li><a href="#获取公共数据的主要途径" id="toc-获取公共数据的主要途径" class="nav-link" data-scroll-target="#获取公共数据的主要途径"><span class="header-section-number">8.3</span> 获取公共数据的主要途径</a>
+  <ul class="collapse">
+  <li><a href="#数据门户手动下载" id="toc-数据门户手动下载" class="nav-link" data-scroll-target="#数据门户手动下载"><span class="header-section-number">8.3.1</span> 1. 数据门户手动下载</a></li>
+  <li><a href="#api-接口与编程获取" id="toc-api-接口与编程获取" class="nav-link" data-scroll-target="#api-接口与编程获取"><span class="header-section-number">8.3.2</span> 2. API 接口与编程获取</a></li>
+  <li><a href="#网络爬虫-web-scraping" id="toc-网络爬虫-web-scraping" class="nav-link" data-scroll-target="#网络爬虫-web-scraping"><span class="header-section-number">8.3.3</span> 3. 网络爬虫 (Web Scraping)</a></li>
+  </ul></li>
+  <li><a href="#公共数据的使用规范与伦理" id="toc-公共数据的使用规范与伦理" class="nav-link" data-scroll-target="#公共数据的使用规范与伦理"><span class="header-section-number">8.4</span> 公共数据的使用规范与伦理</a></li>
+  <li><a href="#公共数据的挑战与质量控制" id="toc-公共数据的挑战与质量控制" class="nav-link" data-scroll-target="#公共数据的挑战与质量控制"><span class="header-section-number">8.5</span> 公共数据的挑战与质量控制</a></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">8.6</span> 总结</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default">
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0205-public-data.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title">数据采集与预处理</h1>
-<p class="subtitle lead">生态学数据采集与预处理方法指南</p>
+<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></h1>
 </div>
 
 
 
 <div class="quarto-title-meta">
 
-    <div>
-    <div class="quarto-title-meta-heading">Author</div>
-    <div class="quarto-title-meta-contents">
-             <p>Hauqing Liu </p>
-          </div>
-  </div>
     
-    <div>
-    <div class="quarto-title-meta-heading">Published</div>
-    <div class="quarto-title-meta-contents">
-      <p class="date">February 10, 2026</p>
-    </div>
-  </div>
   
     
   </div>
@@ -320,62 +314,73 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="前言" class="level1 unnumbered">
-<h1 class="unnumbered">前言</h1>
-<p>《数据采集与预处理》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。</p>
-<section id="课程目标" class="level2">
-<h2 class="anchored" data-anchor-id="课程目标">课程目标</h2>
+<section id="引言" class="level2" data-number="8.1">
+<h2 data-number="8.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">8.1</span> 引言</h2>
+<p>在“大数据”时代，生态学研究正从单一的样地调查转向全球尺度的整合分析。<strong>公共数据（Public Data）</strong>是指由政府机构、科研项目、国际组织或公民科学家公开发布的数据资源。利用这些现成的数据，研究者可以跨越时空限制，探索宏观生态学规律，或为自己的野外调查提供背景支撑。</p>
+</section>
+<section id="公共数据的主要类型" class="level2" data-number="8.2">
+<h2 data-number="8.2" class="anchored" data-anchor-id="公共数据的主要类型"><span class="header-section-number">8.2</span> 公共数据的主要类型</h2>
+<p>生态学领域拥有丰富的开放获取数据库，主要包括以下几类：</p>
+<section id="生物多样性与分布数据" class="level3" data-number="8.2.1">
+<h3 data-number="8.2.1" class="anchored" data-anchor-id="生物多样性与分布数据"><span class="header-section-number">8.2.1</span> 1. 生物多样性与分布数据</h3>
 <ul>
-<li>理解数据驱动的可重复性研究的概念和重要性</li>
-<li>掌握相关工具和技术，能够实施可重复性研究</li>
-<li>培养数据分析和代码编写的能力，提高科研水平</li>
+<li><strong>GBIF (Global Biodiversity Information Facility)</strong>：全球最大的生物多样性数据网络，提供数以亿计的物种出现记录。</li>
+<li><strong>eBird / iNaturalist</strong>：典型的公民科学数据，由全球志愿者提交的鸟类观测或生物鉴定照片组成。</li>
 </ul>
 </section>
-<section id="课程特色" class="level2">
-<h2 class="anchored" data-anchor-id="课程特色">课程特色</h2>
+<section id="遥感与地理信息数据" class="level3" data-number="8.2.2">
+<h3 data-number="8.2.2" class="anchored" data-anchor-id="遥感与地理信息数据"><span class="header-section-number">8.2.2</span> 2. 遥感与地理信息数据</h3>
 <ul>
-<li>强调数据和代码的规范化，确保可重复性</li>
-<li>以项目为导向，关注实际应用场景</li>
-<li>注重实践操作，强调动手能力</li>
+<li><strong>Landsat / Sentinel</strong>：提供长序列、高分辨率的地表覆盖和植被指数数据。</li>
+<li><strong>Google Earth Engine (GEE)</strong>：云端地理信息处理平台，集成了海量的遥感数据集。</li>
 </ul>
 </section>
-<section id="课堂组织形式" class="level2">
-<h2 class="anchored" data-anchor-id="课堂组织形式">课堂组织形式</h2>
-<p>因为选课场地限制，无法提供机房。请选课的同学自行准备电脑，并根据课程进度安排，确保电脑上安装了 R、Python 等需要用到的软件。</p>
+<section id="气象与环境监测数据" class="level3" data-number="8.2.3">
+<h3 data-number="8.2.3" class="anchored" data-anchor-id="气象与环境监测数据"><span class="header-section-number">8.2.3</span> 3. 气象与环境监测数据</h3>
 <ul>
-<li>课堂讲解：介绍相关概念、方法和工具</li>
-<li>实践操作：通过实际案例进行动手实践</li>
-<li>小组讨论：学生之间进行交流与协作</li>
-<li>课后作业：巩固所学知识，提高实践能力</li>
+<li><strong>WorldClim</strong>：提供全球高分辨率的历史、当前及未来气候预测数据。</li>
+<li><strong>NOAA (National Oceanic and Atmospheric Administration)</strong>：提供详尽的海温、气象和大气监测数据。</li>
 </ul>
 </section>
-<section id="如何分组" class="level2">
-<h2 class="anchored" data-anchor-id="如何分组">如何分组？</h2>
+<section id="分子生态学数据" class="level3" data-number="8.2.4">
+<h3 data-number="8.2.4" class="anchored" data-anchor-id="分子生态学数据"><span class="header-section-number">8.2.4</span> 4. 分子生态学数据</h3>
 <ul>
-<li>请研究生们根据自己的实验室或者研究方向，自行分组，每组人数不超过 10 人。</li>
-<li>在第二次课程开始前，请在雨课堂内确认分组。</li>
+<li><strong>NCBI (GenBank)</strong>：全球最权威的 DNA 序列数据库。</li>
+<li><strong>BOLD (Barcode of Life Data System)</strong>：专门用于物种条形码鉴定的数据库。</li>
 </ul>
 </section>
-<section id="如何考察" class="level2">
-<h2 class="anchored" data-anchor-id="如何考察">如何考察？</h2>
+</section>
+<section id="获取公共数据的主要途径" class="level2" data-number="8.3">
+<h2 data-number="8.3" class="anchored" data-anchor-id="获取公共数据的主要途径"><span class="header-section-number">8.3</span> 获取公共数据的主要途径</h2>
+<section id="数据门户手动下载" class="level3" data-number="8.3.1">
+<h3 data-number="8.3.1" class="anchored" data-anchor-id="数据门户手动下载"><span class="header-section-number">8.3.1</span> 1. 数据门户手动下载</h3>
+<p>大多数数据库（如 GBIF）都提供直观的 Web 界面，用户可以通过筛选物种、区域和时间段，直接下载 CSV 或 Darwin Core 格式的数据。</p>
+</section>
+<section id="api-接口与编程获取" class="level3" data-number="8.3.2">
+<h3 data-number="8.3.2" class="anchored" data-anchor-id="api-接口与编程获取"><span class="header-section-number">8.3.2</span> 2. API 接口与编程获取</h3>
+<p>对于大规模数据采集，编程获取是更高效的选择： * <strong>R 语言生态</strong>：利用 <code>rgbif</code> 库连接 GBIF，利用 <code>rnoaa</code> 获取气象数据。 * <strong>Python 生态</strong>：利用 <code>pygbif</code> 或直接调用 RESTful API。</p>
+</section>
+<section id="网络爬虫-web-scraping" class="level3" data-number="8.3.3">
+<h3 data-number="8.3.3" class="anchored" data-anchor-id="网络爬虫-web-scraping"><span class="header-section-number">8.3.3</span> 3. 网络爬虫 (Web Scraping)</h3>
+<p>当数据分散在没有提供 API 的网页上时，可以使用 Python 的 <code>BeautifulSoup</code> 或 <code>Scrapy</code> 库进行抓取。但需注意遵守网站的 <code>robots.txt</code> 协议。</p>
+</section>
+</section>
+<section id="公共数据的使用规范与伦理" class="level2" data-number="8.4">
+<h2 data-number="8.4" class="anchored" data-anchor-id="公共数据的使用规范与伦理"><span class="header-section-number">8.4</span> 公共数据的使用规范与伦理</h2>
 <ul>
-<li>使用课程中教授的技能，创建一个数据分析、软件开发、研究复现等类型的项目</li>
-<li>3 - 5 人一组共创一个项目，将项目代码移交到<a href="https://github.com/Data-collection-and-preprocessing">课程仓库</a>（使用 transfer 的方法）</li>
-<li>项目可以以课程建设为立足点，为<a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring">课程课件</a>提出改进意见。</li>
-<li>需要保证每个人在项目中都有贡献（通过 Git 追踪）。</li>
+<li><strong>数据引用</strong>：公共数据并非“无主之地”。在使用数据时，必须引用原始数据集的 DOI 或按照数据库要求的格式进行致谢。</li>
+<li><strong>理解协议</strong>：注意数据遵循的 CC 协议（如 CC BY 4.0 或 CC0）。某些数据可能禁止商业用途。</li>
 </ul>
 </section>
-<section id="联系方式" class="level2">
-<h2 class="anchored" data-anchor-id="联系方式">联系方式</h2>
-<p>如有任何问题或建议，请通过以下方式联系：</p>
-<ul>
-<li>项目 <a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring/issues">Issue 板块</a></li>
-<li>邮箱：<a href="mailto:huaqingliu@gxu.edu.cn">联系老师</a></li>
-<li>QQ群：（公共群，加群时请说明来意）</li>
-</ul>
+<section id="公共数据的挑战与质量控制" class="level2" data-number="8.5">
+<h2 data-number="8.5" class="anchored" data-anchor-id="公共数据的挑战与质量控制"><span class="header-section-number">8.5</span> 公共数据的挑战与质量控制</h2>
+<p>公共数据虽然强大，但也存在“陷阱”： * <strong>分类学偏差</strong>：某些明星物种（如大熊猫、鸟类）的数据远多于隐秘物种。 * <strong>空间偏差</strong>：交通便利地区或发达国家的数据记录往往更密集。 * <strong>标准化问题</strong>：不同来源的数据格式不一。建议遵循 <strong>Darwin Core (DwC)</strong> 等国际标准进行数据清洗和整合。</p>
+</section>
+<section id="总结" class="level2" data-number="8.6">
+<h2 data-number="8.6" class="anchored" data-anchor-id="总结"><span class="header-section-number">8.6</span> 总结</h2>
+<p>公共数据采集方法是现代生态学家的必备技能。它不仅降低了数据获取的成本，更促进了科学研究的透明度与可重复性。通过将公共数据与自己的观测或实验数据相结合，研究者能够以更广阔的视角审视自然界的复杂过程。</p>
 
 
-</section>
 </section>
 
 </main> <!-- /main -->
@@ -784,10 +789,13 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
+      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型采集数据方法">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span>
+      </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="课程资源">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0206-references.html" class="pagination-link" aria-label="数据采集方法扩展阅读">
+        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

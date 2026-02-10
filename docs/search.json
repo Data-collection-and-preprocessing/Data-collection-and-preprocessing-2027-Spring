@@ -259,121 +259,330 @@
   {
     "objectID": "0202-observation.html",
     "href": "0202-observation.html",
-    "title": "5  生态学观测方法",
+    "title": "5  生态学观测数据方法",
     "section": "",
-    "text": "5.1 生态学观测新方法",
+    "text": "5.1 引言\n生态学观测（Ecological Observation）是指在自然状态下，通过感官或仪器对生态系统成分、结构和功能进行系统性记录的过程。作为生态学研究最古老且最基础的方法，观测为我们提供了关于物种分布、种群动态和环境变迁的第一手资料。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测方法</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测数据方法</span>"
     ]
   },
   {
-    "objectID": "0202-observation.html#生态学观测新方法",
-    "href": "0202-observation.html#生态学观测新方法",
-    "title": "5  生态学观测方法",
-    "section": "",
-    "text": "该软件包可用于可视化和提取任何地理参考的全景层影像数据，并生成带有嵌入地理定位数据的裁剪图像，用于基于人工智能/机器学习的下游应用(Godfree and Knerr 2025)。\n\n\n\n\n\nGodfree, Robert, and Nunzio Knerr. 2025. “Rapid Ecological Data Collection from 360-Degree Imagery Using Visualisation and Immersive Sampling in the r Pannotator Package.” Methods in Ecology and Evolution 16 (3): 640–54. https://doi.org/https://doi.org/10.1111/2041-210X.14472.",
+    "objectID": "0202-observation.html#传统观测方法",
+    "href": "0202-observation.html#传统观测方法",
+    "title": "5  生态学观测数据方法",
+    "section": "5.2 传统观测方法",
+    "text": "5.2 传统观测方法\n在自动化技术普及之前，生态学家主要依赖以下经典方法：\n\n样方法 (Quadrat Sampling)：在研究区域内随机或系统地选取一定面积的样方，统计其中的物种组成、多度和盖度。常用于植物群落和移动性较弱的动物调查。\n样线法 (Transect Method)：沿预设的线条记录观察到的生物及其距离线条的距离。适用于研究环境梯度（如海拔、水分）对生物分布的影响。\n直接观察法：研究者通过望远镜、录音机等工具直接记录动物的行为、迁徙或鸣叫。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测方法</span>"
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0202-observation.html#现代观测技术与新方法",
+    "href": "0202-observation.html#现代观测技术与新方法",
+    "title": "5  生态学观测数据方法",
+    "section": "5.3 现代观测技术与新方法",
+    "text": "5.3 现代观测技术与新方法\n随着传感器、卫星通讯和人工智能技术的发展，生态观测正经历着从“人工化”向“智能化”的转变。\n\n5.3.1 1. 遥感与无人机 (RS & UAV)\n遥感技术允许研究者在卫星尺度上监测全球植被动态（如NDVI指数）。而无人机（UAV）的普及填补了地面调查与卫星遥感之间的尺度空白，能够获取厘米级分辨率的地形和植被结构数据。\n\n\n5.3.2 2. 自动监测网络与物联网 (IoT)\n通过在野外布置自动气象站、土壤水分传感器和红外相机阵列，研究者可以实现对生态环境的 24 小时连续监测，获取高频率的时间序列数据。\n\n\n5.3.3 3. 环境DNA (eDNA)\n通过采集水体、土壤或空气中的 DNA 片段，无需直接捕获生物即可检测特定物种的存在。这对于监测隐秘物种或水生生物多样性具有革命性意义。\n\n\n5.3.4 4. 计算机视觉与人工智能 (AI/ML)\n这是当前生态观测中最具潜力的领域之一。通过深度学习算法，可以自动识别红外相机拍摄的数百万张动物照片，或从声学传感器中提取特定鸟类的鸣叫声。\n\n地理参考影像处理：现代软件包（如 panoviewer 等相关工具）可用于可视化和提取任何地理参考的全景层影像数据，并生成带有嵌入地理定位数据的裁剪图像，用于基于人工智能/机器学习的下游应用(Godfree and Knerr 2025)。这种方法极大地提高了从街景或全景影像中提取生态特征（如行道树健康状况、入侵物种分布）的效率。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0202-observation.html#观测数据的质量控制",
+    "href": "0202-observation.html#观测数据的质量控制",
+    "title": "5  生态学观测数据方法",
+    "section": "5.4 观测数据的质量控制",
+    "text": "5.4 观测数据的质量控制\n由于观测是在不可控的自然环境中进行的，数据质量受环境噪声和人为偏差影响较大。质量控制通常包括： * 标准化协议：确保不同观测者之间的一致性。 * 多源数据校验：将地面观测数据与遥感数据进行交叉验证。 * 元数据记录：详细记录观测时的天气、时间、仪器参数等背景信息。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0202-observation.html#总结",
+    "href": "0202-observation.html#总结",
+    "title": "5  生态学观测数据方法",
+    "section": "5.5 总结",
+    "text": "5.5 总结\n虽然新技术层出不穷，但传统观测方法提供的生物学直觉和精细数据仍然不可替代。未来的生态观测将是“天-空-地”一体化的多源数据融合，通过人工智能技术将海量的原始影像和信号转化为具有科学价值的生态学洞察。\n\n\n\n\nGodfree, Robert, and Nunzio Knerr. 2025. “Rapid Ecological Data Collection from 360-Degree Imagery Using Visualisation and Immersive Sampling in the r Pannotator Package.” Methods in Ecology and Evolution 16 (3): 640–54. https://doi.org/https://doi.org/10.1111/2041-210X.14472.",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>5</span>  <span class='chapter-title'>生态学观测数据方法</span>"
     ]
   },
   {
     "objectID": "0203-experimentation.html",
     "href": "0203-experimentation.html",
-    "title": "6  生态学实验",
+    "title": "6  生态学实验采集数据方法",
     "section": "",
-    "text": "6.1 Python 环境测试\nprint(f\"0203-experimentation\")\n\n0203-experimentation",
+    "text": "6.1 引言\n如果说观测是生态学的“眼睛”，那么实验就是生态学的“手术刀”。生态学实验（Ecological Experimentation）通过主动操纵一个或多个环境因子（自变量），观察生物或生态系统产生的响应（因变量），从而揭示变量之间的因果关系。在数据采集领域，实验数据以其高受控性和逻辑严密性，成为验证科学假设的关键来源。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验</span>"
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0203-experimentation.html#实验设计的基本原则",
+    "href": "0203-experimentation.html#实验设计的基本原则",
+    "title": "6  生态学实验采集数据方法",
+    "section": "6.2 实验设计的基本原则",
+    "text": "6.2 实验设计的基本原则\n为了确保采集到的数据具有统计学意义和科学说服力，生态实验必须遵循以下核心原则：\n\n对照 (Control)：设立对照组（不施加处理）与处理组进行比较，以排除非实验因子（如背景天气变化）对结果的影响。\n重复 (Replication)：在相同的处理水平下设置多个实验单元。重复可以估算实验误差，提高结果的普适性。\n随机化 (Randomization)：将实验单元随机分配到不同处理组中，以消除潜在的系统偏差（如样地坡度、土壤肥力的不均匀性）。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0203-experimentation.html#生态学实验的主要类型",
+    "href": "0203-experimentation.html#生态学实验的主要类型",
+    "title": "6  生态学实验采集数据方法",
+    "section": "6.3 生态学实验的主要类型",
+    "text": "6.3 生态学实验的主要类型\n根据受控程度和空间尺度的不同，实验数据采集通常在以下场景中进行：\n\n6.3.1 1. 实验室实验 (Laboratory Experiments)\n在完全人工控制的环境（如人工气候室、恒温培养箱）中进行。 * 优点：变量控制极度精确，可重复性最高。 * 数据采集：常利用高精度传感器监测微环境，或通过显微镜、生化分析仪获取微观数据。\n\n\n6.3.2 2. 野外控制实验 (Field Experiments)\n在自然生态系统中直接操纵变量，如在森林中架设增温设施（OTC）、进行人工降雨模拟或物种移除实验。 * 优点：生态真实性强，结果可直接应用于自然系统。 * 数据采集：依赖于野外耐用型仪器（如自动气象站、地下根系扫描仪）和定期的手工实测。\n\n\n6.3.3 3. 中宇宙实验 (Mesocosm Experiments)\n构建介于实验室和野外之间的半人工系统（如大型水箱、封闭式人工生态仓）。 * 优点：在保持一定生态复杂性的同时，提供了比野外更高的控制力。 * 数据采集：通常集成多参数水质监测仪、气体通量分析仪等设备。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0203-experimentation.html#实验数据的采集技术",
+    "href": "0203-experimentation.html#实验数据的采集技术",
+    "title": "6  生态学实验采集数据方法",
+    "section": "6.4 实验数据的采集技术",
+    "text": "6.4 实验数据的采集技术\n实验过程中的数据采集往往比观测更具针对性：\n\n自动化连续监测：利用数据采集器（Data Logger）连接各类传感器，实时记录光照、温度、湿度、CO2浓度等环境背景数据。\n破坏性采样 (Destructive Sampling)：为了获取生物量、养分含量或解剖学特征，往往需要在实验结束或特定阶段移除部分生物样本进行实验室分析。\n非损伤性测量：利用叶绿素荧光仪、便携式光合系统等设备，在不伤害生物体的情况下采集生理状态数据。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0203-experimentation.html#实验设计的挑战与伦理",
+    "href": "0203-experimentation.html#实验设计的挑战与伦理",
+    "title": "6  生态学实验采集数据方法",
+    "section": "6.5 实验设计的挑战与伦理",
+    "text": "6.5 实验设计的挑战与伦理\n\n尺度效应 (Scale Issues)：实验室中的“瓶子效应”可能无法完全模拟自然界的大尺度过程。\n边缘效应：实验边界可能对内部生物产生非自然的影响。\n环境伦理：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0203-experimentation.html#总结",
+    "href": "0203-experimentation.html#总结",
+    "title": "6  生态学实验采集数据方法",
+    "section": "6.6 总结",
+    "text": "6.6 总结\n实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>6</span>  <span class='chapter-title'>生态学实验采集数据方法</span>"
     ]
   },
   {
     "objectID": "0204-modeling.html",
     "href": "0204-modeling.html",
-    "title": "7  生态学模型",
+    "title": "7  生态学模型采集数据方法",
     "section": "",
-    "text": "7.1 Python 环境测试\nprint(f\"0204-modeling\")\n\n0204-modeling",
+    "text": "7.1 引言\n在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来 100 年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，生态学模型（Ecological Modeling）成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的“数据生成器”，它能够产生跨越时空限制的虚拟数据，帮助我们探索“如果……会怎样”的情景。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
     ]
   },
   {
-    "objectID": "0205-references.html",
-    "href": "0205-references.html",
-    "title": "8  数据采集方法扩展阅读",
-    "section": "",
-    "text": "8.1 相关教程文件",
+    "objectID": "0204-modeling.html#模型作为数据生成器",
+    "href": "0204-modeling.html#模型作为数据生成器",
+    "title": "7  生态学模型采集数据方法",
+    "section": "7.2 模型作为“数据生成器”",
+    "text": "7.2 模型作为“数据生成器”\n模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。 * 输入数据：模型需要真实的观测或实验数据作为初始条件和参数。 * 输出数据：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据采集方法扩展阅读</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
     ]
   },
   {
-    "objectID": "0205-references.html#相关教程文件",
-    "href": "0205-references.html#相关教程文件",
-    "title": "8  数据采集方法扩展阅读",
-    "section": "",
-    "text": "8.1.1 学术讲座\nGathering Ecological Data | Youtube\nThis video outlines three methods of ecological data collection, including observation, experimentation, and modeling. \n\n\n8.1.2 免费课程\n4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube\n\n\n\n8.1.3 付费培训课程\nMachine Learning Bootcamp: Python, Projects & Deployment\n\nSection 7. Data Collection\n\n7.1. ML Project Workflow - Recap 9:27\n7.2. ML Dataset & Data Collection 19:30\n7.3. Load CSV, Excel and Parquet Files 33:15\n7.4. Load Kaggle and UCI Datasets 32:30\n7.5. Load Data from Database 20:11\nAssignment - Section 7. Data Collection 0:50\n\nSection 8. EDA and Visualization\n\n8.1. Exploratory Data Analysis - Intro 6:27\n8.2. Data Quality Checks 1:50:21\n8.3. Univariate Analysis 49:10\n8.4. Bivariate Analysis 59:52\n8.5. Multivariate Analysis 33:20\n8.6. Outlier Detection 37:40\nActivity - 8.7. Full EDA Project 1:01:00\nAssignment - Section 8. EDA and Visualization 0:50\n\nSection 9. Data Preprocessing\n\n9.1. Data Preprocessing Overview 8:38\n9.2. Train Test Split 55:12\n9.3. Handling Missing Values 1:02:27\n9.4. Encoding Categorical Features 1:06:32\n9.5. Outlier Treatment 30:23\n9.6. Handling Imbalanced Data 29:59\n9.7. Standardization and Normalization 23:00\nActivity - 9.8. Full Data Preprocessing Project 46:39",
+    "objectID": "0204-modeling.html#主要的生态学模型类型",
+    "href": "0204-modeling.html#主要的生态学模型类型",
+    "title": "7  生态学模型采集数据方法",
+    "section": "7.3 主要的生态学模型类型",
+    "text": "7.3 主要的生态学模型类型\n\n7.3.1 1. 统计模型 (Statistical Models)\n利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。 * 特点：侧重于相关性，对历史数据依赖性强。 * 应用：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。\n\n\n7.3.2 2. 机理模型 (Process-based Models)\n基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。 * 特点：具有较强的生物学解释力，能够预测超出历史经验范围的情景。 * 应用：植被动态模型（DGVMs），模拟全球植被对大气 CO2 浓度升高的响应。\n\n\n7.3.3 3. 个体为本模型 (Agent-Based Models, ABM)\n模拟大量具有独立决策能力的个体（如动物、植物或人类）及其相互作用。 * 特点：能够观察到从微观行为中“涌现”出的宏观群体模式。 * 应用：动物迁徙路径模拟、流行病在野生动物种群中的传播。\n\n\n7.3.4 4. 地球系统模型 (Earth System Models)\n集成大气、海洋、陆地生态系统的超大规模数值模拟系统。 * 特点：处理全球尺度的复杂反馈关系。 * 应用：IPCC 气候变化评估报告中的生态系统响应预测。",
     "crumbs": [
       "第二部分：数据采集方法",
-      "<span class='chapter-number'>8</span>  <span class='chapter-title'>数据采集方法扩展阅读</span>"
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0204-modeling.html#模型数据的生成流程",
+    "href": "0204-modeling.html#模型数据的生成流程",
+    "title": "7  生态学模型采集数据方法",
+    "section": "7.4 模型数据的生成流程",
+    "text": "7.4 模型数据的生成流程\n\n参数化 (Parameterization)：利用实测数据确定模型中的关键参数（如生长速率、死亡率）。\n模拟运行 (Simulation)：设定初始状态和驱动因子（如气象数据），运行模型生成模拟数据。\n情景分析 (Scenario Analysis)：通过改变输入条件（如不同的减排情景），生成多组对比数据，评估不同政策或环境变化的影响。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0204-modeling.html#模型数据的验证与不确定性",
+    "href": "0204-modeling.html#模型数据的验证与不确定性",
+    "title": "7  生态学模型采集数据方法",
+    "section": "7.5 模型数据的验证与不确定性",
+    "text": "7.5 模型数据的验证与不确定性\n模型生成的数据并非“真实”数据，其可靠性取决于： * 模型校准 (Calibration)：调整参数使模型输出尽可能接近已知的观测值。 * 模型验证 (Validation)：使用未参与建模的独立数据集来检验模型的预测准确性。 * 不确定性分析：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0204-modeling.html#总结",
+    "href": "0204-modeling.html#总结",
+    "title": "7  生态学模型采集数据方法",
+    "section": "7.6 总结",
+    "text": "7.6 总结\n模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家乔治·博克斯所言：“所有模型都是错的，但有些是有用的。”在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>7</span>  <span class='chapter-title'>生态学模型采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html",
+    "href": "0205-public-data.html",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "",
+    "text": "8.1 引言\n在“大数据”时代，生态学研究正从单一的样地调查转向全球尺度的整合分析。公共数据（Public Data）是指由政府机构、科研项目、国际组织或公民科学家公开发布的数据资源。利用这些现成的数据，研究者可以跨越时空限制，探索宏观生态学规律，或为自己的野外调查提供背景支撑。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html#公共数据的主要类型",
+    "href": "0205-public-data.html#公共数据的主要类型",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "8.2 公共数据的主要类型",
+    "text": "8.2 公共数据的主要类型\n生态学领域拥有丰富的开放获取数据库，主要包括以下几类：\n\n8.2.1 1. 生物多样性与分布数据\n\nGBIF (Global Biodiversity Information Facility)：全球最大的生物多样性数据网络，提供数以亿计的物种出现记录。\neBird / iNaturalist：典型的公民科学数据，由全球志愿者提交的鸟类观测或生物鉴定照片组成。\n\n\n\n8.2.2 2. 遥感与地理信息数据\n\nLandsat / Sentinel：提供长序列、高分辨率的地表覆盖和植被指数数据。\nGoogle Earth Engine (GEE)：云端地理信息处理平台，集成了海量的遥感数据集。\n\n\n\n8.2.3 3. 气象与环境监测数据\n\nWorldClim：提供全球高分辨率的历史、当前及未来气候预测数据。\nNOAA (National Oceanic and Atmospheric Administration)：提供详尽的海温、气象和大气监测数据。\n\n\n\n8.2.4 4. 分子生态学数据\n\nNCBI (GenBank)：全球最权威的 DNA 序列数据库。\nBOLD (Barcode of Life Data System)：专门用于物种条形码鉴定的数据库。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html#获取公共数据的主要途径",
+    "href": "0205-public-data.html#获取公共数据的主要途径",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "8.3 获取公共数据的主要途径",
+    "text": "8.3 获取公共数据的主要途径\n\n8.3.1 1. 数据门户手动下载\n大多数数据库（如 GBIF）都提供直观的 Web 界面，用户可以通过筛选物种、区域和时间段，直接下载 CSV 或 Darwin Core 格式的数据。\n\n\n8.3.2 2. API 接口与编程获取\n对于大规模数据采集，编程获取是更高效的选择： * R 语言生态：利用 rgbif 库连接 GBIF，利用 rnoaa 获取气象数据。 * Python 生态：利用 pygbif 或直接调用 RESTful API。\n\n\n8.3.3 3. 网络爬虫 (Web Scraping)\n当数据分散在没有提供 API 的网页上时，可以使用 Python 的 BeautifulSoup 或 Scrapy 库进行抓取。但需注意遵守网站的 robots.txt 协议。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html#公共数据的使用规范与伦理",
+    "href": "0205-public-data.html#公共数据的使用规范与伦理",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "8.4 公共数据的使用规范与伦理",
+    "text": "8.4 公共数据的使用规范与伦理\n\n数据引用：公共数据并非“无主之地”。在使用数据时，必须引用原始数据集的 DOI 或按照数据库要求的格式进行致谢。\n理解协议：注意数据遵循的 CC 协议（如 CC BY 4.0 或 CC0）。某些数据可能禁止商业用途。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html#公共数据的挑战与质量控制",
+    "href": "0205-public-data.html#公共数据的挑战与质量控制",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "8.5 公共数据的挑战与质量控制",
+    "text": "8.5 公共数据的挑战与质量控制\n公共数据虽然强大，但也存在“陷阱”： * 分类学偏差：某些明星物种（如大熊猫、鸟类）的数据远多于隐秘物种。 * 空间偏差：交通便利地区或发达国家的数据记录往往更密集。 * 标准化问题：不同来源的数据格式不一。建议遵循 Darwin Core (DwC) 等国际标准进行数据清洗和整合。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0205-public-data.html#总结",
+    "href": "0205-public-data.html#总结",
+    "title": "8  生态学公共数据采集数据方法",
+    "section": "8.6 总结",
+    "text": "8.6 总结\n公共数据采集方法是现代生态学家的必备技能。它不仅降低了数据获取的成本，更促进了科学研究的透明度与可重复性。通过将公共数据与自己的观测或实验数据相结合，研究者能够以更广阔的视角审视自然界的复杂过程。",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>8</span>  <span class='chapter-title'>生态学公共数据采集数据方法</span>"
+    ]
+  },
+  {
+    "objectID": "0206-references.html",
+    "href": "0206-references.html",
+    "title": "9  数据采集方法扩展阅读",
+    "section": "",
+    "text": "9.1 相关教程文件",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据采集方法扩展阅读</span>"
+    ]
+  },
+  {
+    "objectID": "0206-references.html#相关教程文件",
+    "href": "0206-references.html#相关教程文件",
+    "title": "9  数据采集方法扩展阅读",
+    "section": "",
+    "text": "9.1.1 学术讲座\nGathering Ecological Data | Youtube\nThis video outlines three methods of ecological data collection, including observation, experimentation, and modeling. \n\n\n9.1.2 免费课程\n4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube\n\n\n\n9.1.3 付费培训课程\nMachine Learning Bootcamp: Python, Projects & Deployment\n\nSection 7. Data Collection\n\n7.1. ML Project Workflow - Recap 9:27\n7.2. ML Dataset & Data Collection 19:30\n7.3. Load CSV, Excel and Parquet Files 33:15\n7.4. Load Kaggle and UCI Datasets 32:30\n7.5. Load Data from Database 20:11\nAssignment - Section 7. Data Collection 0:50\n\nSection 8. EDA and Visualization\n\n8.1. Exploratory Data Analysis - Intro 6:27\n8.2. Data Quality Checks 1:50:21\n8.3. Univariate Analysis 49:10\n8.4. Bivariate Analysis 59:52\n8.5. Multivariate Analysis 33:20\n8.6. Outlier Detection 37:40\nActivity - 8.7. Full EDA Project 1:01:00\nAssignment - Section 8. EDA and Visualization 0:50\n\nSection 9. Data Preprocessing\n\n9.1. Data Preprocessing Overview 8:38\n9.2. Train Test Split 55:12\n9.3. Handling Missing Values 1:02:27\n9.4. Encoding Categorical Features 1:06:32\n9.5. Outlier Treatment 30:23\n9.6. Handling Imbalanced Data 29:59\n9.7. Standardization and Normalization 23:00\nActivity - 9.8. Full Data Preprocessing Project 46:39",
+    "crumbs": [
+      "第二部分：数据采集方法",
+      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据采集方法扩展阅读</span>"
     ]
   },
   {
     "objectID": "0301-data-cleaning-pandas.html",
     "href": "0301-data-cleaning-pandas.html",
-    "title": "9  数据预处理方法1",
+    "title": "10  数据预处理方法1",
     "section": "",
     "text": "为生态学研究人员和专家提出了一个实用和可操作的框架，以实现构建从单个研究项目到生产级分析管道的分析程序的最佳实践(Royaux_2025_Guidanceframeworkapply?)。",
     "crumbs": [
       "第三部分：数据预处理方法",
-      "<span class='chapter-number'>9</span>  <span class='chapter-title'>数据预处理方法1</span>"
+      "<span class='chapter-number'>10</span>  <span class='chapter-title'>数据预处理方法1</span>"
     ]
   },
   {
     "objectID": "0302-feature-engineering.html",
     "href": "0302-feature-engineering.html",
-    "title": "10  数据预处理方法2",
+    "title": "11  数据预处理方法2",
     "section": "",
     "text": "print(f\"0302-feature-engineering\")\n\n0302-feature-engineering",
     "crumbs": [
       "第三部分：数据预处理方法",
-      "<span class='chapter-number'>10</span>  <span class='chapter-title'>数据预处理方法2</span>"
+      "<span class='chapter-number'>11</span>  <span class='chapter-title'>数据预处理方法2</span>"
     ]
   },
   {
     "objectID": "0401-data-cleaning-pandas.html",
     "href": "0401-data-cleaning-pandas.html",
-    "title": "11  数据采集与预处理实践项目1",
+    "title": "12  数据采集与预处理实践项目1",
     "section": "",
     "text": "print(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第四部分：数据采集实战",
-      "<span class='chapter-number'>11</span>  <span class='chapter-title'>数据采集与预处理实践项目1</span>"
+      "<span class='chapter-number'>12</span>  <span class='chapter-title'>数据采集与预处理实践项目1</span>"
     ]
   },
   {
     "objectID": "0402-feature-engineering.html",
     "href": "0402-feature-engineering.html",
-    "title": "12  数据采集与预处理实践项目2",
+    "title": "13  数据采集与预处理实践项目2",
     "section": "",
     "text": "print(f\"0301-data-cleaning-pandas\")\n\n0301-data-cleaning-pandas",
     "crumbs": [
       "第四部分：数据采集实战",
-      "<span class='chapter-number'>12</span>  <span class='chapter-title'>数据采集与预处理实践项目2</span>"
+      "<span class='chapter-number'>13</span>  <span class='chapter-title'>数据采集与预处理实践项目2</span>"
     ]
   },
   {
     "objectID": "010-references.html",
     "href": "010-references.html",
-    "title": "13  Python 编程基础",
+    "title": "14  Python 编程基础",
     "section": "",
-    "text": "13.1 Reference\nprint(f\"010-references\")\n\n010-references",
+    "text": "14.1 Reference\nprint(f\"010-references\")\n\n010-references",
     "crumbs": [
-      "<span class='chapter-number'>13</span>  <span class='chapter-title'>Python 编程基础</span>"
+      "<span class='chapter-number'>14</span>  <span class='chapter-title'>Python 编程基础</span>"
     ]
   }
 ]

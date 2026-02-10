@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>6&nbsp; 生态学实验 – 数据采集与预处理</title>
+<title>6&nbsp; 生态学实验采集数据方法 – 数据采集与预处理</title>
 <style>
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
@@ -19,41 +19,6 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
-}
-/* CSS for syntax highlighting */
-html { -webkit-text-size-adjust: 100%; }
-pre > code.sourceCode { white-space: pre; position: relative; }
-pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
-pre > code.sourceCode > span:empty { height: 1.2em; }
-.sourceCode { overflow: visible; }
-code.sourceCode > span { color: inherit; text-decoration: inherit; }
-div.sourceCode { margin: 1em 0; }
-pre.sourceCode { margin: 0; }
-@media screen {
-div.sourceCode { overflow: auto; }
-}
-@media print {
-pre > code.sourceCode { white-space: pre-wrap; }
-pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
-}
-pre.numberSource code
-  { counter-reset: source-line 0; }
-pre.numberSource code > span
-  { position: relative; left: -4em; counter-increment: source-line; }
-pre.numberSource code > span > a:first-child::before
-  { content: counter(source-line);
-    position: relative; left: -1em; text-align: right; vertical-align: baseline;
-    border: none; display: inline-block;
-    -webkit-touch-callout: none; -webkit-user-select: none;
-    -khtml-user-select: none; -moz-user-select: none;
-    -ms-user-select: none; user-select: none;
-    padding: 0 4px; width: 4em;
-  }
-pre.numberSource { margin-left: 3em;  padding-left: 4px; }
-div.sourceCode
-  {   }
-@media screen {
-pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -136,7 +101,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -216,25 +181,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0205-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
   </div>
 </li>
       </ul>
@@ -251,13 +222,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span></a>
   </div>
 </li>
       </ul>
@@ -274,13 +245,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0401-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目1</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目1</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0402-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目2</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目2</span></span></a>
   </div>
 </li>
       </ul>
@@ -288,7 +259,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
     </ul>
@@ -301,16 +272,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#python-环境测试" id="toc-python-环境测试" class="nav-link active" data-scroll-target="#python-环境测试"><span class="header-section-number">6.1</span> Python 环境测试</a></li>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">6.1</span> 引言</a></li>
+  <li><a href="#实验设计的基本原则" id="toc-实验设计的基本原则" class="nav-link" data-scroll-target="#实验设计的基本原则"><span class="header-section-number">6.2</span> 实验设计的基本原则</a></li>
+  <li><a href="#生态学实验的主要类型" id="toc-生态学实验的主要类型" class="nav-link" data-scroll-target="#生态学实验的主要类型"><span class="header-section-number">6.3</span> 生态学实验的主要类型</a>
+  <ul class="collapse">
+  <li><a href="#实验室实验-laboratory-experiments" id="toc-实验室实验-laboratory-experiments" class="nav-link" data-scroll-target="#实验室实验-laboratory-experiments"><span class="header-section-number">6.3.1</span> 1. 实验室实验 (Laboratory Experiments)</a></li>
+  <li><a href="#野外控制实验-field-experiments" id="toc-野外控制实验-field-experiments" class="nav-link" data-scroll-target="#野外控制实验-field-experiments"><span class="header-section-number">6.3.2</span> 2. 野外控制实验 (Field Experiments)</a></li>
+  <li><a href="#中宇宙实验-mesocosm-experiments" id="toc-中宇宙实验-mesocosm-experiments" class="nav-link" data-scroll-target="#中宇宙实验-mesocosm-experiments"><span class="header-section-number">6.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</a></li>
+  </ul></li>
+  <li><a href="#实验数据的采集技术" id="toc-实验数据的采集技术" class="nav-link" data-scroll-target="#实验数据的采集技术"><span class="header-section-number">6.4</span> 实验数据的采集技术</a></li>
+  <li><a href="#实验设计的挑战与伦理" id="toc-实验设计的挑战与伦理" class="nav-link" data-scroll-target="#实验设计的挑战与伦理"><span class="header-section-number">6.5</span> 实验设计的挑战与伦理</a></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">6.6</span> 总结</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></h1>
 </div>
 
 
@@ -327,14 +308,55 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="python-环境测试" class="level2" data-number="6.1">
-<h2 data-number="6.1" class="anchored" data-anchor-id="python-环境测试"><span class="header-section-number">6.1</span> Python 环境测试</h2>
-<div id="501ddf5c" class="cell" data-execution_count="1">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"0203-experimentation"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-<div class="cell-output cell-output-stdout">
-<pre><code>0203-experimentation</code></pre>
-</div>
-</div>
+<section id="引言" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">6.1</span> 引言</h2>
+<p>如果说观测是生态学的“眼睛”，那么实验就是生态学的“手术刀”。生态学实验（Ecological Experimentation）通过主动操纵一个或多个环境因子（自变量），观察生物或生态系统产生的响应（因变量），从而揭示变量之间的因果关系。在数据采集领域，实验数据以其高受控性和逻辑严密性，成为验证科学假设的关键来源。</p>
+</section>
+<section id="实验设计的基本原则" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="实验设计的基本原则"><span class="header-section-number">6.2</span> 实验设计的基本原则</h2>
+<p>为了确保采集到的数据具有统计学意义和科学说服力，生态实验必须遵循以下核心原则：</p>
+<ul>
+<li><strong>对照 (Control)</strong>：设立对照组（不施加处理）与处理组进行比较，以排除非实验因子（如背景天气变化）对结果的影响。</li>
+<li><strong>重复 (Replication)</strong>：在相同的处理水平下设置多个实验单元。重复可以估算实验误差，提高结果的普适性。</li>
+<li><strong>随机化 (Randomization)</strong>：将实验单元随机分配到不同处理组中，以消除潜在的系统偏差（如样地坡度、土壤肥力的不均匀性）。</li>
+</ul>
+</section>
+<section id="生态学实验的主要类型" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="生态学实验的主要类型"><span class="header-section-number">6.3</span> 生态学实验的主要类型</h2>
+<p>根据受控程度和空间尺度的不同，实验数据采集通常在以下场景中进行：</p>
+<section id="实验室实验-laboratory-experiments" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="实验室实验-laboratory-experiments"><span class="header-section-number">6.3.1</span> 1. 实验室实验 (Laboratory Experiments)</h3>
+<p>在完全人工控制的环境（如人工气候室、恒温培养箱）中进行。 * <strong>优点</strong>：变量控制极度精确，可重复性最高。 * <strong>数据采集</strong>：常利用高精度传感器监测微环境，或通过显微镜、生化分析仪获取微观数据。</p>
+</section>
+<section id="野外控制实验-field-experiments" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="野外控制实验-field-experiments"><span class="header-section-number">6.3.2</span> 2. 野外控制实验 (Field Experiments)</h3>
+<p>在自然生态系统中直接操纵变量，如在森林中架设增温设施（OTC）、进行人工降雨模拟或物种移除实验。 * <strong>优点</strong>：生态真实性强，结果可直接应用于自然系统。 * <strong>数据采集</strong>：依赖于野外耐用型仪器（如自动气象站、地下根系扫描仪）和定期的手工实测。</p>
+</section>
+<section id="中宇宙实验-mesocosm-experiments" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="中宇宙实验-mesocosm-experiments"><span class="header-section-number">6.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</h3>
+<p>构建介于实验室和野外之间的半人工系统（如大型水箱、封闭式人工生态仓）。 * <strong>优点</strong>：在保持一定生态复杂性的同时，提供了比野外更高的控制力。 * <strong>数据采集</strong>：通常集成多参数水质监测仪、气体通量分析仪等设备。</p>
+</section>
+</section>
+<section id="实验数据的采集技术" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="实验数据的采集技术"><span class="header-section-number">6.4</span> 实验数据的采集技术</h2>
+<p>实验过程中的数据采集往往比观测更具针对性：</p>
+<ul>
+<li><strong>自动化连续监测</strong>：利用数据采集器（Data Logger）连接各类传感器，实时记录光照、温度、湿度、CO2浓度等环境背景数据。</li>
+<li><strong>破坏性采样 (Destructive Sampling)</strong>：为了获取生物量、养分含量或解剖学特征，往往需要在实验结束或特定阶段移除部分生物样本进行实验室分析。</li>
+<li><strong>非损伤性测量</strong>：利用叶绿素荧光仪、便携式光合系统等设备，在不伤害生物体的情况下采集生理状态数据。</li>
+</ul>
+</section>
+<section id="实验设计的挑战与伦理" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="实验设计的挑战与伦理"><span class="header-section-number">6.5</span> 实验设计的挑战与伦理</h2>
+<ul>
+<li><strong>尺度效应 (Scale Issues)</strong>：实验室中的“瓶子效应”可能无法完全模拟自然界的大尺度过程。</li>
+<li><strong>边缘效应</strong>：实验边界可能对内部生物产生非自然的影响。</li>
+<li><strong>环境伦理</strong>：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。</li>
+</ul>
+</section>
+<section id="总结" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="总结"><span class="header-section-number">6.6</span> 总结</h2>
+<p>实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。</p>
 
 
 </section>
@@ -745,13 +767,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0202-observation.html" class="pagination-link" aria-label="生态学观测方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测方法</span></span>
+      <a href="./0202-observation.html" class="pagination-link" aria-label="生态学观测数据方法">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型">
-        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型采集数据方法">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
