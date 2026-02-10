@@ -195,18 +195,18 @@
     "href": "0201-data-collection-method.html",
     "title": "4  数据采集方法",
     "section": "",
-    "text": "4.1 生态学研究中的数据采集方法\n:::Reference: Gathering Ecological Data | Youtube",
+    "text": "4.1 生态学研究中的数据类型\n在生态学研究中，数据是检验假设、理解自然规律的基石。根据研究目的和条件的不同，我们可以通过多种方式来获取数据。本章将主要介绍四种基本的数据类型及其采集方法：观测、实验、模型和公共数据。\n:::Reference: Gathering Ecological Data | Youtube",
     "crumbs": [
       "第二部分：数据采集方法",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据采集方法</span>"
     ]
   },
   {
-    "objectID": "0201-data-collection-method.html#生态学研究中的数据采集方法",
-    "href": "0201-data-collection-method.html#生态学研究中的数据采集方法",
+    "objectID": "0201-data-collection-method.html#生态学研究中的数据类型",
+    "href": "0201-data-collection-method.html#生态学研究中的数据类型",
     "title": "4  数据采集方法",
     "section": "",
-    "text": "Observation\nWhich species lives here?\nHow many individuals of each species are there in a community?\nWhat happens if a particular species is removed from a community?\nHow will organisms respond to climate changes?\n\n\n\n\n\n\n\n\n\nExperimentation\nDesigned to test hypotheses by gathering data that support or reject those hypotheses.\nSome ecological experiments carefully monitor conditions in selected parts of natural environments (difficult to control variables).\nSome ecologists may design artificial environments to carefully control variables in order to test the association of organisms and those variables.\n\n\n\n\n\n\n\n\n\nModeling\nMany ecological processes, such as climate change, occur over long periods of time or occur over areas as large as our entire planet.\nModels help ecologists to understand these phenomenon.\n\n\n\n\n\n\n\n\n\nPublic data\nEcology related database\nSocial media data",
+    "text": "观测数据 是通过直接观察和记录自然界中发生的现象而获得的信息。这是一种非侵入性的方法，研究者不干预研究对象，仅仅作为一名“旁观者”。例如，记录特定区域的物种组成、种群数量，或者观察动物的行为模式。观测是生态学研究的起点，它能帮助我们提出问题和形成初步的假设。\n实验数据 来自于精心设计的实验，旨在检验特定的科学假设。与观测不同，实验需要研究者主动操控一个或多个变量，并观察这些改变对其他变量产生的影响。实验可以在野外进行，也可以在可控的实验室环境中开展，后者能更精确地分离出变量之间的因果关系。\n模型数据 是通过数学或计算模型生成的数据。当研究的时间尺度非常长（如气候变化）或空间尺度非常大（如全球生态系统）时，直接观测或实验变得不切实际。此时，科学家会利用已有的知识和数据建立模型，来模拟和预测生态系统的动态变化。\n公共数据 是指由政府机构、科研项目或公民科学家等公开发布的数据集。随着技术的发展，我们可以获取到的公共数据越来越丰富，例如气象数据、遥感影像、物种分布数据库以及社交媒体上与生态相关的信息。利用这些现成的数据可以帮助我们以更广阔的视角来探索生态学问题。\n\n\n\n\n\n\n\n观测 Observation\n这里生活着哪些物种？\n一个群落中每个物种有多少个体？\n如果从群落中移除某个特定物种会发生什么？\n生物将如何应对气候变化？\n\n\n\n\n\n\n\n\n\n实验 Experimentation\n旨在通过收集支持或拒绝假设的数据来检验假设。\n一些生态学实验会仔细监测自然环境中选定部分的条件（难以控制变量）。\n一些生态学家可能会设计人工环境来仔细控制变量，以测试生物与这些变量之间的关联。\n\n\n\n\n\n\n\n\n\n模型 Modeling\n许多生态过程，例如气候变化，发生在很长一段时间内或遍及整个地球这么大的区域。\n模型帮助生态学家理解这些现象。\n\n\n\n\n\n\n\n\n\n公共数据 Public data\n生态学相关数据库\n社交媒体数据",
     "crumbs": [
       "第二部分：数据采集方法",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>数据采集方法</span>"
