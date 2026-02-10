@@ -1,10 +1,4 @@
----
-title: "参考文献"
-execute:
-  warning: false
-  message: false
----
-
+# 参考文献  {.unnumbered}
 
 
 ## 相关教程文件
