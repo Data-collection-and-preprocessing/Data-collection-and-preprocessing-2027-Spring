@@ -5,7 +5,3 @@
     margin: auto;
 }
 
-/* 选中 .hide-chapter-number 容器下的 直接子级 H1 的编号 */
-section.hide-chapter-number > h1 .header-section-number {
-  display: none;
-}

@@ -8,11 +8,14 @@ project:
 execute:
   freeze: auto
 
+bibliography: references.bib
+
 book:
   title: "数据采集与预处理"
-  subtitle: "从网页爬虫到数据清洗的实战指南"
+  subtitle: "生态学数据采集与预处理方法指南"
   author: "Hauqing Liu"
   date: now
+  
   
   chapters:
     - index.qmd
