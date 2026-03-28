@@ -1,6 +1,263 @@
+---
+title: "数据转换与特征工程"
+execute:
+  warning: false
+  message: false
+---
 
-# 数据预处理方法2
+# 数据转换与特征工程
 
-```{python}
-print(f"0302-feature-engineering")
+数据清洗解决了"数据有没有问题"，特征工程解决的是"数据能不能用好"。本章介绍常见的数据转换方法和特征构造技巧。
+
+```{r}
+library(tidyverse)
 ```
+
+## 示例数据
+
+延续上一章的土壤调查场景，使用一个已清洗的数据集：
+
+```{r}
+set.seed(2027)
+
+soil <- tibble(
+  site_id = rep(paste0("S", sprintf("%02d", 1:20)), each = 3),
+  depth = factor(rep(c("0-10", "10-20", "20-30"), 20),
+                 levels = c("0-10", "10-20", "20-30"), ordered = TRUE),
+  ph = round(rnorm(60, 6.2, 0.8), 2),
+  organic_carbon = round(rlnorm(60, log(25), 0.4), 2),  # 右偏分布
+  nitrogen = round(rnorm(60, 2.1, 0.6), 2),
+  clay_pct = round(runif(60, 10, 60), 1),
+  sand_pct = round(runif(60, 15, 55), 1),
+  elevation = rep(round(runif(20, 200, 800)), each = 3),
+  slope = rep(round(runif(20, 5, 35), 1), each = 3),
+  aspect = rep(sample(c("N", "S", "E", "W", "NE", "NW", "SE", "SW"), 20, replace = TRUE), each = 3),
+  vegetation = rep(sample(c("针叶林", "阔叶林", "混交林", "灌丛", "草地"), 20, replace = TRUE), each = 3)
+)
+
+head(soil)
+```
+
+## 数据标准化与归一化
+
+不同变量的量纲和范围差异很大（如 pH 范围 4-8，有机碳范围 10-60），在某些分析（如 PCA、聚类）中需要先统一尺度。
+
+### Z-score 标准化
+
+将数据转换为均值为 0、标准差为 1 的分布：
+
+$$z = \frac{x - \bar{x}}{s}$$
+
+```{r}
+soil_scaled <- soil |>
+  mutate(
+    ph_z = scale(ph)[,1],
+    oc_z = scale(organic_carbon)[,1],
+    nitrogen_z = scale(nitrogen)[,1]
+  )
+
+# 验证
+soil_scaled |>
+  summarise(
+    ph_z_mean = round(mean(ph_z), 10),
+    ph_z_sd = round(sd(ph_z), 10)
+  )
+```
+
+### Min-Max 归一化
+
+将数据缩放到 [0, 1] 区间：
+
+$$x_{norm} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+
+```{r}
+min_max <- function(x) (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+
+soil_norm <- soil |>
+  mutate(
+    ph_norm = min_max(ph),
+    oc_norm = min_max(organic_carbon),
+    nitrogen_norm = min_max(nitrogen)
+  )
+
+# 验证范围
+soil_norm |>
+  summarise(across(ends_with("_norm"), list(min = min, max = max)))
+```
+
+::: {.callout-tip}
+## 什么时候用哪种？
+
+- **Z-score**：适合大多数统计分析（PCA、回归），保留了分布形状
+- **Min-Max**：适合需要固定范围的场景（如神经网络输入）
+- **不需要标准化**：基于树的模型（随机森林、决策树）对尺度不敏感
+:::
+
+## 变量变换
+
+### 对数变换
+
+生态学数据中很多变量呈右偏分布（如生物量、物种丰度、有机碳含量），对数变换可以使其接近正态分布：
+
+```{r}
+# 对比变换前后的分布
+p1 <- ggplot(soil, aes(x = organic_carbon)) +
+  geom_histogram(bins = 15, fill = "steelblue", alpha = 0.7) +
+  labs(title = "原始分布", x = "有机碳 (g/kg)") +
+  theme_minimal()
+
+p2 <- ggplot(soil, aes(x = log(organic_carbon))) +
+  geom_histogram(bins = 15, fill = "coral", alpha = 0.7) +
+  labs(title = "对数变换后", x = "ln(有机碳)") +
+  theme_minimal()
+
+library(patchwork)
+p1 + p2
+```
+
+```{r}
+# 添加对数变换列
+soil <- soil |>
+  mutate(
+    log_oc = log(organic_carbon),
+    log_nitrogen = log(nitrogen)
+  )
+```
+
+### 正态性检验
+
+```{r}
+# Shapiro-Wilk 检验
+shapiro.test(soil$organic_carbon)
+shapiro.test(soil$log_oc)
+```
+
+::: {.callout-note}
+## 对数变换的注意事项
+
+- 数据中不能有 0 或负值（可以用 `log(x + 1)` 处理含 0 的数据）
+- 变换后的结果需要反变换才能解释原始尺度
+- 在论文中要说明使用了什么变换
+:::
+
+## 分类变量编码
+
+### 因子排序
+
+```{r}
+# 按频次排序
+soil |>
+  mutate(vegetation = fct_infreq(vegetation)) |>
+  ggplot(aes(x = vegetation)) +
+  geom_bar(fill = "steelblue") +
+  labs(title = "植被类型分布", x = "", y = "样本数") +
+  theme_minimal()
+```
+
+### 虚拟变量（独热编码）
+
+某些统计模型需要将分类变量转换为数值型的虚拟变量：
+
+```{r}
+# 使用 model.matrix 创建虚拟变量
+dummy <- model.matrix(~ vegetation - 1, data = soil) |>
+  as_tibble()
+
+head(dummy)
+```
+
+### 坡向的数值编码
+
+坡向是一个特殊的分类变量——它本质上是角度，可以用三角函数转换为连续变量：
+
+```{r}
+# 坡向转角度
+aspect_to_degree <- function(asp) {
+  mapping <- c(N = 0, NE = 45, E = 90, SE = 135, S = 180, SW = 225, W = 270, NW = 315)
+  mapping[asp]
+}
+
+soil <- soil |>
+  mutate(
+    aspect_deg = aspect_to_degree(aspect),
+    aspect_cos = cos(aspect_deg * pi / 180),  # 南北分量
+    aspect_sin = sin(aspect_deg * pi / 180)   # 东西分量
+  )
+```
+
+## 数据合并与重塑
+
+### 合并多个数据源
+
+```{r}
+# 气象数据
+climate <- tibble(
+  site_id = paste0("S", sprintf("%02d", 1:20)),
+  mean_temp = round(rnorm(20, 18, 3), 1),
+  annual_precip = round(rnorm(20, 1200, 200))
+)
+
+# 合并
+soil_full <- soil |>
+  left_join(climate, by = "site_id")
+
+head(soil_full)
+```
+
+### 长宽格式转换
+
+```{r}
+# 宽格式：每个深度一列
+soil_wide <- soil |>
+  select(site_id, depth, ph) |>
+  pivot_wider(
+    names_from = depth,
+    values_from = ph,
+    names_prefix = "ph_"
+  )
+
+head(soil_wide)
+
+# 转回长格式
+soil_wide |>
+  pivot_longer(
+    cols = starts_with("ph_"),
+    names_to = "depth",
+    values_to = "ph",
+    names_prefix = "ph_"
+  ) |>
+  head()
+```
+
+## 构造新特征
+
+根据领域知识，从已有变量中构造有意义的新特征：
+
+```{r}
+soil_features <- soil_full |>
+  mutate(
+    # 碳氮比（C/N ratio）——重要的土壤质量指标
+    cn_ratio = organic_carbon / nitrogen,
+
+    # 粉粒含量（假设三者之和为100%）
+    silt_pct = 100 - clay_pct - sand_pct,
+
+    # 海拔分级
+    elev_class = cut(elevation, breaks = c(0, 300, 500, 800, Inf),
+                     labels = c("低海拔", "中低海拔", "中高海拔", "高海拔")),
+
+    # 坡度分级
+    slope_class = cut(slope, breaks = c(0, 10, 20, 30, Inf),
+                      labels = c("平缓", "中等", "较陡", "陡峭"))
+  )
+
+head(soil_features |> select(site_id, cn_ratio, silt_pct, elev_class, slope_class))
+```
+
+## 课后练习
+
+1. 对 `iris` 数据集的 4 个数值变量进行 Z-score 标准化
+2. 检验 `iris$Sepal.Width` 是否服从正态分布，如果不是，尝试对数变换
+3. 将 `iris$Species` 转换为虚拟变量
+4. 构造一个新特征：花瓣面积 = Petal.Length × Petal.Width
+5. 将 iris 数据从宽格式转为长格式（4 个测量值变成一列）

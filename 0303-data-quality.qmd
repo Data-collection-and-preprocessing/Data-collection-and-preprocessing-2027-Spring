@@ -1,19 +1,215 @@
-﻿# 数据质量控制
+---
+title: "数据质量控制"
+execute:
+  warning: false
+  message: false
+---
 
-本章介绍数据验证、元数据编写和数据文档化的规范方法。
+# 数据质量控制
 
-## 数据验证与一致性检查
+数据清洗和特征工程解决了"数据怎么处理"的问题，数据质量控制解决的是"怎么确保数据可靠、可追溯、可复用"。这是可重复性研究的核心环节。
 
-（待编写）
+```{r}
+library(tidyverse)
+```
 
-## 元数据编写规范
+## 数据验证
 
-（待编写）
+### 范围检查
 
-## 数据存储格式选择
+确保数值在合理范围内：
 
-（待编写）
+```{r}
+validate_soil <- function(data) {
+  issues <- list()
 
-## 数据文档化
+  # pH 范围检查（0-14）
+  bad_ph <- data |> filter(ph < 0 | ph > 14)
+  if (nrow(bad_ph) > 0) issues$ph <- paste(nrow(bad_ph), "条 pH 超出范围")
 
-（待编写）
+  # 有机碳不能为负
+  bad_oc <- data |> filter(organic_carbon < 0)
+  if (nrow(bad_oc) > 0) issues$oc <- paste(nrow(bad_oc), "条有机碳为负值")
+
+  # 百分比之和检查
+  if ("clay_pct" %in% names(data) && "sand_pct" %in% names(data)) {
+    bad_pct <- data |> filter(clay_pct + sand_pct > 100)
+    if (nrow(bad_pct) > 0) issues$pct <- paste(nrow(bad_pct), "条粒径百分比之和超过100%")
+  }
+
+  if (length(issues) == 0) {
+    cat("✅ 所有验证通过\n")
+  } else {
+    cat("⚠️ 发现以下问题：\n")
+    for (name in names(issues)) {
+      cat("  -", issues[[name]], "\n")
+    }
+  }
+
+  invisible(issues)
+}
+
+# 示例
+set.seed(2027)
+soil <- tibble(
+  site_id = paste0("S", 1:10),
+  ph = c(6.2, 5.8, 7.1, -0.5, 6.5, 15.2, 6.8, 5.9, 6.3, 7.0),
+  organic_carbon = c(25, 30, 22, 28, -5, 35, 20, 27, 31, 24),
+  clay_pct = c(30, 45, 20, 55, 40, 35, 25, 50, 38, 42),
+  sand_pct = c(40, 30, 50, 60, 35, 45, 55, 30, 40, 35)
+)
+
+validate_soil(soil)
+```
+
+### 一致性检查
+
+```{r}
+# 检查同一样点不同深度的数据是否一致
+# 例如：表层有机碳应该高于深层
+check_depth_consistency <- function(data) {
+  if (!("depth" %in% names(data))) return(invisible(NULL))
+
+  inconsistent <- data |>
+    group_by(site_id) |>
+    arrange(depth) |>
+    mutate(oc_decreasing = organic_carbon < lag(organic_carbon)) |>
+    filter(!is.na(oc_decreasing) & !oc_decreasing) |>
+    ungroup()
+
+  if (nrow(inconsistent) > 0) {
+    cat("⚠️", nrow(inconsistent), "条记录的有机碳未随深度递减（可能需要核实）\n")
+  } else {
+    cat("✅ 有机碳随深度递减，符合预期\n")
+  }
+}
+```
+
+## 元数据（Metadata）
+
+元数据是"描述数据的数据"。没有元数据的数据集，就像没有说明书的仪器——别人（包括未来的你）无法正确使用。
+
+### 元数据应包含的内容
+
+| 项目 | 说明 | 示例 |
+|:---|:---|:---|
+| 数据集名称 | 简明描述 | 广西大学校园土壤调查数据 |
+| 采集时间 | 数据采集的时间范围 | 2027年3月15日-17日 |
+| 采集地点 | 地理位置和坐标 | 广西南宁市广西大学校园（108.29°E, 22.83°N） |
+| 采集方法 | 采样设计和方法 | 随机布设20个样点，每点采集0-30cm三层土壤 |
+| 变量说明 | 每个变量的含义和单位 | ph: 土壤pH值（水土比1:2.5） |
+| 数据处理 | 清洗和转换的方法 | 缺失值用中位数填充，pH异常值（<0或>14）标记为NA |
+| 联系人 | 数据负责人 | 刘华清 huaqingliu@gxu.edu.cn |
+| 许可证 | 数据使用许可 | CC BY 4.0 |
+
+### 编写元数据文件
+
+在项目中创建 `data/README.md`：
+
+```markdown
+# 数据说明
+
+## 数据集：广西大学校园土壤调查
+
+- **采集时间**：2027年3月15日-17日
+- **采集地点**：广西南宁市广西大学校园
+- **采集人**：XXX, XXX
+- **样本量**：20个样点 × 3个深度 = 60条记录
+
+## 变量说明
+
+| 变量名 | 类型 | 单位 | 说明 |
+|:---|:---|:---|:---|
+| site_id | 字符 | - | 样点编号（S01-S20） |
+| depth | 因子 | cm | 采样深度（0-10, 10-20, 20-30） |
+| ph | 数值 | - | 土壤pH（水土比1:2.5） |
+| organic_carbon | 数值 | g/kg | 土壤有机碳含量 |
+| nitrogen | 数值 | g/kg | 全氮含量 |
+| clay_pct | 数值 | % | 黏粒含量 |
+| sand_pct | 数值 | % | 砂粒含量 |
+
+## 数据处理记录
+
+1. 去除重复记录（3条）
+2. pH异常值（<0或>14）标记为NA
+3. 有机碳异常值（<0或>100）标记为NA
+4. 缺失值用各变量中位数填充
+5. 字符串统一为小写并去除空格
+```
+
+## 数据存储格式
+
+### 常见格式对比
+
+| 格式 | 优点 | 缺点 | 适用场景 |
+|:---|:---|:---|:---|
+| CSV | 通用、人类可读 | 不保留数据类型 | 数据共享、发布 |
+| RDS | 保留 R 对象完整信息 | 仅 R 可读 | R 项目中间结果 |
+| Excel | 直观、易编辑 | 格式易损坏 | 数据录入（不推荐分析用） |
+| Parquet | 高效压缩、列式存储 | 需要额外包 | 大数据集 |
+
+### 推荐做法
+
+```{r}
+#| eval: false
+
+# 原始数据保存为 CSV（通用性最好）
+write_csv(soil_raw, "data/raw/soil_survey_raw.csv")
+
+# 处理后的数据保存为 RDS（保留因子等类型信息）
+saveRDS(soil_clean, "data/processed/soil_survey_clean.rds")
+
+# 读取
+soil_clean <- readRDS("data/processed/soil_survey_clean.rds")
+```
+
+::: {.callout-tip}
+## 数据存储的黄金法则
+
+1. **原始数据只读**：永远不修改 `data/raw/` 中的文件
+2. **处理过程可追溯**：所有清洗步骤都写在脚本里，不要手动修改数据
+3. **中间结果可重建**：`data/processed/` 中的文件都能通过运行脚本重新生成
+4. **共享用 CSV**：给别人的数据用 CSV 格式，附带元数据说明
+:::
+
+## Codebook（数据字典）
+
+Codebook 是比 README 更详细的变量说明文档，可以用 R 自动生成：
+
+```{r}
+# 自动生成 codebook
+generate_codebook <- function(data) {
+  tibble(
+    variable = names(data),
+    type = map_chr(data, ~class(.x)[1]),
+    n_missing = map_int(data, ~sum(is.na(.x))),
+    n_unique = map_int(data, ~n_distinct(.x)),
+    example = map_chr(data, ~paste(head(unique(.x), 3), collapse = ", "))
+  )
+}
+
+generate_codebook(soil)
+```
+
+## 数据质量检查清单
+
+在提交数据或开始分析之前，逐项检查：
+
+- [ ] 没有重复记录
+- [ ] 缺失值已识别并合理处理
+- [ ] 数值变量在合理范围内
+- [ ] 分类变量的水平一致（无拼写错误、大小写不一致）
+- [ ] 日期格式统一
+- [ ] 数据类型正确（数值/因子/日期）
+- [ ] 有完整的元数据文件（README.md）
+- [ ] 有变量说明（codebook）
+- [ ] 原始数据已备份且未被修改
+- [ ] 清洗脚本可以从原始数据重新生成处理后的数据
+
+## 课后练习
+
+1. 为你的课程项目数据编写一份完整的元数据文件（README.md）
+2. 编写一个数据验证函数，检查你的数据是否满足预期的范围和一致性
+3. 用 `generate_codebook()` 函数为你的数据生成 codebook
+4. 将原始数据保存为 CSV，处理后的数据保存为 RDS
+5. 确保你的数据处理流程完全可重复：删除 `data/processed/` 中的文件，重新运行脚本能得到相同结果
