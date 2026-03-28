@@ -1,8 +1,296 @@
+---
+title: "数据清洗"
+execute:
+  warning: false
+  message: false
+---
 
+# 数据清洗
 
-# 数据预处理方法1
+真实世界的数据从来都不是"干净"的。缺失值、异常值、格式不一致、重复记录……这些问题在生态学数据中尤为常见。数据清洗是数据分析的第一步，也是最重要的一步——垃圾进，垃圾出（Garbage In, Garbage Out）。
 
+```{r}
+library(tidyverse)
+```
 
-为生态学研究人员和专家提出了一个实用和可操作的框架，以实现构建从单个研究项目到生产级分析管道的分析程序的最佳实践[@Royaux_2025_Guidanceframeworkapply]。
+## 示例数据
 
+我们使用一个模拟的土壤调查数据集来演示数据清洗的各个步骤：
 
+```{r}
+set.seed(2027)
+
+soil_raw <- tibble(
+  site_id = rep(paste0("S", sprintf("%02d", 1:20)), each = 3),
+  depth = rep(c("0-10", "10-20", "20-30"), 20),
+  ph = c(rnorm(58, 6.2, 0.8), NA, -1.5),                    # 含缺失值和异常值
+  organic_carbon = c(rnorm(55, 25, 8), NA, NA, NA, 150, -5), # 含缺失值和异常值
+  nitrogen = c(rnorm(57, 2.1, 0.6), NA, NA, 0),
+  texture = c(rep("clay", 15), rep("loam", 15), rep("sand", 15),
+              "Clay", "LOAM", " sand ", "clay ", "loam",      # 格式不一致
+              rep("clay", 5), rep("loam", 5)),
+  date = c(rep("2027-03-15", 30), rep("2027/03/16", 15),     # 日期格式不一致
+           rep("15-Mar-2027", 10), rep("2027-03-17", 5))
+)
+
+# 添加重复行
+soil_raw <- bind_rows(soil_raw, soil_raw[c(1, 1, 5), ])
+
+head(soil_raw, 10)
+dim(soil_raw)
+```
+
+## 第一步：了解你的数据
+
+在动手清洗之前，先全面了解数据的基本情况：
+
+```{r}
+# 数据维度
+dim(soil_raw)
+
+# 数据结构
+str(soil_raw)
+
+# 描述性统计
+summary(soil_raw)
+
+# 每列缺失值数量
+colSums(is.na(soil_raw))
+```
+
+## 处理重复值
+
+```{r}
+# 检查重复行
+sum(duplicated(soil_raw))
+
+# 查看重复的行
+soil_raw[duplicated(soil_raw), ]
+
+# 去除重复行
+soil <- soil_raw |>
+  distinct()
+
+cat("去重前:", nrow(soil_raw), "行\n")
+cat("去重后:", nrow(soil), "行\n")
+```
+
+## 处理缺失值
+
+### 识别缺失值
+
+```{r}
+# 每列缺失值统计
+soil |>
+  summarise(across(everything(), ~sum(is.na(.)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "n_missing") |>
+  filter(n_missing > 0)
+```
+
+### 可视化缺失模式
+
+```{r}
+# 简单的缺失值热力图
+soil |>
+  mutate(row = row_number()) |>
+  pivot_longer(-row, names_to = "variable", values_to = "value") |>
+  mutate(is_missing = is.na(value)) |>
+  ggplot(aes(x = variable, y = row, fill = is_missing)) +
+  geom_tile() +
+  scale_fill_manual(values = c("grey90", "red"), labels = c("有值", "缺失")) +
+  labs(title = "缺失值分布", x = "", y = "行号", fill = "") +
+  theme_minimal()
+```
+
+### 处理策略
+
+根据缺失的原因和比例，选择不同的处理方式：
+
+| 策略 | 适用场景 | R 实现 |
+|:---|:---|:---|
+| 删除行 | 缺失比例低（<5%），随机缺失 | `drop_na()` |
+| 删除列 | 某列缺失比例过高（>50%） | `select(-col)` |
+| 均值/中位数填充 | 数值型，缺失比例适中 | `replace_na()` |
+| 分组填充 | 缺失值与分组有关 | `group_by() + fill()` |
+| 标记为单独类别 | 分类变量 | `replace_na(list(x = "未知"))` |
+
+```{r}
+# 方法1：删除含缺失值的行
+soil_complete <- soil |> drop_na()
+cat("删除缺失后:", nrow(soil_complete), "行\n")
+
+# 方法2：用中位数填充数值型缺失值
+soil_filled <- soil |>
+  mutate(
+    ph = replace_na(ph, median(ph, na.rm = TRUE)),
+    organic_carbon = replace_na(organic_carbon, median(organic_carbon, na.rm = TRUE)),
+    nitrogen = replace_na(nitrogen, median(nitrogen, na.rm = TRUE))
+  )
+```
+
+::: {.callout-warning}
+## 缺失值处理的注意事项
+
+- 先搞清楚缺失的原因（随机缺失 vs 系统性缺失）
+- 不要盲目删除——可能引入偏差
+- 不要盲目填充——可能掩盖真实模式
+- 在论文中必须报告缺失值的处理方式
+:::
+
+## 处理异常值
+
+### 识别异常值
+
+```{r}
+# 箱线图识别异常值
+soil |>
+  select(where(is.numeric)) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "value") |>
+  ggplot(aes(x = variable, y = value)) +
+  geom_boxplot(fill = "lightblue") +
+  facet_wrap(~variable, scales = "free") +
+  labs(title = "数值变量箱线图（异常值检测）") +
+  theme_minimal()
+```
+
+### IQR 方法
+
+```{r}
+# 用 IQR 方法检测异常值
+detect_outliers <- function(x) {
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  q3 <- quantile(x, 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+  lower <- q1 - 1.5 * iqr
+  upper <- q3 + 1.5 * iqr
+  x < lower | x > upper
+}
+
+# 检测各列异常值
+soil |>
+  summarise(
+    ph_outliers = sum(detect_outliers(ph), na.rm = TRUE),
+    oc_outliers = sum(detect_outliers(organic_carbon), na.rm = TRUE),
+    n_outliers = sum(detect_outliers(nitrogen), na.rm = TRUE)
+  )
+```
+
+### 处理异常值
+
+```{r}
+# 查看异常值
+soil |>
+  filter(detect_outliers(ph) | detect_outliers(organic_carbon)) |>
+  select(site_id, depth, ph, organic_carbon)
+
+# 将不合理的值替换为 NA（pH 不可能为负数，有机碳不可能为 150 或负数）
+soil_clean <- soil_filled |>
+  mutate(
+    ph = if_else(ph < 0 | ph > 14, NA_real_, ph),
+    organic_carbon = if_else(organic_carbon < 0 | organic_carbon > 100, NA_real_, organic_carbon),
+    nitrogen = if_else(nitrogen < 0, NA_real_, nitrogen)
+  )
+```
+
+::: {.callout-note}
+## 异常值 ≠ 错误值
+
+异常值不一定是错误的。在生态学中，极端值可能反映了真实的生态现象（如极端干旱下的土壤 pH 变化）。处理异常值时要结合专业知识判断，不能机械地删除。
+:::
+
+## 统一数据格式
+
+### 字符串清洗
+
+```{r}
+# 查看 texture 列的唯一值
+unique(soil_clean$texture)
+
+# 统一格式：去空格、转小写
+soil_clean <- soil_clean |>
+  mutate(
+    texture = texture |>
+      str_trim() |>          # 去除首尾空格
+      str_to_lower()         # 转为小写
+  )
+
+unique(soil_clean$texture)
+```
+
+### 日期格式统一
+
+```{r}
+# 查看日期格式
+unique(soil_clean$date)
+
+# 使用 lubridate 统一日期格式
+library(lubridate)
+
+soil_clean <- soil_clean |>
+  mutate(
+    date = parse_date_time(date, orders = c("ymd", "y/m/d", "d-b-Y")) |>
+      as.Date()
+  )
+
+unique(soil_clean$date)
+class(soil_clean$date)
+```
+
+## 数据类型转换
+
+```{r}
+# 将 texture 转为因子
+soil_clean <- soil_clean |>
+  mutate(
+    texture = factor(texture, levels = c("sand", "loam", "clay")),
+    depth = factor(depth, levels = c("0-10", "10-20", "20-30"), ordered = TRUE)
+  )
+
+str(soil_clean)
+```
+
+## 完整的数据清洗流水线
+
+将以上步骤整合为一个完整的流水线：
+
+```{r}
+soil_final <- soil_raw |>
+  # 1. 去重
+  distinct() |>
+  # 2. 统一字符串格式
+  mutate(
+    texture = texture |> str_trim() |> str_to_lower()
+  ) |>
+  # 3. 统一日期格式
+  mutate(
+    date = parse_date_time(date, orders = c("ymd", "y/m/d", "d-b-Y")) |> as.Date()
+  ) |>
+  # 4. 处理不合理的值
+  mutate(
+    ph = if_else(ph < 0 | ph > 14, NA_real_, ph),
+    organic_carbon = if_else(organic_carbon < 0 | organic_carbon > 100, NA_real_, organic_carbon),
+    nitrogen = if_else(nitrogen < 0, NA_real_, nitrogen)
+  ) |>
+  # 5. 填充缺失值（中位数）
+  mutate(
+    ph = replace_na(ph, median(ph, na.rm = TRUE)),
+    organic_carbon = replace_na(organic_carbon, median(organic_carbon, na.rm = TRUE)),
+    nitrogen = replace_na(nitrogen, median(nitrogen, na.rm = TRUE))
+  ) |>
+  # 6. 转换数据类型
+  mutate(
+    texture = factor(texture, levels = c("sand", "loam", "clay")),
+    depth = factor(depth, levels = c("0-10", "10-20", "20-30"), ordered = TRUE)
+  )
+
+# 验证
+summary(soil_final)
+```
+
+## 课后练习
+
+1. 下载一个真实的生态学数据集（如从 GBIF 下载物种观测数据）
+2. 检查数据中的缺失值、异常值和格式问题
+3. 编写一个完整的数据清洗流水线
+4. 对比清洗前后的数据质量（缺失值数量、异常值数量、数据类型）
+5. 将清洗脚本和清洗报告提交到 GitHub
