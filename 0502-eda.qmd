@@ -1,19 +1,249 @@
-﻿# 探索性数据分析
+---
+title: "探索性数据分析"
+execute:
+  warning: false
+  message: false
+---
 
-本章介绍探索性数据分析（EDA）的方法和流程。
+# 探索性数据分析
+
+探索性数据分析（Exploratory Data Analysis, EDA）是在正式建模之前，通过统计摘要和可视化手段全面了解数据特征的过程。EDA 的目标不是得出结论，而是发现模式、检测异常、验证假设。
+
+```{r}
+library(tidyverse)
+library(corrplot)
+library(patchwork)
+```
+
+## 示例数据：物种多样性调查
+
+```{r}
+set.seed(2027)
+n <- 80
+
+diversity <- tibble(
+  plot_id = paste0("P", sprintf("%03d", 1:n)),
+  richness = rpois(n, lambda = 12),
+  shannon = rnorm(n, 2.1, 0.4),
+  evenness = runif(n, 0.5, 0.95),
+  biomass = rlnorm(n, log(500), 0.5),
+  soil_ph = rnorm(n, 6.0, 0.9),
+  soil_moisture = runif(n, 15, 55),
+  organic_carbon = rlnorm(n, log(30), 0.3),
+  elevation = runif(n, 150, 1000),
+  slope = runif(n, 2, 40),
+  habitat = sample(c("常绿阔叶林", "落叶阔叶林", "针叶林", "灌丛"), n,
+                   replace = TRUE, prob = c(0.35, 0.25, 0.2, 0.2)),
+  disturbance = sample(c("无", "轻度", "中度", "重度"), n,
+                       replace = TRUE, prob = c(0.3, 0.35, 0.25, 0.1))
+)
+
+head(diversity)
+```
+
+## 第一步：数据概览
+
+```{r}
+# 维度
+dim(diversity)
+
+# 结构
+glimpse(diversity)
+
+# 数值变量摘要
+diversity |>
+  select(where(is.numeric)) |>
+  summary()
+```
 
 ## 描述性统计
 
-（待编写）
+### 集中趋势与离散程度
 
-## 相关性分析
+```{r}
+diversity |>
+  select(where(is.numeric)) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "value") |>
+  group_by(variable) |>
+  summarise(
+    n = n(),
+    mean = round(mean(value), 2),
+    sd = round(sd(value), 2),
+    median = round(median(value), 2),
+    min = round(min(value), 2),
+    max = round(max(value), 2),
+    cv = round(sd(value) / mean(value) * 100, 1)  # 变异系数 (%)
+  ) |>
+  arrange(desc(cv))
+```
 
-（待编写）
+::: {.callout-note}
+## 变异系数（CV）
+
+CV = (标准差 / 均值) × 100%，用于比较不同量纲变量的变异程度。CV > 30% 通常认为变异较大。
+:::
+
+### 分组统计
+
+```{r}
+diversity |>
+  group_by(habitat) |>
+  summarise(
+    n = n(),
+    mean_richness = round(mean(richness), 1),
+    sd_richness = round(sd(richness), 1),
+    mean_shannon = round(mean(shannon), 2),
+    mean_biomass = round(mean(biomass), 0)
+  ) |>
+  arrange(desc(mean_richness))
+```
 
 ## 分布检验
 
-（待编写）
+### 可视化检验
 
-## 案例：物种多样性数据 EDA
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
 
-（待编写）
+vars_to_check <- c("richness", "shannon", "biomass", "soil_ph")
+
+plots <- map(vars_to_check, function(var) {
+  ggplot(diversity, aes(x = .data[[var]])) +
+    geom_histogram(aes(y = after_stat(density)), bins = 15,
+                   fill = "steelblue", alpha = 0.7, color = "white") +
+    geom_density(color = "coral", linewidth = 1) +
+    labs(title = var, x = "", y = "") +
+    theme_minimal(base_size = 10)
+})
+
+wrap_plots(plots, nrow = 1)
+```
+
+### Q-Q 图
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
+
+qq_plots <- map(vars_to_check, function(var) {
+  ggplot(diversity, aes(sample = .data[[var]])) +
+    stat_qq(alpha = 0.6) +
+    stat_qq_line(color = "coral") +
+    labs(title = var) +
+    theme_minimal(base_size = 10)
+})
+
+wrap_plots(qq_plots, nrow = 1)
+```
+
+### Shapiro-Wilk 正态性检验
+
+```{r}
+diversity |>
+  select(all_of(vars_to_check)) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "value") |>
+  group_by(variable) |>
+  summarise(
+    W = shapiro.test(value)$statistic,
+    p_value = shapiro.test(value)$p.value,
+    normal = if_else(p_value > 0.05, "✅ 是", "❌ 否")
+  )
+```
+
+## 相关性分析
+
+### 相关系数矩阵
+
+```{r}
+#| fig-width: 7
+#| fig-asp: 1
+
+cor_data <- diversity |>
+  select(richness, shannon, evenness, biomass, soil_ph, soil_moisture,
+         organic_carbon, elevation, slope)
+
+cor_matrix <- cor(cor_data, use = "complete.obs")
+
+corrplot(cor_matrix, method = "color", type = "lower",
+         addCoef.col = "black", number.cex = 0.7,
+         tl.col = "black", tl.cex = 0.8,
+         col = colorRampPalette(c("#4575b4", "white", "#d73027"))(200))
+```
+
+### 关键变量对的散点图
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.35
+
+p1 <- ggplot(diversity, aes(x = soil_ph, y = richness)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "steelblue") +
+  labs(x = "土壤 pH", y = "物种丰富度") +
+  theme_minimal()
+
+p2 <- ggplot(diversity, aes(x = elevation, y = shannon)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "loess", color = "coral") +
+  labs(x = "海拔 (m)", y = "Shannon 指数") +
+  theme_minimal()
+
+p3 <- ggplot(diversity, aes(x = organic_carbon, y = biomass)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", color = "forestgreen") +
+  labs(x = "有机碳 (g/kg)", y = "生物量 (g/m²)") +
+  theme_minimal()
+
+p1 + p2 + p3
+```
+
+## 分组比较
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
+
+p_hab <- ggplot(diversity, aes(x = habitat, y = richness, fill = habitat)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, alpha = 0.3, size = 1) +
+  labs(x = "", y = "物种丰富度") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_dist <- ggplot(diversity, aes(x = disturbance, y = shannon, fill = disturbance)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, alpha = 0.3, size = 1) +
+  labs(x = "", y = "Shannon 指数") +
+  scale_fill_brewer(palette = "Pastel1") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_hab + p_dist
+```
+
+## EDA 报告模板
+
+一份完整的 EDA 报告应包含：
+
+1. **数据概览**：维度、变量类型、缺失值
+2. **描述性统计**：均值、标准差、变异系数
+3. **分布检验**：直方图、Q-Q 图、正态性检验
+4. **相关性分析**：相关系数矩阵、关键散点图
+5. **分组比较**：箱线图、分组统计
+6. **初步发现**：数据中的模式、异常、值得深入研究的问题
+
+::: {.callout-tip}
+## EDA 的心态
+
+EDA 不是为了证明什么，而是为了发现什么。保持好奇心，让数据告诉你故事。如果发现了意料之外的模式，不要急着解释——先记录下来，后续用更严格的统计方法验证。
+:::
+
+## 课后练习
+
+1. 对 `iris` 数据集进行完整的 EDA：描述性统计 → 分布检验 → 相关性分析 → 分组比较
+2. 检验 `iris` 中哪些变量服从正态分布
+3. 绘制 4 个数值变量的相关性矩阵热力图
+4. 按物种分组，比较花瓣长度的差异（箱线图 + 统计摘要）
+5. 写一份简短的 EDA 报告（用 Quarto 渲染为 HTML），总结你的发现
