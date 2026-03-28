@@ -1,19 +1,256 @@
-﻿# 版本控制与协作
+---
+title: "版本控制与协作"
+execute:
+  eval: false
+---
 
-本章介绍 Git 版本控制系统和 GitHub 协作平台的使用方法。
+# 版本控制与协作
+
+在科学研究中，代码和数据的版本管理是确保可重复性的关键环节。本章介绍 Git 版本控制系统和 GitHub 协作平台的使用方法。
+
+## 为什么需要版本控制？
+
+你是否遇到过这样的情况？
+
+```
+论文_v1.docx
+论文_v2.docx
+论文_v2_导师修改.docx
+论文_v3_最终版.docx
+论文_v3_最终版_真的最终版.docx
+论文_v3_最终版_打死不改了.docx
+```
+
+版本控制系统（Version Control System, VCS）就是为了解决这个问题。Git 是目前最流行的版本控制工具，它能：
+
+- 记录文件的每一次修改历史
+- 随时回退到任意历史版本
+- 多人协作时自动合并修改
+- 追踪每个人的贡献
 
 ## Git 基本概念
 
-（待编写）
+### 仓库（Repository）
+
+仓库是 Git 管理的项目文件夹。分为：
+
+- **本地仓库**：在你电脑上的项目文件夹
+- **远程仓库**：托管在 GitHub 等平台上的副本
+
+### 工作区、暂存区、版本库
+
+```
+工作区（Working Directory）
+    ↓  git add
+暂存区（Staging Area）
+    ↓  git commit
+版本库（Repository）
+    ↓  git push
+远程仓库（Remote）
+```
+
+- **工作区**：你正在编辑的文件
+- **暂存区**：准备提交的文件（`git add` 后）
+- **版本库**：已提交的历史记录（`git commit` 后）
 
 ## 常用 Git 命令
 
-（待编写）
+### 初始化与克隆
+
+```bash
+# 在当前文件夹初始化 Git 仓库
+git init
+
+# 克隆远程仓库到本地
+git clone https://github.com/username/repo-name.git
+```
+
+### 日常工作流
+
+```bash
+# 查看当前状态（哪些文件被修改了）
+git status
+
+# 将修改添加到暂存区
+git add filename.R          # 添加单个文件
+git add .                   # 添加所有修改
+
+# 提交到版本库（附带说明信息）
+git commit -m "添加数据清洗脚本"
+
+# 推送到远程仓库
+git push origin main
+
+# 从远程仓库拉取最新代码
+git pull origin main
+```
+
+### 查看历史
+
+```bash
+# 查看提交历史
+git log --oneline
+
+# 查看某个文件的修改历史
+git log --oneline -- analysis.R
+
+# 查看具体修改内容
+git diff
+```
+
+::: {.callout-tip}
+## 写好提交信息
+
+好的提交信息应该简洁明了，说明"做了什么"：
+
+- ✅ `添加土壤pH数据清洗脚本`
+- ✅ `修复物种名称拼写错误`
+- ✅ `更新图表配色方案`
+- ❌ `修改了一些东西`
+- ❌ `update`
+- ❌ `...`
+:::
 
 ## GitHub 协作
 
-（待编写）
+### Fork 与 Pull Request
 
-## RStudio 中使用 Git
+在团队协作中，常用的工作流程是：
 
-（待编写）
+1. **Fork**：将别人的仓库复制一份到自己的 GitHub 账号
+2. **Clone**：将 Fork 的仓库克隆到本地
+3. **修改**：在本地进行修改并提交
+4. **Push**：推送到自己的 GitHub 仓库
+5. **Pull Request（PR）**：向原仓库发起合并请求
+
+```bash
+# 1. Fork 后克隆自己的仓库
+git clone https://github.com/你的用户名/repo-name.git
+
+# 2. 创建新分支进行修改
+git checkout -b feature/add-analysis
+
+# 3. 修改文件并提交
+git add .
+git commit -m "添加多样性分析脚本"
+
+# 4. 推送到自己的仓库
+git push origin feature/add-analysis
+
+# 5. 在 GitHub 网页上创建 Pull Request
+```
+
+### Issue
+
+Issue 是 GitHub 上的问题追踪工具，可以用来：
+
+- 报告 Bug
+- 提出新功能需求
+- 讨论项目方向
+- 记录待办事项
+
+## 在 RStudio 中使用 Git
+
+RStudio 内置了 Git 图形界面，不需要记命令行：
+
+### 创建 Git 项目
+
+1. File → New Project → Version Control → Git
+2. 输入远程仓库 URL
+3. 选择本地存放路径
+4. 点击 Create Project
+
+### 日常操作
+
+RStudio 右上角的 Git 面板提供了常用操作：
+
+1. **查看修改**：Git 面板会显示所有被修改的文件
+2. **暂存文件**：勾选文件前的复选框（等同于 `git add`）
+3. **提交**：点击 Commit 按钮，输入提交信息（等同于 `git commit`）
+4. **推送/拉取**：点击 Push/Pull 按钮（等同于 `git push`/`git pull`）
+
+::: {.callout-note}
+## RStudio 中的 Git 快捷键
+
+- `Ctrl + Alt + M`：打开 Commit 窗口
+- `Ctrl + Alt + D`：查看 Diff（文件差异）
+:::
+
+## .gitignore 文件
+
+有些文件不应该被 Git 追踪（如大型数据文件、临时文件、密钥等）。在项目根目录创建 `.gitignore` 文件：
+
+```
+# R 临时文件
+.Rhistory
+.RData
+.Rproj.user/
+
+# 数据文件（太大不适合放 Git）
+data/raw/*.csv
+data/raw/*.xlsx
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编译产物
+docs/
+_freeze/
+```
+
+::: {.callout-warning}
+## 不要把敏感信息提交到 Git
+
+API 密钥、密码、个人隐私数据等绝对不能提交到 Git 仓库，尤其是公开仓库。一旦提交，即使删除文件，历史记录中仍然可以找到。
+:::
+
+## 项目文件组织规范
+
+一个规范的数据分析项目应该有清晰的文件结构：
+
+```
+my-project/
+├── README.md           # 项目说明
+├── .gitignore          # Git 忽略规则
+├── data/
+│   ├── raw/            # 原始数据（不修改）
+│   └── processed/      # 处理后的数据
+├── scripts/
+│   ├── 01-clean.R      # 数据清洗
+│   ├── 02-analyze.R    # 数据分析
+│   └── 03-visualize.R  # 数据可视化
+├── output/
+│   ├── figures/         # 图表
+│   └── tables/          # 表格
+└── docs/
+    └── report.qmd       # 分析报告
+```
+
+关键原则：
+
+- **原始数据只读**：`data/raw/` 中的文件永远不修改
+- **脚本有编号**：按执行顺序编号，方便他人复现
+- **输出可重建**：`output/` 中的所有文件都能通过运行脚本重新生成
+- **有 README**：说明项目目的、数据来源、运行方法
+
+## 实践：分组创建项目仓库
+
+按照以下步骤完成本章实践：
+
+1. 在 GitHub 上创建一个新仓库，命名为 `ecology-data-project`
+2. 添加 README.md 和 .gitignore（选择 R 模板）
+3. 克隆到本地（使用 RStudio）
+4. 按照上面的规范创建文件夹结构
+5. 添加一个简单的 R 脚本（如读取 iris 数据并保存描述性统计）
+6. 提交并推送到 GitHub
+7. 邀请组员作为 Collaborator
+8. 组员各自克隆仓库，添加自己的分析脚本，提交推送
+
+## 课后练习
+
+1. 在 GitHub 上创建个人项目仓库，包含完整的文件夹结构
+2. 练习 `git add` → `git commit` → `git push` 的完整流程
+3. 查看 `git log` 确认提交历史
+4. 创建 `.gitignore` 文件，排除不需要追踪的文件
+5. 尝试在 RStudio 中使用 Git 面板完成一次提交和推送
