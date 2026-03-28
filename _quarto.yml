@@ -38,6 +38,7 @@ book:
         - 0205-public-data.qmd
         - 0206-references.qmd
         - 0207-meta-analysis-intro.qmd
+        - 0208-python-data-collection.qmd
     - part: "第四单元：数据预处理"
       chapters:
         - 0301-data-cleaning.qmd

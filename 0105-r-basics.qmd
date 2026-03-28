@@ -1,19 +1,282 @@
-﻿# R 语言基础
+---
+title: "R 语言基础"
+execute:
+  warning: false
+  message: false
+---
 
-本章介绍 R 语言的基本数据类型、数据读取和基础统计操作。
+# R 语言基础
 
-## 数据类型
+本章介绍 R 语言的基本数据类型、数据读取和基础统计操作。如果你之前没有编程经验，不用担心——R 的语法直观易懂，我们会从最基础的概念开始。
 
-（待编写）
+## 认识 RStudio
+
+RStudio 界面分为四个区域：
+
+- **左上**：脚本编辑器（Source），编写和保存代码
+- **左下**：控制台（Console），直接运行代码
+- **右上**：环境（Environment），查看当前变量
+- **右下**：文件/图表/帮助（Files/Plots/Help）
+
+::: {.callout-tip}
+## 快捷键
+
+- `Ctrl + Enter`：运行当前行代码
+- `Ctrl + Shift + Enter`：运行整个脚本
+- `Ctrl + S`：保存文件
+- `Tab`：代码自动补全
+:::
+
+## 基本数据类型
+
+R 中有几种基本的数据类型：
+
+### 数值型（numeric）
+
+```{r}
+x <- 3.14        # 赋值
+y <- 42L          # 整数（加 L 后缀）
+class(x)          # 查看类型
+class(y)
+```
+
+### 字符型（character）
+
+```{r}
+name <- "广西大学"
+species <- '马尾松'    # 单引号和双引号都可以
+class(name)
+nchar(name)            # 字符数
+```
+
+### 逻辑型（logical）
+
+```{r}
+is_tree <- TRUE
+is_herb <- FALSE
+3 > 2              # 比较运算返回逻辑值
+```
+
+## 向量（vector）
+
+向量是 R 中最基本的数据结构，用 `c()` 函数创建：
+
+```{r}
+# 数值向量
+heights <- c(12.5, 8.3, 15.7, 10.2, 9.8)
+
+# 字符向量
+species <- c("马尾松", "杉木", "桉树", "樟树", "楠木")
+
+# 逻辑向量
+is_native <- c(TRUE, TRUE, FALSE, TRUE, TRUE)
+```
+
+### 向量运算
+
+R 的向量运算是自动逐元素进行的：
+
+```{r}
+heights <- c(12.5, 8.3, 15.7, 10.2, 9.8)
+
+# 基本运算
+heights * 100          # 每个元素乘以 100（cm 转换）
+heights + 1            # 每个元素加 1
+
+# 统计函数
+mean(heights)          # 平均值
+sd(heights)            # 标准差
+max(heights)           # 最大值
+min(heights)           # 最小值
+length(heights)        # 长度
+```
+
+### 向量索引
+
+```{r}
+heights <- c(12.5, 8.3, 15.7, 10.2, 9.8)
+
+heights[1]             # 第 1 个元素（R 从 1 开始计数！）
+heights[c(1, 3)]       # 第 1 和第 3 个
+heights[heights > 10]  # 筛选大于 10 的元素
+```
+
+## 因子（factor）
+
+因子用于表示分类变量，在生态学数据中非常常见：
+
+```{r}
+# 创建因子
+habitat <- factor(c("森林", "草地", "湿地", "森林", "草地", "森林"))
+habitat
+
+# 查看水平
+levels(habitat)
+
+# 频次统计
+table(habitat)
+```
+
+::: {.callout-note}
+## 为什么需要因子？
+
+在统计分析和绑图中，R 需要知道哪些变量是分类变量。因子告诉 R："这个变量有固定的几个类别"，而不是随意的文本。
+:::
+
+## 数据框（data.frame）
+
+数据框是 R 中最常用的数据结构，类似于 Excel 表格：
+
+```{r}
+# 创建数据框
+tree_data <- data.frame(
+  species = c("马尾松", "杉木", "桉树", "樟树", "楠木"),
+  height = c(12.5, 8.3, 15.7, 10.2, 9.8),
+  dbh = c(25.3, 15.8, 32.1, 20.5, 18.7),    # 胸径 (cm)
+  native = c(TRUE, TRUE, FALSE, TRUE, TRUE)
+)
+
+# 查看数据
+tree_data
+str(tree_data)     # 查看结构
+summary(tree_data) # 描述性统计
+```
+
+### 访问数据框
+
+```{r}
+tree_data <- data.frame(
+  species = c("马尾松", "杉木", "桉树", "樟树", "楠木"),
+  height = c(12.5, 8.3, 15.7, 10.2, 9.8),
+  dbh = c(25.3, 15.8, 32.1, 20.5, 18.7),
+  native = c(TRUE, TRUE, FALSE, TRUE, TRUE)
+)
+
+tree_data$height       # 用 $ 访问列
+tree_data[1, ]         # 第 1 行
+tree_data[, 2]         # 第 2 列
+tree_data[1, 2]        # 第 1 行第 2 列
+```
 
 ## 读取数据文件
 
-（待编写）
+实际研究中，数据通常存储在文件中。R 提供了多种读取方式。
+
+### 读取 CSV 文件
+
+```{r}
+# 基础 R
+data <- read.csv("data/species_survey.csv")
+
+# tidyverse（推荐，更快更智能）
+library(readr)
+data <- read_csv("data/species_survey.csv")
+```
+
+### 读取 Excel 文件
+
+```{r}
+library(readxl)
+data <- read_excel("data/soil_data.xlsx", sheet = 1)
+```
+
+### 读取其他格式
+
+```{r}
+# Tab 分隔文件
+data <- read_tsv("data/results.txt")
+
+# R 原生格式（推荐用于保存中间结果）
+saveRDS(data, "data/processed.rds")
+data <- readRDS("data/processed.rds")
+```
+
+::: {.callout-tip}
+## 文件路径
+
+- 使用 `/` 而不是 `\` 作为路径分隔符
+- 使用相对路径而不是绝对路径，这样别人也能运行你的代码
+- 把数据文件放在项目的 `data/` 文件夹中
+:::
 
 ## 基本统计函数
 
-（待编写）
+```{r}
+# 生成示例数据
+set.seed(42)  # 设置随机种子，确保可重复
+soil_ph <- rnorm(50, mean = 6.5, sd = 0.8)  # 50 个土壤 pH 值
 
-## 实践：生态学数据集
+# 描述性统计
+mean(soil_ph)          # 平均值
+median(soil_ph)        # 中位数
+sd(soil_ph)            # 标准差
+var(soil_ph)           # 方差
+range(soil_ph)         # 范围
+quantile(soil_ph)      # 四分位数
 
-（待编写）
+# 综合统计
+summary(soil_ph)
+```
+
+## 基本绘图
+
+R 内置了基本绑图功能，后续课程会详细讲解 ggplot2：
+
+```{r}
+set.seed(42)
+soil_ph <- rnorm(50, mean = 6.5, sd = 0.8)
+
+# 直方图
+hist(soil_ph, main = "土壤 pH 分布", xlab = "pH", col = "lightblue")
+
+# 箱线图
+boxplot(soil_ph, main = "土壤 pH", ylab = "pH")
+```
+
+## 获取帮助
+
+```{r}
+#| eval: false
+?mean              # 查看函数帮助
+help(read.csv)     # 同上
+??regression       # 搜索关键词
+```
+
+## 实践：生态学数据集探索
+
+让我们用一个真实的生态学数据集来练习。R 内置了 `iris`（鸢尾花）数据集：
+
+```{r}
+# 加载数据
+data(iris)
+
+# 查看前 6 行
+head(iris)
+
+# 数据结构
+str(iris)
+
+# 描述性统计
+summary(iris)
+
+# 按物种分组统计花瓣长度
+tapply(iris$Petal.Length, iris$Species, mean)
+
+# 简单散点图
+plot(iris$Sepal.Length, iris$Petal.Length,
+     col = as.numeric(iris$Species),
+     pch = 16,
+     xlab = "花萼长度 (cm)",
+     ylab = "花瓣长度 (cm)",
+     main = "鸢尾花花萼与花瓣长度关系")
+legend("topleft", levels(iris$Species),
+       col = 1:3, pch = 16, cex = 0.8)
+```
+
+## 课后练习
+
+1. 创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列
+2. 计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）
+3. 筛选出株高大于平均值的植物
+4. 用 `hist()` 绑制 `iris` 数据集中 `Sepal.Width` 的分布直方图
+5. 将你的代码保存为 `.R` 文件，提交到 GitHub 仓库

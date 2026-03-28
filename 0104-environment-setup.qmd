@@ -1,19 +1,190 @@
-﻿# 研究环境搭建
+---
+title: "研究环境搭建"
+execute:
+  eval: false
+---
 
-本章将指导你安装和配置数据分析所需的软件环境，包括 R/RStudio、Git 和 Quarto。
+# 研究环境搭建
 
-## R 与 RStudio 安装
+工欲善其事，必先利其器。在开始数据采集与预处理之前，我们需要搭建一个标准化的研究环境。本章将指导你安装和配置课程所需的全部软件工具。
 
-（待编写）
+## R 与 RStudio
 
-## Git 安装与配置
+R 是本课程的主要编程语言，RStudio 是 R 最常用的集成开发环境（IDE）。
 
-（待编写）
+### 安装 R
 
-## GitHub 账号注册
+1. 访问 R 官方网站：<https://cran.r-project.org/>
+2. 根据你的操作系统选择对应版本：
+   - **Windows**：点击 "Download R for Windows" → "base" → 下载最新版本
+   - **macOS**：点击 "Download R for macOS" → 选择对应芯片版本（Apple Silicon 或 Intel）
+3. 运行安装程序，保持默认设置即可
 
-（待编写）
+### 安装 RStudio
 
-## Quarto 安装
+1. 访问 RStudio 下载页面：<https://posit.co/download/rstudio-desktop/>
+2. 下载免费的 RStudio Desktop 版本
+3. 运行安装程序
 
-（待编写）
+### 验证安装
+
+打开 RStudio，在控制台（Console）中输入：
+
+```{r}
+R.version.string
+```
+
+如果看到类似 `"R version 4.x.x ..."` 的输出，说明安装成功。
+
+### 安装常用 R 包
+
+本课程会用到以下 R 包，建议提前安装：
+
+```{r}
+# 数据处理核心包
+install.packages("tidyverse")  # 包含 dplyr, tidyr, ggplot2, readr 等
+
+# 数据读取
+install.packages("readxl")     # 读取 Excel 文件
+install.packages("haven")      # 读取 SPSS/Stata/SAS 文件
+
+# 数据可视化增强
+install.packages("corrplot")   # 相关性矩阵可视化
+install.packages("patchwork")  # 图表拼接
+
+# 荟萃分析
+install.packages("metafor")    # 荟萃分析
+
+# Quarto 支持
+install.packages("knitr")
+install.packages("rmarkdown")
+```
+
+安装过程中如果提示选择 CRAN 镜像，建议选择国内镜像（如清华大学镜像）以加快下载速度。
+
+::: {.callout-tip}
+## 国内镜像加速
+
+在 R 中设置清华镜像：
+
+```{r}
+options(repos = c(CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN/"))
+```
+
+可以将这行代码添加到 `~/.Rprofile` 文件中，这样每次启动 R 都会自动使用国内镜像。
+:::
+
+## Python 环境（数据采集用）
+
+Python 在本课程中主要用于网络数据采集（爬虫、API 调用）。
+
+### 安装 Python
+
+推荐使用 Anaconda 或 Miniconda：
+
+1. 访问 Miniconda 下载页面：<https://docs.conda.io/en/latest/miniconda.html>
+2. 下载对应操作系统的安装包
+3. 运行安装程序，勾选 "Add to PATH"
+
+### 验证安装
+
+打开终端（Windows 用 Anaconda Prompt），输入：
+
+```bash
+python --version
+```
+
+### 安装常用 Python 包
+
+```bash
+pip install requests beautifulsoup4 pandas
+```
+
+## Git 与 GitHub
+
+Git 是版本控制工具，GitHub 是代码托管平台。本课程的期末项目需要通过 Git 提交。
+
+### 安装 Git
+
+1. 访问 Git 官方网站：<https://git-scm.com/downloads>
+2. 下载对应操作系统的安装包
+3. Windows 用户安装时保持默认设置即可
+
+### 配置 Git
+
+安装完成后，打开终端配置用户信息：
+
+```bash
+git config --global user.name "你的姓名"
+git config --global user.email "你的邮箱@gxu.edu.cn"
+```
+
+### 注册 GitHub 账号
+
+1. 访问 <https://github.com>
+2. 点击 "Sign up" 注册账号
+3. 建议使用学校邮箱注册，可以申请 GitHub Education 免费权益
+
+::: {.callout-note}
+## GitHub Education
+
+使用 .edu.cn 邮箱注册后，可以在 <https://education.github.com> 申请学生开发者包，获得 GitHub Copilot 等免费工具。
+:::
+
+### 在 RStudio 中配置 Git
+
+RStudio 内置了 Git 支持：
+
+1. 打开 RStudio → Tools → Global Options → Git/SVN
+2. 确认 "Git executable" 路径正确（通常自动检测）
+3. 点击 "Create RSA Key" 生成 SSH 密钥
+4. 将公钥添加到 GitHub：Settings → SSH and GPG keys → New SSH key
+
+## Quarto
+
+Quarto 是下一代科学出版系统，本课程的教材就是用 Quarto 编写的。
+
+### 安装 Quarto
+
+1. 访问 <https://quarto.org/docs/get-started/>
+2. 下载对应操作系统的安装包
+3. 安装完成后，RStudio 会自动识别 Quarto
+
+### 验证安装
+
+在终端中输入：
+
+```bash
+quarto --version
+```
+
+### 创建第一个 Quarto 文档
+
+在 RStudio 中：File → New File → Quarto Document，选择 HTML 格式，点击 "Render" 按钮即可生成文档。
+
+## 环境检查清单
+
+完成以上安装后，请逐项确认：
+
+- [ ] R 已安装，版本 ≥ 4.0
+- [ ] RStudio 已安装
+- [ ] tidyverse 等 R 包已安装
+- [ ] Python 已安装（Miniconda）
+- [ ] Git 已安装并配置了用户信息
+- [ ] GitHub 账号已注册
+- [ ] RStudio 中 Git 已配置
+- [ ] Quarto 已安装
+
+::: {.callout-warning}
+## 常见问题
+
+- **R 包安装失败**：检查网络连接，尝试切换 CRAN 镜像
+- **Git 命令找不到**：Windows 用户需要重启终端或将 Git 添加到 PATH
+- **RStudio 找不到 Git**：手动在 Tools → Global Options → Git/SVN 中指定 Git 路径
+:::
+
+## 课后任务
+
+1. 完成所有软件的安装和配置
+2. 在 GitHub 上创建一个名为 `data-preprocessing-homework` 的仓库
+3. 在 RStudio 中克隆该仓库，创建一个 `hello.qmd` 文件，写入你的姓名和学号，渲染为 HTML 后提交推送
