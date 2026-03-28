@@ -1,19 +1,224 @@
-﻿# 综合实战案例
+---
+title: "综合实战案例"
+execute:
+  warning: false
+  message: false
+---
 
-本章通过一个完整的生态学案例，演示从原始数据到可视化报告的全流程。
+# 综合实战案例
+
+本章通过一个完整的生态学案例，演示从原始数据到可视化报告的全流程。我们将分析植物多样性与土壤性质的关系。
+
+```{r}
+library(tidyverse)
+library(corrplot)
+library(patchwork)
+```
 
 ## 案例背景
 
-（待编写）
+**研究问题**：广西某自然保护区内，不同海拔梯度上植物多样性与土壤理化性质有何关系？
 
-## 数据获取与清洗
+**数据来源**：沿海拔梯度设置 40 个样方（200-1200m），每个样方记录植物物种数、Shannon 多样性指数，并采集表层土壤（0-20cm）测定理化性质。
 
-（待编写）
+## 第一步：数据获取与读取
 
-## 分析与可视化
+```{r}
+# 模拟原始数据（实际项目中从 CSV 读取）
+set.seed(42)
+n <- 40
 
-（待编写）
+raw_data <- tibble(
+  plot_id = paste0("P", sprintf("%02d", 1:n)),
+  elevation = sort(runif(n, 200, 1200)),
+  richness = rpois(n, lambda = pmax(5, 20 - 0.01 * sort(runif(n, 200, 1200)))),
+  shannon = 1.5 + 0.8 * log(rpois(n, lambda = pmax(5, 20 - 0.01 * sort(runif(n, 200, 1200))))) +
+            rnorm(n, 0, 0.2),
+  cover_pct = runif(n, 40, 95),
+  soil_ph = 5.0 + 0.001 * sort(runif(n, 200, 1200)) + rnorm(n, 0, 0.3),
+  organic_carbon = 40 - 0.02 * sort(runif(n, 200, 1200)) + rlnorm(n, 0, 0.3),
+  total_nitrogen = (40 - 0.02 * sort(runif(n, 200, 1200)) + rlnorm(n, 0, 0.3)) / 12 + rnorm(n, 0, 0.2),
+  soil_moisture = 25 + 0.015 * sort(runif(n, 200, 1200)) + rnorm(n, 0, 5),
+  slope = runif(n, 5, 45),
+  aspect = sample(c("N", "S", "E", "W"), n, replace = TRUE),
+  habitat = c(rep("常绿阔叶林", 15), rep("落叶阔叶林", 10),
+              rep("针阔混交林", 10), rep("亚高山灌丛", 5))
+)
 
-## 生成可重复性报告
+# 人为加入一些数据质量问题
+raw_data$soil_ph[c(5, 22)] <- NA
+raw_data$organic_carbon[38] <- -3.2
+raw_data$richness[15] <- NA
+raw_data$cover_pct[c(10, 30)] <- c(105, -2)
 
-（待编写）
+head(raw_data)
+```
+
+## 第二步：数据清洗
+
+```{r}
+# 检查数据质量
+cat("数据维度:", dim(raw_data), "\n")
+cat("缺失值:\n")
+colSums(is.na(raw_data))
+
+# 清洗流水线
+clean_data <- raw_data |>
+  # 处理不合理的值
+  mutate(
+    organic_carbon = if_else(organic_carbon < 0, NA_real_, organic_carbon),
+    cover_pct = if_else(cover_pct < 0 | cover_pct > 100, NA_real_, cover_pct)
+  ) |>
+  # 填充缺失值
+  mutate(
+    soil_ph = replace_na(soil_ph, median(soil_ph, na.rm = TRUE)),
+    organic_carbon = replace_na(organic_carbon, median(organic_carbon, na.rm = TRUE)),
+    cover_pct = replace_na(cover_pct, median(cover_pct, na.rm = TRUE))
+  ) |>
+  # 删除物种数缺失的行（核心变量不填充）
+  filter(!is.na(richness)) |>
+  # 计算衍生变量
+  mutate(
+    cn_ratio = organic_carbon / total_nitrogen,
+    elev_band = cut(elevation, breaks = c(0, 400, 700, 1000, 1500),
+                    labels = c("低海拔", "中低海拔", "中高海拔", "高海拔")),
+    log_biomass = log(organic_carbon)
+  )
+
+cat("\n清洗后:", nrow(clean_data), "行\n")
+summary(clean_data |> select(where(is.numeric)))
+```
+
+## 第三步：探索性数据分析
+
+### 描述性统计
+
+```{r}
+clean_data |>
+  group_by(habitat) |>
+  summarise(
+    n = n(),
+    richness_mean = round(mean(richness), 1),
+    richness_sd = round(sd(richness), 1),
+    shannon_mean = round(mean(shannon), 2),
+    ph_mean = round(mean(soil_ph), 2),
+    oc_mean = round(mean(organic_carbon), 1)
+  )
+```
+
+### 分布与相关性
+
+```{r}
+#| fig-width: 8
+#| fig-asp: 0.8
+
+cor_vars <- clean_data |>
+  select(richness, shannon, elevation, soil_ph, organic_carbon,
+         total_nitrogen, soil_moisture, slope)
+
+corrplot(cor(cor_vars, use = "complete.obs"),
+         method = "color", type = "lower",
+         addCoef.col = "black", number.cex = 0.6,
+         tl.col = "black", tl.cex = 0.7,
+         col = colorRampPalette(c("#2166ac", "white", "#b2182b"))(200))
+```
+
+## 第四步：核心分析与可视化
+
+### 海拔梯度上的多样性变化
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
+
+p1 <- ggplot(clean_data, aes(x = elevation, y = richness)) +
+  geom_point(aes(color = habitat), size = 2.5, alpha = 0.7) +
+  geom_smooth(method = "loess", color = "black", linewidth = 0.8) +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "植被类型") +
+  theme_bw()
+
+p2 <- ggplot(clean_data, aes(x = elevation, y = shannon)) +
+  geom_point(aes(color = habitat), size = 2.5, alpha = 0.7) +
+  geom_smooth(method = "loess", color = "black", linewidth = 0.8) +
+  labs(x = "海拔 (m)", y = "Shannon 指数", color = "植被类型") +
+  theme_bw()
+
+p1 + p2 + plot_layout(guides = "collect") &
+  theme(legend.position = "bottom")
+```
+
+### 土壤因子与多样性的关系
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.35
+
+p_ph <- ggplot(clean_data, aes(x = soil_ph, y = richness)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "steelblue") +
+  labs(x = "土壤 pH", y = "物种丰富度") +
+  theme_bw()
+
+p_oc <- ggplot(clean_data, aes(x = organic_carbon, y = richness)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "coral") +
+  labs(x = "有机碳 (g/kg)", y = "物种丰富度") +
+  theme_bw()
+
+p_moist <- ggplot(clean_data, aes(x = soil_moisture, y = richness)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "forestgreen") +
+  labs(x = "土壤含水量 (%)", y = "物种丰富度") +
+  theme_bw()
+
+p_ph + p_oc + p_moist +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+```
+
+### 不同植被类型的比较
+
+```{r}
+ggplot(clean_data, aes(x = reorder(habitat, -richness), y = richness, fill = habitat)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.15, alpha = 0.4, size = 1.5) +
+  labs(x = "", y = "物种丰富度",
+       title = "不同植被类型的物种丰富度比较") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_bw() +
+  theme(legend.position = "none")
+```
+
+## 第五步：简单统计检验
+
+```{r}
+# 线性回归：物种丰富度 ~ 海拔
+model <- lm(richness ~ elevation + soil_ph + organic_carbon + soil_moisture, data = clean_data)
+summary(model)
+```
+
+```{r}
+# 方差分析：不同植被类型的物种丰富度差异
+anova_result <- aov(richness ~ habitat, data = clean_data)
+summary(anova_result)
+```
+
+## 第六步：生成可重复性报告
+
+本章的所有代码都写在一个 `.qmd` 文件中，可以一键渲染为 HTML 报告。这就是可重复性研究的核心——任何人拿到你的数据和代码，都能重现完全相同的结果。
+
+### 可重复性检查清单
+
+- [x] 原始数据未被修改
+- [x] 所有清洗步骤都在代码中
+- [x] 设置了随机种子（`set.seed(42)`）
+- [x] 图表可以通过运行代码重新生成
+- [x] 统计结果可以通过运行代码重新计算
+- [x] 使用了相对路径
+- [x] 代码有注释说明每一步的目的
+
+## 课后练习
+
+1. 选择一个你感兴趣的生态学问题，从公共数据库下载数据
+2. 按照本章的六步流程完成完整的数据分析
+3. 将分析写成 Quarto 文档，渲染为 HTML 报告
+4. 将项目（数据 + 代码 + 报告）提交到 GitHub
