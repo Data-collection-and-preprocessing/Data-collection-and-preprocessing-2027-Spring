@@ -54,6 +54,148 @@ execute:
 *   **空间偏差**：交通便利地区或发达国家的数据记录往往更密集。
 *   **标准化问题**：不同来源的数据格式不一。建议遵循 **Darwin Core (DwC)** 等国际标准进行数据清洗和整合。
 
+## R 代码示例：从公共数据库下载生态数据
+
+下面演示如何用 R 从两个常用的公共数据库获取数据：**GBIF**（物种分布数据）和 **WorldClim**（全球气候数据）。
+
+### 从 GBIF 下载物种分布数据
+
+[GBIF](https://www.gbif.org/) 是全球最大的生物多样性数据平台。R 的 `rgbif` 包提供了便捷的 API 接口。
+
+```{r}
+#| eval: false
+
+# 安装（仅需运行一次）
+install.packages("rgbif")
+```
+
+```{r}
+#| eval: false
+
+library(rgbif)
+library(tibble)
+
+# 搜索物种：以白鹭 (Egretta garzetta) 为例
+# 先查找物种的 GBIF 分类编号
+species_key <- name_backbone(name = "Egretta garzetta")$usageKey
+species_key
+
+# 下载中国范围内的观测记录（限制 500 条）
+egret_data <- occ_search(
+  taxonKey  = species_key,
+  country   = "CN",            # 国家代码：中国
+  limit     = 500,             # 最多返回 500 条
+  hasCoordinate = TRUE         # 仅保留有经纬度的记录
+)
+
+# 提取数据表
+egret_df <- as_tibble(egret_data$data)
+
+# 查看关键列
+egret_df[, c("species", "decimalLatitude", "decimalLongitude",
+             "eventDate", "stateProvince")]
+```
+
+```{r}
+#| eval: false
+
+# 简单可视化：在地图上展示分布点
+library(ggplot2)
+
+ggplot(egret_df, aes(x = decimalLongitude, y = decimalLatitude)) +
+  borders("world", regions = "China", fill = "grey90", colour = "grey70") +
+  geom_point(color = "forestgreen", alpha = 0.5, size = 1.5) +
+  coord_quickmap(xlim = c(73, 135), ylim = c(18, 54)) +
+  labs(
+    title = "白鹭 (Egretta garzetta) 在中国的 GBIF 记录",
+    x = "经度", y = "纬度"
+  ) +
+  theme_minimal()
+```
+
+::: {.callout-important}
+## GBIF 数据使用须知
+
+- 下载大量数据时需要注册 GBIF 账号，并使用 `occ_download()` 提交异步下载请求
+- 发表论文时必须引用 GBIF 数据集的 DOI
+- 公民科学数据可能存在空间偏差（城市和道路附近记录更多），分析时需注意
+:::
+
+### 从 WorldClim 下载气候数据
+
+[WorldClim](https://www.worldclim.org/) 提供全球高分辨率的气候栅格数据。R 的 `geodata` 包可以直接下载。
+
+```{r}
+#| eval: false
+
+# 安装（仅需运行一次）
+install.packages("geodata")
+```
+
+```{r}
+#| eval: false
+
+library(geodata)
+library(terra)
+
+# 下载全球生物气候变量（分辨率 10 分，约 18 km）
+# 数据会缓存到本地 path 目录，下次无需重复下载
+bioclim <- worldclim_global(
+  var = "bio",       # 19 个生物气候变量
+  res = 10,          # 分辨率：10 arc-minutes
+  path = "data"      # 本地保存路径
+)
+
+# 查看数据基本信息
+bioclim
+```
+
+```{r}
+#| eval: false
+
+# 提取中国区域的年均温（BIO1）和年降水量（BIO12）
+china_extent <- ext(73, 135, 18, 54)  # 中国大致经纬度范围
+
+bio1  <- crop(bioclim$wc2.1_10m_bio_1, china_extent)   # 年均温 (°C × 10)
+bio12 <- crop(bioclim$wc2.1_10m_bio_12, china_extent)   # 年降水量 (mm)
+
+# 可视化年均温
+plot(bio1, main = "中国年均温 (BIO1, °C × 10)")
+```
+
+```{r}
+#| eval: false
+
+# 提取物种分布点对应的气候数据
+# 将白鹭的经纬度转为空间点，提取对应的气候值
+library(dplyr)
+
+egret_coords <- egret_df |>
+  filter(!is.na(decimalLongitude), !is.na(decimalLatitude)) |>
+  select(decimalLongitude, decimalLatitude)
+
+# 创建空间向量并提取气候值
+egret_points <- vect(egret_coords, geom = c("decimalLongitude", "decimalLatitude"))
+climate_values <- extract(bioclim, egret_points)
+
+# 合并物种数据与气候数据
+egret_climate <- bind_cols(egret_coords, as_tibble(climate_values))
+head(egret_climate)
+```
+
+::: {.callout-tip}
+## 数据保存建议
+
+下载的公共数据建议保存到项目的 `data/` 目录下，并在 README 中注明数据来源和下载日期：
+
+```r
+# 保存处理后的数据
+write_csv(egret_climate, "data/egret_climate_data.csv")
+```
+
+这样既方便团队协作，也满足科研可重复性的要求。
+:::
+
 ## 总结
 
 公共数据采集方法是现代生态学家的必备技能。它不仅降低了数据获取的成本，更促进了科学研究的透明度与可重复性。通过将公共数据与自己的观测或实验数据相结合，研究者能够以更广阔的视角审视自然界的复杂过程。

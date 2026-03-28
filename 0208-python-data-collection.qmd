@@ -1,27 +1,588 @@
+---
+title: "Python 数据采集"
+execute:
+  eval: false
+---
+
 # Python 数据采集
 
-本章介绍使用 Python 进行网络数据采集的基本方法，包括网页爬虫和 API 调用。
+在前面的章节中，我们学习了如何通过数据门户手动下载公共数据。但当你需要从多个网站批量获取数据，或者需要定期更新数据时，手动操作就显得力不从心了。Python 是数据采集领域最流行的编程语言之一，它拥有丰富的第三方库，能够帮助我们高效地从网页和 API 中提取数据。
 
-## Python 环境搭建
+本章将带你从零开始，学习使用 Python 进行网络数据采集的核心技能。我们会以生态学中的真实场景为例——从 GBIF 获取物种分布记录、从气象 API 获取气候数据——让你在实践中掌握这些工具。
 
-（待编写）
+## Python 环境配置
 
-## requests 库：HTTP 请求基础
+### 为什么需要独立的 Python 环境？
 
-（待编写）
+在实际项目中，不同的任务可能依赖不同版本的 Python 包。例如，你的数据采集脚本需要 `requests 2.31`，而另一个分析项目需要 `requests 2.28`。如果所有包都安装在同一个环境中，版本冲突会让你头疼不已。**虚拟环境（Virtual Environment）**就是为了解决这个问题而设计的——它为每个项目创建一个独立的"沙盒"，互不干扰。
 
-## BeautifulSoup：网页解析
+### 使用 conda 管理环境
 
-（待编写）
+如果你在 @sec-environment-setup 中已经安装了 Miniconda，那么可以直接使用 `conda` 来创建和管理虚拟环境。
 
-## API 数据获取
+**创建课程专用环境：**
 
-（待编写）
+```bash
+# 创建名为 "ecology-data" 的环境，指定 Python 3.11
+conda create -n ecology-data python=3.11
 
-## 实践：从公共数据库获取生态学数据
+# 激活环境
+conda activate ecology-data
+```
 
-（待编写）
+**安装本章所需的包：**
 
-## 数据采集伦理与规范
+```bash
+# 网络请求与网页解析
+pip install requests beautifulsoup4
 
-（待编写）
+# 数据处理与保存
+pip install pandas
+
+# （可选）进度条显示，适合批量下载
+pip install tqdm
+```
+
+::: {.callout-tip}
+## pip 与 conda 的区别
+
+`conda` 是一个通用的包管理器和环境管理器，可以安装 Python 包以及非 Python 的依赖（如 C 库）。`pip` 是 Python 专用的包管理器，包的数量更多。在 conda 环境中，推荐优先用 `conda install` 安装包，找不到时再用 `pip install`。
+:::
+
+### 验证安装
+
+激活环境后，在终端中运行以下命令，确认包已正确安装：
+
+```bash
+python -c "import requests; import bs4; import pandas; print('所有包安装成功！')"
+```
+
+## requests 库：发送 HTTP 请求 {#sec-requests}
+
+### 什么是 HTTP 请求？
+
+当你在浏览器中输入一个网址并按下回车，浏览器实际上向服务器发送了一个 **HTTP 请求（Request）**，服务器处理后返回一个 **HTTP 响应（Response）**，其中包含了网页的 HTML 内容。Python 的 `requests` 库让我们可以用代码模拟这个过程。
+
+### 第一个请求：获取网页内容
+
+```python
+import requests
+
+# 向 GBIF 首页发送 GET 请求
+url = "https://www.gbif.org"
+response = requests.get(url)
+
+# 查看响应状态码（200 表示成功）
+print(f"状态码: {response.status_code}")
+
+# 查看返回内容的前 500 个字符
+print(response.text[:500])
+```
+
+### 常见的 HTTP 状态码
+
+在数据采集中，你会经常遇到以下状态码：
+
+| 状态码 | 含义 | 应对方式 |
+|--------|------|----------|
+| 200 | 请求成功 | 正常处理返回数据 |
+| 403 | 禁止访问 | 检查是否需要认证或被反爬机制拦截 |
+| 404 | 页面不存在 | 检查 URL 是否正确 |
+| 429 | 请求过于频繁 | 降低请求频率，添加延时 |
+| 500 | 服务器内部错误 | 稍后重试 |
+
+### 添加请求头
+
+有些网站会检查请求的来源。通过设置 `User-Agent` 请求头，我们可以告诉服务器"我是谁"：
+
+```python
+headers = {
+    "User-Agent": "EcologyResearchBot/1.0 (university-course-project)"
+}
+response = requests.get(url, headers=headers)
+```
+
+::: {.callout-important}
+## 礼貌的爬虫
+
+在请求头中标明你的身份（如课程项目、研究用途）是一种良好的实践。这不仅是礼貌，也有助于网站管理员在出现问题时联系你。
+:::
+
+## BeautifulSoup：解析网页内容 {#sec-beautifulsoup}
+
+`requests` 帮我们拿到了网页的原始 HTML 代码，但 HTML 是一堆嵌套的标签，直接阅读非常困难。**BeautifulSoup** 是一个 HTML/XML 解析库，它能将杂乱的 HTML 转化为结构化的 Python 对象，让我们轻松提取所需信息。
+
+### 基本用法
+
+假设我们想从一个简单的 HTML 页面中提取物种名称：
+
+```python
+from bs4 import BeautifulSoup
+
+# 模拟一段包含物种信息的 HTML
+html_content = """
+<html>
+<body>
+  <h1>华南地区常见鸟类</h1>
+  <ul class="species-list">
+    <li>白鹭 (<i>Egretta garzetta</i>)</li>
+    <li>夜鹭 (<i>Nycticorax nycticorax</i>)</li>
+    <li>池鹭 (<i>Ardeola bacchus</i>)</li>
+  </ul>
+</body>
+</html>
+"""
+
+# 创建 BeautifulSoup 对象
+soup = BeautifulSoup(html_content, "html.parser")
+
+# 提取标题
+title = soup.find("h1").text
+print(f"标题: {title}")
+
+# 提取所有物种的拉丁名
+latin_names = soup.find_all("i")
+for name in latin_names:
+    print(f"拉丁名: {name.text}")
+```
+
+输出：
+
+```
+标题: 华南地区常见鸟类
+拉丁名: Egretta garzetta
+拉丁名: Nycticorax nycticorax
+拉丁名: Ardeola bacchus
+```
+
+### 常用的查找方法
+
+| 方法 | 功能 | 示例 |
+|------|------|------|
+| `find("tag")` | 查找第一个匹配的标签 | `soup.find("h1")` |
+| `find_all("tag")` | 查找所有匹配的标签 | `soup.find_all("li")` |
+| `find(class_="name")` | 按 CSS 类名查找 | `soup.find(class_="species-list")` |
+| `find(id="name")` | 按 ID 查找 | `soup.find(id="header")` |
+| `.text` | 获取标签内的文本 | `tag.text` |
+| `.get("attr")` | 获取标签的属性值 | `tag.get("href")` |
+
+### 实战：从网页表格提取数据
+
+生态学文献中经常有数据表格发布在网页上。以下示例展示如何从 HTML 表格中提取数据：
+
+```python
+import requests
+from bs4 import BeautifulSoup
+import pandas as pd
+
+# 假设我们要解析一个包含物种观测记录的网页表格
+html_table = """
+<table>
+  <tr><th>物种</th><th>观测地点</th><th>数量</th></tr>
+  <tr><td>白鹭</td><td>南宁青秀山</td><td>23</td></tr>
+  <tr><td>夜鹭</td><td>南宁南湖</td><td>15</td></tr>
+  <tr><td>池鹭</td><td>南宁相思湖</td><td>8</td></tr>
+</table>
+"""
+
+soup = BeautifulSoup(html_table, "html.parser")
+
+# 提取表头
+headers = [th.text for th in soup.find_all("th")]
+
+# 提取每一行数据
+rows = []
+for tr in soup.find_all("tr")[1:]:  # 跳过表头行
+    row = [td.text for td in tr.find_all("td")]
+    rows.append(row)
+
+# 转换为 pandas DataFrame
+df = pd.DataFrame(rows, columns=headers)
+print(df)
+```
+
+输出：
+
+```
+   物种    观测地点  数量
+0  白鹭  南宁青秀山   23
+1  夜鹭    南宁南湖   15
+2  池鹭  南宁相思湖    8
+```
+
+## API 数据获取 {#sec-api}
+
+### 什么是 API？
+
+**API（Application Programming Interface，应用程序编程接口）**是服务器提供的一种标准化数据访问方式。与网页爬虫不同，API 直接返回结构化的数据（通常是 JSON 格式），无需解析 HTML。大多数生态学公共数据库都提供了 API 接口，这是获取数据最推荐的方式。
+
+**API 相比网页爬虫的优势：**
+
+- 返回结构化数据，无需解析 HTML
+- 更稳定，不会因网页改版而失效
+- 通常有明确的使用条款和速率限制
+- 数据质量更有保障
+
+### 实践一：从 GBIF API 获取物种分布数据
+
+GBIF（全球生物多样性信息网络）提供了功能强大的 RESTful API。以下示例展示如何查询白鹭（*Egretta garzetta*）在中国的分布记录。
+
+**第一步：查询物种的 taxonKey**
+
+```python
+import requests
+
+# 通过物种名称查询 GBIF 的分类编号
+species_url = "https://api.gbif.org/v1/species/match"
+params = {"name": "Egretta garzetta"}
+
+response = requests.get(species_url, params=params)
+species_data = response.json()
+
+taxon_key = species_data["usageKey"]
+print(f"白鹭的 taxonKey: {taxon_key}")
+print(f"分类信息: {species_data['scientificName']}")
+```
+
+**第二步：获取分布记录**
+
+```python
+# 查询该物种在中国的出现记录
+occurrence_url = "https://api.gbif.org/v1/occurrence/search"
+params = {
+    "taxonKey": taxon_key,
+    "country": "CN",        # 中国的 ISO 国家代码
+    "limit": 20,             # 每次返回 20 条记录
+    "hasCoordinate": True    # 只返回有经纬度坐标的记录
+}
+
+response = requests.get(occurrence_url, params=params)
+data = response.json()
+
+print(f"共找到 {data['count']} 条记录")
+print(f"本次返回 {len(data['results'])} 条")
+
+# 查看第一条记录的关键字段
+record = data["results"][0]
+print(f"观测地点: ({record['decimalLatitude']}, {record['decimalLongitude']})")
+print(f"观测日期: {record.get('eventDate', '未记录')}")
+print(f"数据来源: {record.get('datasetName', '未知')}")
+```
+
+**第三步：批量获取并整理为 DataFrame**
+
+```python
+import pandas as pd
+
+# 提取关键字段
+records = []
+for r in data["results"]:
+    records.append({
+        "物种": r.get("species", ""),
+        "纬度": r.get("decimalLatitude", None),
+        "经度": r.get("decimalLongitude", None),
+        "观测日期": r.get("eventDate", ""),
+        "国家": r.get("country", ""),
+        "数据集": r.get("datasetName", "")
+    })
+
+df = pd.DataFrame(records)
+print(df.head())
+```
+
+### 实践二：从 Open-Meteo API 获取气候数据
+
+气候数据是生态学研究的重要背景变量。[Open-Meteo](https://open-meteo.com/) 是一个免费的气象 API，无需注册即可使用，非常适合教学和科研。
+
+以下示例获取南宁市（22.82°N, 108.32°E）2024 年的月均温和月降水量：
+
+```python
+import requests
+import pandas as pd
+
+# Open-Meteo 历史天气 API
+url = "https://archive-api.open-meteo.com/v1/archive"
+params = {
+    "latitude": 22.82,
+    "longitude": 108.32,
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-31",
+    "daily": "temperature_2m_mean,precipitation_sum",
+    "timezone": "Asia/Shanghai"
+}
+
+response = requests.get(url, params=params)
+weather_data = response.json()
+
+# 将日数据转换为 DataFrame
+df = pd.DataFrame({
+    "日期": weather_data["daily"]["time"],
+    "日均温_C": weather_data["daily"]["temperature_2m_mean"],
+    "日降水量_mm": weather_data["daily"]["precipitation_sum"]
+})
+
+# 转换日期格式并计算月均值
+df["日期"] = pd.to_datetime(df["日期"])
+df["月份"] = df["日期"].dt.month
+
+monthly = df.groupby("月份").agg(
+    月均温=("日均温_C", "mean"),
+    月降水量=("日降水量_mm", "sum")
+).round(1)
+
+print(monthly)
+```
+
+::: {.callout-note}
+## 关于 API Key
+
+许多 API 需要注册账号并获取 **API Key**（密钥）才能使用。API Key 是你的身份凭证，不要将其公开分享或上传到 GitHub。Open-Meteo 和 GBIF 的基础查询不需要 API Key，因此非常适合课堂练习。
+:::
+
+### 处理分页：获取大量数据
+
+大多数 API 会限制单次返回的数据量（如 GBIF 每次最多返回 300 条）。要获取全部数据，需要使用**分页（Pagination）**机制：
+
+```python
+import time
+
+all_records = []
+offset = 0
+limit = 300
+
+while True:
+    params = {
+        "taxonKey": taxon_key,
+        "country": "CN",
+        "limit": limit,
+        "offset": offset,
+        "hasCoordinate": True
+    }
+
+    response = requests.get(occurrence_url, params=params)
+    data = response.json()
+
+    results = data.get("results", [])
+    if not results:
+        break  # 没有更多数据了
+
+    all_records.extend(results)
+    offset += limit
+
+    print(f"已获取 {len(all_records)} / {data['count']} 条记录")
+
+    # 礼貌延时：每次请求间隔 1 秒，避免给服务器造成压力
+    time.sleep(1)
+
+    # 安全限制：最多获取 1000 条（课堂练习用）
+    if len(all_records) >= 1000:
+        break
+
+print(f"共获取 {len(all_records)} 条记录")
+```
+
+## 数据保存：CSV 与 JSON {#sec-save-data}
+
+采集到的数据需要保存到本地文件，以便后续分析。最常用的两种格式是 CSV 和 JSON。
+
+### 保存为 CSV
+
+CSV（Comma-Separated Values）是表格数据最通用的格式，可以直接用 Excel 或 R 打开：
+
+```python
+# 将 DataFrame 保存为 CSV
+df.to_csv("gbif_egretta_garzetta_cn.csv", index=False, encoding="utf-8-sig")
+print("数据已保存为 CSV 文件")
+```
+
+::: {.callout-tip}
+## 编码问题
+
+保存包含中文的 CSV 文件时，建议使用 `encoding="utf-8-sig"`。这样用 Excel 打开时不会出现乱码。如果只在 Python 或 R 中使用，`utf-8` 即可。
+:::
+
+### 保存为 JSON
+
+JSON（JavaScript Object Notation）适合保存嵌套结构的数据，如 API 返回的原始响应：
+
+```python
+import json
+
+# 保存原始 API 响应
+with open("gbif_raw_response.json", "w", encoding="utf-8") as f:
+    json.dump(data, f, ensure_ascii=False, indent=2)
+
+print("原始数据已保存为 JSON 文件")
+```
+
+### CSV 与 JSON 的选择
+
+| 特性 | CSV | JSON |
+|------|-----|------|
+| 适合的数据结构 | 扁平的表格数据 | 嵌套的层级数据 |
+| 文件大小 | 较小 | 较大 |
+| 可读性 | 用 Excel 直接打开 | 需要代码或专用工具 |
+| R/Python 读取 | `read.csv()` / `pd.read_csv()` | `jsonlite::fromJSON()` / `json.load()` |
+| 推荐场景 | 最终整理好的分析数据 | API 原始响应、元数据 |
+
+## 数据采集伦理与 robots.txt {#sec-ethics}
+
+数据采集不仅是技术问题，更涉及法律和伦理。作为研究者，我们有责任以负责任的方式获取数据。
+
+### robots.txt 协议
+
+`robots.txt` 是网站根目录下的一个文本文件，它告诉爬虫哪些页面可以访问、哪些不可以。在采集任何网站之前，你应该先检查它的 robots.txt：
+
+```python
+# 查看 GBIF 的 robots.txt
+response = requests.get("https://www.gbif.org/robots.txt")
+print(response.text)
+```
+
+一个典型的 robots.txt 文件内容如下：
+
+```
+User-agent: *
+Disallow: /admin/
+Disallow: /private/
+Crawl-delay: 10
+```
+
+这表示：所有爬虫（`*`）不得访问 `/admin/` 和 `/private/` 路径，且每次请求之间应间隔至少 10 秒。
+
+### 数据采集的基本准则
+
+1. **优先使用 API**：如果网站提供了 API，优先使用 API 而非爬虫。API 是网站官方认可的数据获取方式。
+2. **遵守 robots.txt**：不要访问 robots.txt 中禁止的路径。
+3. **控制请求频率**：在请求之间添加适当的延时（如 `time.sleep(1)`），避免对服务器造成过大压力。
+4. **标明身份**：在请求头中设置有意义的 `User-Agent`，说明你的用途。
+5. **尊重数据许可**：注意数据的使用协议（如 CC BY 4.0），在论文中正确引用数据来源。
+6. **不采集个人信息**：不要采集涉及个人隐私的数据。
+
+::: {.callout-warning}
+## 法律风险
+
+未经授权的大规模数据采集可能违反《中华人民共和国网络安全法》和《数据安全法》。在进行任何数据采集之前，请确保你了解并遵守相关法律法规和网站的使用条款。课堂练习中，我们只使用明确允许数据访问的公共数据库。
+:::
+
+## 完整案例：构建物种分布数据集 {#sec-full-example}
+
+下面我们将前面学到的知识串联起来，完成一个完整的数据采集任务：从 GBIF 获取广西壮族自治区三种常见鸟类的分布记录，并保存为 CSV 文件。
+
+```python
+import requests
+import pandas as pd
+import time
+
+def get_taxon_key(species_name):
+    """通过物种学名查询 GBIF taxonKey"""
+    url = "https://api.gbif.org/v1/species/match"
+    response = requests.get(url, params={"name": species_name})
+    data = response.json()
+    return data.get("usageKey")
+
+def get_occurrences(taxon_key, country="CN", max_records=100):
+    """获取指定物种的分布记录"""
+    url = "https://api.gbif.org/v1/occurrence/search"
+    all_records = []
+    offset = 0
+
+    while len(all_records) < max_records:
+        params = {
+            "taxonKey": taxon_key,
+            "country": country,
+            "hasCoordinate": True,
+            "limit": min(100, max_records - len(all_records)),
+            "offset": offset
+        }
+        response = requests.get(url, params=params)
+        results = response.json().get("results", [])
+
+        if not results:
+            break
+
+        all_records.extend(results)
+        offset += len(results)
+        time.sleep(0.5)  # 礼貌延时
+
+    return all_records
+
+# 目标物种列表
+species_list = [
+    "Egretta garzetta",       # 白鹭
+    "Nycticorax nycticorax",  # 夜鹭
+    "Ardeola bacchus"         # 池鹭
+]
+
+# 批量采集
+all_data = []
+for species in species_list:
+    print(f"正在查询: {species}")
+    key = get_taxon_key(species)
+
+    if key is None:
+        print(f"  未找到 {species} 的分类信息，跳过")
+        continue
+
+    records = get_occurrences(key, max_records=50)
+    print(f"  获取到 {len(records)} 条记录")
+
+    for r in records:
+        all_data.append({
+            "species": r.get("species", ""),
+            "latitude": r.get("decimalLatitude"),
+            "longitude": r.get("decimalLongitude"),
+            "event_date": r.get("eventDate", ""),
+            "locality": r.get("locality", ""),
+            "dataset": r.get("datasetName", "")
+        })
+
+# 整理并保存
+df = pd.DataFrame(all_data)
+df.to_csv("guangxi_birds_gbif.csv", index=False, encoding="utf-8-sig")
+print(f"\n采集完成！共 {len(df)} 条记录，已保存至 guangxi_birds_gbif.csv")
+```
+
+## 课后练习
+
+### 练习 1：基础 API 调用
+
+使用 GBIF API 查询你感兴趣的一种植物或动物在中国的分布记录。要求：
+
+1. 使用 `species/match` 接口获取 taxonKey
+2. 使用 `occurrence/search` 接口获取至少 20 条有坐标的记录
+3. 将结果保存为 CSV 文件
+4. 在代码中添加适当的注释
+
+### 练习 2：气候数据获取
+
+使用 Open-Meteo API 获取你家乡所在城市 2024 年的气温和降水数据。要求：
+
+1. 查找你所在城市的经纬度坐标
+2. 获取全年的日均温和日降水量数据
+3. 计算月均温和月总降水量
+4. 将结果保存为 CSV 文件
+
+### 练习 3（挑战）：多物种分布数据集
+
+参考 @sec-full-example 的完整案例，选择同一科（Family）的 5 种物种，批量获取它们在中国的分布记录。要求：
+
+1. 编写可复用的函数
+2. 在请求之间添加适当的延时
+3. 处理可能的异常（如网络错误、物种未找到）
+4. 将最终数据保存为 CSV，并用几句话描述数据的基本特征（记录数、物种数、坐标范围等）
+
+::: {.callout-tip}
+## 提示
+
+处理网络请求异常的基本模式：
+
+```python
+try:
+    response = requests.get(url, params=params, timeout=10)
+    response.raise_for_status()  # 如果状态码不是 200，抛出异常
+    data = response.json()
+except requests.exceptions.RequestException as e:
+    print(f"请求失败: {e}")
+```
+:::
