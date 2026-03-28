@@ -13,18 +13,23 @@ bibliography: references.bib
 book:
   title: "数据采集与预处理"
   subtitle: "生态学数据采集与预处理方法指南"
-  author: "Hauqing Liu"
+  author: "Huaqing Liu"
   date: now
   
   
   chapters:
     - index.qmd
-    - part: "第一部分：绪论"
+    - part: "第一单元：绪论与环境搭建"
       chapters:
         - 0101-what-is-data-collection.qmd
         - 0102-what-is-data-preprocessing.qmd
-        - 0103-introduction.qmd
-    - part: "第二部分：数据采集方法"
+        - 0104-environment-setup.qmd
+    - part: "第二单元：R 语言编程基础"
+      chapters:
+        - 0105-r-basics.qmd
+        - 0106-r-data-wrangling.qmd
+        - 0107-git-collaboration.qmd
+    - part: "第三单元：数据采集方法"
       chapters:
         - 0201-data-collection-method.qmd
         - 0202-observation.qmd
@@ -32,14 +37,21 @@ book:
         - 0204-modeling.qmd
         - 0205-public-data.qmd
         - 0206-references.qmd
-    - part: "第三部分：数据预处理方法"
+        - 0207-meta-analysis-intro.qmd
+    - part: "第四单元：数据预处理"
       chapters:
-        - 0301-data-cleaning-pandas.qmd
+        - 0301-data-cleaning.qmd
         - 0302-feature-engineering.qmd
-    - part: "第四部分：数据采集实战"
+        - 0303-data-quality.qmd
+    - part: "第五单元：数据可视化与探索性分析"
       chapters:
-        - 0401-data-cleaning-pandas.qmd
-        - 0402-feature-engineering.qmd
+        - 0501-visualization-basics.qmd
+        - 0502-eda.qmd
+    - part: "第六单元：实战与项目"
+      chapters:
+        - 0601-case-study.qmd
+        - 0602-project-workshop.qmd
+        - 0603-summary.qmd
     - 010-references.qmd
 format:
   html:
