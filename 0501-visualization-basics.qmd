@@ -28,6 +28,34 @@ ggplot(data, aes(x, y)) +   # 数据和映射
   theme()                     # 主题（外观）
 ```
 
+::: {.callout-note}
+## `aes()` 是什么？
+
+`aes()` 是 aesthetic mapping（美学映射）的缩写，它告诉 ggplot2 如何将数据变量映射到图形属性上：
+
+- `aes(x = soil_ph)` → 将 soil_ph 映射到 x 轴
+- `aes(color = habitat)` → 将 habitat 映射到颜色
+- `aes(size = elevation)` → 将 elevation 映射到点的大小
+
+关键区别：写在 `aes()` 里面的属性由数据驱动（每个数据点可以不同），写在 `aes()` 外面的属性是固定值（所有点相同）。例如 `geom_point(aes(color = habitat))` 按生境着色，而 `geom_point(color = "red")` 所有点都是红色。
+:::
+
+::: {.callout-tip}
+## `+` 运算符
+
+ggplot2 使用 `+` 将图层逐层叠加。每个 `+` 后面添加一个新的组件（几何对象、标度、主题等）。注意 `+` 必须放在行末，不能放在下一行的开头：
+
+```r
+# 正确
+ggplot(data, aes(x, y)) +
+  geom_point()
+
+# 错误（+ 不能在行首）
+ggplot(data, aes(x, y))
+  + geom_point()
+```
+:::
+
 ## 示例数据
 
 ```{r}
@@ -122,7 +150,7 @@ cor_matrix <- ecology |>
   select(species_richness, soil_ph, organic_carbon, elevation) |>
   cor()
 
-# 转为长格式绑图
+# 转为长格式绘图
 cor_matrix |>
   as.data.frame() |>
   rownames_to_column("var1") |>
@@ -186,14 +214,18 @@ p_scatter + p_box +
 ```{r}
 #| eval: false
 
+# 将图表保存到变量中
+p_final <- p_scatter + p_box +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
 # 保存为 PDF（矢量图，论文首选）
-ggsave("output/figures/fig1_diversity.pdf", width = 10, height = 5, dpi = 300)
+ggsave("output/figures/fig1_diversity.pdf", plot = p_final, width = 10, height = 5, dpi = 300)
 
 # 保存为 PNG（位图，PPT/网页用）
-ggsave("output/figures/fig1_diversity.png", width = 10, height = 5, dpi = 300)
+ggsave("output/figures/fig1_diversity.png", plot = p_final, width = 10, height = 5, dpi = 300)
 
 # 保存为 TIFF（某些期刊要求）
-ggsave("output/figures/fig1_diversity.tiff", width = 10, height = 5, dpi = 600,
+ggsave("output/figures/fig1_diversity.tiff", plot = p_final, width = 10, height = 5, dpi = 600,
        compression = "lzw")
 ```
 
@@ -205,6 +237,34 @@ ggsave("output/figures/fig1_diversity.tiff", width = 10, height = 5, dpi = 600,
 - 字体大小：图中文字 ≥ 8pt
 - 配色：考虑色盲友好（避免红绿搭配，推荐 viridis 色板）
 - 图注：在图下方，不在图内
+:::
+
+## 色盲友好配色：viridis
+
+viridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度图时也能区分。ggplot2 内置了 viridis 系列函数：
+
+```{r}
+# 离散变量：scale_color_viridis_d()
+p1 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = habitat)) +
+  geom_point(alpha = 0.7, size = 2) +
+  scale_color_viridis_d(option = "D") +
+  labs(x = "土壤 pH", y = "物种丰富度", color = "生境", title = "viridis 离散配色") +
+  theme_minimal()
+
+# 连续变量：scale_color_viridis_c()
+p2 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = elevation)) +
+  geom_point(alpha = 0.7, size = 2) +
+  scale_color_viridis_c(option = "C") +
+  labs(x = "土壤 pH", y = "物种丰富度", color = "海拔 (m)", title = "viridis 连续配色") +
+  theme_minimal()
+
+p1 + p2
+```
+
+::: {.callout-tip}
+## viridis 色板选项
+
+`option` 参数可选 `"A"`（magma）、`"B"`（inferno）、`"C"`（plasma）、`"D"`（viridis，默认）、`"E"`（cividis）。科研论文推荐使用 `"D"` 或 `"E"`。
 :::
 
 ## 课后练习

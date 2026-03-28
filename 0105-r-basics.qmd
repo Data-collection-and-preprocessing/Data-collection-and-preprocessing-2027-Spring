@@ -120,8 +120,25 @@ table(habitat)
 ::: {.callout-note}
 ## 为什么需要因子？
 
-在统计分析和绑图中，R 需要知道哪些变量是分类变量。因子告诉 R："这个变量有固定的几个类别"，而不是随意的文本。
+在统计分析和绘图中，R 需要知道哪些变量是分类变量。因子告诉 R："这个变量有固定的几个类别"，而不是随意的文本。
 :::
+
+### 有序因子（ordered factor）
+
+有些分类变量有自然的顺序关系，比如"低 < 中 < 高"。使用有序因子可以让 R 正确处理这种顺序：
+
+```{r}
+# 创建有序因子
+soil_depth <- factor(
+  c("0-10cm", "10-20cm", "20-30cm", "0-10cm", "10-20cm"),
+  levels = c("0-10cm", "10-20cm", "20-30cm"),
+  ordered = TRUE
+)
+soil_depth
+
+# 有序因子支持比较运算
+soil_depth[1] < soil_depth[3]  # TRUE：0-10cm < 20-30cm
+```
 
 ## 数据框（data.frame）
 
@@ -162,9 +179,24 @@ tree_data[1, 2]        # 第 1 行第 2 列
 
 实际研究中，数据通常存储在文件中。R 提供了多种读取方式。
 
+::: {.callout-tip}
+## 安装所需包
+
+读取数据前，需要先安装相应的 R 包。只需安装一次，之后每次使用 `library()` 加载即可：
+
+```r
+# 安装 tidyverse（包含 readr 等常用包）
+install.packages("tidyverse")
+
+# 安装 readxl（读取 Excel 文件）
+install.packages("readxl")
+```
+:::
+
 ### 读取 CSV 文件
 
 ```{r}
+#| eval: false
 # 基础 R
 data <- read.csv("data/species_survey.csv")
 
@@ -176,6 +208,7 @@ data <- read_csv("data/species_survey.csv")
 ### 读取 Excel 文件
 
 ```{r}
+#| eval: false
 library(readxl)
 data <- read_excel("data/soil_data.xlsx", sheet = 1)
 ```
@@ -183,6 +216,7 @@ data <- read_excel("data/soil_data.xlsx", sheet = 1)
 ### 读取其他格式
 
 ```{r}
+#| eval: false
 # Tab 分隔文件
 data <- read_tsv("data/results.txt")
 
@@ -220,7 +254,7 @@ summary(soil_ph)
 
 ## 基本绘图
 
-R 内置了基本绑图功能，后续课程会详细讲解 ggplot2：
+R 内置了基本绘图功能，后续课程会详细讲解 ggplot2：
 
 ```{r}
 set.seed(42)
