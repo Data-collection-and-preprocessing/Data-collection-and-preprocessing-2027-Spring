@@ -1,5 +1,5 @@
 ---
-title: "生态学公共数据采集数据方法"
+title: "生态学公共数据获取方法"
 execute:
   warning: false
   message: false
@@ -39,8 +39,18 @@ execute:
 *   **R 语言生态**：利用 `rgbif` 库连接 GBIF，利用 `rnoaa` 获取气象数据。
 *   **Python 生态**：利用 `pygbif` 或直接调用 RESTful API。
 
-### 3. 网络爬虫 (Web Scraping)
-当数据分散在没有提供 API 的网页上时，可以使用 Python 的 `BeautifulSoup` 或 `Scrapy` 库进行抓取。但需注意遵守网站的 `robots.txt` 协议。
+### 3. 元数据与数据字典
+
+在使用公共数据之前，务必阅读其元数据（metadata）和数据字典（data dictionary）：
+
+*   **元数据**：描述数据集的"数据"，包括数据来源、采集方法、时间范围、空间覆盖、数据精度和更新频率等。例如，GBIF 的每条记录都附带 Darwin Core 标准的元数据字段。
+*   **数据字典**：定义数据集中每个字段的含义、数据类型、取值范围和缺失值编码。例如，WorldClim 的 BIO1 变量表示年均温（单位为 °C × 10），不了解这一点会导致分析错误。
+*   **数据许可协议**：注意数据遵循的 CC 协议（如 CC BY 4.0 或 CC0），某些数据可能禁止商业用途。
+
+理解元数据是正确使用公共数据的前提，也是保证研究可重复性的关键。
+
+### 4. 网络爬虫 (Web Scraping)
+当数据分散在没有提供 API 的网页上时，可以使用 Python 的 `BeautifulSoup` 或 `Scrapy` 库进行抓取。但需注意遵守网站的 `robots.txt` 协议，且爬虫应作为最后手段——优先使用官方 API 或数据下载服务。
 
 ## 公共数据的使用规范与伦理
 
@@ -100,6 +110,7 @@ egret_df[, c("species", "decimalLatitude", "decimalLongitude",
 #| eval: false
 
 # 简单可视化：在地图上展示分布点
+# 注意：borders() 函数依赖 maps 包，需先安装：install.packages("maps")
 library(ggplot2)
 
 ggplot(egret_df, aes(x = decimalLongitude, y = decimalLatitude)) +
@@ -113,9 +124,7 @@ ggplot(egret_df, aes(x = decimalLongitude, y = decimalLatitude)) +
   theme_minimal()
 ```
 
-::: {.callout-important}
-## GBIF 数据使用须知
-
+::: {.callout-important title="GBIF 数据使用须知"}
 - 下载大量数据时需要注册 GBIF 账号，并使用 `occ_download()` 提交异步下载请求
 - 发表论文时必须引用 GBIF 数据集的 DOI
 - 公民科学数据可能存在空间偏差（城市和道路附近记录更多），分析时需注意
@@ -169,6 +178,7 @@ plot(bio1, main = "中国年均温 (BIO1, °C × 10)")
 # 提取物种分布点对应的气候数据
 # 将白鹭的经纬度转为空间点，提取对应的气候值
 library(dplyr)
+library(readr)
 
 egret_coords <- egret_df |>
   filter(!is.na(decimalLongitude), !is.na(decimalLatitude)) |>
@@ -183,9 +193,7 @@ egret_climate <- bind_cols(egret_coords, as_tibble(climate_values))
 head(egret_climate)
 ```
 
-::: {.callout-tip}
-## 数据保存建议
-
+::: {.callout-tip title="数据保存建议"}
 下载的公共数据建议保存到项目的 `data/` 目录下，并在 README 中注明数据来源和下载日期：
 
 ```r
@@ -199,3 +207,11 @@ write_csv(egret_climate, "data/egret_climate_data.csv")
 ## 总结
 
 公共数据采集方法是现代生态学家的必备技能。它不仅降低了数据获取的成本，更促进了科学研究的透明度与可重复性。通过将公共数据与自己的观测或实验数据相结合，研究者能够以更广阔的视角审视自然界的复杂过程。
+
+## 课后练习
+
+1. 访问 [GBIF](https://www.gbif.org/)，搜索一个你感兴趣的物种在中国的分布记录，下载数据并查看其 Darwin Core 元数据字段。列出至少 5 个你认为对生态分析最重要的字段及其含义。
+
+2. 访问 [WorldClim](https://www.worldclim.org/)，查阅其 19 个生物气候变量（BIO1-BIO19）的数据字典。选择 3 个你认为对物种分布建模最重要的变量，说明理由。
+
+3. 比较 GBIF 和 eBird 两个数据平台在数据质量控制方面的异同。讨论：公民科学数据存在哪些常见偏差？在分析中如何应对？
