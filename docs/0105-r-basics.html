@@ -412,10 +412,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#读取其他格式" id="toc-读取其他格式" class="nav-link" data-scroll-target="#读取其他格式"><span class="header-section-number">5.6.3</span> 读取其他格式</a></li>
   </ul></li>
   <li><a href="#基本统计函数" id="toc-基本统计函数" class="nav-link" data-scroll-target="#基本统计函数"><span class="header-section-number">5.7</span> 基本统计函数</a></li>
-  <li><a href="#基本绘图" id="toc-基本绘图" class="nav-link" data-scroll-target="#基本绘图"><span class="header-section-number">5.8</span> 基本绘图</a></li>
-  <li><a href="#获取帮助" id="toc-获取帮助" class="nav-link" data-scroll-target="#获取帮助"><span class="header-section-number">5.9</span> 获取帮助</a></li>
-  <li><a href="#实践生态学数据集探索" id="toc-实践生态学数据集探索" class="nav-link" data-scroll-target="#实践生态学数据集探索"><span class="header-section-number">5.10</span> 实践：生态学数据集探索</a></li>
-  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">5.11</span> 课后练习</a></li>
+  <li><a href="#基本绘图" id="toc-基本绘图" class="nav-link" data-scroll-target="#基本绘图"><span class="header-section-number">5.8</span> 基本绘图</a>
+  <ul class="collapse">
+  <li><a href="#获取帮助" id="toc-获取帮助" class="nav-link" data-scroll-target="#获取帮助"><span class="header-section-number">5.8.1</span> 获取帮助</a></li>
+  </ul></li>
+  <li><a href="#实践生态学数据集探索" id="toc-实践生态学数据集探索" class="nav-link" data-scroll-target="#实践生态学数据集探索"><span class="header-section-number">5.9</span> 实践：生态学数据集探索</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">5.10</span> 课后练习</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -723,17 +725,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 箱线图</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">boxplot</span>(soil_ph, <span class="at">main =</span> <span class="st">"土壤 pH"</span>, <span class="at">ylab =</span> <span class="st">"pH"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="获取帮助" class="level2" data-number="5.9">
-<h2 data-number="5.9" class="anchored" data-anchor-id="获取帮助"><span class="header-section-number">5.9</span> 获取帮助</h2>
+<section id="获取帮助" class="level3" data-number="5.8.1">
+<h3 data-number="5.8.1" class="anchored" data-anchor-id="获取帮助"><span class="header-section-number">5.8.1</span> 获取帮助</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>?mean              <span class="co"># 查看函数帮助</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">help</span>(read.csv)     <span class="co"># 同上</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>??regression       <span class="co"># 搜索关键词</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="实践生态学数据集探索" class="level2" data-number="5.10">
-<h2 data-number="5.10" class="anchored" data-anchor-id="实践生态学数据集探索"><span class="header-section-number">5.10</span> 实践：生态学数据集探索</h2>
+</section>
+<section id="实践生态学数据集探索" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="实践生态学数据集探索"><span class="header-section-number">5.9</span> 实践：生态学数据集探索</h2>
 <p>让我们用一个真实的生态学数据集来练习。R 内置了 <code>iris</code>（鸢尾花）数据集：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载数据</span></span>
@@ -762,8 +764,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="课后练习" class="level2" data-number="5.11">
-<h2 data-number="5.11" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">5.11</span> 课后练习</h2>
+<section id="课后练习" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">5.10</span> 课后练习</h2>
 <ol type="1">
 <li>创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列</li>
 <li>计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）</li>

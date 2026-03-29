@@ -96,18 +96,7 @@
     "href": "0101-what-is-data-collection.html#数据采集的基本类型",
     "title": "1  课程资源",
     "section": "2.2 数据采集的基本类型",
-    "text": "2.2 数据采集的基本类型\n根据数据的来源和获取方式，我们可以将数据采集分为以下几类：\n\n\n\n\n\n\n\n\n类型\n描述\n生态学示例\n\n\n\n\n野外观测\n在自然条件下直接观察和记录\n样方调查、鸟类计数、物候观测\n\n\n控制实验\n在受控条件下操纵变量并测量响应\n温室实验、养分添加实验\n\n\n问卷调查\n通过结构化问题收集人类行为或认知数据\n农户土地利用调查\n\n\n仪器监测\n使用传感器或仪器自动记录数据\n气象站、通量塔、水质监测\n\n\n公共数据库\n从已有的开放数据平台获取\nWorldClim、GBIF、中国生态系统研究网络\n\n\n网络采集\n通过 API 或爬虫从互联网获取数据\n遥感影像下载、文献数据提取\n\n\n\n本课程将在后续章节中逐一深入讲解这些方法。",
-    "crumbs": [
-      "第一单元：绪论与环境搭建",
-      "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程资源</span>"
-    ]
-  },
-  {
-    "objectID": "0101-what-is-data-collection.html#数据的基本形态",
-    "href": "0101-what-is-data-collection.html#数据的基本形态",
-    "title": "1  课程资源",
-    "section": "2.3 数据的基本形态",
-    "text": "2.3 数据的基本形态\n采集到的数据通常以结构化的格式存储。以下是三种最常见的数据格式：\n\n2.3.1 CSV（逗号分隔值）\n最简单、最通用的表格数据格式，几乎所有软件都能读取：\nplot_id,species,count,date\nP001,马尾松,12,2027-03-15\nP001,杉木,8,2027-03-15\nP002,马尾松,5,2027-03-16\n\n\n2.3.2 JSON（JavaScript 对象表示法）\n适合存储嵌套结构的数据，常见于 API 返回结果：\n[\n  {\n    \"plot_id\": \"P001\",\n    \"species\": \"马尾松\",\n    \"count\": 12,\n    \"date\": \"2027-03-15\"\n  },\n  {\n    \"plot_id\": \"P001\",\n    \"species\": \"杉木\",\n    \"count\": 8,\n    \"date\": \"2027-03-15\"\n  }\n]\n\n\n2.3.3 XML（可扩展标记语言）\n结构严谨，常用于配置文件和数据交换：\n&lt;survey&gt;\n  &lt;record&gt;\n    &lt;plot_id&gt;P001&lt;/plot_id&gt;\n    &lt;species&gt;马尾松&lt;/species&gt;\n    &lt;count&gt;12&lt;/count&gt;\n    &lt;date&gt;2027-03-15&lt;/date&gt;\n  &lt;/record&gt;\n&lt;/survey&gt;\n\n\n\n\n\n\nTip格式选择建议\n\n\n\n\n表格数据优先使用 CSV：简单、通用、体积小\n嵌套或半结构化数据使用 JSON：灵活、可读性好\n需要严格校验的场景使用 XML：有 Schema 验证机制",
+    "text": "2.2 数据采集的基本类型\n根据数据的来源和获取方式，我们可以将数据采集分为以下几类：\n\n\n\n\n\n\n\n\n类型\n描述\n生态学示例\n\n\n\n\n野外观测\n在自然条件下直接观察和记录\n样方调查、鸟类计数、物候观测\n\n\n控制实验\n在受控条件下操纵变量并测量响应\n温室实验、养分添加实验\n\n\n问卷调查\n通过结构化问题收集人类行为或认知数据\n农户土地利用调查\n\n\n仪器监测\n使用传感器或仪器自动记录数据\n气象站、通量塔、水质监测\n\n\n公共数据库\n从已有的开放数据平台获取\nWorldClim、GBIF、中国生态系统研究网络\n\n\n网络采集\n通过 API 或爬虫从互联网获取数据\n遥感影像下载、文献数据提取\n\n\n\n本课程将在后续章节中逐一深入讲解这些方法。\n\n2.2.1 数据的基本形态\n采集到的数据通常以结构化的格式存储。以下是三种最常见的数据格式：\n\nCSV（逗号分隔值）\n最简单、最通用的表格数据格式，几乎所有软件都能读取：\nplot_id,species,count,date\nP001,马尾松,12,2027-03-15\nP001,杉木,8,2027-03-15\nP002,马尾松,5,2027-03-16\n\n\nJSON（JavaScript 对象表示法）\n适合存储嵌套结构的数据，常见于 API 返回结果：\n[\n  {\n    \"plot_id\": \"P001\",\n    \"species\": \"马尾松\",\n    \"count\": 12,\n    \"date\": \"2027-03-15\"\n  },\n  {\n    \"plot_id\": \"P001\",\n    \"species\": \"杉木\",\n    \"count\": 8,\n    \"date\": \"2027-03-15\"\n  }\n]\n\n\nXML（可扩展标记语言）\n结构严谨，常用于配置文件和数据交换：\n&lt;survey&gt;\n  &lt;record&gt;\n    &lt;plot_id&gt;P001&lt;/plot_id&gt;\n    &lt;species&gt;马尾松&lt;/species&gt;\n    &lt;count&gt;12&lt;/count&gt;\n    &lt;date&gt;2027-03-15&lt;/date&gt;\n  &lt;/record&gt;\n&lt;/survey&gt;\n\n\n\n\n\n\nTip格式选择建议\n\n\n\n\n表格数据优先使用 CSV：简单、通用、体积小\n嵌套或半结构化数据使用 JSON：灵活、可读性好\n需要严格校验的场景使用 XML：有 Schema 验证机制",
     "crumbs": [
       "第一单元：绪论与环境搭建",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程资源</span>"
@@ -117,8 +106,8 @@
     "objectID": "0101-what-is-data-collection.html#数据采集的基本原则",
     "href": "0101-what-is-data-collection.html#数据采集的基本原则",
     "title": "1  课程资源",
-    "section": "2.4 数据采集的基本原则",
-    "text": "2.4 数据采集的基本原则\n无论使用哪种采集方法，都应遵循以下原则：\n\n2.4.1 1. 明确研究问题\n在采集数据之前，先回答：我需要什么数据来回答我的研究问题？ 避免”先采集再想用途”的做法。\n\n\n2.4.2 2. 制定采集方案\n包括：采样设计（随机、分层、系统）、样本量确定、变量定义、记录格式等。\n\n\n2.4.3 3. 保证数据质量\n\n使用标准化的记录表格或电子设备\n培训采集人员，减少人为误差\n设置质量控制检查点（如重复测量）\n\n\n\n2.4.4 4. 记录元数据\n元数据（Metadata）是”关于数据的数据”，包括：\n\n谁采集的（采集人员）\n何时采集的（日期、时间）\n何地采集的（经纬度、海拔）\n如何采集的（方法、仪器、精度）\n为何采集的（研究目的）\n\n\n\n\n\n\n\nImportant元数据的重要性\n\n\n\n没有元数据的数据就像没有标签的样品瓶——三个月后你可能完全不记得它是什么。养成记录元数据的习惯，是可重复性研究的基础。\n\n\n\n\n2.4.5 5. 确保可重复性\n详细记录采集过程，使其他研究者能够在相同条件下重现你的数据采集。这包括：\n\n使用版本控制（Git）管理数据和代码\n采用通用数据格式（CSV、JSON）\n公开数据和采集方案",
+    "section": "2.3 数据采集的基本原则",
+    "text": "2.3 数据采集的基本原则\n无论使用哪种采集方法，都应遵循以下原则：\n\n2.3.1 1. 明确研究问题\n在采集数据之前，先回答：我需要什么数据来回答我的研究问题？ 避免”先采集再想用途”的做法。\n\n\n2.3.2 2. 制定采集方案\n包括：采样设计（随机、分层、系统）、样本量确定、变量定义、记录格式等。\n\n\n2.3.3 3. 保证数据质量\n\n使用标准化的记录表格或电子设备\n培训采集人员，减少人为误差\n设置质量控制检查点（如重复测量）\n\n\n\n2.3.4 4. 记录元数据\n元数据（Metadata）是”关于数据的数据”，包括：\n\n谁采集的（采集人员）\n何时采集的（日期、时间）\n何地采集的（经纬度、海拔）\n如何采集的（方法、仪器、精度）\n为何采集的（研究目的）\n\n没有元数据的数据就像没有标签的样品瓶——三个月后你可能完全不记得它是什么。养成记录元数据的习惯，是可重复性研究的基础。\n\n\n2.3.5 5. 确保可重复性\n详细记录采集过程，使其他研究者能够在相同条件下重现你的数据采集。这包括：\n\n使用版本控制（Git）管理数据和代码\n采用通用数据格式（CSV、JSON）\n公开数据和采集方案",
     "crumbs": [
       "第一单元：绪论与环境搭建",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程资源</span>"
@@ -128,8 +117,8 @@
     "objectID": "0101-what-is-data-collection.html#本课程的数据采集路线图",
     "href": "0101-what-is-data-collection.html#本课程的数据采集路线图",
     "title": "1  课程资源",
-    "section": "2.5 本课程的数据采集路线图",
-    "text": "2.5 本课程的数据采集路线图\n本课程将按照以下路径，带你从零开始掌握数据采集与预处理的完整流程：\n第一单元：绪论与环境搭建\n  ├── 什么是数据采集（本章）\n  ├── 什么是数据预处理\n  └── 研究环境搭建\n\n第二单元：R 语言编程基础\n  ├── R 语言入门\n  ├── 数据整理（dplyr/tidyr）\n  └── Git 协作\n\n第三单元：数据采集方法\n  ├── 观测 → 实验 → 模型 → 公共数据\n  ├── 荟萃分析\n  └── Python 网络采集\n\n第四单元：数据预处理\n  ├── 数据清洗\n  ├── 特征工程\n  └── 数据质量评估\n\n第五单元：数据可视化与探索性分析\n\n第六单元：实战项目",
+    "section": "2.4 本课程的数据采集路线图",
+    "text": "2.4 本课程的数据采集路线图\n本课程将按照以下路径，带你从零开始掌握数据采集与预处理的完整流程：\n第一单元：绪论与环境搭建\n  ├── 什么是数据采集（本章）\n  ├── 什么是数据预处理\n  └── 研究环境搭建\n\n第二单元：R 语言编程基础\n  ├── R 语言入门\n  ├── 数据整理（dplyr/tidyr）\n  └── Git 协作\n\n第三单元：数据采集方法\n  ├── 观测 → 实验 → 模型 → 公共数据\n  ├── 荟萃分析\n  └── Python 网络采集\n\n第四单元：数据预处理\n  ├── 数据清洗\n  ├── 特征工程\n  └── 数据质量评估\n\n第五单元：数据可视化与探索性分析\n\n第六单元：实战项目",
     "crumbs": [
       "第一单元：绪论与环境搭建",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程资源</span>"
@@ -139,8 +128,8 @@
     "objectID": "0101-what-is-data-collection.html#课后思考",
     "href": "0101-what-is-data-collection.html#课后思考",
     "title": "1  课程资源",
-    "section": "2.6 课后思考",
-    "text": "2.6 课后思考\n\n回顾你自己的研究课题，列出你需要采集哪些类型的数据？\n你目前的数据采集方案中，是否记录了完整的元数据？\n如果另一位同学要复现你的数据采集过程，他/她能做到吗？缺少什么信息？",
+    "section": "2.5 课后思考",
+    "text": "2.5 课后思考\n\n回顾你自己的研究课题，列出你需要采集哪些类型的数据？\n你目前的数据采集方案中，是否记录了完整的元数据？\n如果另一位同学要复现你的数据采集过程，他/她能做到吗？缺少什么信息？",
     "crumbs": [
       "第一单元：绪论与环境搭建",
       "<span class='chapter-number'>1</span>  <span class='chapter-title'>课程资源</span>"
@@ -393,18 +382,7 @@
     "href": "0105-r-basics.html#基本绘图",
     "title": "4  R 语言基础",
     "section": "5.8 基本绘图",
-    "text": "5.8 基本绘图\nR 内置了基本绘图功能，后续课程会详细讲解 ggplot2：\n\nset.seed(42)\nsoil_ph &lt;- rnorm(50, mean = 6.5, sd = 0.8)\n\n# 直方图\nhist(soil_ph, main = \"土壤 pH 分布\", xlab = \"pH\", col = \"lightblue\")\n\n# 箱线图\nboxplot(soil_ph, main = \"土壤 pH\", ylab = \"pH\")",
-    "crumbs": [
-      "第二单元：R 语言编程基础",
-      "<span class='chapter-number'>4</span>  <span class='chapter-title'>R 语言基础</span>"
-    ]
-  },
-  {
-    "objectID": "0105-r-basics.html#获取帮助",
-    "href": "0105-r-basics.html#获取帮助",
-    "title": "4  R 语言基础",
-    "section": "5.9 获取帮助",
-    "text": "5.9 获取帮助\n\n?mean              # 查看函数帮助\nhelp(read.csv)     # 同上\n??regression       # 搜索关键词",
+    "text": "5.8 基本绘图\nR 内置了基本绘图功能，后续课程会详细讲解 ggplot2：\n\nset.seed(42)\nsoil_ph &lt;- rnorm(50, mean = 6.5, sd = 0.8)\n\n# 直方图\nhist(soil_ph, main = \"土壤 pH 分布\", xlab = \"pH\", col = \"lightblue\")\n\n# 箱线图\nboxplot(soil_ph, main = \"土壤 pH\", ylab = \"pH\")\n\n\n5.8.1 获取帮助\n\n?mean              # 查看函数帮助\nhelp(read.csv)     # 同上\n??regression       # 搜索关键词",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>R 语言基础</span>"
@@ -414,8 +392,8 @@
     "objectID": "0105-r-basics.html#实践生态学数据集探索",
     "href": "0105-r-basics.html#实践生态学数据集探索",
     "title": "4  R 语言基础",
-    "section": "5.10 实践：生态学数据集探索",
-    "text": "5.10 实践：生态学数据集探索\n让我们用一个真实的生态学数据集来练习。R 内置了 iris（鸢尾花）数据集：\n\n# 加载数据\ndata(iris)\n\n# 查看前 6 行\nhead(iris)\n\n# 数据结构\nstr(iris)\n\n# 描述性统计\nsummary(iris)\n\n# 按物种分组统计花瓣长度\ntapply(iris$Petal.Length, iris$Species, mean)\n\n# 简单散点图\nplot(iris$Sepal.Length, iris$Petal.Length,\n     col = as.numeric(iris$Species),\n     pch = 16,\n     xlab = \"花萼长度 (cm)\",\n     ylab = \"花瓣长度 (cm)\",\n     main = \"鸢尾花花萼与花瓣长度关系\")\nlegend(\"topleft\", levels(iris$Species),\n       col = 1:3, pch = 16, cex = 0.8)",
+    "section": "5.9 实践：生态学数据集探索",
+    "text": "5.9 实践：生态学数据集探索\n让我们用一个真实的生态学数据集来练习。R 内置了 iris（鸢尾花）数据集：\n\n# 加载数据\ndata(iris)\n\n# 查看前 6 行\nhead(iris)\n\n# 数据结构\nstr(iris)\n\n# 描述性统计\nsummary(iris)\n\n# 按物种分组统计花瓣长度\ntapply(iris$Petal.Length, iris$Species, mean)\n\n# 简单散点图\nplot(iris$Sepal.Length, iris$Petal.Length,\n     col = as.numeric(iris$Species),\n     pch = 16,\n     xlab = \"花萼长度 (cm)\",\n     ylab = \"花瓣长度 (cm)\",\n     main = \"鸢尾花花萼与花瓣长度关系\")\nlegend(\"topleft\", levels(iris$Species),\n       col = 1:3, pch = 16, cex = 0.8)",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>R 语言基础</span>"
@@ -425,8 +403,8 @@
     "objectID": "0105-r-basics.html#课后练习",
     "href": "0105-r-basics.html#课后练习",
     "title": "4  R 语言基础",
-    "section": "5.11 课后练习",
-    "text": "5.11 课后练习\n\n创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列\n计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）\n筛选出株高大于平均值的植物\n用 hist() 绑制 iris 数据集中 Sepal.Width 的分布直方图\n将你的代码保存为 .R 文件，提交到 GitHub 仓库",
+    "section": "5.10 课后练习",
+    "text": "5.10 课后练习\n\n创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列\n计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）\n筛选出株高大于平均值的植物\n用 hist() 绑制 iris 数据集中 Sepal.Width 的分布直方图\n将你的代码保存为 .R 文件，提交到 GitHub 仓库",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>4</span>  <span class='chapter-title'>R 语言基础</span>"
@@ -459,18 +437,7 @@
     "href": "0106-r-data-wrangling.html#管道操作符",
     "title": "5  R 数据处理进阶",
     "section": "6.2 管道操作符",
-    "text": "6.2 管道操作符\n管道操作符 |&gt; 是 tidyverse 编程风格的核心。它的作用很简单：把左边的结果，作为右边函数的第一个参数传入。\n\n# 传统写法（从内向外读，难以理解）\nround(mean(c(1.5, 2.3, 3.7, 4.1)), 1)\n\n# 管道写法（从左到右读，清晰直观）\nc(1.5, 2.3, 3.7, 4.1) |&gt;\n  mean() |&gt;\n  round(1)\n\n上面的管道写法等价于：\n\nc(1.5, 2.3, 3.7, 4.1) 的结果传给 mean() → 得到 2.9\n2.9 传给 round(1) → 即 round(2.9, 1) → 得到 2.9\n\n你可以把 |&gt; 读作”然后”：取这些数字，然后求平均，然后四舍五入。\n\n\n\n\n\n\nTip管道的快捷键\n\n\n\n在 RStudio 中，按 Ctrl + Shift + M 可以快速输入管道操作符。\n\n\n\n\n\n\n\n\nNote|&gt; 与 %&gt;% 的区别\n\n\n\n你可能在网上看到另一种管道 %&gt;%（来自 magrittr 包）。两者功能基本相同，区别在于：\n\n|&gt; 是 R 4.1+ 内置的原生管道，不需要加载任何包\n%&gt;% 是 magrittr 包提供的管道，需要加载 tidyverse 或 magrittr\n\n本课程统一使用 |&gt;。如果你在旧教程中看到 %&gt;%，直接替换为 |&gt; 即可。",
-    "crumbs": [
-      "第二单元：R 语言编程基础",
-      "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
-    ]
-  },
-  {
-    "objectID": "0106-r-data-wrangling.html#示例数据",
-    "href": "0106-r-data-wrangling.html#示例数据",
-    "title": "5  R 数据处理进阶",
-    "section": "6.3 示例数据",
-    "text": "6.3 示例数据\n本章使用一个模拟的植物样方调查数据集：\n\n# 创建示例数据\nset.seed(2027)\nsurvey &lt;- tibble(\n  plot_id = rep(paste0(\"P\", 1:10), each = 5),\n  species = sample(c(\"马尾松\", \"杉木\", \"桉树\", \"樟树\", \"楠木\"), 50, replace = TRUE),\n  height = round(rnorm(50, mean = 12, sd = 4), 1),\n  dbh = round(rnorm(50, mean = 20, sd = 8), 1),\n  habitat = rep(sample(c(\"山脊\", \"山坡\", \"山谷\"), 10, replace = TRUE), each = 5),\n  soil_ph = round(rnorm(50, mean = 5.5, sd = 0.8), 2)\n)\n\n# 人为加入一些缺失值\nsurvey$height[c(3, 17, 28)] &lt;- NA\nsurvey$dbh[c(8, 42)] &lt;- NA\n\nhead(survey, 10)",
+    "text": "6.2 管道操作符\n管道操作符 |&gt; 是 tidyverse 编程风格的核心。它的作用很简单：把左边的结果，作为右边函数的第一个参数传入。\n\n# 传统写法（从内向外读，难以理解）\nround(mean(c(1.5, 2.3, 3.7, 4.1)), 1)\n\n# 管道写法（从左到右读，清晰直观）\nc(1.5, 2.3, 3.7, 4.1) |&gt;\n  mean() |&gt;\n  round(1)\n\n上面的管道写法等价于：\n\nc(1.5, 2.3, 3.7, 4.1) 的结果传给 mean() → 得到 2.9\n2.9 传给 round(1) → 即 round(2.9, 1) → 得到 2.9\n\n你可以把 |&gt; 读作”然后”：取这些数字，然后求平均，然后四舍五入。\n\n\n\n\n\n\nTip管道的快捷键\n\n\n\n在 RStudio 中，按 Ctrl + Shift + M 可以快速输入管道操作符。\n\n\n\n\n\n\n\n\nNote|&gt; 与 %&gt;% 的区别\n\n\n\n你可能在网上看到另一种管道 %&gt;%（来自 magrittr 包）。两者功能基本相同，区别在于：\n\n|&gt; 是 R 4.1+ 内置的原生管道，不需要加载任何包\n%&gt;% 是 magrittr 包提供的管道，需要加载 tidyverse 或 magrittr\n\n本课程统一使用 |&gt;。如果你在旧教程中看到 %&gt;%，直接替换为 |&gt; 即可。\n\n\n\n6.2.1 示例数据\n本章使用一个模拟的植物样方调查数据集：\n\n# 创建示例数据\nset.seed(2027)\nsurvey &lt;- tibble(\n  plot_id = rep(paste0(\"P\", 1:10), each = 5),\n  species = sample(c(\"马尾松\", \"杉木\", \"桉树\", \"樟树\", \"楠木\"), 50, replace = TRUE),\n  height = round(rnorm(50, mean = 12, sd = 4), 1),\n  dbh = round(rnorm(50, mean = 20, sd = 8), 1),\n  habitat = rep(sample(c(\"山脊\", \"山坡\", \"山谷\"), 10, replace = TRUE), each = 5),\n  soil_ph = round(rnorm(50, mean = 5.5, sd = 0.8), 2)\n)\n\n# 人为加入一些缺失值\nsurvey$height[c(3, 17, 28)] &lt;- NA\nsurvey$dbh[c(8, 42)] &lt;- NA\n\nhead(survey, 10)",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -480,8 +447,8 @@
     "objectID": "0106-r-data-wrangling.html#dplyr数据操作五大动词",
     "href": "0106-r-data-wrangling.html#dplyr数据操作五大动词",
     "title": "5  R 数据处理进阶",
-    "section": "6.4 dplyr：数据操作五大动词",
-    "text": "6.4 dplyr：数据操作五大动词\n\n6.4.1 filter() — 筛选行\n\n# 筛选马尾松\nsurvey |&gt;\n  filter(species == \"马尾松\")\n\n# 多条件筛选：株高 &gt; 15 且 土壤 pH &lt; 6\nsurvey |&gt;\n  filter(height &gt; 15, soil_ph &lt; 6)\n\n# 或条件：马尾松或杉木\nsurvey |&gt;\n  filter(species %in% c(\"马尾松\", \"杉木\"))\n\n\n\n6.4.2 select() — 选择列\n\n# 选择特定列\nsurvey |&gt;\n  select(plot_id, species, height)\n\n# 排除某列\nsurvey |&gt;\n  select(-soil_ph)\n\n# 选择数值列\nsurvey |&gt;\n  select(where(is.numeric))\n\n\n\n6.4.3 mutate() — 新增/修改列\n\n# 新增列：计算树木断面积（basal area）\nsurvey |&gt;\n  mutate(\n    basal_area = pi * (dbh / 200)^2,    # 单位：m²\n    height_class = case_when(\n      height &lt; 8  ~ \"矮\",\n      height &lt; 15 ~ \"中\",\n      TRUE        ~ \"高\"\n    )\n  ) |&gt;\n  head()\n\n\n\n6.4.4 arrange() — 排序\n\n# 按株高降序排列\nsurvey |&gt;\n  arrange(desc(height)) |&gt;\n  head()\n\n# 先按样方排序，再按株高排序\nsurvey |&gt;\n  arrange(plot_id, desc(height)) |&gt;\n  head()\n\n\n\n6.4.5 summarise() + group_by() — 分组汇总\n\n# 按物种分组统计\nsurvey |&gt;\n  group_by(species) |&gt;\n  summarise(\n    n = n(),\n    mean_height = mean(height, na.rm = TRUE),\n    sd_height = sd(height, na.rm = TRUE),\n    mean_dbh = mean(dbh, na.rm = TRUE)\n  ) |&gt;\n  arrange(desc(mean_height))\n\n\n# 按样方和生境分组\nsurvey |&gt;\n  group_by(habitat) |&gt;\n  summarise(\n    n_trees = n(),\n    n_species = n_distinct(species),\n    mean_ph = mean(soil_ph, na.rm = TRUE)\n  )",
+    "section": "6.3 dplyr：数据操作五大动词",
+    "text": "6.3 dplyr：数据操作五大动词\n\n6.3.1 filter() — 筛选行\n\n# 筛选马尾松\nsurvey |&gt;\n  filter(species == \"马尾松\")\n\n# 多条件筛选：株高 &gt; 15 且 土壤 pH &lt; 6\nsurvey |&gt;\n  filter(height &gt; 15, soil_ph &lt; 6)\n\n# 或条件：马尾松或杉木\nsurvey |&gt;\n  filter(species %in% c(\"马尾松\", \"杉木\"))\n\n\n\n6.3.2 select() — 选择列\n\n# 选择特定列\nsurvey |&gt;\n  select(plot_id, species, height)\n\n# 排除某列\nsurvey |&gt;\n  select(-soil_ph)\n\n# 选择数值列\nsurvey |&gt;\n  select(where(is.numeric))\n\n\n\n6.3.3 mutate() — 新增/修改列\n\n# 新增列：计算树木断面积（basal area）\nsurvey |&gt;\n  mutate(\n    basal_area = pi * (dbh / 200)^2,    # 单位：m²\n    height_class = case_when(\n      height &lt; 8  ~ \"矮\",\n      height &lt; 15 ~ \"中\",\n      TRUE        ~ \"高\"\n    )\n  ) |&gt;\n  head()\n\n\n\n6.3.4 arrange() — 排序\n\n# 按株高降序排列\nsurvey |&gt;\n  arrange(desc(height)) |&gt;\n  head()\n\n# 先按样方排序，再按株高排序\nsurvey |&gt;\n  arrange(plot_id, desc(height)) |&gt;\n  head()\n\n\n\n6.3.5 summarise() + group_by() — 分组汇总\n\n# 按物种分组统计\nsurvey |&gt;\n  group_by(species) |&gt;\n  summarise(\n    n = n(),\n    mean_height = mean(height, na.rm = TRUE),\n    sd_height = sd(height, na.rm = TRUE),\n    mean_dbh = mean(dbh, na.rm = TRUE)\n  ) |&gt;\n  arrange(desc(mean_height))\n\n\n# 按样方和生境分组\nsurvey |&gt;\n  group_by(habitat) |&gt;\n  summarise(\n    n_trees = n(),\n    n_species = n_distinct(species),\n    mean_ph = mean(soil_ph, na.rm = TRUE)\n  )",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -491,8 +458,8 @@
     "objectID": "0106-r-data-wrangling.html#组合使用数据处理流水线",
     "href": "0106-r-data-wrangling.html#组合使用数据处理流水线",
     "title": "5  R 数据处理进阶",
-    "section": "6.5 组合使用：数据处理流水线",
-    "text": "6.5 组合使用：数据处理流水线\ndplyr 的强大之处在于可以用管道将多个操作串联起来：\n\n# 完整的数据处理流水线\nresult &lt;- survey |&gt;\n  filter(!is.na(height), !is.na(dbh)) |&gt;       # 1. 去除缺失值\n  mutate(basal_area = pi * (dbh / 200)^2) |&gt;    # 2. 计算断面积\n  group_by(habitat, species) |&gt;                  # 3. 按生境和物种分组\n  summarise(\n    n = n(),\n    mean_height = round(mean(height), 1),\n    total_ba = round(sum(basal_area), 4),\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(habitat, desc(total_ba))               # 4. 排序\n\nresult",
+    "section": "6.4 组合使用：数据处理流水线",
+    "text": "6.4 组合使用：数据处理流水线\ndplyr 的强大之处在于可以用管道将多个操作串联起来：\n\n# 完整的数据处理流水线\nresult &lt;- survey |&gt;\n  filter(!is.na(height), !is.na(dbh)) |&gt;       # 1. 去除缺失值\n  mutate(basal_area = pi * (dbh / 200)^2) |&gt;    # 2. 计算断面积\n  group_by(habitat, species) |&gt;                  # 3. 按生境和物种分组\n  summarise(\n    n = n(),\n    mean_height = round(mean(height), 1),\n    total_ba = round(sum(basal_area), 4),\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(habitat, desc(total_ba))               # 4. 排序\n\nresult",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -502,8 +469,8 @@
     "objectID": "0106-r-data-wrangling.html#tidyr数据重塑",
     "href": "0106-r-data-wrangling.html#tidyr数据重塑",
     "title": "5  R 数据处理进阶",
-    "section": "6.6 tidyr：数据重塑",
-    "text": "6.6 tidyr：数据重塑\n生态学数据经常需要在”长格式”和”宽格式”之间转换。\n\n6.6.1 宽格式 → 长格式：pivot_longer()\n\n# 宽格式数据：每个物种一列\nwide_data &lt;- tibble(\n  plot = paste0(\"P\", 1:5),\n  马尾松 = c(12, 8, 0, 15, 6),\n  杉木 = c(5, 0, 10, 3, 8),\n  桉树 = c(0, 7, 4, 0, 2)\n)\nwide_data\n\n# 转为长格式\nlong_data &lt;- wide_data |&gt;\n  pivot_longer(\n    cols = -plot,           # 除了 plot 列，其他都转\n    names_to = \"species\",   # 列名变成 species 列\n    values_to = \"count\"     # 值变成 count 列\n  )\nlong_data\n\n\n\n6.6.2 长格式 → 宽格式：pivot_wider()\n\n# 转回宽格式\nlong_data |&gt;\n  pivot_wider(\n    names_from = species,\n    values_from = count\n  )\n\n\n\n\n\n\n\nNote什么时候用长格式？什么时候用宽格式？\n\n\n\n\n长格式：适合 ggplot2 绘图和大多数统计分析\n宽格式：适合展示和人工查看，以及某些多元统计分析（如 PCA）\n\n一般原则：存储和分析用长格式，展示用宽格式。",
+    "section": "6.5 tidyr：数据重塑",
+    "text": "6.5 tidyr：数据重塑\n生态学数据经常需要在”长格式”和”宽格式”之间转换。\n\n6.5.1 宽格式 → 长格式：pivot_longer()\n\n# 宽格式数据：每个物种一列\nwide_data &lt;- tibble(\n  plot = paste0(\"P\", 1:5),\n  马尾松 = c(12, 8, 0, 15, 6),\n  杉木 = c(5, 0, 10, 3, 8),\n  桉树 = c(0, 7, 4, 0, 2)\n)\nwide_data\n\n# 转为长格式\nlong_data &lt;- wide_data |&gt;\n  pivot_longer(\n    cols = -plot,           # 除了 plot 列，其他都转\n    names_to = \"species\",   # 列名变成 species 列\n    values_to = \"count\"     # 值变成 count 列\n  )\nlong_data\n\n\n\n6.5.2 长格式 → 宽格式：pivot_wider()\n\n# 转回宽格式\nlong_data |&gt;\n  pivot_wider(\n    names_from = species,\n    values_from = count\n  )\n\n\n\n\n\n\n\nNote什么时候用长格式？什么时候用宽格式？\n\n\n\n\n长格式：适合 ggplot2 绘图和大多数统计分析\n宽格式：适合展示和人工查看，以及某些多元统计分析（如 PCA）\n\n一般原则：存储和分析用长格式，展示用宽格式。",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -513,8 +480,8 @@
     "objectID": "0106-r-data-wrangling.html#数据合并",
     "href": "0106-r-data-wrangling.html#数据合并",
     "title": "5  R 数据处理进阶",
-    "section": "6.7 数据合并",
-    "text": "6.7 数据合并\n研究中经常需要合并来自不同来源的数据：\n\n# 样方环境数据\nplot_env &lt;- tibble(\n  plot_id = paste0(\"P\", 1:10),\n  elevation = round(runif(10, 200, 800)),\n  slope = round(runif(10, 5, 35)),\n  aspect = sample(c(\"N\", \"S\", \"E\", \"W\"), 10, replace = TRUE)\n)\n\n# 将环境数据合并到调查数据\nsurvey_full &lt;- survey |&gt;\n  left_join(plot_env, by = \"plot_id\")\n\nhead(survey_full)\n\n常用的合并方式：\n\n\n\n函数\n说明\n\n\n\n\nleft_join(x, y)\n保留 x 的所有行，匹配 y 的列\n\n\nright_join(x, y)\n保留 y 的所有行\n\n\ninner_join(x, y)\n只保留两边都有的行\n\n\nfull_join(x, y)\n保留所有行",
+    "section": "6.6 数据合并",
+    "text": "6.6 数据合并\n研究中经常需要合并来自不同来源的数据：\n\n# 样方环境数据\nplot_env &lt;- tibble(\n  plot_id = paste0(\"P\", 1:10),\n  elevation = round(runif(10, 200, 800)),\n  slope = round(runif(10, 5, 35)),\n  aspect = sample(c(\"N\", \"S\", \"E\", \"W\"), 10, replace = TRUE)\n)\n\n# 将环境数据合并到调查数据\nsurvey_full &lt;- survey |&gt;\n  left_join(plot_env, by = \"plot_id\")\n\nhead(survey_full)\n\n常用的合并方式：\n\n\n\n函数\n说明\n\n\n\n\nleft_join(x, y)\n保留 x 的所有行，匹配 y 的列\n\n\nright_join(x, y)\n保留 y 的所有行\n\n\ninner_join(x, y)\n只保留两边都有的行\n\n\nfull_join(x, y)\n保留所有行",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -524,8 +491,8 @@
     "objectID": "0106-r-data-wrangling.html#实践物种调查数据整理",
     "href": "0106-r-data-wrangling.html#实践物种调查数据整理",
     "title": "5  R 数据处理进阶",
-    "section": "6.8 实践：物种调查数据整理",
-    "text": "6.8 实践：物种调查数据整理\n综合运用本章所学，完成以下数据处理任务：\n\n# 任务：生成一份各样方的物种多样性报告\n\ndiversity_report &lt;- survey |&gt;\n  filter(!is.na(height)) |&gt;                    # 去除缺失值\n  left_join(plot_env, by = \"plot_id\") |&gt;       # 合并环境数据\n  group_by(plot_id, habitat, elevation) |&gt;     # 按样方分组\n  summarise(\n    n_individuals = n(),                        # 个体数\n    n_species = n_distinct(species),            # 物种数\n    mean_height = round(mean(height), 1),       # 平均株高\n    max_height = max(height),                   # 最大株高\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(desc(n_species))\n\ndiversity_report",
+    "section": "6.7 实践：物种调查数据整理",
+    "text": "6.7 实践：物种调查数据整理\n综合运用本章所学，完成以下数据处理任务：\n\n# 任务：生成一份各样方的物种多样性报告\n\ndiversity_report &lt;- survey |&gt;\n  filter(!is.na(height)) |&gt;                    # 去除缺失值\n  left_join(plot_env, by = \"plot_id\") |&gt;       # 合并环境数据\n  group_by(plot_id, habitat, elevation) |&gt;     # 按样方分组\n  summarise(\n    n_individuals = n(),                        # 个体数\n    n_species = n_distinct(species),            # 物种数\n    mean_height = round(mean(height), 1),       # 平均株高\n    max_height = max(height),                   # 最大株高\n    .groups = \"drop\"\n  ) |&gt;\n  arrange(desc(n_species))\n\ndiversity_report",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -535,8 +502,8 @@
     "objectID": "0106-r-data-wrangling.html#课后练习",
     "href": "0106-r-data-wrangling.html#课后练习",
     "title": "5  R 数据处理进阶",
-    "section": "6.9 课后练习",
-    "text": "6.9 课后练习\n\n使用 iris 数据集，用 dplyr 计算每个物种的花瓣长度和宽度的平均值\n将 iris 数据集转换为长格式（4 个测量值变成一列）\n筛选出花萼长度大于 6 的记录，按物种分组统计数量\n创建一个数据处理流水线：筛选 → 新增列（花瓣面积 = 长 × 宽）→ 分组汇总 → 排序\n将代码保存为 .qmd 文件，渲染为 HTML 后提交到 GitHub",
+    "section": "6.8 课后练习",
+    "text": "6.8 课后练习\n\n使用 iris 数据集，用 dplyr 计算每个物种的花瓣长度和宽度的平均值\n将 iris 数据集转换为长格式（4 个测量值变成一列）\n筛选出花萼长度大于 6 的记录，按物种分组统计数量\n创建一个数据处理流水线：筛选 → 新增列（花瓣面积 = 长 × 宽）→ 分组汇总 → 排序\n将代码保存为 .qmd 文件，渲染为 HTML 后提交到 GitHub",
     "crumbs": [
       "第二单元：R 语言编程基础",
       "<span class='chapter-number'>5</span>  <span class='chapter-title'>R 数据处理进阶</span>"
@@ -1548,7 +1515,7 @@
     "href": "0303-data-quality.html#元数据metadata",
     "title": "17  数据质量控制",
     "section": "18.2 元数据（Metadata）",
-    "text": "18.2 元数据（Metadata）\n元数据是”描述数据的数据”。没有元数据的数据集，就像没有说明书的仪器——别人（包括未来的你）无法正确使用。\n\n18.2.1 元数据应包含的内容\n\n\n\n\n\n\n\n\n项目\n说明\n示例\n\n\n\n\n数据集名称\n简明描述\n广西大学校园土壤调查数据\n\n\n采集时间\n数据采集的时间范围\n2027年3月15日-17日\n\n\n采集地点\n地理位置和坐标\n广西南宁市广西大学校园（108.29°E, 22.83°N）\n\n\n采集方法\n采样设计和方法\n随机布设20个样点，每点采集0-30cm三层土壤\n\n\n变量说明\n每个变量的含义和单位\nph: 土壤pH值（水土比1:2.5）\n\n\n数据处理\n清洗和转换的方法\n缺失值用中位数填充，pH异常值（&lt;0或&gt;14）标记为NA\n\n\n联系人\n数据负责人\n刘华清 huaqingliu@gxu.edu.cn\n\n\n许可证\n数据使用许可\nCC BY 4.0\n\n\n\n\n\n18.2.2 编写元数据文件\n在项目中创建 data/README.md：\n# 数据说明\n\n## 数据集：广西大学校园土壤调查\n\n- **采集时间**：2027年3月15日-17日\n- **采集地点**：广西南宁市广西大学校园\n- **采集人**：XXX, XXX\n- **样本量**：20个样点 × 3个深度 = 60条记录\n\n## 变量说明\n\n| 变量名 | 类型 | 单位 | 说明 |\n|:---|:---|:---|:---|\n| site_id | 字符 | - | 样点编号（S01-S20） |\n| depth | 因子 | cm | 采样深度（0-10, 10-20, 20-30） |\n| ph | 数值 | - | 土壤pH（水土比1:2.5） |\n| organic_carbon | 数值 | g/kg | 土壤有机碳含量 |\n| nitrogen | 数值 | g/kg | 全氮含量 |\n| clay_pct | 数值 | % | 黏粒含量 |\n| sand_pct | 数值 | % | 砂粒含量 |\n\n## 数据处理记录\n\n1. 去除重复记录（3条）\n2. pH异常值（&lt;0或&gt;14）标记为NA\n3. 有机碳异常值（&lt;0或&gt;100）标记为NA\n4. 缺失值用各变量中位数填充\n5. 字符串统一为小写并去除空格",
+    "text": "18.2 元数据（Metadata）\n元数据是”描述数据的数据”。没有元数据的数据集，就像没有说明书的仪器——别人（包括未来的你）无法正确使用。\n\n18.2.1 元数据应包含的内容\n\n\n\n\n\n\n\n\n项目\n说明\n示例\n\n\n\n\n数据集名称\n简明描述\n广西大学校园土壤调查数据\n\n\n采集时间\n数据采集的时间范围\n2027年3月15日-17日\n\n\n采集地点\n地理位置和坐标\n广西南宁市广西大学校园（108.29°E, 22.83°N）\n\n\n采集方法\n采样设计和方法\n随机布设20个样点，每点采集0-30cm三层土壤\n\n\n变量说明\n每个变量的含义和单位\nph: 土壤pH值（水土比1:2.5）\n\n\n数据处理\n清洗和转换的方法\n缺失值用中位数填充，pH异常值（&lt;0或&gt;14）标记为NA\n\n\n联系人\n数据负责人\n刘华清 huaqingliu@gxu.edu.cn\n\n\n许可证\n数据使用许可\nCC BY 4.0\n\n\n\n\n\n18.2.2 编写元数据文件\n在项目中创建 data/README.md：\n# 数据说明\n\n## 数据集：广西大学校园土壤调查\n\n- **采集时间**：2027年3月15日-17日\n- **采集地点**：广西南宁市广西大学校园\n- **采集人**：XXX, XXX\n- **样本量**：20个样点 × 3个深度 = 60条记录\n\n### 变量说明\n\n| 变量名 | 类型 | 单位 | 说明 |\n|:---|:---|:---|:---|\n| site_id | 字符 | - | 样点编号（S01-S20） |\n| depth | 因子 | cm | 采样深度（0-10, 10-20, 20-30） |\n| ph | 数值 | - | 土壤pH（水土比1:2.5） |\n| organic_carbon | 数值 | g/kg | 土壤有机碳含量 |\n| nitrogen | 数值 | g/kg | 全氮含量 |\n| clay_pct | 数值 | % | 黏粒含量 |\n| sand_pct | 数值 | % | 砂粒含量 |\n\n### 数据处理记录\n\n1. 去除重复记录（3条）\n2. pH异常值（&lt;0或&gt;14）标记为NA\n3. 有机碳异常值（&lt;0或&gt;100）标记为NA\n4. 缺失值用各变量中位数填充\n5. 字符串统一为小写并去除空格",
     "crumbs": [
       "第四单元：数据预处理",
       "<span class='chapter-number'>17</span>  <span class='chapter-title'>数据质量控制</span>"
@@ -1988,7 +1955,7 @@
     "href": "0602-project-workshop.html#项目报告模板",
     "title": "21  项目工作坊",
     "section": "22.5 项目报告模板",
-    "text": "22.5 项目报告模板\n最终报告使用 Quarto 撰写，建议结构如下：\n---\ntitle: \"项目标题\"\nauthor: \"组员姓名\"\ndate: \"2027-06-XX\"\nformat: html\n---\n\n## 1 引言\n- 研究背景（为什么研究这个问题？）\n- 研究目的（具体要回答什么问题？）\n\n## 2 材料与方法\n- 研究区域描述\n- 采样设计与数据采集方法\n- 数据处理与分析方法（使用的 R 包和统计方法）\n\n## 3 结果\n- 描述性统计（表格）\n- 数据可视化（图表，附图注）\n- 统计检验结果\n\n## 4 讨论\n- 主要发现的解读\n- 与已有研究的比较\n- 研究局限性\n\n## 5 结论\n- 核心发现（2-3 句话）\n\n## 参考文献\n\n## 附录\n- 原始数据描述\n- 补充图表\n- 完整代码（或 GitHub 仓库链接）\n\n22.5.1 报告要求\n\n正文 2000-3000 字（不含代码和图表）\n至少包含 3 张数据可视化图表\n代码需可运行、有注释\n引用至少 5 篇参考文献",
+    "text": "22.5 项目报告模板\n最终报告使用 Quarto 撰写，建议结构如下：\n---\ntitle: \"项目标题\"\nauthor: \"组员姓名\"\ndate: \"2027-06-XX\"\nformat: html\n---\n\n### 1 引言\n- 研究背景（为什么研究这个问题？）\n- 研究目的（具体要回答什么问题？）\n\n### 2 材料与方法\n- 研究区域描述\n- 采样设计与数据采集方法\n- 数据处理与分析方法（使用的 R 包和统计方法）\n\n### 3 结果\n- 描述性统计（表格）\n- 数据可视化（图表，附图注）\n- 统计检验结果\n\n### 4 讨论\n- 主要发现的解读\n- 与已有研究的比较\n- 研究局限性\n\n### 5 结论\n- 核心发现（2-3 句话）\n\n### 参考文献\n\n### 附录\n- 原始数据描述\n- 补充图表\n- 完整代码（或 GitHub 仓库链接）\n\n22.5.1 报告要求\n\n正文 2000-3000 字（不含代码和图表）\n至少包含 3 张数据可视化图表\n代码需可运行、有注释\n引用至少 5 篇参考文献",
     "crumbs": [
       "第六单元：实战与项目",
       "<span class='chapter-number'>21</span>  <span class='chapter-title'>项目工作坊</span>"

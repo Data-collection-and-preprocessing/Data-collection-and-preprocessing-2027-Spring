@@ -386,25 +386,27 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#r-数据处理进阶" id="toc-r-数据处理进阶" class="nav-link active" data-scroll-target="#r-数据处理进阶"><span class="header-section-number">6</span> R 数据处理进阶</a>
   <ul class="collapse">
   <li><a href="#tidyverse-简介" id="toc-tidyverse-简介" class="nav-link" data-scroll-target="#tidyverse-简介"><span class="header-section-number">6.1</span> tidyverse 简介</a></li>
-  <li><a href="#管道操作符" id="toc-管道操作符" class="nav-link" data-scroll-target="#管道操作符"><span class="header-section-number">6.2</span> 管道操作符</a></li>
-  <li><a href="#示例数据" id="toc-示例数据" class="nav-link" data-scroll-target="#示例数据"><span class="header-section-number">6.3</span> 示例数据</a></li>
-  <li><a href="#dplyr数据操作五大动词" id="toc-dplyr数据操作五大动词" class="nav-link" data-scroll-target="#dplyr数据操作五大动词"><span class="header-section-number">6.4</span> dplyr：数据操作五大动词</a>
+  <li><a href="#管道操作符" id="toc-管道操作符" class="nav-link" data-scroll-target="#管道操作符"><span class="header-section-number">6.2</span> 管道操作符</a>
   <ul class="collapse">
-  <li><a href="#filter-筛选行" id="toc-filter-筛选行" class="nav-link" data-scroll-target="#filter-筛选行"><span class="header-section-number">6.4.1</span> filter() — 筛选行</a></li>
-  <li><a href="#select-选择列" id="toc-select-选择列" class="nav-link" data-scroll-target="#select-选择列"><span class="header-section-number">6.4.2</span> select() — 选择列</a></li>
-  <li><a href="#mutate-新增修改列" id="toc-mutate-新增修改列" class="nav-link" data-scroll-target="#mutate-新增修改列"><span class="header-section-number">6.4.3</span> mutate() — 新增/修改列</a></li>
-  <li><a href="#arrange-排序" id="toc-arrange-排序" class="nav-link" data-scroll-target="#arrange-排序"><span class="header-section-number">6.4.4</span> arrange() — 排序</a></li>
-  <li><a href="#summarise-group_by-分组汇总" id="toc-summarise-group_by-分组汇总" class="nav-link" data-scroll-target="#summarise-group_by-分组汇总"><span class="header-section-number">6.4.5</span> summarise() + group_by() — 分组汇总</a></li>
+  <li><a href="#示例数据" id="toc-示例数据" class="nav-link" data-scroll-target="#示例数据"><span class="header-section-number">6.2.1</span> 示例数据</a></li>
   </ul></li>
-  <li><a href="#组合使用数据处理流水线" id="toc-组合使用数据处理流水线" class="nav-link" data-scroll-target="#组合使用数据处理流水线"><span class="header-section-number">6.5</span> 组合使用：数据处理流水线</a></li>
-  <li><a href="#tidyr数据重塑" id="toc-tidyr数据重塑" class="nav-link" data-scroll-target="#tidyr数据重塑"><span class="header-section-number">6.6</span> tidyr：数据重塑</a>
+  <li><a href="#dplyr数据操作五大动词" id="toc-dplyr数据操作五大动词" class="nav-link" data-scroll-target="#dplyr数据操作五大动词"><span class="header-section-number">6.3</span> dplyr：数据操作五大动词</a>
   <ul class="collapse">
-  <li><a href="#宽格式-长格式pivot_longer" id="toc-宽格式-长格式pivot_longer" class="nav-link" data-scroll-target="#宽格式-长格式pivot_longer"><span class="header-section-number">6.6.1</span> 宽格式 → 长格式：pivot_longer()</a></li>
-  <li><a href="#长格式-宽格式pivot_wider" id="toc-长格式-宽格式pivot_wider" class="nav-link" data-scroll-target="#长格式-宽格式pivot_wider"><span class="header-section-number">6.6.2</span> 长格式 → 宽格式：pivot_wider()</a></li>
+  <li><a href="#filter-筛选行" id="toc-filter-筛选行" class="nav-link" data-scroll-target="#filter-筛选行"><span class="header-section-number">6.3.1</span> filter() — 筛选行</a></li>
+  <li><a href="#select-选择列" id="toc-select-选择列" class="nav-link" data-scroll-target="#select-选择列"><span class="header-section-number">6.3.2</span> select() — 选择列</a></li>
+  <li><a href="#mutate-新增修改列" id="toc-mutate-新增修改列" class="nav-link" data-scroll-target="#mutate-新增修改列"><span class="header-section-number">6.3.3</span> mutate() — 新增/修改列</a></li>
+  <li><a href="#arrange-排序" id="toc-arrange-排序" class="nav-link" data-scroll-target="#arrange-排序"><span class="header-section-number">6.3.4</span> arrange() — 排序</a></li>
+  <li><a href="#summarise-group_by-分组汇总" id="toc-summarise-group_by-分组汇总" class="nav-link" data-scroll-target="#summarise-group_by-分组汇总"><span class="header-section-number">6.3.5</span> summarise() + group_by() — 分组汇总</a></li>
   </ul></li>
-  <li><a href="#数据合并" id="toc-数据合并" class="nav-link" data-scroll-target="#数据合并"><span class="header-section-number">6.7</span> 数据合并</a></li>
-  <li><a href="#实践物种调查数据整理" id="toc-实践物种调查数据整理" class="nav-link" data-scroll-target="#实践物种调查数据整理"><span class="header-section-number">6.8</span> 实践：物种调查数据整理</a></li>
-  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">6.9</span> 课后练习</a></li>
+  <li><a href="#组合使用数据处理流水线" id="toc-组合使用数据处理流水线" class="nav-link" data-scroll-target="#组合使用数据处理流水线"><span class="header-section-number">6.4</span> 组合使用：数据处理流水线</a></li>
+  <li><a href="#tidyr数据重塑" id="toc-tidyr数据重塑" class="nav-link" data-scroll-target="#tidyr数据重塑"><span class="header-section-number">6.5</span> tidyr：数据重塑</a>
+  <ul class="collapse">
+  <li><a href="#宽格式-长格式pivot_longer" id="toc-宽格式-长格式pivot_longer" class="nav-link" data-scroll-target="#宽格式-长格式pivot_longer"><span class="header-section-number">6.5.1</span> 宽格式 → 长格式：pivot_longer()</a></li>
+  <li><a href="#长格式-宽格式pivot_wider" id="toc-长格式-宽格式pivot_wider" class="nav-link" data-scroll-target="#长格式-宽格式pivot_wider"><span class="header-section-number">6.5.2</span> 长格式 → 宽格式：pivot_wider()</a></li>
+  </ul></li>
+  <li><a href="#数据合并" id="toc-数据合并" class="nav-link" data-scroll-target="#数据合并"><span class="header-section-number">6.6</span> 数据合并</a></li>
+  <li><a href="#实践物种调查数据整理" id="toc-实践物种调查数据整理" class="nav-link" data-scroll-target="#实践物种调查数据整理"><span class="header-section-number">6.7</span> 实践：物种调查数据整理</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">6.8</span> 课后练习</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -533,9 +535,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>本课程统一使用 <code>|&gt;</code>。如果你在旧教程中看到 <code>%&gt;%</code>，直接替换为 <code>|&gt;</code> 即可。</p>
 </div>
 </div>
-</section>
-<section id="示例数据" class="level2" data-number="6.3">
-<h2 data-number="6.3" class="anchored" data-anchor-id="示例数据"><span class="header-section-number">6.3</span> 示例数据</h2>
+<section id="示例数据" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="示例数据"><span class="header-section-number">6.2.1</span> 示例数据</h3>
 <p>本章使用一个模拟的植物样方调查数据集：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建示例数据</span></span>
@@ -556,10 +557,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(survey, <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="dplyr数据操作五大动词" class="level2" data-number="6.4">
-<h2 data-number="6.4" class="anchored" data-anchor-id="dplyr数据操作五大动词"><span class="header-section-number">6.4</span> dplyr：数据操作五大动词</h2>
-<section id="filter-筛选行" class="level3" data-number="6.4.1">
-<h3 data-number="6.4.1" class="anchored" data-anchor-id="filter-筛选行"><span class="header-section-number">6.4.1</span> filter() — 筛选行</h3>
+</section>
+<section id="dplyr数据操作五大动词" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="dplyr数据操作五大动词"><span class="header-section-number">6.3</span> dplyr：数据操作五大动词</h2>
+<section id="filter-筛选行" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="filter-筛选行"><span class="header-section-number">6.3.1</span> filter() — 筛选行</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 筛选马尾松</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span></span>
@@ -574,8 +576,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(species <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="select-选择列" class="level3" data-number="6.4.2">
-<h3 data-number="6.4.2" class="anchored" data-anchor-id="select-选择列"><span class="header-section-number">6.4.2</span> select() — 选择列</h3>
+<section id="select-选择列" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="select-选择列"><span class="header-section-number">6.3.2</span> select() — 选择列</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 选择特定列</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span></span>
@@ -590,8 +592,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="mutate-新增修改列" class="level3" data-number="6.4.3">
-<h3 data-number="6.4.3" class="anchored" data-anchor-id="mutate-新增修改列"><span class="header-section-number">6.4.3</span> mutate() — 新增/修改列</h3>
+<section id="mutate-新增修改列" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="mutate-新增修改列"><span class="header-section-number">6.3.3</span> mutate() — 新增/修改列</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 新增列：计算树木断面积（basal area）</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span></span>
@@ -606,8 +608,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="arrange-排序" class="level3" data-number="6.4.4">
-<h3 data-number="6.4.4" class="anchored" data-anchor-id="arrange-排序"><span class="header-section-number">6.4.4</span> arrange() — 排序</h3>
+<section id="arrange-排序" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="arrange-排序"><span class="header-section-number">6.3.4</span> arrange() — 排序</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 按株高降序排列</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span></span>
@@ -620,8 +622,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="summarise-group_by-分组汇总" class="level3" data-number="6.4.5">
-<h3 data-number="6.4.5" class="anchored" data-anchor-id="summarise-group_by-分组汇总"><span class="header-section-number">6.4.5</span> summarise() + group_by() — 分组汇总</h3>
+<section id="summarise-group_by-分组汇总" class="level3" data-number="6.3.5">
+<h3 data-number="6.3.5" class="anchored" data-anchor-id="summarise-group_by-分组汇总"><span class="header-section-number">6.3.5</span> summarise() + group_by() — 分组汇总</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 按物种分组统计</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>survey <span class="sc">|&gt;</span></span>
@@ -646,8 +648,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="组合使用数据处理流水线" class="level2" data-number="6.5">
-<h2 data-number="6.5" class="anchored" data-anchor-id="组合使用数据处理流水线"><span class="header-section-number">6.5</span> 组合使用：数据处理流水线</h2>
+<section id="组合使用数据处理流水线" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="组合使用数据处理流水线"><span class="header-section-number">6.4</span> 组合使用：数据处理流水线</h2>
 <p>dplyr 的强大之处在于可以用管道将多个操作串联起来：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 完整的数据处理流水线</span></span>
@@ -666,11 +668,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>result</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="tidyr数据重塑" class="level2" data-number="6.6">
-<h2 data-number="6.6" class="anchored" data-anchor-id="tidyr数据重塑"><span class="header-section-number">6.6</span> tidyr：数据重塑</h2>
+<section id="tidyr数据重塑" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="tidyr数据重塑"><span class="header-section-number">6.5</span> tidyr：数据重塑</h2>
 <p>生态学数据经常需要在”长格式”和”宽格式”之间转换。</p>
-<section id="宽格式-长格式pivot_longer" class="level3" data-number="6.6.1">
-<h3 data-number="6.6.1" class="anchored" data-anchor-id="宽格式-长格式pivot_longer"><span class="header-section-number">6.6.1</span> 宽格式 → 长格式：pivot_longer()</h3>
+<section id="宽格式-长格式pivot_longer" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="宽格式-长格式pivot_longer"><span class="header-section-number">6.5.1</span> 宽格式 → 长格式：pivot_longer()</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 宽格式数据：每个物种一列</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>wide_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
@@ -691,8 +693,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>long_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="长格式-宽格式pivot_wider" class="level3" data-number="6.6.2">
-<h3 data-number="6.6.2" class="anchored" data-anchor-id="长格式-宽格式pivot_wider"><span class="header-section-number">6.6.2</span> 长格式 → 宽格式：pivot_wider()</h3>
+<section id="长格式-宽格式pivot_wider" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="长格式-宽格式pivot_wider"><span class="header-section-number">6.5.2</span> 长格式 → 宽格式：pivot_wider()</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 转回宽格式</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>long_data <span class="sc">|&gt;</span></span>
@@ -720,8 +722,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="数据合并" class="level2" data-number="6.7">
-<h2 data-number="6.7" class="anchored" data-anchor-id="数据合并"><span class="header-section-number">6.7</span> 数据合并</h2>
+<section id="数据合并" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="数据合并"><span class="header-section-number">6.6</span> 数据合并</h2>
 <p>研究中经常需要合并来自不同来源的数据：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 样方环境数据</span></span>
@@ -766,8 +768,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </tbody>
 </table>
 </section>
-<section id="实践物种调查数据整理" class="level2" data-number="6.8">
-<h2 data-number="6.8" class="anchored" data-anchor-id="实践物种调查数据整理"><span class="header-section-number">6.8</span> 实践：物种调查数据整理</h2>
+<section id="实践物种调查数据整理" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="实践物种调查数据整理"><span class="header-section-number">6.7</span> 实践：物种调查数据整理</h2>
 <p>综合运用本章所学，完成以下数据处理任务：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 任务：生成一份各样方的物种多样性报告</span></span>
@@ -788,8 +790,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>diversity_report</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="课后练习" class="level2" data-number="6.9">
-<h2 data-number="6.9" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">6.9</span> 课后练习</h2>
+<section id="课后练习" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">6.8</span> 课后练习</h2>
 <ol type="1">
 <li>使用 <code>iris</code> 数据集，用 dplyr 计算每个物种的花瓣长度和宽度的平均值</li>
 <li>将 <code>iris</code> 数据集转换为长格式（4 个测量值变成一列）</li>
