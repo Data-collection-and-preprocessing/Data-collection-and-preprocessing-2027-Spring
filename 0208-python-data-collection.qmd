@@ -477,7 +477,8 @@ import time
 def get_taxon_key(species_name):
     """通过物种学名查询 GBIF taxonKey"""
     url = "https://api.gbif.org/v1/species/match"
-    response = requests.get(url, params={"name": species_name})
+    response = requests.get(url, params={"name": species_name}, timeout=10)
+    response.raise_for_status()
     data = response.json()
     return data.get("usageKey")
 
@@ -495,7 +496,8 @@ def get_occurrences(taxon_key, country="CN", max_records=100):
             "limit": min(100, max_records - len(all_records)),
             "offset": offset
         }
-        response = requests.get(url, params=params)
+        response = requests.get(url, params=params, timeout=10)
+        response.raise_for_status()
         results = response.json().get("results", [])
 
         if not results:
