@@ -294,6 +294,7 @@ str(iris)
 summary(iris)
 
 # 按物种分组统计花瓣长度
+# tapply(数据, 分组变量, 函数) —— 对每组分别计算
 tapply(iris$Petal.Length, iris$Species, mean)
 
 # 简单散点图
@@ -312,5 +313,5 @@ legend("topleft", levels(iris$Species),
 1. 创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列
 2. 计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）
 3. 筛选出株高大于平均值的植物
-4. 用 `hist()` 绑制 `iris` 数据集中 `Sepal.Width` 的分布直方图
+4. 用 `hist()` 绘制 `iris` 数据集中 `Sepal.Width` 的分布直方图
 5. 将你的代码保存为 `.R` 文件，提交到 GitHub 仓库
