@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; 生态学实验采集数据方法 – 数据采集与预处理</title>
+<title>6&nbsp; 版本控制与协作 – 数据采集与预处理</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0204-modeling.html" rel="next">
-<link href="./0202-observation.html" rel="prev">
+<link href="./0201-data-collection-method.html" rel="next">
+<link href="./0106-r-data-wrangling.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0105-r-basics.html">第二单元：R 语言编程基础</a></li><li class="breadcrumb-item"><a href="./0107-git-collaboration.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -221,7 +221,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
   </div>
 </li>
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
   </div>
 </li>
@@ -383,33 +383,50 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">9.1</span> 引言</a></li>
-  <li><a href="#实验设计的基本原则" id="toc-实验设计的基本原则" class="nav-link" data-scroll-target="#实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</a></li>
-  <li><a href="#生态学实验的主要类型" id="toc-生态学实验的主要类型" class="nav-link" data-scroll-target="#生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</a>
+  <li><a href="#版本控制与协作" id="toc-版本控制与协作" class="nav-link active" data-scroll-target="#版本控制与协作"><span class="header-section-number">7</span> 版本控制与协作</a>
   <ul class="collapse">
-  <li><a href="#实验室实验-laboratory-experiments" id="toc-实验室实验-laboratory-experiments" class="nav-link" data-scroll-target="#实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</a></li>
-  <li><a href="#野外控制实验-field-experiments" id="toc-野外控制实验-field-experiments" class="nav-link" data-scroll-target="#野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</a></li>
-  <li><a href="#中宇宙实验-mesocosm-experiments" id="toc-中宇宙实验-mesocosm-experiments" class="nav-link" data-scroll-target="#中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</a></li>
-  </ul></li>
-  <li><a href="#实验数据的采集技术" id="toc-实验数据的采集技术" class="nav-link" data-scroll-target="#实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</a></li>
-  <li><a href="#实验设计的挑战与伦理" id="toc-实验设计的挑战与伦理" class="nav-link" data-scroll-target="#实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</a></li>
-  <li><a href="#r-代码示例实验数据的记录与分析" id="toc-r-代码示例实验数据的记录与分析" class="nav-link" data-scroll-target="#r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</a>
+  <li><a href="#为什么需要版本控制" id="toc-为什么需要版本控制" class="nav-link" data-scroll-target="#为什么需要版本控制"><span class="header-section-number">7.1</span> 为什么需要版本控制？</a></li>
+  <li><a href="#git-基本概念" id="toc-git-基本概念" class="nav-link" data-scroll-target="#git-基本概念"><span class="header-section-number">7.2</span> Git 基本概念</a>
   <ul class="collapse">
-  <li><a href="#创建实验数据" id="toc-创建实验数据" class="nav-link" data-scroll-target="#创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</a></li>
-  <li><a href="#描述性统计" id="toc-描述性统计" class="nav-link" data-scroll-target="#描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</a></li>
-  <li><a href="#单因素方差分析-one-way-anova" id="toc-单因素方差分析-one-way-anova" class="nav-link" data-scroll-target="#单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</a></li>
-  <li><a href="#可视化实验结果" id="toc-可视化实验结果" class="nav-link" data-scroll-target="#可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</a></li>
+  <li><a href="#仓库repository" id="toc-仓库repository" class="nav-link" data-scroll-target="#仓库repository"><span class="header-section-number">7.2.1</span> 仓库（Repository）</a></li>
+  <li><a href="#工作区暂存区版本库" id="toc-工作区暂存区版本库" class="nav-link" data-scroll-target="#工作区暂存区版本库"><span class="header-section-number">7.2.2</span> 工作区、暂存区、版本库</a></li>
   </ul></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">9.7</span> 总结</a></li>
+  <li><a href="#首次使用-git初始配置" id="toc-首次使用-git初始配置" class="nav-link" data-scroll-target="#首次使用-git初始配置"><span class="header-section-number">7.3</span> 首次使用 Git：初始配置</a></li>
+  <li><a href="#常用-git-命令" id="toc-常用-git-命令" class="nav-link" data-scroll-target="#常用-git-命令"><span class="header-section-number">7.4</span> 常用 Git 命令</a>
+  <ul class="collapse">
+  <li><a href="#初始化与克隆" id="toc-初始化与克隆" class="nav-link" data-scroll-target="#初始化与克隆"><span class="header-section-number">7.4.1</span> 初始化与克隆</a></li>
+  <li><a href="#日常工作流" id="toc-日常工作流" class="nav-link" data-scroll-target="#日常工作流"><span class="header-section-number">7.4.2</span> 日常工作流</a></li>
+  <li><a href="#查看历史" id="toc-查看历史" class="nav-link" data-scroll-target="#查看历史"><span class="header-section-number">7.4.3</span> 查看历史</a></li>
+  </ul></li>
+  <li><a href="#github-协作" id="toc-github-协作" class="nav-link" data-scroll-target="#github-协作"><span class="header-section-number">7.5</span> GitHub 协作</a>
+  <ul class="collapse">
+  <li><a href="#fork-与-pull-request" id="toc-fork-与-pull-request" class="nav-link" data-scroll-target="#fork-与-pull-request"><span class="header-section-number">7.5.1</span> Fork 与 Pull Request</a></li>
+  <li><a href="#issue" id="toc-issue" class="nav-link" data-scroll-target="#issue"><span class="header-section-number">7.5.2</span> Issue</a></li>
+  </ul></li>
+  <li><a href="#在-rstudio-中使用-git" id="toc-在-rstudio-中使用-git" class="nav-link" data-scroll-target="#在-rstudio-中使用-git"><span class="header-section-number">7.6</span> 在 RStudio 中使用 Git</a>
+  <ul class="collapse">
+  <li><a href="#创建-git-项目" id="toc-创建-git-项目" class="nav-link" data-scroll-target="#创建-git-项目"><span class="header-section-number">7.6.1</span> 创建 Git 项目</a></li>
+  <li><a href="#日常操作" id="toc-日常操作" class="nav-link" data-scroll-target="#日常操作"><span class="header-section-number">7.6.2</span> 日常操作</a></li>
+  </ul></li>
+  <li><a href="#常见问题与错误处理" id="toc-常见问题与错误处理" class="nav-link" data-scroll-target="#常见问题与错误处理"><span class="header-section-number">7.7</span> 常见问题与错误处理</a>
+  <ul class="collapse">
+  <li><a href="#合并冲突merge-conflict" id="toc-合并冲突merge-conflict" class="nav-link" data-scroll-target="#合并冲突merge-conflict"><span class="header-section-number">7.7.1</span> 合并冲突（Merge Conflict）</a></li>
+  <li><a href="#常见错误及解决方法" id="toc-常见错误及解决方法" class="nav-link" data-scroll-target="#常见错误及解决方法"><span class="header-section-number">7.7.2</span> 常见错误及解决方法</a></li>
+  </ul></li>
+  <li><a href="#gitignore-文件" id="toc-gitignore-文件" class="nav-link" data-scroll-target="#gitignore-文件"><span class="header-section-number">7.8</span> .gitignore 文件</a></li>
+  <li><a href="#项目文件组织规范" id="toc-项目文件组织规范" class="nav-link" data-scroll-target="#项目文件组织规范"><span class="header-section-number">7.9</span> 项目文件组织规范</a></li>
+  <li><a href="#实践分组创建项目仓库" id="toc-实践分组创建项目仓库" class="nav-link" data-scroll-target="#实践分组创建项目仓库"><span class="header-section-number">7.10</span> 实践：分组创建项目仓库</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">7.11</span> 课后练习</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0105-r-basics.html">第二单元：R 语言编程基础</a></li><li class="breadcrumb-item"><a href="./0107-git-collaboration.html"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></h1>
+<h1 class="title"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></h1>
 </div>
 
 
@@ -426,169 +443,371 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="引言" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">9.1</span> 引言</h2>
-<p>如果说观测是生态学的“眼睛”，那么实验就是生态学的“手术刀”。生态学实验（Ecological Experimentation）通过主动操纵一个或多个环境因子（自变量），观察生物或生态系统产生的响应（因变量），从而揭示变量之间的因果关系。在数据采集领域，实验数据以其高受控性和逻辑严密性，成为验证科学假设的关键来源。</p>
-</section>
-<section id="实验设计的基本原则" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</h2>
-<p>为了确保采集到的数据具有统计学意义和科学说服力，生态实验必须遵循以下核心原则：</p>
+<section id="版本控制与协作" class="level1" data-number="7">
+<h1 data-number="7"><span class="header-section-number">7</span> 版本控制与协作</h1>
+<p>在科学研究中，代码和数据的版本管理是确保可重复性的关键环节。本章介绍 Git 版本控制系统和 GitHub 协作平台的使用方法。</p>
+<section id="为什么需要版本控制" class="level2" data-number="7.1">
+<h2 data-number="7.1" class="anchored" data-anchor-id="为什么需要版本控制"><span class="header-section-number">7.1</span> 为什么需要版本控制？</h2>
+<p>你是否遇到过这样的情况？</p>
+<pre><code>论文_v1.docx
+论文_v2.docx
+论文_v2_导师修改.docx
+论文_v3_最终版.docx
+论文_v3_最终版_真的最终版.docx
+论文_v3_最终版_打死不改了.docx</code></pre>
+<p>版本控制系统（Version Control System, VCS）就是为了解决这个问题。Git 是目前最流行的版本控制工具，它能：</p>
 <ul>
-<li><strong>对照 (Control)</strong>：设立对照组（不施加处理）与处理组进行比较，以排除非实验因子（如背景天气变化）对结果的影响。</li>
-<li><strong>重复 (Replication)</strong>：在相同的处理水平下设置多个实验单元。重复可以估算实验误差，提高结果的普适性。</li>
-<li><strong>随机化 (Randomization)</strong>：将实验单元随机分配到不同处理组中，以消除潜在的系统偏差（如样地坡度、土壤肥力的不均匀性）。</li>
+<li>记录文件的每一次修改历史</li>
+<li>随时回退到任意历史版本</li>
+<li>多人协作时自动合并修改</li>
+<li>追踪每个人的贡献</li>
 </ul>
 </section>
-<section id="生态学实验的主要类型" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</h2>
-<p>根据受控程度和空间尺度的不同，实验数据采集通常在以下场景中进行：</p>
-<section id="实验室实验-laboratory-experiments" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</h3>
-<p>在完全人工控制的环境（如人工气候室、恒温培养箱）中进行。 * <strong>优点</strong>：变量控制极度精确，可重复性最高。 * <strong>数据采集</strong>：常利用高精度传感器监测微环境，或通过显微镜、生化分析仪获取微观数据。</p>
-</section>
-<section id="野外控制实验-field-experiments" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</h3>
-<p>在自然生态系统中直接操纵变量，如在森林中架设增温设施（OTC）、进行人工降雨模拟或物种移除实验。 * <strong>优点</strong>：生态真实性强，结果可直接应用于自然系统。 * <strong>数据采集</strong>：依赖于野外耐用型仪器（如自动气象站、地下根系扫描仪）和定期的手工实测。</p>
-</section>
-<section id="中宇宙实验-mesocosm-experiments" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</h3>
-<p>构建介于实验室和野外之间的半人工系统（如大型水箱、封闭式人工生态仓）。 * <strong>优点</strong>：在保持一定生态复杂性的同时，提供了比野外更高的控制力。 * <strong>数据采集</strong>：通常集成多参数水质监测仪、气体通量分析仪等设备。</p>
-</section>
-</section>
-<section id="实验数据的采集技术" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</h2>
-<p>实验过程中的数据采集往往比观测更具针对性：</p>
+<section id="git-基本概念" class="level2" data-number="7.2">
+<h2 data-number="7.2" class="anchored" data-anchor-id="git-基本概念"><span class="header-section-number">7.2</span> Git 基本概念</h2>
+<section id="仓库repository" class="level3" data-number="7.2.1">
+<h3 data-number="7.2.1" class="anchored" data-anchor-id="仓库repository"><span class="header-section-number">7.2.1</span> 仓库（Repository）</h3>
+<p>仓库是 Git 管理的项目文件夹。分为：</p>
 <ul>
-<li><strong>自动化连续监测</strong>：利用数据采集器（Data Logger）连接各类传感器，实时记录光照、温度、湿度、CO2浓度等环境背景数据。</li>
-<li><strong>破坏性采样 (Destructive Sampling)</strong>：为了获取生物量、养分含量或解剖学特征，往往需要在实验结束或特定阶段移除部分生物样本进行实验室分析。</li>
-<li><strong>非损伤性测量</strong>：利用叶绿素荧光仪、便携式光合系统等设备，在不伤害生物体的情况下采集生理状态数据。</li>
+<li><strong>本地仓库</strong>：在你电脑上的项目文件夹</li>
+<li><strong>远程仓库</strong>：托管在 GitHub 等平台上的副本</li>
 </ul>
 </section>
-<section id="实验设计的挑战与伦理" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</h2>
+<section id="工作区暂存区版本库" class="level3" data-number="7.2.2">
+<h3 data-number="7.2.2" class="anchored" data-anchor-id="工作区暂存区版本库"><span class="header-section-number">7.2.2</span> 工作区、暂存区、版本库</h3>
+<pre><code>工作区（Working Directory）
+    ↓  git add
+暂存区（Staging Area）
+    ↓  git commit
+版本库（Repository）
+    ↓  git push
+远程仓库（Remote）</code></pre>
 <ul>
-<li><strong>尺度效应 (Scale Issues)</strong>：实验室中的“瓶子效应”可能无法完全模拟自然界的大尺度过程。</li>
-<li><strong>边缘效应</strong>：实验边界可能对内部生物产生非自然的影响。</li>
-<li><strong>环境伦理</strong>：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。</li>
+<li><strong>工作区</strong>：你正在编辑的文件</li>
+<li><strong>暂存区</strong>：准备提交的文件（<code>git add</code> 后）</li>
+<li><strong>版本库</strong>：已提交的历史记录（<code>git commit</code> 后）</li>
 </ul>
 </section>
-<section id="r-代码示例实验数据的记录与分析" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</h2>
-<p>下面以一个经典的生态学实验——<strong>氮添加对植物生物量的影响</strong>——为例，演示如何在 R 中记录实验数据、进行基本的统计检验和可视化。</p>
-<section id="创建实验数据" class="level3" data-number="9.6.1">
-<h3 data-number="9.6.1" class="anchored" data-anchor-id="创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</h3>
-<p>模拟一个完全随机设计的氮添加实验：3 个处理水平（对照、低氮、高氮），每组 8 个重复。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟氮添加实验数据</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id   =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>), <span class="at">each =</span> <span class="dv">8</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">biomass_g =</span> <span class="fu">c</span>(</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">45</span>, <span class="at">sd =</span> <span class="dv">6</span>),   <span class="co"># 对照组</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">58</span>, <span class="at">sd =</span> <span class="dv">7</span>),   <span class="co"># 低氮组</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">72</span>, <span class="at">sd =</span> <span class="dv">8</span>)    <span class="co"># 高氮组</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 将处理设为有序因子</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>experiment_data<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  experiment_data<span class="sc">$</span>treatment,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(experiment_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
-<section id="描述性统计" class="level3" data-number="9.6.2">
-<h3 data-number="9.6.2" class="anchored" data-anchor-id="描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 按处理组计算均值和标准差</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n     =</span> <span class="fu">n</span>(),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean  =</span> <span class="fu">round</span>(<span class="fu">mean</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd    =</span> <span class="fu">round</span>(<span class="fu">sd</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="单因素方差分析-one-way-anova" class="level3" data-number="9.6.3">
-<h3 data-number="9.6.3" class="anchored" data-anchor-id="单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</h3>
-<p>检验不同氮添加水平对植物生物量是否有显著影响。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合 ANOVA 模型</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>anova_model <span class="ot">&lt;-</span> <span class="fu">aov</span>(biomass_g <span class="sc">~</span> treatment, <span class="at">data =</span> experiment_data)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
+<section id="首次使用-git初始配置" class="level2" data-number="7.3">
+<h2 data-number="7.3" class="anchored" data-anchor-id="首次使用-git初始配置"><span class="header-section-number">7.3</span> 首次使用 Git：初始配置</h2>
+<p>安装 Git 后，第一件事是告诉 Git 你是谁。这些信息会记录在每次提交中：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置用户名和邮箱（只需执行一次）</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"你的名字"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"你的邮箱@example.com"</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证设置</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>如何解读 ANOVA 结果？
+<span class="screen-reader-only">Warning</span>邮箱要和 GitHub 账号一致
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ul>
-<li><strong>F value</strong>：组间变异与组内变异的比值，越大说明处理效应越明显</li>
-<li><strong>Pr(&gt;F)</strong>：p 值，小于 0.05 表示至少有一组与其他组存在显著差异</li>
-<li>ANOVA 只能告诉你”有差异”，但不能告诉你”哪两组之间有差异”，需要进一步做事后多重比较</li>
-</ul>
+<p><code>user.email</code> 应该填你注册 GitHub 时使用的邮箱，否则 GitHub 无法正确关联你的提交记录。</p>
 </div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD 事后多重比较</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="可视化实验结果" class="level3" data-number="9.6.4">
-<h3 data-number="9.6.4" class="anchored" data-anchor-id="可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(experiment_data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> biomass_g, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greens"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"氮添加处理"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"地上生物量 (g)"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"氮添加对植物地上生物量的影响"</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="常用-git-命令" class="level2" data-number="7.4">
+<h2 data-number="7.4" class="anchored" data-anchor-id="常用-git-命令"><span class="header-section-number">7.4</span> 常用 Git 命令</h2>
+<section id="初始化与克隆" class="level3" data-number="7.4.1">
+<h3 data-number="7.4.1" class="anchored" data-anchor-id="初始化与克隆"><span class="header-section-number">7.4.1</span> 初始化与克隆</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在当前文件夹初始化 Git 仓库</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 克隆远程仓库到本地</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/username/repo-name.git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="日常工作流" class="level3" data-number="7.4.2">
+<h3 data-number="7.4.2" class="anchored" data-anchor-id="日常工作流"><span class="header-section-number">7.4.2</span> 日常工作流</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看当前状态（哪些文件被修改了）</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 将修改添加到暂存区</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add filename.R          <span class="co"># 添加单个文件</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .                   <span class="co"># 添加所有修改</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 提交到版本库（附带说明信息）</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"添加数据清洗脚本"</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 推送到远程仓库</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 从远程仓库拉取最新代码</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="查看历史" class="level3" data-number="7.4.3">
+<h3 data-number="7.4.3" class="anchored" data-anchor-id="查看历史"><span class="header-section-number">7.4.3</span> 查看历史</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看提交历史</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看某个文件的修改历史</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> <span class="at">--</span> analysis.R</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看具体修改内容</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>实验数据记录的好习惯
+<span class="screen-reader-only">Tip</span>写好提交信息
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>好的提交信息应该简洁明了，说明”做了什么”：</p>
 <ul>
-<li><strong>记录处理细节</strong>：每个处理的具体施加量、频率和方式</li>
-<li><strong>标注随机化方案</strong>：记录样地的随机分配过程，便于审稿人评估</li>
-<li><strong>保留原始数据</strong>：分析用的数据和原始记录分开存放，确保可追溯</li>
+<li>✅ <code>添加土壤pH数据清洗脚本</code></li>
+<li>✅ <code>修复物种名称拼写错误</code></li>
+<li>✅ <code>更新图表配色方案</code></li>
+<li>❌ <code>修改了一些东西</code></li>
+<li>❌ <code>update</code></li>
+<li>❌ <code>...</code></li>
 </ul>
 </div>
 </div>
 </section>
 </section>
-<section id="总结" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">9.7</span> 总结</h2>
-<p>实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。</p>
+<section id="github-协作" class="level2" data-number="7.5">
+<h2 data-number="7.5" class="anchored" data-anchor-id="github-协作"><span class="header-section-number">7.5</span> GitHub 协作</h2>
+<section id="fork-与-pull-request" class="level3" data-number="7.5.1">
+<h3 data-number="7.5.1" class="anchored" data-anchor-id="fork-与-pull-request"><span class="header-section-number">7.5.1</span> Fork 与 Pull Request</h3>
+<p>在团队协作中，常用的工作流程是：</p>
+<ol type="1">
+<li><strong>Fork</strong>：将别人的仓库复制一份到自己的 GitHub 账号</li>
+<li><strong>Clone</strong>：将 Fork 的仓库克隆到本地</li>
+<li><strong>修改</strong>：在本地进行修改并提交</li>
+<li><strong>Push</strong>：推送到自己的 GitHub 仓库</li>
+<li><strong>Pull Request（PR）</strong>：向原仓库发起合并请求</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Fork 后克隆自己的仓库（替换为你的 GitHub 用户名）</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://github.com/your-username/repo-name.git</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 创建新分支进行修改</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/add-analysis</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 修改文件并提交</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add .</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"添加多样性分析脚本"</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 推送到自己的仓库</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin feature/add-analysis</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 在 GitHub 网页上创建 Pull Request</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="issue" class="level3" data-number="7.5.2">
+<h3 data-number="7.5.2" class="anchored" data-anchor-id="issue"><span class="header-section-number">7.5.2</span> Issue</h3>
+<p>Issue 是 GitHub 上的问题追踪工具，可以用来：</p>
+<ul>
+<li>报告 Bug</li>
+<li>提出新功能需求</li>
+<li>讨论项目方向</li>
+<li>记录待办事项</li>
+</ul>
+</section>
+</section>
+<section id="在-rstudio-中使用-git" class="level2" data-number="7.6">
+<h2 data-number="7.6" class="anchored" data-anchor-id="在-rstudio-中使用-git"><span class="header-section-number">7.6</span> 在 RStudio 中使用 Git</h2>
+<p>RStudio 内置了 Git 图形界面，不需要记命令行：</p>
+<section id="创建-git-项目" class="level3" data-number="7.6.1">
+<h3 data-number="7.6.1" class="anchored" data-anchor-id="创建-git-项目"><span class="header-section-number">7.6.1</span> 创建 Git 项目</h3>
+<ol type="1">
+<li>File → New Project → Version Control → Git</li>
+<li>输入远程仓库 URL</li>
+<li>选择本地存放路径</li>
+<li>点击 Create Project</li>
+</ol>
+</section>
+<section id="日常操作" class="level3" data-number="7.6.2">
+<h3 data-number="7.6.2" class="anchored" data-anchor-id="日常操作"><span class="header-section-number">7.6.2</span> 日常操作</h3>
+<p>RStudio 右上角的 Git 面板提供了常用操作：</p>
+<ol type="1">
+<li><strong>查看修改</strong>：Git 面板会显示所有被修改的文件</li>
+<li><strong>暂存文件</strong>：勾选文件前的复选框（等同于 <code>git add</code>）</li>
+<li><strong>提交</strong>：点击 Commit 按钮，输入提交信息（等同于 <code>git commit</code>）</li>
+<li><strong>推送/拉取</strong>：点击 Push/Pull 按钮（等同于 <code>git push</code>/<code>git pull</code>）</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>RStudio 中的 Git 快捷键
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>Ctrl + Alt + M</code>：打开 Commit 窗口</li>
+<li><code>Ctrl + Alt + D</code>：查看 Diff（文件差异）</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="常见问题与错误处理" class="level2" data-number="7.7">
+<h2 data-number="7.7" class="anchored" data-anchor-id="常见问题与错误处理"><span class="header-section-number">7.7</span> 常见问题与错误处理</h2>
+<section id="合并冲突merge-conflict" class="level3" data-number="7.7.1">
+<h3 data-number="7.7.1" class="anchored" data-anchor-id="合并冲突merge-conflict"><span class="header-section-number">7.7.1</span> 合并冲突（Merge Conflict）</h3>
+<p>当两个人同时修改了同一个文件的同一部分，Git 无法自动合并，就会产生<strong>合并冲突</strong>。这是初学者最常遇到的问题。</p>
+<p>执行 <code>git pull</code> 时如果出现冲突，Git 会在文件中标记冲突位置：</p>
+<pre><code>&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+# 你的修改
+mean_height &lt;- mean(data$height, na.rm = TRUE)
+=======
+# 队友的修改
+mean_height &lt;- median(data$height, na.rm = TRUE)
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; origin/main</code></pre>
+<p>解决步骤：</p>
+<ol type="1">
+<li>打开冲突文件，找到 <code>&lt;&lt;&lt;&lt;&lt;&lt;&lt;</code>、<code>=======</code>、<code>&gt;&gt;&gt;&gt;&gt;&gt;&gt;</code> 标记</li>
+<li>决定保留哪个版本（或合并两者），删除所有标记符号</li>
+<li>保存文件后提交：</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add filename.R</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"解决合并冲突：统一使用均值计算株高"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>预防冲突的好习惯
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>每次开始工作前先 <code>git pull</code> 拉取最新代码</li>
+<li>团队成员尽量编辑不同的文件</li>
+<li>频繁提交、频繁推送，减少冲突范围</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="常见错误及解决方法" class="level3" data-number="7.7.2">
+<h3 data-number="7.7.2" class="anchored" data-anchor-id="常见错误及解决方法"><span class="header-section-number">7.7.2</span> 常见错误及解决方法</h3>
+<p><strong>推送被拒绝（push rejected）</strong></p>
+<pre><code>! [rejected] main -&gt; main (fetch first)</code></pre>
+<p>原因：远程仓库有你本地没有的新提交。先拉取再推送：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin main</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果有冲突，解决冲突后再推送</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin main</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>误提交了不该提交的文件</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从暂存区移除（文件本身不删除）</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reset HEAD filename.csv</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果已经 commit 了，撤销最近一次提交（保留修改）</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> reset <span class="at">--soft</span> HEAD~1</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>修改了文件但想恢复原样</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 丢弃工作区的修改，恢复到上次提交的状态</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> restore filename.R</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span><code>git restore</code> 不可撤销
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><code>git restore</code> 会丢弃你未提交的修改，且无法恢复。使用前请确认你确实不需要这些修改。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="gitignore-文件" class="level2" data-number="7.8">
+<h2 data-number="7.8" class="anchored" data-anchor-id="gitignore-文件"><span class="header-section-number">7.8</span> .gitignore 文件</h2>
+<p>有些文件不应该被 Git 追踪（如大型数据文件、临时文件、密钥等）。在项目根目录创建 <code>.gitignore</code> 文件：</p>
+<pre><code># R 临时文件
+.Rhistory
+.RData
+.Rproj.user/
+
+# 数据文件（太大不适合放 Git）
+data/raw/*.csv
+data/raw/*.xlsx
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 编译产物
+docs/
+_freeze/</code></pre>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>不要把敏感信息提交到 Git
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>API 密钥、密码、个人隐私数据等绝对不能提交到 Git 仓库，尤其是公开仓库。一旦提交，即使删除文件，历史记录中仍然可以找到。</p>
+</div>
+</div>
+</section>
+<section id="项目文件组织规范" class="level2" data-number="7.9">
+<h2 data-number="7.9" class="anchored" data-anchor-id="项目文件组织规范"><span class="header-section-number">7.9</span> 项目文件组织规范</h2>
+<p>一个规范的数据分析项目应该有清晰的文件结构：</p>
+<pre><code>my-project/
+├── README.md           # 项目说明
+├── .gitignore          # Git 忽略规则
+├── data/
+│   ├── raw/            # 原始数据（不修改）
+│   └── processed/      # 处理后的数据
+├── scripts/
+│   ├── 01-clean.R      # 数据清洗
+│   ├── 02-analyze.R    # 数据分析
+│   └── 03-visualize.R  # 数据可视化
+├── output/
+│   ├── figures/         # 图表
+│   └── tables/          # 表格
+└── docs/
+    └── report.qmd       # 分析报告</code></pre>
+<p>关键原则：</p>
+<ul>
+<li><strong>原始数据只读</strong>：<code>data/raw/</code> 中的文件永远不修改</li>
+<li><strong>脚本有编号</strong>：按执行顺序编号，方便他人复现</li>
+<li><strong>输出可重建</strong>：<code>output/</code> 中的所有文件都能通过运行脚本重新生成</li>
+<li><strong>有 README</strong>：说明项目目的、数据来源、运行方法</li>
+</ul>
+</section>
+<section id="实践分组创建项目仓库" class="level2" data-number="7.10">
+<h2 data-number="7.10" class="anchored" data-anchor-id="实践分组创建项目仓库"><span class="header-section-number">7.10</span> 实践：分组创建项目仓库</h2>
+<p>按照以下步骤完成本章实践：</p>
+<ol type="1">
+<li>在 GitHub 上创建一个新仓库，命名为 <code>ecology-data-project</code></li>
+<li>添加 README.md 和 .gitignore（选择 R 模板）</li>
+<li>克隆到本地（使用 RStudio）</li>
+<li>按照上面的规范创建文件夹结构</li>
+<li>添加一个简单的 R 脚本（如读取 iris 数据并保存描述性统计）</li>
+<li>提交并推送到 GitHub</li>
+<li>邀请组员作为 Collaborator</li>
+<li>组员各自克隆仓库，添加自己的分析脚本，提交推送</li>
+</ol>
+</section>
+<section id="课后练习" class="level2" data-number="7.11">
+<h2 data-number="7.11" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">7.11</span> 课后练习</h2>
+<ol type="1">
+<li>完成 Git 初始配置（<code>user.name</code> 和 <code>user.email</code>）</li>
+<li>在 GitHub 上创建个人项目仓库，包含完整的文件夹结构</li>
+<li>练习 <code>git add</code> → <code>git commit</code> → <code>git push</code> 的完整流程</li>
+<li>查看 <code>git log</code> 确认提交历史</li>
+<li>创建 <code>.gitignore</code> 文件，排除不需要追踪的文件</li>
+<li>尝试在 RStudio 中使用 Git 面板完成一次提交和推送</li>
+<li>（进阶）与同学协作制造一次合并冲突，练习解决冲突的流程</li>
+</ol>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -997,13 +1216,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0202-observation.html" class="pagination-link" aria-label="生态学观测数据方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span>
+      <a href="./0106-r-data-wrangling.html" class="pagination-link" aria-label="R 数据处理进阶">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型采集数据方法">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0201-data-collection-method.html" class="pagination-link" aria-label="数据采集方法">
+        <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

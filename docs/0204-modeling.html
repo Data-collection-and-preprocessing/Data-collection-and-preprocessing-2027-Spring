@@ -2,13 +2,16 @@
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
 
 <meta charset="utf-8">
-<meta name="generator" content="quarto-1.8.24">
+<meta name="generator" content="quarto-1.9.36">
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>7&nbsp; 生态学模型采集数据方法 – 数据采集与预处理</title>
+<title>10&nbsp; 生态学模型采集数据方法 – 数据采集与预处理</title>
 <style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
 code{white-space: pre-wrap;}
 span.smallcaps{font-variant: small-caps;}
 div.columns{display: flex; gap: min(4vw, 1.5em);}
@@ -19,6 +22,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -34,15 +72,14 @@ ul.task-list li input[type="checkbox"] {
 <link href="./0203-experimentation.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
-<script src="site_libs/quarto-html/axe/axe-check.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
 <script src="site_libs/quarto-html/tippy.umd.min.js"></script>
 <script src="site_libs/quarto-html/anchor.min.js"></script>
 <link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
-<link href="site_libs/quarto-html/quarto-syntax-highlighting-dc55a5b9e770e841cd82e46aadbfb9b0.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-845c23b38eaddc0f92fda52bfe77a8c8.css" rel="stylesheet" id="quarto-text-highlighting-styles">
 <script src="site_libs/bootstrap/bootstrap.min.js"></script>
 <link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
-<link href="site_libs/bootstrap/bootstrap-27d87c89055eeb95ddb73215ea103daa.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<link href="site_libs/bootstrap/bootstrap-f9562d0ac456b0fa249c6f195314aaec.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
 <script id="quarto-search-options" type="application/json">{
   "location": "sidebar",
   "copy-button": false,
@@ -101,7 +138,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -114,9 +151,7 @@ ul.task-list li input[type="checkbox"] {
 <div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
 <!-- sidebar -->
   <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
-    <div class="pt-lg-2 mt-2 text-left sidebar-header sidebar-header-stacked">
-      <a href="./index.html" class="sidebar-logo-link">
-      </a>
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
     <div class="sidebar-title mb-0 py-0">
       <a href="./">数据采集与预处理</a> 
     </div>
@@ -137,7 +172,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
- <span class="menu-text">第一部分：绪论</span></a>
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -152,13 +187,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是可重复性研究</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0103-introduction.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">R 环境测试2</span></span></a>
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
   </div>
 </li>
       </ul>
@@ -166,7 +201,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
- <span class="menu-text">第二部分：数据采集方法</span></a>
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -174,38 +209,20 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
-  </div>
-</li>
-          <li class="sidebar-item">
-  <div class="sidebar-item-container"> 
-  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
   </div>
 </li>
       </ul>
@@ -213,7 +230,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
- <span class="menu-text">第三部分：数据预处理方法</span></a>
+ <span class="menu-text">第三单元：数据采集方法</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -221,14 +238,50 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0301-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">数据预处理方法1</span></span></a>
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">数据预处理方法2</span></span></a>
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
   </div>
 </li>
       </ul>
@@ -236,7 +289,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item sidebar-item-section">
       <div class="sidebar-item-container"> 
             <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
- <span class="menu-text">第四部分：数据采集实战</span></a>
+ <span class="menu-text">第四单元：数据预处理</span></a>
           <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
             <i class="bi bi-chevron-right ms-2"></i>
           </a> 
@@ -244,14 +297,72 @@ ul.task-list li input[type="checkbox"] {
       <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0401-data-cleaning-pandas.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目1</span></span></a>
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0402-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">数据采集与预处理实践项目2</span></span></a>
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据质量控制</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
   </div>
 </li>
       </ul>
@@ -259,7 +370,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">Python 编程基础</span></span></a>
   </div>
 </li>
     </ul>
@@ -272,27 +383,35 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">7.1</span> 引言</a></li>
-  <li><a href="#模型作为数据生成器" id="toc-模型作为数据生成器" class="nav-link" data-scroll-target="#模型作为数据生成器"><span class="header-section-number">7.2</span> 模型作为“数据生成器”</a></li>
-  <li><a href="#主要的生态学模型类型" id="toc-主要的生态学模型类型" class="nav-link" data-scroll-target="#主要的生态学模型类型"><span class="header-section-number">7.3</span> 主要的生态学模型类型</a>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">10.1</span> 引言</a></li>
+  <li><a href="#模型作为数据生成器" id="toc-模型作为数据生成器" class="nav-link" data-scroll-target="#模型作为数据生成器"><span class="header-section-number">10.2</span> 模型作为“数据生成器”</a></li>
+  <li><a href="#主要的生态学模型类型" id="toc-主要的生态学模型类型" class="nav-link" data-scroll-target="#主要的生态学模型类型"><span class="header-section-number">10.3</span> 主要的生态学模型类型</a>
   <ul class="collapse">
-  <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">7.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
-  <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">7.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
-  <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">7.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
-  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">7.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
+  <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">10.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
+  <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">10.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
+  <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">10.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
+  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">10.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
   </ul></li>
-  <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">7.4</span> 模型数据的生成流程</a></li>
-  <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">7.5</span> 模型数据的验证与不确定性</a></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">7.6</span> 总结</a></li>
+  <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">10.4</span> 模型数据的生成流程</a></li>
+  <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">10.5</span> 模型数据的验证与不确定性</a></li>
+  <li><a href="#r-代码示例简单统计模型" id="toc-r-代码示例简单统计模型" class="nav-link" data-scroll-target="#r-代码示例简单统计模型"><span class="header-section-number">10.6</span> R 代码示例：简单统计模型</a>
+  <ul class="collapse">
+  <li><a href="#准备数据" id="toc-准备数据" class="nav-link" data-scroll-target="#准备数据"><span class="header-section-number">10.6.1</span> 准备数据</a></li>
+  <li><a href="#拟合线性回归模型" id="toc-拟合线性回归模型" class="nav-link" data-scroll-target="#拟合线性回归模型"><span class="header-section-number">10.6.2</span> 拟合线性回归模型</a></li>
+  <li><a href="#可视化回归结果" id="toc-可视化回归结果" class="nav-link" data-scroll-target="#可视化回归结果"><span class="header-section-number">10.6.3</span> 可视化回归结果</a></li>
+  <li><a href="#模型诊断" id="toc-模型诊断" class="nav-link" data-scroll-target="#模型诊断"><span class="header-section-number">10.6.4</span> 模型诊断</a></li>
+  <li><a href="#使用模型生成预测数据" id="toc-使用模型生成预测数据" class="nav-link" data-scroll-target="#使用模型生成预测数据"><span class="header-section-number">10.6.5</span> 使用模型生成预测数据</a></li>
+  </ul></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">10.7</span> 总结</a></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第二部分：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></h1>
 </div>
 
 
@@ -309,48 +428,178 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="引言" class="level2" data-number="7.1">
-<h2 data-number="7.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">7.1</span> 引言</h2>
+<section id="引言" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">10.1</span> 引言</h2>
 <p>在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来 100 年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，<strong>生态学模型（Ecological Modeling）</strong>成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的“数据生成器”，它能够产生跨越时空限制的虚拟数据，帮助我们探索“如果……会怎样”的情景。</p>
 </section>
-<section id="模型作为数据生成器" class="level2" data-number="7.2">
-<h2 data-number="7.2" class="anchored" data-anchor-id="模型作为数据生成器"><span class="header-section-number">7.2</span> 模型作为“数据生成器”</h2>
+<section id="模型作为数据生成器" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="模型作为数据生成器"><span class="header-section-number">10.2</span> 模型作为“数据生成器”</h2>
 <p>模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。 * <strong>输入数据</strong>：模型需要真实的观测或实验数据作为初始条件和参数。 * <strong>输出数据</strong>：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。</p>
 </section>
-<section id="主要的生态学模型类型" class="level2" data-number="7.3">
-<h2 data-number="7.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">7.3</span> 主要的生态学模型类型</h2>
-<section id="统计模型-statistical-models" class="level3" data-number="7.3.1">
-<h3 data-number="7.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">7.3.1</span> 1. 统计模型 (Statistical Models)</h3>
+<section id="主要的生态学模型类型" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">10.3</span> 主要的生态学模型类型</h2>
+<section id="统计模型-statistical-models" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">10.3.1</span> 1. 统计模型 (Statistical Models)</h3>
 <p>利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。 * <strong>特点</strong>：侧重于相关性，对历史数据依赖性强。 * <strong>应用</strong>：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。</p>
 </section>
-<section id="机理模型-process-based-models" class="level3" data-number="7.3.2">
-<h3 data-number="7.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">7.3.2</span> 2. 机理模型 (Process-based Models)</h3>
+<section id="机理模型-process-based-models" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">10.3.2</span> 2. 机理模型 (Process-based Models)</h3>
 <p>基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。 * <strong>特点</strong>：具有较强的生物学解释力，能够预测超出历史经验范围的情景。 * <strong>应用</strong>：植被动态模型（DGVMs），模拟全球植被对大气 CO2 浓度升高的响应。</p>
 </section>
-<section id="个体为本模型-agent-based-models-abm" class="level3" data-number="7.3.3">
-<h3 data-number="7.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">7.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
+<section id="个体为本模型-agent-based-models-abm" class="level3" data-number="10.3.3">
+<h3 data-number="10.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">10.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
 <p>模拟大量具有独立决策能力的个体（如动物、植物或人类）及其相互作用。 * <strong>特点</strong>：能够观察到从微观行为中“涌现”出的宏观群体模式。 * <strong>应用</strong>：动物迁徙路径模拟、流行病在野生动物种群中的传播。</p>
 </section>
-<section id="地球系统模型-earth-system-models" class="level3" data-number="7.3.4">
-<h3 data-number="7.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">7.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
+<section id="地球系统模型-earth-system-models" class="level3" data-number="10.3.4">
+<h3 data-number="10.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">10.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
 <p>集成大气、海洋、陆地生态系统的超大规模数值模拟系统。 * <strong>特点</strong>：处理全球尺度的复杂反馈关系。 * <strong>应用</strong>：IPCC 气候变化评估报告中的生态系统响应预测。</p>
 </section>
 </section>
-<section id="模型数据的生成流程" class="level2" data-number="7.4">
-<h2 data-number="7.4" class="anchored" data-anchor-id="模型数据的生成流程"><span class="header-section-number">7.4</span> 模型数据的生成流程</h2>
+<section id="模型数据的生成流程" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="模型数据的生成流程"><span class="header-section-number">10.4</span> 模型数据的生成流程</h2>
 <ol type="1">
 <li><strong>参数化 (Parameterization)</strong>：利用实测数据确定模型中的关键参数（如生长速率、死亡率）。</li>
 <li><strong>模拟运行 (Simulation)</strong>：设定初始状态和驱动因子（如气象数据），运行模型生成模拟数据。</li>
 <li><strong>情景分析 (Scenario Analysis)</strong>：通过改变输入条件（如不同的减排情景），生成多组对比数据，评估不同政策或环境变化的影响。</li>
 </ol>
 </section>
-<section id="模型数据的验证与不确定性" class="level2" data-number="7.5">
-<h2 data-number="7.5" class="anchored" data-anchor-id="模型数据的验证与不确定性"><span class="header-section-number">7.5</span> 模型数据的验证与不确定性</h2>
+<section id="模型数据的验证与不确定性" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="模型数据的验证与不确定性"><span class="header-section-number">10.5</span> 模型数据的验证与不确定性</h2>
 <p>模型生成的数据并非“真实”数据，其可靠性取决于： * <strong>模型校准 (Calibration)</strong>：调整参数使模型输出尽可能接近已知的观测值。 * <strong>模型验证 (Validation)</strong>：使用未参与建模的独立数据集来检验模型的预测准确性。 * <strong>不确定性分析</strong>：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。</p>
 </section>
-<section id="总结" class="level2" data-number="7.6">
-<h2 data-number="7.6" class="anchored" data-anchor-id="总结"><span class="header-section-number">7.6</span> 总结</h2>
-<p>模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家乔治·博克斯所言：“所有模型都是错的，但有些是有用的。”在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。</p>
+<section id="r-代码示例简单统计模型" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="r-代码示例简单统计模型"><span class="header-section-number">10.6</span> R 代码示例：简单统计模型</h2>
+<p>下面以一个经典的生态学问题——<strong>树高与胸径的关系</strong>——为例，演示如何在 R 中构建线性回归模型、进行模型诊断和结果解读。</p>
+<section id="准备数据" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="准备数据"><span class="header-section-number">10.6.1</span> 准备数据</h3>
+<p>我们模拟一组亚热带常绿阔叶林的树木测量数据。在生态学中，树高（height）与胸径（DBH, diameter at breast height）之间通常存在正相关关系。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟 50 棵树的胸径和树高数据</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_id  =</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">species  =</span> <span class="fu">sample</span>(<span class="fu">c</span>(“马尾松”, “杉木”, “枫香”), n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm   =</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">5</span>, <span class="at">max =</span> <span class="dv">40</span>),                          <span class="co"># 胸径 5-40 cm</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fl">2.5</span> <span class="sc">+</span> <span class="fl">0.35</span> <span class="sc">*</span> dbh_cm <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">1.5</span>)   <span class="co"># 树高 = 截距 + 斜率*胸径 + 噪声</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看前几行</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tree_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="拟合线性回归模型" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="拟合线性回归模型"><span class="header-section-number">10.6.2</span> 拟合线性回归模型</h3>
+<p>使用 <code>lm()</code> 函数拟合树高对胸径的线性回归。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合模型：树高 ~ 胸径</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(height_m <span class="sc">~</span> dbh_cm, <span class="at">data =</span> tree_data)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看模型摘要</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>如何解读 <code>summary()</code> 输出？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>Estimate（估计值）</strong>：截距（Intercept）表示胸径为 0 时的预测树高，<code>dbh_cm</code> 的系数表示胸径每增加 1 cm，树高平均增加多少米</li>
+<li><strong>Pr(&gt;|t|)</strong>：p 值，小于 0.05 通常认为该变量对树高有显著影响</li>
+<li><strong>R-squared</strong>：决定系数，表示胸径能解释树高变异的比例，越接近 1 说明模型拟合越好</li>
+<li><strong>Residual standard error</strong>：残差标准误，反映预测值与实际值的平均偏差</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="可视化回归结果" class="level3" data-number="10.6.3">
+<h3 data-number="10.6.3" class="anchored" data-anchor-id="可视化回归结果"><span class="header-section-number">10.6.3</span> 可视化回归结果</h3>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_data, <span class="fu">aes</span>(<span class="at">x =</span> dbh_cm, <span class="at">y =</span> height_m)) <span class="sc">+</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> “lm”, <span class="at">color =</span> “steelblue”, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> “胸径 (cm)”,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> “树高 (m)”,</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> “树高与胸径的线性关系”,</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> “树种”</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="模型诊断" class="level3" data-number="10.6.4">
+<h3 data-number="10.6.4" class="anchored" data-anchor-id="模型诊断"><span class="header-section-number">10.6.4</span> 模型诊断</h3>
+<p>拟合模型后，必须检查模型假设是否成立。<code>plot()</code> 函数会生成四张诊断图。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 四张诊断图</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">1</span>)  <span class="co"># 残差 vs 拟合值：检查线性假设和等方差性</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">2</span>)  <span class="co"># Q-Q 图：检查残差是否服从正态分布</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">3</span>)  <span class="co"># 标准化残差 vs 拟合值：检查方差齐性</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">5</span>)  <span class="co"># 残差 vs 杠杆值：识别强影响点</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>诊断图怎么看？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>残差 vs 拟合值</strong>：点应随机分布在 0 线两侧，无明显趋势。若呈现弯曲，说明线性假设不成立</li>
+<li><strong>Q-Q 图</strong>：点应大致落在对角线上。若两端偏离严重，说明残差不服从正态分布</li>
+<li><strong>Scale-Location 图</strong>：红线应大致水平，否则说明存在异方差</li>
+<li><strong>Residuals vs Leverage</strong>：关注 Cook’s distance 超过 0.5 的点，它们可能是强影响观测值</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="使用模型生成预测数据" class="level3" data-number="10.6.5">
+<h3 data-number="10.6.5" class="anchored" data-anchor-id="使用模型生成预测数据"><span class="header-section-number">10.6.5</span> 使用模型生成预测数据</h3>
+<p>模型的核心价值在于预测。下面演示如何用拟合好的模型为新数据生成预测值及其置信区间——这就是”模型作为数据生成器”的具体体现。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 为新的胸径值生成预测</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>new_trees <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">dbh_cm =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测树高及 95% 置信区间</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> new_trees, <span class="at">interval =</span> <span class="st">"confidence"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(new_trees, <span class="fu">as_tibble</span>(predictions))</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>预测区间 vs 置信区间
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>置信区间 (confidence interval)</strong>：反映回归线本身的不确定性，即”平均树高”的估计范围</li>
+<li><strong>预测区间 (prediction interval)</strong>：反映单棵树的预测不确定性，通常比置信区间更宽。使用 <code>interval = "prediction"</code> 获取</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="总结" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">10.7</span> 总结</h2>
+<p>模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家乔治·博克斯所言：”所有模型都是错的，但有些是有用的。”在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。</p>
 
 
 </section>
@@ -762,12 +1011,12 @@ ul.task-list li input[type="checkbox"] {
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./0203-experimentation.html" class="pagination-link" aria-label="生态学实验采集数据方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./0205-public-data.html" class="pagination-link" aria-label="生态学公共数据采集数据方法">
-        <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

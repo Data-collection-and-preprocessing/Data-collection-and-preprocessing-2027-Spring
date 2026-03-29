@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; 生态学实验采集数据方法 – 数据采集与预处理</title>
+<title>21&nbsp; 项目工作坊 – 数据采集与预处理</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0204-modeling.html" rel="next">
-<link href="./0202-observation.html" rel="prev">
+<link href="./0603-summary.html" rel="next">
+<link href="./0601-case-study.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0601-case-study.html">第六单元：实战与项目</a></li><li class="breadcrumb-item"><a href="./0602-project-workshop.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
   </div>
 </li>
@@ -355,7 +355,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
   </div>
 </li>
@@ -383,33 +383,52 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">9.1</span> 引言</a></li>
-  <li><a href="#实验设计的基本原则" id="toc-实验设计的基本原则" class="nav-link" data-scroll-target="#实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</a></li>
-  <li><a href="#生态学实验的主要类型" id="toc-生态学实验的主要类型" class="nav-link" data-scroll-target="#生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</a>
+  <li><a href="#项目工作坊" id="toc-项目工作坊" class="nav-link active" data-scroll-target="#项目工作坊"><span class="header-section-number">22</span> 项目工作坊</a>
   <ul class="collapse">
-  <li><a href="#实验室实验-laboratory-experiments" id="toc-实验室实验-laboratory-experiments" class="nav-link" data-scroll-target="#实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</a></li>
-  <li><a href="#野外控制实验-field-experiments" id="toc-野外控制实验-field-experiments" class="nav-link" data-scroll-target="#野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</a></li>
-  <li><a href="#中宇宙实验-mesocosm-experiments" id="toc-中宇宙实验-mesocosm-experiments" class="nav-link" data-scroll-target="#中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</a></li>
-  </ul></li>
-  <li><a href="#实验数据的采集技术" id="toc-实验数据的采集技术" class="nav-link" data-scroll-target="#实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</a></li>
-  <li><a href="#实验设计的挑战与伦理" id="toc-实验设计的挑战与伦理" class="nav-link" data-scroll-target="#实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</a></li>
-  <li><a href="#r-代码示例实验数据的记录与分析" id="toc-r-代码示例实验数据的记录与分析" class="nav-link" data-scroll-target="#r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</a>
+  <li><a href="#项目选题指南" id="toc-项目选题指南" class="nav-link" data-scroll-target="#项目选题指南"><span class="header-section-number">22.1</span> 项目选题指南</a>
   <ul class="collapse">
-  <li><a href="#创建实验数据" id="toc-创建实验数据" class="nav-link" data-scroll-target="#创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</a></li>
-  <li><a href="#描述性统计" id="toc-描述性统计" class="nav-link" data-scroll-target="#描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</a></li>
-  <li><a href="#单因素方差分析-one-way-anova" id="toc-单因素方差分析-one-way-anova" class="nav-link" data-scroll-target="#单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</a></li>
-  <li><a href="#可视化实验结果" id="toc-可视化实验结果" class="nav-link" data-scroll-target="#可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</a></li>
+  <li><a href="#选题原则" id="toc-选题原则" class="nav-link" data-scroll-target="#选题原则"><span class="header-section-number">22.1.1</span> 选题原则</a></li>
+  <li><a href="#推荐选题方向" id="toc-推荐选题方向" class="nav-link" data-scroll-target="#推荐选题方向"><span class="header-section-number">22.1.2</span> 推荐选题方向</a></li>
+  <li><a href="#选题评估清单" id="toc-选题评估清单" class="nav-link" data-scroll-target="#选题评估清单"><span class="header-section-number">22.1.3</span> 选题评估清单</a></li>
   </ul></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">9.7</span> 总结</a></li>
+  <li><a href="#数据采集方案设计" id="toc-数据采集方案设计" class="nav-link" data-scroll-target="#数据采集方案设计"><span class="header-section-number">22.2</span> 数据采集方案设计</a>
+  <ul class="collapse">
+  <li><a href="#采样设计" id="toc-采样设计" class="nav-link" data-scroll-target="#采样设计"><span class="header-section-number">22.2.1</span> 采样设计</a></li>
+  <li><a href="#数据记录规范" id="toc-数据记录规范" class="nav-link" data-scroll-target="#数据记录规范"><span class="header-section-number">22.2.2</span> 数据记录规范</a></li>
+  <li><a href="#质量控制要点" id="toc-质量控制要点" class="nav-link" data-scroll-target="#质量控制要点"><span class="header-section-number">22.2.3</span> 质量控制要点</a></li>
+  </ul></li>
+  <li><a href="#分组协作流程" id="toc-分组协作流程" class="nav-link" data-scroll-target="#分组协作流程"><span class="header-section-number">22.3</span> 分组协作流程</a>
+  <ul class="collapse">
+  <li><a href="#角色分工" id="toc-角色分工" class="nav-link" data-scroll-target="#角色分工"><span class="header-section-number">22.3.1</span> 角色分工</a></li>
+  <li><a href="#项目时间线" id="toc-项目时间线" class="nav-link" data-scroll-target="#项目时间线"><span class="header-section-number">22.3.2</span> 项目时间线</a></li>
+  <li><a href="#每周例会制度" id="toc-每周例会制度" class="nav-link" data-scroll-target="#每周例会制度"><span class="header-section-number">22.3.3</span> 每周例会制度</a></li>
+  </ul></li>
+  <li><a href="#git-协作规范" id="toc-git-协作规范" class="nav-link" data-scroll-target="#git-协作规范"><span class="header-section-number">22.4</span> Git 协作规范</a>
+  <ul class="collapse">
+  <li><a href="#仓库结构" id="toc-仓库结构" class="nav-link" data-scroll-target="#仓库结构"><span class="header-section-number">22.4.1</span> 仓库结构</a></li>
+  <li><a href="#分支策略" id="toc-分支策略" class="nav-link" data-scroll-target="#分支策略"><span class="header-section-number">22.4.2</span> 分支策略</a></li>
+  <li><a href="#基本工作流" id="toc-基本工作流" class="nav-link" data-scroll-target="#基本工作流"><span class="header-section-number">22.4.3</span> 基本工作流</a></li>
+  <li><a href="#提交信息规范" id="toc-提交信息规范" class="nav-link" data-scroll-target="#提交信息规范"><span class="header-section-number">22.4.4</span> 提交信息规范</a></li>
+  <li><a href="#gitignore-模板" id="toc-gitignore-模板" class="nav-link" data-scroll-target="#gitignore-模板"><span class="header-section-number">22.4.5</span> .gitignore 模板</a></li>
+  </ul></li>
+  <li><a href="#项目报告模板" id="toc-项目报告模板" class="nav-link" data-scroll-target="#项目报告模板"><span class="header-section-number">22.5</span> 项目报告模板</a>
+  <ul class="collapse">
+  <li><a href="#报告要求" id="toc-报告要求" class="nav-link" data-scroll-target="#报告要求"><span class="header-section-number">22.5.1</span> 报告要求</a></li>
+  </ul></li>
+  <li><a href="#评分标准" id="toc-评分标准" class="nav-link" data-scroll-target="#评分标准"><span class="header-section-number">22.6</span> 评分标准</a>
+  <ul class="collapse">
+  <li><a href="#可重复性检查清单" id="toc-可重复性检查清单" class="nav-link" data-scroll-target="#可重复性检查清单"><span class="header-section-number">22.6.1</span> 可重复性检查清单</a></li>
+  </ul></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0601-case-study.html">第六单元：实战与项目</a></li><li class="breadcrumb-item"><a href="./0602-project-workshop.html"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></h1>
+<h1 class="title"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></h1>
 </div>
 
 
@@ -426,169 +445,380 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="引言" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">9.1</span> 引言</h2>
-<p>如果说观测是生态学的“眼睛”，那么实验就是生态学的“手术刀”。生态学实验（Ecological Experimentation）通过主动操纵一个或多个环境因子（自变量），观察生物或生态系统产生的响应（因变量），从而揭示变量之间的因果关系。在数据采集领域，实验数据以其高受控性和逻辑严密性，成为验证科学假设的关键来源。</p>
-</section>
-<section id="实验设计的基本原则" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</h2>
-<p>为了确保采集到的数据具有统计学意义和科学说服力，生态实验必须遵循以下核心原则：</p>
+<section id="项目工作坊" class="level1" data-number="22">
+<h1 data-number="22"><span class="header-section-number">22</span> 项目工作坊</h1>
+<p>本章为期末小组项目提供系统指导。你将以 3-5 人小组为单位，完成一个完整的生态学数据采集与分析项目。这是将课程所学技能融会贯通的实践机会。</p>
+<section id="项目选题指南" class="level2" data-number="22.1">
+<h2 data-number="22.1" class="anchored" data-anchor-id="项目选题指南"><span class="header-section-number">22.1</span> 项目选题指南</h2>
+<section id="选题原则" class="level3" data-number="22.1.1">
+<h3 data-number="22.1.1" class="anchored" data-anchor-id="选题原则"><span class="header-section-number">22.1.1</span> 选题原则</h3>
+<p>好的选题应满足以下条件：</p>
 <ul>
-<li><strong>对照 (Control)</strong>：设立对照组（不施加处理）与处理组进行比较，以排除非实验因子（如背景天气变化）对结果的影响。</li>
-<li><strong>重复 (Replication)</strong>：在相同的处理水平下设置多个实验单元。重复可以估算实验误差，提高结果的普适性。</li>
-<li><strong>随机化 (Randomization)</strong>：将实验单元随机分配到不同处理组中，以消除潜在的系统偏差（如样地坡度、土壤肥力的不均匀性）。</li>
+<li><strong>可操作性</strong>：在 4-6 周内可完成数据采集和分析</li>
+<li><strong>数据可得性</strong>：能获取足够的数据量（建议 ≥30 个观测值）</li>
+<li><strong>生态学意义</strong>：围绕真实的生态学问题展开</li>
+<li><strong>技能覆盖</strong>：能运用课程中学到的数据采集、清洗、分析和可视化技能</li>
 </ul>
 </section>
-<section id="生态学实验的主要类型" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</h2>
-<p>根据受控程度和空间尺度的不同，实验数据采集通常在以下场景中进行：</p>
-<section id="实验室实验-laboratory-experiments" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</h3>
-<p>在完全人工控制的环境（如人工气候室、恒温培养箱）中进行。 * <strong>优点</strong>：变量控制极度精确，可重复性最高。 * <strong>数据采集</strong>：常利用高精度传感器监测微环境，或通过显微镜、生化分析仪获取微观数据。</p>
-</section>
-<section id="野外控制实验-field-experiments" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</h3>
-<p>在自然生态系统中直接操纵变量，如在森林中架设增温设施（OTC）、进行人工降雨模拟或物种移除实验。 * <strong>优点</strong>：生态真实性强，结果可直接应用于自然系统。 * <strong>数据采集</strong>：依赖于野外耐用型仪器（如自动气象站、地下根系扫描仪）和定期的手工实测。</p>
-</section>
-<section id="中宇宙实验-mesocosm-experiments" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</h3>
-<p>构建介于实验室和野外之间的半人工系统（如大型水箱、封闭式人工生态仓）。 * <strong>优点</strong>：在保持一定生态复杂性的同时，提供了比野外更高的控制力。 * <strong>数据采集</strong>：通常集成多参数水质监测仪、气体通量分析仪等设备。</p>
-</section>
-</section>
-<section id="实验数据的采集技术" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</h2>
-<p>实验过程中的数据采集往往比观测更具针对性：</p>
+<section id="推荐选题方向" class="level3" data-number="22.1.2">
+<h3 data-number="22.1.2" class="anchored" data-anchor-id="推荐选题方向"><span class="header-section-number">22.1.2</span> 推荐选题方向</h3>
+<p>以下是适合本课程的选题方向，供各组参考：</p>
+<p><strong>方向一：校园生物多样性调查</strong></p>
 <ul>
-<li><strong>自动化连续监测</strong>：利用数据采集器（Data Logger）连接各类传感器，实时记录光照、温度、湿度、CO2浓度等环境背景数据。</li>
-<li><strong>破坏性采样 (Destructive Sampling)</strong>：为了获取生物量、养分含量或解剖学特征，往往需要在实验结束或特定阶段移除部分生物样本进行实验室分析。</li>
-<li><strong>非损伤性测量</strong>：利用叶绿素荧光仪、便携式光合系统等设备，在不伤害生物体的情况下采集生理状态数据。</li>
+<li>校园不同生境（草地、林地、水域边）的植物物种组成比较</li>
+<li>校园鸟类多样性的时间动态（早、中、晚观测）</li>
+<li>校园昆虫多样性与植被类型的关系</li>
+</ul>
+<p><strong>方向二：环境因子与生物响应</strong></p>
+<ul>
+<li>不同光照条件下植物叶片形态的差异</li>
+<li>土壤 pH 值与植物群落组成的关系</li>
+<li>水质指标与水生生物多样性的关联</li>
+</ul>
+<p><strong>方向三：公开数据集分析</strong></p>
+<ul>
+<li>利用 GBIF 数据分析某类群在广西的分布格局</li>
+<li>基于气象站数据分析气候变化对物候的影响</li>
+<li>利用遥感植被指数（NDVI）分析土地利用变化</li>
+</ul>
+<p><strong>方向四：人类活动与生态影响</strong></p>
+<ul>
+<li>校园不同区域（教学区、生活区、绿化区）的土壤动物多样性</li>
+<li>道路边缘效应对植物群落的影响</li>
+<li>不同管理方式（修剪 vs.&nbsp;自然生长）对草地物种多样性的影响</li>
 </ul>
 </section>
-<section id="实验设计的挑战与伦理" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</h2>
+<section id="选题评估清单" class="level3" data-number="22.1.3">
+<h3 data-number="22.1.3" class="anchored" data-anchor-id="选题评估清单"><span class="header-section-number">22.1.3</span> 选题评估清单</h3>
+<p>确定选题前，请用以下清单自查：</p>
+<pre><code>□ 研究问题是否明确？能否用一句话概括？
+□ 数据采集方法是否可行？需要什么设备？
+□ 样本量是否充足？能否在规定时间内完成？
+□ 是否涉及伦理问题（如采集保护物种）？
+□ 小组成员是否都能参与数据采集？</code></pre>
+</section>
+</section>
+<section id="数据采集方案设计" class="level2" data-number="22.2">
+<h2 data-number="22.2" class="anchored" data-anchor-id="数据采集方案设计"><span class="header-section-number">22.2</span> 数据采集方案设计</h2>
+<p>确定选题后，需要制定详细的数据采集方案。一份完整的方案应包含以下内容：</p>
+<section id="采样设计" class="level3" data-number="22.2.1">
+<h3 data-number="22.2.1" class="anchored" data-anchor-id="采样设计"><span class="header-section-number">22.2.1</span> 采样设计</h3>
+<pre><code>1. 研究区域描述
+   - 地理位置、面积、基本环境特征
+
+2. 采样策略
+   - 随机采样 / 系统采样 / 分层采样
+   - 样方大小和数量的确定依据
+
+3. 变量定义
+   - 响应变量（因变量）：如物种数、多样性指数
+   - 解释变量（自变量）：如海拔、土壤 pH
+   - 协变量：如坡度、坡向
+
+4. 时间安排
+   - 预调查时间
+   - 正式采样时间
+   - 数据录入截止时间</code></pre>
+</section>
+<section id="数据记录规范" class="level3" data-number="22.2.2">
+<h3 data-number="22.2.2" class="anchored" data-anchor-id="数据记录规范"><span class="header-section-number">22.2.2</span> 数据记录规范</h3>
+<p>统一的数据记录格式是保证数据质量的基础：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 推荐的野外记录表结构</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>field_record <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">date       =</span> <span class="st">"2027-04-15"</span>,      <span class="co"># 日期（ISO 8601 格式）</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id    =</span> <span class="st">"S01"</span>,             <span class="co"># 样点编号</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer   =</span> <span class="st">"张三"</span>,            <span class="co"># 记录人</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude   =</span> <span class="fl">23.456</span>,            <span class="co"># 纬度（十进制度）</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude  =</span> <span class="fl">108.789</span>,           <span class="co"># 经度（十进制度）</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation  =</span> <span class="dv">350</span>,               <span class="co"># 海拔（m）</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">species    =</span> <span class="st">"Pinus massoniana"</span>, <span class="co"># 物种拉丁名</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">count      =</span> <span class="dv">12</span>,                <span class="co"># 个体数</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh        =</span> <span class="fl">15.3</span>,              <span class="co"># 胸径（cm）</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes      =</span> <span class="st">"林缘个体"</span>         <span class="co"># 备注</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="质量控制要点" class="level3" data-number="22.2.3">
+<h3 data-number="22.2.3" class="anchored" data-anchor-id="质量控制要点"><span class="header-section-number">22.2.3</span> 质量控制要点</h3>
 <ul>
-<li><strong>尺度效应 (Scale Issues)</strong>：实验室中的“瓶子效应”可能无法完全模拟自然界的大尺度过程。</li>
-<li><strong>边缘效应</strong>：实验边界可能对内部生物产生非自然的影响。</li>
-<li><strong>环境伦理</strong>：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。</li>
+<li><strong>双人录入</strong>：关键数据由两人独立录入后比对</li>
+<li><strong>即时检查</strong>：每天采样结束后检查数据完整性</li>
+<li><strong>异常标记</strong>：对可疑数据标记 flag，不要直接删除</li>
+<li><strong>元数据记录</strong>：记录天气、设备型号等可能影响数据的信息</li>
 </ul>
 </section>
-<section id="r-代码示例实验数据的记录与分析" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</h2>
-<p>下面以一个经典的生态学实验——<strong>氮添加对植物生物量的影响</strong>——为例，演示如何在 R 中记录实验数据、进行基本的统计检验和可视化。</p>
-<section id="创建实验数据" class="level3" data-number="9.6.1">
-<h3 data-number="9.6.1" class="anchored" data-anchor-id="创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</h3>
-<p>模拟一个完全随机设计的氮添加实验：3 个处理水平（对照、低氮、高氮），每组 8 个重复。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟氮添加实验数据</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id   =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>), <span class="at">each =</span> <span class="dv">8</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">biomass_g =</span> <span class="fu">c</span>(</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">45</span>, <span class="at">sd =</span> <span class="dv">6</span>),   <span class="co"># 对照组</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">58</span>, <span class="at">sd =</span> <span class="dv">7</span>),   <span class="co"># 低氮组</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">72</span>, <span class="at">sd =</span> <span class="dv">8</span>)    <span class="co"># 高氮组</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 将处理设为有序因子</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>experiment_data<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  experiment_data<span class="sc">$</span>treatment,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(experiment_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
-<section id="描述性统计" class="level3" data-number="9.6.2">
-<h3 data-number="9.6.2" class="anchored" data-anchor-id="描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 按处理组计算均值和标准差</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n     =</span> <span class="fu">n</span>(),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean  =</span> <span class="fu">round</span>(<span class="fu">mean</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd    =</span> <span class="fu">round</span>(<span class="fu">sd</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="分组协作流程" class="level2" data-number="22.3">
+<h2 data-number="22.3" class="anchored" data-anchor-id="分组协作流程"><span class="header-section-number">22.3</span> 分组协作流程</h2>
+<section id="角色分工" class="level3" data-number="22.3.1">
+<h3 data-number="22.3.1" class="anchored" data-anchor-id="角色分工"><span class="header-section-number">22.3.1</span> 角色分工</h3>
+<p>每组建议设置以下角色（可兼任）：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>角色</th>
+<th>职责</th>
+<th>建议人数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>项目负责人</td>
+<td>统筹进度、协调分工、汇报展示</td>
+<td>1 人</td>
+</tr>
+<tr class="even">
+<td>数据采集员</td>
+<td>野外调查、数据记录</td>
+<td>2-3 人</td>
+</tr>
+<tr class="odd">
+<td>数据分析员</td>
+<td>数据清洗、统计分析、可视化</td>
+<td>1-2 人</td>
+</tr>
+<tr class="even">
+<td>文档撰写员</td>
+<td>撰写报告、整理参考文献</td>
+<td>1 人</td>
+</tr>
+</tbody>
+</table>
 </section>
-<section id="单因素方差分析-one-way-anova" class="level3" data-number="9.6.3">
-<h3 data-number="9.6.3" class="anchored" data-anchor-id="单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</h3>
-<p>检验不同氮添加水平对植物生物量是否有显著影响。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合 ANOVA 模型</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>anova_model <span class="ot">&lt;-</span> <span class="fu">aov</span>(biomass_g <span class="sc">~</span> treatment, <span class="at">data =</span> experiment_data)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>如何解读 ANOVA 结果？
-</div>
-</div>
-<div class="callout-body-container callout-body">
+<section id="项目时间线" class="level3" data-number="22.3.2">
+<h3 data-number="22.3.2" class="anchored" data-anchor-id="项目时间线"><span class="header-section-number">22.3.2</span> 项目时间线</h3>
+<pre><code>第 1 周：选题讨论 → 确定研究问题 → 提交选题报告
+第 2 周：设计采样方案 → 准备设备 → 预调查
+第 3 周：正式数据采集（第一轮）
+第 4 周：正式数据采集（第二轮）→ 数据录入
+第 5 周：数据清洗 → 探索性分析 → 可视化
+第 6 周：撰写报告 → 组内审阅 → 提交 → 汇报展示</code></pre>
+</section>
+<section id="每周例会制度" class="level3" data-number="22.3.3">
+<h3 data-number="22.3.3" class="anchored" data-anchor-id="每周例会制度"><span class="header-section-number">22.3.3</span> 每周例会制度</h3>
+<p>建议每周召开一次小组会议（15-30 分钟）：</p>
+<ol type="1">
+<li>各成员汇报本周完成的工作</li>
+<li>讨论遇到的问题和解决方案</li>
+<li>明确下周任务分配</li>
+<li>更新项目进度看板</li>
+</ol>
+</section>
+</section>
+<section id="git-协作规范" class="level2" data-number="22.4">
+<h2 data-number="22.4" class="anchored" data-anchor-id="git-协作规范"><span class="header-section-number">22.4</span> Git 协作规范</h2>
+<p>本课程要求使用 Git 进行版本控制和团队协作。以下是小组项目的 Git 工作流程。</p>
+<section id="仓库结构" class="level3" data-number="22.4.1">
+<h3 data-number="22.4.1" class="anchored" data-anchor-id="仓库结构"><span class="header-section-number">22.4.1</span> 仓库结构</h3>
+<pre><code>project-name/
+├── README.md              # 项目说明
+├── data/
+│   ├── raw/               # 原始数据（不修改）
+│   └── processed/         # 清洗后的数据
+├── scripts/
+│   ├── 01-data-cleaning.R
+│   ├── 02-analysis.R
+│   └── 03-visualization.R
+├── output/
+│   ├── figures/           # 图表
+│   └── tables/            # 结果表格
+├── report/
+│   └── final-report.qmd   # Quarto 报告
+└── .gitignore</code></pre>
+</section>
+<section id="分支策略" class="level3" data-number="22.4.2">
+<h3 data-number="22.4.2" class="anchored" data-anchor-id="分支策略"><span class="header-section-number">22.4.2</span> 分支策略</h3>
+<pre><code>main          ← 稳定版本，仅通过合并更新
+  ├── dev     ← 开发分支，日常工作在此进行
+  │   ├── feature/data-cleaning   ← 张三负责数据清洗
+  │   ├── feature/analysis        ← 李四负责统计分析
+  │   └── feature/visualization   ← 王五负责可视化</code></pre>
+</section>
+<section id="基本工作流" class="level3" data-number="22.4.3">
+<h3 data-number="22.4.3" class="anchored" data-anchor-id="基本工作流"><span class="header-section-number">22.4.3</span> 基本工作流</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 从 dev 分支创建个人功能分支</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout dev</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin dev</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/data-cleaning</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 完成工作后提交</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add scripts/01-data-cleaning.R</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"feat(data): complete missing value imputation"</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 推送到远程并创建 Pull Request</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin feature/data-cleaning</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 GitHub 上创建 PR，请队友 review</span></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Review 通过后合并到 dev</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="提交信息规范" class="level3" data-number="22.4.4">
+<h3 data-number="22.4.4" class="anchored" data-anchor-id="提交信息规范"><span class="header-section-number">22.4.4</span> 提交信息规范</h3>
+<pre><code>feat(data): add species abundance data     # 新增功能
+fix(analysis): correct diversity index formula  # 修复错误
+docs(report): update methods section       # 文档更新</code></pre>
+</section>
+<section id="gitignore-模板" class="level3" data-number="22.4.5">
+<h3 data-number="22.4.5" class="anchored" data-anchor-id="gitignore-模板"><span class="header-section-number">22.4.5</span> .gitignore 模板</h3>
+<pre><code># 数据文件（大文件不入库）
+data/raw/*.xlsx
+*.csv.gz
+
+# R 临时文件
+.Rhistory
+.RData
+.Rproj.user/
+
+# 系统文件
+.DS_Store
+Thumbs.db</code></pre>
+</section>
+</section>
+<section id="项目报告模板" class="level2" data-number="22.5">
+<h2 data-number="22.5" class="anchored" data-anchor-id="项目报告模板"><span class="header-section-number">22.5</span> 项目报告模板</h2>
+<p>最终报告使用 Quarto 撰写，建议结构如下：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "项目标题"</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "组员姓名"</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2027-06-XX"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">## 1 引言</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>研究背景（为什么研究这个问题？）</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>研究目的（具体要回答什么问题？）</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## 2 材料与方法</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>研究区域描述</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>采样设计与数据采集方法</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>数据处理与分析方法（使用的 R 包和统计方法）</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="fu">## 3 结果</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>描述性统计（表格）</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>数据可视化（图表，附图注）</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>统计检验结果</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a><span class="fu">## 4 讨论</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>主要发现的解读</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>与已有研究的比较</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>研究局限性</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a><span class="fu">## 5 结论</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>核心发现（2-3 句话）</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="fu">## 参考文献</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="fu">## 附录</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>原始数据描述</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>补充图表</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>完整代码（或 GitHub 仓库链接）</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="报告要求" class="level3" data-number="22.5.1">
+<h3 data-number="22.5.1" class="anchored" data-anchor-id="报告要求"><span class="header-section-number">22.5.1</span> 报告要求</h3>
 <ul>
-<li><strong>F value</strong>：组间变异与组内变异的比值，越大说明处理效应越明显</li>
-<li><strong>Pr(&gt;F)</strong>：p 值，小于 0.05 表示至少有一组与其他组存在显著差异</li>
-<li>ANOVA 只能告诉你”有差异”，但不能告诉你”哪两组之间有差异”，需要进一步做事后多重比较</li>
+<li>正文 2000-3000 字（不含代码和图表）</li>
+<li>至少包含 3 张数据可视化图表</li>
+<li>代码需可运行、有注释</li>
+<li>引用至少 5 篇参考文献</li>
 </ul>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD 事后多重比较</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
 </section>
-<section id="可视化实验结果" class="level3" data-number="9.6.4">
-<h3 data-number="9.6.4" class="anchored" data-anchor-id="可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(experiment_data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> biomass_g, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greens"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"氮添加处理"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"地上生物量 (g)"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"氮添加对植物地上生物量的影响"</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+</section>
+<section id="评分标准" class="level2" data-number="22.6">
+<h2 data-number="22.6" class="anchored" data-anchor-id="评分标准"><span class="header-section-number">22.6</span> 评分标准</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 9%">
+<col style="width: 25%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>评分维度</th>
+<th>权重</th>
+<th>优秀（90-100）</th>
+<th>良好（75-89）</th>
+<th>合格（60-74）</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>选题与设计</td>
+<td>15%</td>
+<td>问题明确，设计合理，有创新性</td>
+<td>问题清晰，设计基本合理</td>
+<td>问题模糊，设计有明显缺陷</td>
+</tr>
+<tr class="even">
+<td>数据质量</td>
+<td>20%</td>
+<td>数据完整，记录规范，有质控措施</td>
+<td>数据基本完整，格式统一</td>
+<td>数据有缺失，格式不统一</td>
+</tr>
+<tr class="odd">
+<td>分析方法</td>
+<td>20%</td>
+<td>方法恰当，代码规范，结果可靠</td>
+<td>方法基本正确，代码可运行</td>
+<td>方法有误或代码无法运行</td>
+</tr>
+<tr class="even">
+<td>可视化</td>
+<td>15%</td>
+<td>图表美观专业，信息传达清晰</td>
+<td>图表基本规范，能传达信息</td>
+<td>图表粗糙，信息不清晰</td>
+</tr>
+<tr class="odd">
+<td>报告撰写</td>
+<td>15%</td>
+<td>逻辑清晰，表述准确，格式规范</td>
+<td>结构完整，表述基本清楚</td>
+<td>结构混乱，表述不清</td>
+</tr>
+<tr class="even">
+<td>团队协作</td>
+<td>10%</td>
+<td>Git 记录完整，分工明确，贡献均衡</td>
+<td>有协作记录，分工基本合理</td>
+<td>协作记录缺失，分工不均</td>
+</tr>
+<tr class="odd">
+<td>可重复性</td>
+<td>5%</td>
+<td>一键运行，结果完全可复现</td>
+<td>基本可复现，需少量调整</td>
+<td>无法复现</td>
+</tr>
+</tbody>
+</table>
+<section id="可重复性检查清单" class="level3" data-number="22.6.1">
+<h3 data-number="22.6.1" class="anchored" data-anchor-id="可重复性检查清单"><span class="header-section-number">22.6.1</span> 可重复性检查清单</h3>
+<p>提交前请逐项确认：</p>
+<pre><code>□ README.md 包含项目说明和运行指南
+□ 所有依赖包已在脚本开头列出
+□ 数据文件路径使用相对路径
+□ 代码可以从头到尾顺序运行，无报错
+□ 随机过程设置了 set.seed()
+□ 图表有标题、坐标轴标签和图注
+□ Git 仓库历史记录清晰，提交信息规范
+□ 敏感信息（如个人数据）已脱敏处理</code></pre>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>实验数据记录的好习惯
+<span class="screen-reader-only">Tip</span>给同学们的建议
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<ul>
-<li><strong>记录处理细节</strong>：每个处理的具体施加量、频率和方式</li>
-<li><strong>标注随机化方案</strong>：记录样地的随机分配过程，便于审稿人评估</li>
-<li><strong>保留原始数据</strong>：分析用的数据和原始记录分开存放，确保可追溯</li>
-</ul>
+<p>项目工作坊的核心目标不是产出完美的研究成果，而是让你体验完整的数据科学工作流程。遇到问题是正常的——数据有缺失、分析结果不如预期、队友进度不一致——这些都是真实科研中会遇到的挑战。重要的是学会如何应对这些问题，而不是回避它们。</p>
 </div>
 </div>
-</section>
-</section>
-<section id="总结" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">9.7</span> 总结</h2>
-<p>实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。</p>
 
 
+</section>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -997,13 +1227,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0202-observation.html" class="pagination-link" aria-label="生态学观测数据方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span>
+      <a href="./0601-case-study.html" class="pagination-link" aria-label="综合实战案例">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">综合实战案例</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型采集数据方法">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0603-summary.html" class="pagination-link" aria-label="课程总结">
+        <span class="nav-page-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">课程总结</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

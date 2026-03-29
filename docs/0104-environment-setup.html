@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>9&nbsp; 生态学实验采集数据方法 – 数据采集与预处理</title>
+<title>3&nbsp; 研究环境搭建 – 数据采集与预处理</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -68,8 +68,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/quarto-search/fuse.min.js"></script>
 <script src="site_libs/quarto-search/quarto-search.js"></script>
 <meta name="quarto:offset" content="./">
-<link href="./0204-modeling.html" rel="next">
-<link href="./0202-observation.html" rel="prev">
+<link href="./0105-r-basics.html" rel="next">
+<link href="./0102-what-is-data-preprocessing.html" rel="prev">
 <script src="site_libs/quarto-html/quarto.js" type="module"></script>
 <script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
 <script src="site_libs/quarto-html/popper.min.js"></script>
@@ -138,7 +138,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0104-environment-setup.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -192,7 +192,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link active">
  <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
   </div>
 </li>
@@ -250,7 +250,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
-  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link active">
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
  <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
   </div>
 </li>
@@ -383,33 +383,48 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">9.1</span> 引言</a></li>
-  <li><a href="#实验设计的基本原则" id="toc-实验设计的基本原则" class="nav-link" data-scroll-target="#实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</a></li>
-  <li><a href="#生态学实验的主要类型" id="toc-生态学实验的主要类型" class="nav-link" data-scroll-target="#生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</a>
+  <li><a href="#研究环境搭建" id="toc-研究环境搭建" class="nav-link active" data-scroll-target="#研究环境搭建"><span class="header-section-number">4</span> 研究环境搭建</a>
   <ul class="collapse">
-  <li><a href="#实验室实验-laboratory-experiments" id="toc-实验室实验-laboratory-experiments" class="nav-link" data-scroll-target="#实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</a></li>
-  <li><a href="#野外控制实验-field-experiments" id="toc-野外控制实验-field-experiments" class="nav-link" data-scroll-target="#野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</a></li>
-  <li><a href="#中宇宙实验-mesocosm-experiments" id="toc-中宇宙实验-mesocosm-experiments" class="nav-link" data-scroll-target="#中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</a></li>
-  </ul></li>
-  <li><a href="#实验数据的采集技术" id="toc-实验数据的采集技术" class="nav-link" data-scroll-target="#实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</a></li>
-  <li><a href="#实验设计的挑战与伦理" id="toc-实验设计的挑战与伦理" class="nav-link" data-scroll-target="#实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</a></li>
-  <li><a href="#r-代码示例实验数据的记录与分析" id="toc-r-代码示例实验数据的记录与分析" class="nav-link" data-scroll-target="#r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</a>
+  <li><a href="#r-与-rstudio" id="toc-r-与-rstudio" class="nav-link" data-scroll-target="#r-与-rstudio"><span class="header-section-number">4.1</span> R 与 RStudio</a>
   <ul class="collapse">
-  <li><a href="#创建实验数据" id="toc-创建实验数据" class="nav-link" data-scroll-target="#创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</a></li>
-  <li><a href="#描述性统计" id="toc-描述性统计" class="nav-link" data-scroll-target="#描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</a></li>
-  <li><a href="#单因素方差分析-one-way-anova" id="toc-单因素方差分析-one-way-anova" class="nav-link" data-scroll-target="#单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</a></li>
-  <li><a href="#可视化实验结果" id="toc-可视化实验结果" class="nav-link" data-scroll-target="#可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</a></li>
+  <li><a href="#安装-r" id="toc-安装-r" class="nav-link" data-scroll-target="#安装-r"><span class="header-section-number">4.1.1</span> 安装 R</a></li>
+  <li><a href="#安装-rstudio" id="toc-安装-rstudio" class="nav-link" data-scroll-target="#安装-rstudio"><span class="header-section-number">4.1.2</span> 安装 RStudio</a></li>
+  <li><a href="#验证安装" id="toc-验证安装" class="nav-link" data-scroll-target="#验证安装"><span class="header-section-number">4.1.3</span> 验证安装</a></li>
+  <li><a href="#安装常用-r-包" id="toc-安装常用-r-包" class="nav-link" data-scroll-target="#安装常用-r-包"><span class="header-section-number">4.1.4</span> 安装常用 R 包</a></li>
+  <li><a href="#验证-r-包安装" id="toc-验证-r-包安装" class="nav-link" data-scroll-target="#验证-r-包安装"><span class="header-section-number">4.1.5</span> 验证 R 包安装</a></li>
   </ul></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">9.7</span> 总结</a></li>
+  <li><a href="#python-环境数据采集用" id="toc-python-环境数据采集用" class="nav-link" data-scroll-target="#python-环境数据采集用"><span class="header-section-number">4.2</span> Python 环境（数据采集用）</a>
+  <ul class="collapse">
+  <li><a href="#安装-python" id="toc-安装-python" class="nav-link" data-scroll-target="#安装-python"><span class="header-section-number">4.2.1</span> 安装 Python</a></li>
+  <li><a href="#验证安装-1" id="toc-验证安装-1" class="nav-link" data-scroll-target="#验证安装-1"><span class="header-section-number">4.2.2</span> 验证安装</a></li>
+  <li><a href="#创建课程专用环境" id="toc-创建课程专用环境" class="nav-link" data-scroll-target="#创建课程专用环境"><span class="header-section-number">4.2.3</span> 创建课程专用环境</a></li>
+  <li><a href="#安装常用-python-包" id="toc-安装常用-python-包" class="nav-link" data-scroll-target="#安装常用-python-包"><span class="header-section-number">4.2.4</span> 安装常用 Python 包</a></li>
+  </ul></li>
+  <li><a href="#git-与-github" id="toc-git-与-github" class="nav-link" data-scroll-target="#git-与-github"><span class="header-section-number">4.3</span> Git 与 GitHub</a>
+  <ul class="collapse">
+  <li><a href="#安装-git" id="toc-安装-git" class="nav-link" data-scroll-target="#安装-git"><span class="header-section-number">4.3.1</span> 安装 Git</a></li>
+  <li><a href="#配置-git" id="toc-配置-git" class="nav-link" data-scroll-target="#配置-git"><span class="header-section-number">4.3.2</span> 配置 Git</a></li>
+  <li><a href="#注册-github-账号" id="toc-注册-github-账号" class="nav-link" data-scroll-target="#注册-github-账号"><span class="header-section-number">4.3.3</span> 注册 GitHub 账号</a></li>
+  <li><a href="#在-rstudio-中配置-git" id="toc-在-rstudio-中配置-git" class="nav-link" data-scroll-target="#在-rstudio-中配置-git"><span class="header-section-number">4.3.4</span> 在 RStudio 中配置 Git</a></li>
+  </ul></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto"><span class="header-section-number">4.4</span> Quarto</a>
+  <ul class="collapse">
+  <li><a href="#安装-quarto" id="toc-安装-quarto" class="nav-link" data-scroll-target="#安装-quarto"><span class="header-section-number">4.4.1</span> 安装 Quarto</a></li>
+  <li><a href="#验证安装-2" id="toc-验证安装-2" class="nav-link" data-scroll-target="#验证安装-2"><span class="header-section-number">4.4.2</span> 验证安装</a></li>
+  <li><a href="#创建第一个-quarto-文档" id="toc-创建第一个-quarto-文档" class="nav-link" data-scroll-target="#创建第一个-quarto-文档"><span class="header-section-number">4.4.3</span> 创建第一个 Quarto 文档</a></li>
+  </ul></li>
+  <li><a href="#环境检查清单" id="toc-环境检查清单" class="nav-link" data-scroll-target="#环境检查清单"><span class="header-section-number">4.5</span> 环境检查清单</a></li>
+  <li><a href="#课后任务" id="toc-课后任务" class="nav-link" data-scroll-target="#课后任务"><span class="header-section-number">4.6</span> 课后任务</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0203-experimentation.html"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0104-environment-setup.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></h1>
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></h1>
 </div>
 
 
@@ -426,169 +441,274 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="引言" class="level2" data-number="9.1">
-<h2 data-number="9.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">9.1</span> 引言</h2>
-<p>如果说观测是生态学的“眼睛”，那么实验就是生态学的“手术刀”。生态学实验（Ecological Experimentation）通过主动操纵一个或多个环境因子（自变量），观察生物或生态系统产生的响应（因变量），从而揭示变量之间的因果关系。在数据采集领域，实验数据以其高受控性和逻辑严密性，成为验证科学假设的关键来源。</p>
-</section>
-<section id="实验设计的基本原则" class="level2" data-number="9.2">
-<h2 data-number="9.2" class="anchored" data-anchor-id="实验设计的基本原则"><span class="header-section-number">9.2</span> 实验设计的基本原则</h2>
-<p>为了确保采集到的数据具有统计学意义和科学说服力，生态实验必须遵循以下核心原则：</p>
+<section id="研究环境搭建" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 研究环境搭建</h1>
+<p>工欲善其事，必先利其器。在开始数据采集与预处理之前，我们需要搭建一个标准化的研究环境。本章将指导你安装和配置课程所需的全部软件工具。</p>
+<section id="r-与-rstudio" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="r-与-rstudio"><span class="header-section-number">4.1</span> R 与 RStudio</h2>
+<p>R 是本课程的主要编程语言，RStudio 是 R 最常用的集成开发环境（IDE）。</p>
+<section id="安装-r" class="level3" data-number="4.1.1">
+<h3 data-number="4.1.1" class="anchored" data-anchor-id="安装-r"><span class="header-section-number">4.1.1</span> 安装 R</h3>
+<ol type="1">
+<li>访问 R 官方网站：<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li>根据你的操作系统选择对应版本：
 <ul>
-<li><strong>对照 (Control)</strong>：设立对照组（不施加处理）与处理组进行比较，以排除非实验因子（如背景天气变化）对结果的影响。</li>
-<li><strong>重复 (Replication)</strong>：在相同的处理水平下设置多个实验单元。重复可以估算实验误差，提高结果的普适性。</li>
-<li><strong>随机化 (Randomization)</strong>：将实验单元随机分配到不同处理组中，以消除潜在的系统偏差（如样地坡度、土壤肥力的不均匀性）。</li>
-</ul>
+<li><strong>Windows</strong>：点击 “Download R for Windows” → “base” → 下载最新版本</li>
+<li><strong>macOS</strong>：点击 “Download R for macOS” → 选择对应芯片版本（Apple Silicon 或 Intel）</li>
+</ul></li>
+<li>运行安装程序，保持默认设置即可</li>
+</ol>
 </section>
-<section id="生态学实验的主要类型" class="level2" data-number="9.3">
-<h2 data-number="9.3" class="anchored" data-anchor-id="生态学实验的主要类型"><span class="header-section-number">9.3</span> 生态学实验的主要类型</h2>
-<p>根据受控程度和空间尺度的不同，实验数据采集通常在以下场景中进行：</p>
-<section id="实验室实验-laboratory-experiments" class="level3" data-number="9.3.1">
-<h3 data-number="9.3.1" class="anchored" data-anchor-id="实验室实验-laboratory-experiments"><span class="header-section-number">9.3.1</span> 1. 实验室实验 (Laboratory Experiments)</h3>
-<p>在完全人工控制的环境（如人工气候室、恒温培养箱）中进行。 * <strong>优点</strong>：变量控制极度精确，可重复性最高。 * <strong>数据采集</strong>：常利用高精度传感器监测微环境，或通过显微镜、生化分析仪获取微观数据。</p>
+<section id="安装-rstudio" class="level3" data-number="4.1.2">
+<h3 data-number="4.1.2" class="anchored" data-anchor-id="安装-rstudio"><span class="header-section-number">4.1.2</span> 安装 RStudio</h3>
+<ol type="1">
+<li>访问 RStudio 下载页面：<a href="https://posit.co/download/rstudio-desktop/" class="uri">https://posit.co/download/rstudio-desktop/</a></li>
+<li>下载免费的 RStudio Desktop 版本</li>
+<li>运行安装程序</li>
+</ol>
 </section>
-<section id="野外控制实验-field-experiments" class="level3" data-number="9.3.2">
-<h3 data-number="9.3.2" class="anchored" data-anchor-id="野外控制实验-field-experiments"><span class="header-section-number">9.3.2</span> 2. 野外控制实验 (Field Experiments)</h3>
-<p>在自然生态系统中直接操纵变量，如在森林中架设增温设施（OTC）、进行人工降雨模拟或物种移除实验。 * <strong>优点</strong>：生态真实性强，结果可直接应用于自然系统。 * <strong>数据采集</strong>：依赖于野外耐用型仪器（如自动气象站、地下根系扫描仪）和定期的手工实测。</p>
-</section>
-<section id="中宇宙实验-mesocosm-experiments" class="level3" data-number="9.3.3">
-<h3 data-number="9.3.3" class="anchored" data-anchor-id="中宇宙实验-mesocosm-experiments"><span class="header-section-number">9.3.3</span> 3. 中宇宙实验 (Mesocosm Experiments)</h3>
-<p>构建介于实验室和野外之间的半人工系统（如大型水箱、封闭式人工生态仓）。 * <strong>优点</strong>：在保持一定生态复杂性的同时，提供了比野外更高的控制力。 * <strong>数据采集</strong>：通常集成多参数水质监测仪、气体通量分析仪等设备。</p>
-</section>
-</section>
-<section id="实验数据的采集技术" class="level2" data-number="9.4">
-<h2 data-number="9.4" class="anchored" data-anchor-id="实验数据的采集技术"><span class="header-section-number">9.4</span> 实验数据的采集技术</h2>
-<p>实验过程中的数据采集往往比观测更具针对性：</p>
-<ul>
-<li><strong>自动化连续监测</strong>：利用数据采集器（Data Logger）连接各类传感器，实时记录光照、温度、湿度、CO2浓度等环境背景数据。</li>
-<li><strong>破坏性采样 (Destructive Sampling)</strong>：为了获取生物量、养分含量或解剖学特征，往往需要在实验结束或特定阶段移除部分生物样本进行实验室分析。</li>
-<li><strong>非损伤性测量</strong>：利用叶绿素荧光仪、便携式光合系统等设备，在不伤害生物体的情况下采集生理状态数据。</li>
-</ul>
-</section>
-<section id="实验设计的挑战与伦理" class="level2" data-number="9.5">
-<h2 data-number="9.5" class="anchored" data-anchor-id="实验设计的挑战与伦理"><span class="header-section-number">9.5</span> 实验设计的挑战与伦理</h2>
-<ul>
-<li><strong>尺度效应 (Scale Issues)</strong>：实验室中的“瓶子效应”可能无法完全模拟自然界的大尺度过程。</li>
-<li><strong>边缘效应</strong>：实验边界可能对内部生物产生非自然的影响。</li>
-<li><strong>环境伦理</strong>：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。</li>
-</ul>
-</section>
-<section id="r-代码示例实验数据的记录与分析" class="level2" data-number="9.6">
-<h2 data-number="9.6" class="anchored" data-anchor-id="r-代码示例实验数据的记录与分析"><span class="header-section-number">9.6</span> R 代码示例：实验数据的记录与分析</h2>
-<p>下面以一个经典的生态学实验——<strong>氮添加对植物生物量的影响</strong>——为例，演示如何在 R 中记录实验数据、进行基本的统计检验和可视化。</p>
-<section id="创建实验数据" class="level3" data-number="9.6.1">
-<h3 data-number="9.6.1" class="anchored" data-anchor-id="创建实验数据"><span class="header-section-number">9.6.1</span> 创建实验数据</h3>
-<p>模拟一个完全随机设计的氮添加实验：3 个处理水平（对照、低氮、高氮），每组 8 个重复。</p>
+<section id="验证安装" class="level3" data-number="4.1.3">
+<h3 data-number="4.1.3" class="anchored" data-anchor-id="验证安装"><span class="header-section-number">4.1.3</span> 验证安装</h3>
+<p>打开 RStudio，在控制台（Console）中输入：</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟氮添加实验数据</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id   =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">24</span>)),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">treatment =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>), <span class="at">each =</span> <span class="dv">8</span>),</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">biomass_g =</span> <span class="fu">c</span>(</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">45</span>, <span class="at">sd =</span> <span class="dv">6</span>),   <span class="co"># 对照组</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">58</span>, <span class="at">sd =</span> <span class="dv">7</span>),   <span class="co"># 低氮组</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">rnorm</span>(<span class="dv">8</span>, <span class="at">mean =</span> <span class="dv">72</span>, <span class="at">sd =</span> <span class="dv">8</span>)    <span class="co"># 高氮组</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  )</span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 将处理设为有序因子</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>experiment_data<span class="sc">$</span>treatment <span class="ot">&lt;-</span> <span class="fu">factor</span>(</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  experiment_data<span class="sc">$</span>treatment,</span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">levels =</span> <span class="fu">c</span>(<span class="st">"对照"</span>, <span class="st">"低氮"</span>, <span class="st">"高氮"</span>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(experiment_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>R.version.string</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>如果看到类似 <code>"R version 4.x.x ..."</code> 的输出，说明安装成功。</p>
+</section>
+<section id="安装常用-r-包" class="level3" data-number="4.1.4">
+<h3 data-number="4.1.4" class="anchored" data-anchor-id="安装常用-r-包"><span class="header-section-number">4.1.4</span> 安装常用 R 包</h3>
+<p>本课程会用到以下 R 包，建议提前安装：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据处理核心包</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)  <span class="co"># 包含 dplyr, tidyr, ggplot2, readr 等</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据读取</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"readxl"</span>)     <span class="co"># 读取 Excel 文件</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"haven"</span>)      <span class="co"># 读取 SPSS/Stata/SAS 文件</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据可视化增强</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"corrplot"</span>)   <span class="co"># 相关性矩阵可视化</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"patchwork"</span>)  <span class="co"># 图表拼接</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 荟萃分析</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"metafor"</span>)    <span class="co"># 荟萃分析</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a><span class="co"># Quarto 支持</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"knitr"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"rmarkdown"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="描述性统计" class="level3" data-number="9.6.2">
-<h3 data-number="9.6.2" class="anchored" data-anchor-id="描述性统计"><span class="header-section-number">9.6.2</span> 描述性统计</h3>
+<section id="验证-r-包安装" class="level3" data-number="4.1.5">
+<h3 data-number="4.1.5" class="anchored" data-anchor-id="验证-r-包安装"><span class="header-section-number">4.1.5</span> 验证 R 包安装</h3>
+<p>安装完成后，运行以下代码确认所有包都能正常加载：</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 按处理组计算均值和标准差</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>experiment_data <span class="sc">|&gt;</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(treatment) <span class="sc">|&gt;</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n     =</span> <span class="fu">n</span>(),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean  =</span> <span class="fu">round</span>(<span class="fu">mean</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd    =</span> <span class="fu">round</span>(<span class="fu">sd</span>(biomass_g), <span class="dv">1</span>),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 逐个加载，检查是否报错</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(haven)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metafor)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rmarkdown)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"所有 R 包加载成功！</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-</section>
-<section id="单因素方差分析-one-way-anova" class="level3" data-number="9.6.3">
-<h3 data-number="9.6.3" class="anchored" data-anchor-id="单因素方差分析-one-way-anova"><span class="header-section-number">9.6.3</span> 单因素方差分析 (One-way ANOVA)</h3>
-<p>检验不同氮添加水平对植物生物量是否有显著影响。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合 ANOVA 模型</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>anova_model <span class="ot">&lt;-</span> <span class="fu">aov</span>(biomass_g <span class="sc">~</span> treatment, <span class="at">data =</span> experiment_data)</span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-<div class="callout callout-style-default callout-note callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>如何解读 ANOVA 结果？
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<ul>
-<li><strong>F value</strong>：组间变异与组内变异的比值，越大说明处理效应越明显</li>
-<li><strong>Pr(&gt;F)</strong>：p 值，小于 0.05 表示至少有一组与其他组存在显著差异</li>
-<li>ANOVA 只能告诉你”有差异”，但不能告诉你”哪两组之间有差异”，需要进一步做事后多重比较</li>
-</ul>
-</div>
-</div>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Tukey HSD 事后多重比较</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">TukeyHSD</span>(anova_model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
-</section>
-<section id="可视化实验结果" class="level3" data-number="9.6.4">
-<h3 data-number="9.6.4" class="anchored" data-anchor-id="可视化实验结果"><span class="header-section-number">9.6.4</span> 可视化实验结果</h3>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(experiment_data, <span class="fu">aes</span>(<span class="at">x =</span> treatment, <span class="at">y =</span> biomass_g, <span class="at">fill =</span> treatment)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.shape =</span> <span class="cn">NA</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.15</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Greens"</span>) <span class="sc">+</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"氮添加处理"</span>,</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"地上生物量 (g)"</span>,</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"氮添加对植物地上生物量的影响"</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
-<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<p>如果某个包加载失败，重新安装该包即可。</p>
+<p>安装过程中如果提示选择 CRAN 镜像，建议选择国内镜像（如清华大学镜像）以加快下载速度。</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Tip</span>实验数据记录的好习惯
+<span class="screen-reader-only">Tip</span>国内镜像加速
 </div>
 </div>
 <div class="callout-body-container callout-body">
+<p>在 R 中设置清华镜像：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://mirrors.tuna.tsinghua.edu.cn/CRAN/"</span>))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p>可以将这行代码添加到 <code>~/.Rprofile</code> 文件中，这样每次启动 R 都会自动使用国内镜像。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="python-环境数据采集用" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="python-环境数据采集用"><span class="header-section-number">4.2</span> Python 环境（数据采集用）</h2>
+<p>Python 在本课程中主要用于网络数据采集（爬虫、API 调用）。</p>
+<section id="安装-python" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="安装-python"><span class="header-section-number">4.2.1</span> 安装 Python</h3>
+<p>推荐使用 Anaconda 或 Miniconda：</p>
+<ol type="1">
+<li>访问 Miniconda 下载页面：<a href="https://docs.conda.io/en/latest/miniconda.html" class="uri">https://docs.conda.io/en/latest/miniconda.html</a></li>
+<li>下载对应操作系统的安装包</li>
+<li>运行安装程序，勾选 “Add to PATH”</li>
+</ol>
+</section>
+<section id="验证安装-1" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="验证安装-1"><span class="header-section-number">4.2.2</span> 验证安装</h3>
+<p>打开终端（Windows 用 Anaconda Prompt），输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="创建课程专用环境" class="level3" data-number="4.2.3">
+<h3 data-number="4.2.3" class="anchored" data-anchor-id="创建课程专用环境"><span class="header-section-number">4.2.3</span> 创建课程专用环境</h3>
+<p>建议为本课程创建独立的 conda 环境，避免与其他项目的包版本冲突：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建名为 datacourse 的环境，指定 Python 版本</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> datacourse python=3.11</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 激活环境</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate datacourse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>以后每次打开终端进行课程相关操作时，先运行 <code>conda activate datacourse</code>。</p>
+</section>
+<section id="安装常用-python-包" class="level3" data-number="4.2.4">
+<h3 data-number="4.2.4" class="anchored" data-anchor-id="安装常用-python-包"><span class="header-section-number">4.2.4</span> 安装常用 Python 包</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests beautifulsoup4 pandas lxml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>pip 国内镜像加速
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>如果下载速度慢，可以使用清华镜像：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests beautifulsoup4 pandas lxml <span class="at">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>永久设置镜像（推荐）：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</div>
+</section>
+</section>
+<section id="git-与-github" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="git-与-github"><span class="header-section-number">4.3</span> Git 与 GitHub</h2>
+<p>Git 是版本控制工具，GitHub 是代码托管平台。本课程的期末项目需要通过 Git 提交。</p>
+<section id="安装-git" class="level3" data-number="4.3.1">
+<h3 data-number="4.3.1" class="anchored" data-anchor-id="安装-git"><span class="header-section-number">4.3.1</span> 安装 Git</h3>
+<ol type="1">
+<li>访问 Git 官方网站：<a href="https://git-scm.com/downloads" class="uri">https://git-scm.com/downloads</a></li>
+<li>下载对应操作系统的安装包</li>
+<li>Windows 用户安装时保持默认设置即可</li>
+</ol>
+</section>
+<section id="配置-git" class="level3" data-number="4.3.2">
+<h3 data-number="4.3.2" class="anchored" data-anchor-id="配置-git"><span class="header-section-number">4.3.2</span> 配置 Git</h3>
+<p>安装完成后，打开终端配置用户信息：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"你的姓名"</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"你的邮箱@gxu.edu.cn"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="注册-github-账号" class="level3" data-number="4.3.3">
+<h3 data-number="4.3.3" class="anchored" data-anchor-id="注册-github-账号"><span class="header-section-number">4.3.3</span> 注册 GitHub 账号</h3>
+<ol type="1">
+<li>访问 <a href="https://github.com" class="uri">https://github.com</a></li>
+<li>点击 “Sign up” 注册账号</li>
+<li>建议使用学校邮箱注册，可以申请 GitHub Education 免费权益</li>
+</ol>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>GitHub Education
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>使用 .edu.cn 邮箱注册后，可以在 <a href="https://education.github.com" class="uri">https://education.github.com</a> 申请学生开发者包，获得 GitHub Copilot 等免费工具。</p>
+</div>
+</div>
+</section>
+<section id="在-rstudio-中配置-git" class="level3" data-number="4.3.4">
+<h3 data-number="4.3.4" class="anchored" data-anchor-id="在-rstudio-中配置-git"><span class="header-section-number">4.3.4</span> 在 RStudio 中配置 Git</h3>
+<p>RStudio 内置了 Git 支持：</p>
+<ol type="1">
+<li>打开 RStudio → Tools → Global Options → Git/SVN</li>
+<li>确认 “Git executable” 路径正确（通常自动检测）</li>
+<li>点击 “Create RSA Key” 生成 SSH 密钥</li>
+<li>将公钥添加到 GitHub：Settings → SSH and GPG keys → New SSH key</li>
+</ol>
+</section>
+</section>
+<section id="quarto" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="quarto"><span class="header-section-number">4.4</span> Quarto</h2>
+<p>Quarto 是下一代科学出版系统，本课程的教材就是用 Quarto 编写的。</p>
+<section id="安装-quarto" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="安装-quarto"><span class="header-section-number">4.4.1</span> 安装 Quarto</h3>
+<ol type="1">
+<li>访问 <a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a></li>
+<li>下载对应操作系统的安装包</li>
+<li>安装完成后，RStudio 会自动识别 Quarto</li>
+</ol>
+</section>
+<section id="验证安装-2" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="验证安装-2"><span class="header-section-number">4.4.2</span> 验证安装</h3>
+<p>在终端中输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="创建第一个-quarto-文档" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="创建第一个-quarto-文档"><span class="header-section-number">4.4.3</span> 创建第一个 Quarto 文档</h3>
+<p>在 RStudio 中：File → New File → Quarto Document，选择 HTML 格式，点击 “Render” 按钮即可生成文档。</p>
+</section>
+</section>
+<section id="环境检查清单" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="环境检查清单"><span class="header-section-number">4.5</span> 环境检查清单</h2>
+<p>完成以上安装后，请逐项确认：</p>
+<ul class="task-list">
+<li><label><input type="checkbox">R 已安装，版本 ≥ 4.0</label></li>
+<li><label><input type="checkbox">RStudio 已安装</label></li>
+<li><label><input type="checkbox">tidyverse 等 R 包已安装并能正常加载</label></li>
+<li><label><input type="checkbox">Python 已安装（Miniconda）</label></li>
+<li><label><input type="checkbox">已创建 <code>datacourse</code> conda 环境</label></li>
+<li><label><input type="checkbox">requests、beautifulsoup4、pandas 等 Python 包已安装</label></li>
+<li><label><input type="checkbox">Git 已安装并配置了用户信息</label></li>
+<li><label><input type="checkbox">GitHub 账号已注册</label></li>
+<li><label><input type="checkbox">RStudio 中 Git 已配置</label></li>
+<li><label><input type="checkbox">Quarto 已安装</label></li>
+</ul>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>常见问题
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>R 相关：</strong></p>
 <ul>
-<li><strong>记录处理细节</strong>：每个处理的具体施加量、频率和方式</li>
-<li><strong>标注随机化方案</strong>：记录样地的随机分配过程，便于审稿人评估</li>
-<li><strong>保留原始数据</strong>：分析用的数据和原始记录分开存放，确保可追溯</li>
+<li><strong>R 包安装失败</strong>：检查网络连接，尝试切换 CRAN 镜像。如果提示需要编译，Windows 用户需安装 <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
+<li><strong>RStudio 打开后闪退</strong>：尝试以管理员身份运行，或重置 RStudio 配置（删除 <code>%localappdata%/RStudio-Desktop</code> 文件夹）</li>
+<li><strong>中文路径问题</strong>：R 项目路径中避免使用中文和空格，建议使用纯英文路径如 <code>D:/projects/</code></li>
+</ul>
+<p><strong>Git 相关：</strong></p>
+<ul>
+<li><strong>Git 命令找不到</strong>：Windows 用户需要重启终端或将 Git 添加到 PATH</li>
+<li><strong>RStudio 找不到 Git</strong>：手动在 Tools → Global Options → Git/SVN 中指定 Git 路径（通常在 <code>C:/Program Files/Git/bin/git.exe</code>）</li>
+<li><strong>SSH 连接 GitHub 失败</strong>：检查是否已将公钥添加到 GitHub，可用 <code>ssh -T git@github.com</code> 测试连接</li>
+</ul>
+<p><strong>Python 相关：</strong></p>
+<ul>
+<li><strong>conda 命令找不到</strong>：Windows 用户使用 “Anaconda Prompt” 而非普通 CMD；或将 conda 添加到系统 PATH</li>
+<li><strong>pip 安装超时</strong>：使用国内镜像（见上方 pip 镜像加速部分）</li>
+<li><strong>Python 版本冲突</strong>：确保在 <code>datacourse</code> 环境中操作，用 <code>conda activate datacourse</code> 激活</li>
 </ul>
 </div>
 </div>
 </section>
+<section id="课后任务" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="课后任务"><span class="header-section-number">4.6</span> 课后任务</h2>
+<ol type="1">
+<li>完成所有软件的安装和配置</li>
+<li>在 GitHub 上创建一个名为 <code>data-preprocessing-homework</code> 的仓库</li>
+<li>在 RStudio 中克隆该仓库，创建一个 <code>hello.qmd</code> 文件，写入你的姓名和学号，渲染为 HTML 后提交推送</li>
+</ol>
+
+
 </section>
-<section id="总结" class="level2" data-number="9.7">
-<h2 data-number="9.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">9.7</span> 总结</h2>
-<p>实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。</p>
-
-
 </section>
 
 </main> <!-- /main -->
@@ -997,13 +1117,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0202-observation.html" class="pagination-link" aria-label="生态学观测数据方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span>
+      <a href="./0102-what-is-data-preprocessing.html" class="pagination-link" aria-label="什么是数据预处理">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0204-modeling.html" class="pagination-link" aria-label="生态学模型采集数据方法">
-        <span class="nav-page-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0105-r-basics.html" class="pagination-link" aria-label="R 语言基础">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R 语言基础</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

@@ -6,6 +6,7 @@ project:
     - "slides/*.qmd"
 
 execute:
+  eval: false
   freeze: auto
 
 bibliography: references.bib
