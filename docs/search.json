@@ -2041,11 +2041,21 @@
   {
     "objectID": "010-references.html",
     "href": "010-references.html",
-    "title": "23  Python 编程基础",
+    "title": "23  参考文献",
     "section": "",
-    "text": "23.1 Reference\nprint(f\"010-references\")\n\n010-references",
+    "text": "23.1 参考文献\n本教材参考了以下资源：",
     "crumbs": [
-      "<span class='chapter-number'>23</span>  <span class='chapter-title'>Python 编程基础</span>"
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>参考文献</span>"
+    ]
+  },
+  {
+    "objectID": "010-references.html#参考文献",
+    "href": "010-references.html#参考文献",
+    "title": "23  参考文献",
+    "section": "",
+    "text": "Wickham, H., & Grolemund, G. (2017). R for Data Science. O’Reilly Media.\nXie, Y., Allaire, J. J., & Grolemund, G. (2018). R Markdown: The Definitive Guide. Chapman and Hall/CRC.\nWilkinson, M. D., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3, 160018.",
+    "crumbs": [
+      "<span class='chapter-number'>23</span>  <span class='chapter-title'>参考文献</span>"
     ]
   }
 ]

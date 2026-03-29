@@ -1,12 +1,11 @@
 ---
-title: "Python 编程基础"
-execute:
-  warning: false
-  message: false
+title: "参考文献"
 ---
 
-## Reference
+## 参考文献
 
-```{python}
-print(f"010-references")
-```
+本教材参考了以下资源：
+
+- Wickham, H., & Grolemund, G. (2017). *R for Data Science*. O'Reilly Media.
+- Xie, Y., Allaire, J. J., & Grolemund, G. (2018). *R Markdown: The Definitive Guide*. Chapman and Hall/CRC.
+- Wilkinson, M. D., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data*, 3, 160018.
