@@ -107,6 +107,9 @@ summary(quadrat_data[, c(“dbh_cm”, “height_m”)])
 ```{r}
 library(readr)
 
+# 确保 data 目录存在
+if (!dir.exists(“data”)) dir.create(“data”, recursive = TRUE)
+
 # 保存为 CSV 文件（UTF-8 编码，兼容中文）
 write_csv(quadrat_data, “data/quadrat_survey_2027.csv”)
 

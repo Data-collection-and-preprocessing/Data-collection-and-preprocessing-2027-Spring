@@ -137,6 +137,28 @@ plot(model, which = 5)  # 残差 vs 杠杆值：识别强影响点
 4. **Residuals vs Leverage**：关注 Cook's distance 超过 0.5 的点，它们可能是强影响观测值
 :::
 
+### 使用模型生成预测数据
+
+模型的核心价值在于预测。下面演示如何用拟合好的模型为新数据生成预测值及其置信区间——这就是"模型作为数据生成器"的具体体现。
+
+```{r}
+# 为新的胸径值生成预测
+new_trees <- tibble(dbh_cm = seq(5, 40, by = 1))
+
+# 预测树高及 95% 置信区间
+predictions <- predict(model, newdata = new_trees, interval = "confidence")
+pred_df <- bind_cols(new_trees, as_tibble(predictions))
+
+head(pred_df)
+```
+
+::: {.callout-tip}
+## 预测区间 vs 置信区间
+
+- **置信区间 (confidence interval)**：反映回归线本身的不确定性，即"平均树高"的估计范围
+- **预测区间 (prediction interval)**：反映单棵树的预测不确定性，通常比置信区间更宽。使用 `interval = "prediction"` 获取
+:::
+
 ## 总结
 
 模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家乔治·博克斯所言：”所有模型都是错的，但有些是有用的。”在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。

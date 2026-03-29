@@ -60,6 +60,26 @@ install.packages("knitr")
 install.packages("rmarkdown")
 ```
 
+### 验证 R 包安装
+
+安装完成后，运行以下代码确认所有包都能正常加载：
+
+```{r}
+# 逐个加载，检查是否报错
+library(tidyverse)
+library(readxl)
+library(haven)
+library(corrplot)
+library(patchwork)
+library(metafor)
+library(knitr)
+library(rmarkdown)
+
+cat("所有 R 包加载成功！\n")
+```
+
+如果某个包加载失败，重新安装该包即可。
+
 安装过程中如果提示选择 CRAN 镜像，建议选择国内镜像（如清华大学镜像）以加快下载速度。
 
 ::: {.callout-tip}
@@ -94,11 +114,41 @@ Python 在本课程中主要用于网络数据采集（爬虫、API 调用）。
 python --version
 ```
 
+### 创建课程专用环境
+
+建议为本课程创建独立的 conda 环境，避免与其他项目的包版本冲突：
+
+```bash
+# 创建名为 datacourse 的环境，指定 Python 版本
+conda create -n datacourse python=3.11
+
+# 激活环境
+conda activate datacourse
+```
+
+以后每次打开终端进行课程相关操作时，先运行 `conda activate datacourse`。
+
 ### 安装常用 Python 包
 
 ```bash
-pip install requests beautifulsoup4 pandas
+pip install requests beautifulsoup4 pandas lxml
 ```
+
+::: {.callout-tip}
+## pip 国内镜像加速
+
+如果下载速度慢，可以使用清华镜像：
+
+```bash
+pip install requests beautifulsoup4 pandas lxml -i https://pypi.tuna.tsinghua.edu.cn/simple
+```
+
+永久设置镜像（推荐）：
+
+```bash
+pip config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple
+```
+:::
 
 ## Git 与 GitHub
 
@@ -168,8 +218,10 @@ quarto --version
 
 - [ ] R 已安装，版本 ≥ 4.0
 - [ ] RStudio 已安装
-- [ ] tidyverse 等 R 包已安装
+- [ ] tidyverse 等 R 包已安装并能正常加载
 - [ ] Python 已安装（Miniconda）
+- [ ] 已创建 `datacourse` conda 环境
+- [ ] requests、beautifulsoup4、pandas 等 Python 包已安装
 - [ ] Git 已安装并配置了用户信息
 - [ ] GitHub 账号已注册
 - [ ] RStudio 中 Git 已配置
@@ -178,9 +230,23 @@ quarto --version
 ::: {.callout-warning}
 ## 常见问题
 
-- **R 包安装失败**：检查网络连接，尝试切换 CRAN 镜像
+**R 相关：**
+
+- **R 包安装失败**：检查网络连接，尝试切换 CRAN 镜像。如果提示需要编译，Windows 用户需安装 [Rtools](https://cran.r-project.org/bin/windows/Rtools/)
+- **RStudio 打开后闪退**：尝试以管理员身份运行，或重置 RStudio 配置（删除 `%localappdata%/RStudio-Desktop` 文件夹）
+- **中文路径问题**：R 项目路径中避免使用中文和空格，建议使用纯英文路径如 `D:/projects/`
+
+**Git 相关：**
+
 - **Git 命令找不到**：Windows 用户需要重启终端或将 Git 添加到 PATH
-- **RStudio 找不到 Git**：手动在 Tools → Global Options → Git/SVN 中指定 Git 路径
+- **RStudio 找不到 Git**：手动在 Tools → Global Options → Git/SVN 中指定 Git 路径（通常在 `C:/Program Files/Git/bin/git.exe`）
+- **SSH 连接 GitHub 失败**：检查是否已将公钥添加到 GitHub，可用 `ssh -T git@github.com` 测试连接
+
+**Python 相关：**
+
+- **conda 命令找不到**：Windows 用户使用 "Anaconda Prompt" 而非普通 CMD；或将 conda 添加到系统 PATH
+- **pip 安装超时**：使用国内镜像（见上方 pip 镜像加速部分）
+- **Python 版本冲突**：确保在 `datacourse` 环境中操作，用 `conda activate datacourse` 激活
 :::
 
 ## 课后任务

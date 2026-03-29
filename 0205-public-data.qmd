@@ -156,8 +156,8 @@ bioclim
 # 提取中国区域的年均温（BIO1）和年降水量（BIO12）
 china_extent <- ext(73, 135, 18, 54)  # 中国大致经纬度范围
 
-bio1  <- crop(bioclim$wc2.1_10m_bio_1, china_extent)   # 年均温 (°C × 10)
-bio12 <- crop(bioclim$wc2.1_10m_bio_12, china_extent)   # 年降水量 (mm)
+bio1  <- crop(bioclim[[1]], china_extent)    # BIO1: 年均温 (°C × 10)
+bio12 <- crop(bioclim[[12]], china_extent)   # BIO12: 年降水量 (mm)
 
 # 可视化年均温
 plot(bio1, main = "中国年均温 (BIO1, °C × 10)")

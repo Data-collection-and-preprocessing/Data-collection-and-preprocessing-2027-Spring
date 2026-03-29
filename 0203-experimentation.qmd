@@ -50,6 +50,103 @@ execute:
 *   **边缘效应**：实验边界可能对内部生物产生非自然的影响。
 *   **环境伦理**：野外实验必须评估操纵行为（如施加污染物或引入物种）对当地生态系统的潜在负面影响。
 
+## R 代码示例：实验数据的记录与分析
+
+下面以一个经典的生态学实验——**氮添加对植物生物量的影响**——为例，演示如何在 R 中记录实验数据、进行基本的统计检验和可视化。
+
+### 创建实验数据
+
+模拟一个完全随机设计的氮添加实验：3 个处理水平（对照、低氮、高氮），每组 8 个重复。
+
+```{r}
+library(tibble)
+library(ggplot2)
+
+set.seed(42)
+
+# 模拟氮添加实验数据
+experiment_data <- tibble(
+  plot_id   = paste0("P", sprintf("%02d", 1:24)),
+  treatment = rep(c("对照", "低氮", "高氮"), each = 8),
+  biomass_g = c(
+    rnorm(8, mean = 45, sd = 6),   # 对照组
+    rnorm(8, mean = 58, sd = 7),   # 低氮组
+    rnorm(8, mean = 72, sd = 8)    # 高氮组
+  )
+)
+
+# 将处理设为有序因子
+experiment_data$treatment <- factor(
+  experiment_data$treatment,
+  levels = c("对照", "低氮", "高氮")
+)
+
+head(experiment_data)
+```
+
+### 描述性统计
+
+```{r}
+library(dplyr)
+
+# 按处理组计算均值和标准差
+experiment_data |>
+  group_by(treatment) |>
+  summarise(
+    n     = n(),
+    mean  = round(mean(biomass_g), 1),
+    sd    = round(sd(biomass_g), 1),
+    .groups = "drop"
+  )
+```
+
+### 单因素方差分析 (One-way ANOVA)
+
+检验不同氮添加水平对植物生物量是否有显著影响。
+
+```{r}
+# 拟合 ANOVA 模型
+anova_model <- aov(biomass_g ~ treatment, data = experiment_data)
+summary(anova_model)
+```
+
+::: {.callout-note}
+## 如何解读 ANOVA 结果？
+
+- **F value**：组间变异与组内变异的比值，越大说明处理效应越明显
+- **Pr(>F)**：p 值，小于 0.05 表示至少有一组与其他组存在显著差异
+- ANOVA 只能告诉你"有差异"，但不能告诉你"哪两组之间有差异"，需要进一步做事后多重比较
+:::
+
+```{r}
+# Tukey HSD 事后多重比较
+TukeyHSD(anova_model)
+```
+
+### 可视化实验结果
+
+```{r}
+ggplot(experiment_data, aes(x = treatment, y = biomass_g, fill = treatment)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.15, size = 2, alpha = 0.6) +
+  scale_fill_brewer(palette = "Greens") +
+  labs(
+    x = "氮添加处理",
+    y = "地上生物量 (g)",
+    title = "氮添加对植物地上生物量的影响"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+::: {.callout-tip}
+## 实验数据记录的好习惯
+
+- **记录处理细节**：每个处理的具体施加量、频率和方式
+- **标注随机化方案**：记录样地的随机分配过程，便于审稿人评估
+- **保留原始数据**：分析用的数据和原始记录分开存放，确保可追溯
+:::
+
 ## 总结
 
 实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。

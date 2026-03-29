@@ -1,3 +1,7 @@
+---
+title: "数据采集方法扩展阅读"
+---
+
 # 数据采集方法扩展阅读
 
 
@@ -41,3 +45,17 @@ This video outlines three methods of ecological data collection, including obser
   - 9.6. Handling Imbalanced Data 29:59
   - 9.7. Standardization and Normalization 23:00
   - Activity - 9.8. Full Data Preprocessing Project 46:39
+
+## 推荐阅读材料
+
+### 公共数据平台
+
+- **[GBIF](https://www.gbif.org/)**：全球生物多样性信息网络，提供数十亿条物种分布记录
+- **[WorldClim](https://www.worldclim.org/)**：全球高分辨率气候数据，常用于物种分布建模
+- **[NCBI GenBank](https://www.ncbi.nlm.nih.gov/genbank/)**：全球最大的 DNA 序列数据库
+- **[eBird](https://ebird.org/)**：康奈尔鸟类学实验室运营的公民科学鸟类观测平台
+
+### R 语言生态数据分析
+
+- **[R for Data Science (2e)](https://r4ds.hadley.nz/)**：Hadley Wickham 等著，tidyverse 数据科学入门经典
+- **[Statistical Methods in Ecology (CRAN Task View)](https://cran.r-project.org/web/views/Environmetrics.html)**：R 生态学与环境统计相关包的汇总
