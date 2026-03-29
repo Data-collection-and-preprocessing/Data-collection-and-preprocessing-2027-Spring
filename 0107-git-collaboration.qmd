@@ -53,6 +53,25 @@ execute:
 - **暂存区**：准备提交的文件（`git add` 后）
 - **版本库**：已提交的历史记录（`git commit` 后）
 
+## 首次使用 Git：初始配置
+
+安装 Git 后，第一件事是告诉 Git 你是谁。这些信息会记录在每次提交中：
+
+```bash
+# 设置用户名和邮箱（只需执行一次）
+git config --global user.name "你的名字"
+git config --global user.email "你的邮箱@example.com"
+
+# 验证设置
+git config --list
+```
+
+::: {.callout-warning}
+## 邮箱要和 GitHub 账号一致
+
+`user.email` 应该填你注册 GitHub 时使用的邮箱，否则 GitHub 无法正确关联你的提交记录。
+:::
+
 ## 常用 Git 命令
 
 ### 初始化与克隆
@@ -124,8 +143,8 @@ git diff
 5. **Pull Request（PR）**：向原仓库发起合并请求
 
 ```bash
-# 1. Fork 后克隆自己的仓库
-git clone https://github.com/你的用户名/repo-name.git
+# 1. Fork 后克隆自己的仓库（替换为你的 GitHub 用户名）
+git clone https://github.com/your-username/repo-name.git
 
 # 2. 创建新分支进行修改
 git checkout -b feature/add-analysis
@@ -174,6 +193,82 @@ RStudio 右上角的 Git 面板提供了常用操作：
 
 - `Ctrl + Alt + M`：打开 Commit 窗口
 - `Ctrl + Alt + D`：查看 Diff（文件差异）
+:::
+
+## 常见问题与错误处理
+
+### 合并冲突（Merge Conflict）
+
+当两个人同时修改了同一个文件的同一部分，Git 无法自动合并，就会产生**合并冲突**。这是初学者最常遇到的问题。
+
+执行 `git pull` 时如果出现冲突，Git 会在文件中标记冲突位置：
+
+```
+<<<<<<< HEAD
+# 你的修改
+mean_height <- mean(data$height, na.rm = TRUE)
+=======
+# 队友的修改
+mean_height <- median(data$height, na.rm = TRUE)
+>>>>>>> origin/main
+```
+
+解决步骤：
+
+1. 打开冲突文件，找到 `<<<<<<<`、`=======`、`>>>>>>>` 标记
+2. 决定保留哪个版本（或合并两者），删除所有标记符号
+3. 保存文件后提交：
+
+```bash
+git add filename.R
+git commit -m "解决合并冲突：统一使用均值计算株高"
+```
+
+::: {.callout-tip}
+## 预防冲突的好习惯
+
+- 每次开始工作前先 `git pull` 拉取最新代码
+- 团队成员尽量编辑不同的文件
+- 频繁提交、频繁推送，减少冲突范围
+:::
+
+### 常见错误及解决方法
+
+**推送被拒绝（push rejected）**
+
+```
+! [rejected] main -> main (fetch first)
+```
+
+原因：远程仓库有你本地没有的新提交。先拉取再推送：
+
+```bash
+git pull origin main
+# 如果有冲突，解决冲突后再推送
+git push origin main
+```
+
+**误提交了不该提交的文件**
+
+```bash
+# 从暂存区移除（文件本身不删除）
+git reset HEAD filename.csv
+
+# 如果已经 commit 了，撤销最近一次提交（保留修改）
+git reset --soft HEAD~1
+```
+
+**修改了文件但想恢复原样**
+
+```bash
+# 丢弃工作区的修改，恢复到上次提交的状态
+git restore filename.R
+```
+
+::: {.callout-warning}
+## `git restore` 不可撤销
+
+`git restore` 会丢弃你未提交的修改，且无法恢复。使用前请确认你确实不需要这些修改。
 :::
 
 ## .gitignore 文件
@@ -249,8 +344,10 @@ my-project/
 
 ## 课后练习
 
-1. 在 GitHub 上创建个人项目仓库，包含完整的文件夹结构
-2. 练习 `git add` → `git commit` → `git push` 的完整流程
-3. 查看 `git log` 确认提交历史
-4. 创建 `.gitignore` 文件，排除不需要追踪的文件
-5. 尝试在 RStudio 中使用 Git 面板完成一次提交和推送
+1. 完成 Git 初始配置（`user.name` 和 `user.email`）
+2. 在 GitHub 上创建个人项目仓库，包含完整的文件夹结构
+3. 练习 `git add` → `git commit` → `git push` 的完整流程
+4. 查看 `git log` 确认提交历史
+5. 创建 `.gitignore` 文件，排除不需要追踪的文件
+6. 尝试在 RStudio 中使用 Git 面板完成一次提交和推送
+7. （进阶）与同学协作制造一次合并冲突，练习解决冲突的流程

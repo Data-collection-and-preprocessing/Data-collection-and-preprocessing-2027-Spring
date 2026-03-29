@@ -82,7 +82,22 @@ check_depth_consistency <- function(data) {
   } else {
     cat("✅ 有机碳随深度递减，符合预期\n")
   }
+
+  invisible(inconsistent)
 }
+
+# 示例：不同深度的土壤数据
+soil_depth <- tibble(
+  site_id = rep(c("S1", "S2", "S3"), each = 3),
+  depth = rep(c(10, 20, 30), 3),
+  organic_carbon = c(
+    35, 22, 15,   # S1: 正常递减
+    28, 32, 18,   # S2: 20cm 处异常升高
+    40, 30, 25    # S3: 正常递减
+  )
+)
+
+check_depth_consistency(soil_depth)
 ```
 
 ## 元数据（Metadata）
@@ -205,6 +220,130 @@ generate_codebook(soil)
 - [ ] 有变量说明（codebook）
 - [ ] 原始数据已备份且未被修改
 - [ ] 清洗脚本可以从原始数据重新生成处理后的数据
+
+## 实战案例：从"脏数据"到"干净数据"
+
+下面通过一个完整的案例，演示数据质量控制的全流程。假设我们收到了一份来自野外调查的土壤数据，需要在分析前进行质量控制。
+
+### 原始数据
+
+```{r}
+# 模拟一份典型的"脏数据"
+set.seed(2027)
+n <- 30
+
+raw_soil <- tibble(
+  sample_id = paste0("GX", sprintf("%03d", 1:n)),
+  site = rep(c("林地", "林地 ", "Linland", "草地", "草地", "农田"), each = 5),
+  date = c(rep("2027-03-15", 10), rep("2027/03/16", 10), rep("15/3/2027", 10)),
+  ph = c(6.2, 5.8, 7.1, 6.5, 6.8, 5.9, 6.3, 7.0, 5.5, 6.1,
+         -0.5, 6.4, 15.2, 5.7, 6.6, 6.0, 6.9, 5.3, 6.7, 6.2,
+         NA, 6.5, 5.8, 7.2, 6.1, 6.8, 5.6, 6.3, 6.0, 6.4),
+  organic_carbon = c(25, 30, 22, 28, 35, 20, 27, 31, 24, 29,
+                     33, -5, 26, 999, 21, 28, 32, 19, 27, 30,
+                     24, 26, 31, 23, 28, 25, 29, 22, 27, 26),
+  nitrogen = c(2.1, 2.5, 1.8, 2.3, 2.9, 1.7, 2.2, 2.6, 2.0, 2.4,
+               2.8, 2.1, 2.2, 2.5, 1.9, 2.3, 2.7, 1.6, 2.2, 2.5,
+               2.0, 2.1, 2.6, 1.9, 2.3, 2.1, 2.4, 1.8, 2.2, 2.1)
+)
+
+cat("原始数据概览：\n")
+glimpse(raw_soil)
+```
+
+这份数据至少有以下问题：
+
+1. `site` 列有拼写不一致（"林地" vs "林地 " vs "Linland"）
+2. `date` 列有三种不同的日期格式
+3. `ph` 列有超出范围的值（-0.5, 15.2）和缺失值
+4. `organic_carbon` 列有负值（-5）和明显的录入错误（999）
+
+### 逐步清洗
+
+```{r}
+clean_soil <- raw_soil |>
+  # 1. 统一站点名称
+  mutate(
+    site = str_trim(site),
+    site = case_match(site,
+      "Linland" ~ "林地",
+      .default = site
+    )
+  ) |>
+  # 2. 统一日期格式
+  mutate(
+    date = case_when(
+      str_detect(date, "^\\d{4}-") ~ ymd(date),
+      str_detect(date, "^\\d{4}/") ~ ymd(date),
+      str_detect(date, "^\\d{2}/") ~ dmy(date),
+      TRUE ~ NA_Date_
+    )
+  ) |>
+  # 3. 标记并处理异常值
+  mutate(
+    ph_flag = case_when(
+      is.na(ph) ~ "缺失",
+      ph < 0 | ph > 14 ~ "超出范围",
+      TRUE ~ "正常"
+    ),
+    oc_flag = case_when(
+      organic_carbon < 0 ~ "负值",
+      organic_carbon > 200 ~ "录入错误",
+      TRUE ~ "正常"
+    )
+  ) |>
+  # 4. 将异常值替换为 NA
+  mutate(
+    ph = if_else(ph < 0 | ph > 14, NA_real_, ph),
+    organic_carbon = if_else(organic_carbon < 0 | organic_carbon > 200, NA_real_, organic_carbon)
+  )
+
+# 查看清洗结果
+cat("--- 站点名称统一 ---\n")
+count(clean_soil, site)
+
+cat("\n--- 异常值标记 ---\n")
+count(clean_soil, ph_flag)
+count(clean_soil, oc_flag)
+```
+
+### 生成质量报告
+
+```{r}
+# 汇总数据质量
+quality_report <- clean_soil |>
+  summarise(
+    total_records = n(),
+    ph_missing = sum(is.na(ph)),
+    ph_flagged = sum(ph_flag != "正常"),
+    oc_missing = sum(is.na(organic_carbon)),
+    oc_flagged = sum(oc_flag != "正常"),
+    date_formats_fixed = sum(!is.na(date)),
+    site_categories = n_distinct(site)
+  )
+
+quality_report |>
+  pivot_longer(everything(), names_to = "检查项", values_to = "结果") |>
+  mutate(检查项 = case_match(检查项,
+    "total_records" ~ "总记录数",
+    "ph_missing" ~ "pH 缺失数",
+    "ph_flagged" ~ "pH 异常标记数",
+    "oc_missing" ~ "有机碳缺失数",
+    "oc_flagged" ~ "有机碳异常标记数",
+    "date_formats_fixed" ~ "日期成功解析数",
+    "site_categories" ~ "站点类别数"
+  ))
+```
+
+::: {.callout-important}
+## 关键原则：标记优先于删除
+
+在上面的案例中，我们先用 `_flag` 列标记异常值，再决定如何处理。这样做的好处是：
+
+1. 保留了原始信息，方便回溯
+2. 可以统计异常值的数量和分布
+3. 不同的分析可能对异常值有不同的处理策略
+:::
 
 ## 课后练习
 

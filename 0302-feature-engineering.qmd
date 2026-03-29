@@ -26,9 +26,9 @@ soil <- tibble(
                  levels = c("0-10", "10-20", "20-30"), ordered = TRUE),
   ph = round(rnorm(60, 6.2, 0.8), 2),
   organic_carbon = round(rlnorm(60, log(25), 0.4), 2),  # 右偏分布
-  nitrogen = round(rnorm(60, 2.1, 0.6), 2),
-  clay_pct = round(runif(60, 10, 60), 1),
-  sand_pct = round(runif(60, 15, 55), 1),
+  nitrogen = round(abs(rnorm(60, 2.1, 0.6)), 2),        # 确保为正值
+  clay_pct = round(runif(60, 10, 45), 1),
+  sand_pct = round(runif(60, 15, 40), 1),
   elevation = rep(round(runif(20, 200, 800)), each = 3),
   slope = rep(round(runif(20, 5, 35), 1), each = 3),
   aspect = rep(sample(c("N", "S", "E", "W", "NE", "NW", "SE", "SW"), 20, replace = TRUE), each = 3),
@@ -253,6 +253,50 @@ soil_features <- soil_full |>
 
 head(soil_features |> select(site_id, cn_ratio, silt_pct, elev_class, slope_class))
 ```
+
+## 交互特征与生态学指标
+
+在生态学中，变量之间的交互效应往往比单个变量更有意义。
+
+### 交互特征
+
+```{r}
+soil_features <- soil_features |>
+  mutate(
+    # 温度-降水交互：反映水热条件组合
+    temp_precip = mean_temp * annual_precip / 1000,
+
+    # 坡度-海拔交互：反映地形复杂度
+    topo_index = slope * log(elevation)
+  )
+```
+
+### 生态学常用派生指标
+
+```{r}
+soil_features <- soil_features |>
+  mutate(
+    # 土壤质地类型（基于粘粒和砂粒含量简化判断）
+    texture = case_when(
+      clay_pct > 40             ~ "粘土",
+      sand_pct > 40             ~ "砂土",
+      TRUE                      ~ "壤土"
+    ),
+
+    # 有机碳密度（考虑深度层厚度，假设容重 1.3 g/cm³，层厚 10 cm）
+    oc_density = organic_carbon * 1.3 * 10 / 100   # 单位：kg/m²
+  )
+
+head(soil_features |> select(site_id, depth, texture, oc_density, temp_precip))
+```
+
+::: {.callout-note}
+## 特征工程的原则
+
+1. **领域知识优先**：碳氮比、土壤质地等指标来自土壤学知识，比盲目组合变量更有效
+2. **避免数据泄露**：特征构造只能使用训练集信息，不能使用目标变量
+3. **检查合理性**：新特征的取值范围和分布是否符合物理意义
+:::
 
 ## 课后练习
 

@@ -28,17 +28,22 @@ library(patchwork)
 set.seed(42)
 n <- 40
 
+# 先生成海拔，后续变量都基于同一个海拔值
+elevation <- sort(runif(n, 200, 1200))
+
+# 物种丰富度随海拔递减（中低海拔最高）
+richness <- rpois(n, lambda = pmax(5, 20 - 0.01 * elevation))
+
 raw_data <- tibble(
   plot_id = paste0("P", sprintf("%02d", 1:n)),
-  elevation = sort(runif(n, 200, 1200)),
-  richness = rpois(n, lambda = pmax(5, 20 - 0.01 * sort(runif(n, 200, 1200)))),
-  shannon = 1.5 + 0.8 * log(rpois(n, lambda = pmax(5, 20 - 0.01 * sort(runif(n, 200, 1200))))) +
-            rnorm(n, 0, 0.2),
+  elevation = elevation,
+  richness = richness,
+  shannon = 1.5 + 0.8 * log(pmax(richness, 1)) + rnorm(n, 0, 0.2),
   cover_pct = runif(n, 40, 95),
-  soil_ph = 5.0 + 0.001 * sort(runif(n, 200, 1200)) + rnorm(n, 0, 0.3),
-  organic_carbon = 40 - 0.02 * sort(runif(n, 200, 1200)) + rlnorm(n, 0, 0.3),
-  total_nitrogen = (40 - 0.02 * sort(runif(n, 200, 1200)) + rlnorm(n, 0, 0.3)) / 12 + rnorm(n, 0, 0.2),
-  soil_moisture = 25 + 0.015 * sort(runif(n, 200, 1200)) + rnorm(n, 0, 5),
+  soil_ph = 5.0 + 0.001 * elevation + rnorm(n, 0, 0.3),
+  organic_carbon = 40 - 0.02 * elevation + rlnorm(n, 0, 0.3),
+  total_nitrogen = (40 - 0.02 * elevation + rlnorm(n, 0, 0.3)) / 12 + rnorm(n, 0, 0.2),
+  soil_moisture = 25 + 0.015 * elevation + rnorm(n, 0, 5),
   slope = runif(n, 5, 45),
   aspect = sample(c("N", "S", "E", "W"), n, replace = TRUE),
   habitat = c(rep("常绿阔叶林", 15), rep("落叶阔叶林", 10),
@@ -202,7 +207,47 @@ anova_result <- aov(richness ~ habitat, data = clean_data)
 summary(anova_result)
 ```
 
-## 第六步：生成可重复性报告
+## 第六步：数据导出与元数据记录
+
+一个完整的分析项目应该保存处理后的数据，并生成数据字典。
+
+```{r}
+# 自动生成 codebook
+codebook <- tibble(
+  variable = names(clean_data),
+  type = map_chr(clean_data, ~class(.x)[1]),
+  n_missing = map_int(clean_data, ~sum(is.na(.x))),
+  n_unique = map_int(clean_data, ~n_distinct(.x)),
+  example = map_chr(clean_data, ~paste(head(unique(.x), 3), collapse = ", "))
+)
+
+codebook |> filter(type %in% c("numeric", "integer"))
+```
+
+```{r}
+#| eval: false
+
+# 保存清洗后的数据和 codebook
+write_csv(clean_data, "data/processed/biodiversity_clean.csv")
+saveRDS(clean_data, "data/processed/biodiversity_clean.rds")
+write_csv(codebook, "data/processed/biodiversity_codebook.csv")
+```
+
+::: {.callout-tip}
+## 项目目录结构建议
+
+```
+my_project/
+├── data/
+│   ├── raw/              # 原始数据（只读）
+│   └── processed/        # 清洗后的数据 + codebook
+├── analysis.qmd          # 分析脚本（本文件）
+├── report.html           # 渲染后的报告
+└── README.md             # 项目说明和元数据
+```
+:::
+
+## 第七步：生成可重复性报告
 
 本章的所有代码都写在一个 `.qmd` 文件中，可以一键渲染为 HTML 报告。这就是可重复性研究的核心——任何人拿到你的数据和代码，都能重现完全相同的结果。
 
@@ -215,10 +260,11 @@ summary(anova_result)
 - [x] 统计结果可以通过运行代码重新计算
 - [x] 使用了相对路径
 - [x] 代码有注释说明每一步的目的
+- [x] 清洗后的数据和 codebook 已导出
 
 ## 课后练习
 
 1. 选择一个你感兴趣的生态学问题，从公共数据库下载数据
-2. 按照本章的六步流程完成完整的数据分析
+2. 按照本章的七步流程完成完整的数据分析（获取→清洗→探索→分析→检验→导出→报告）
 3. 将分析写成 Quarto 文档，渲染为 HTML 报告
 4. 将项目（数据 + 代码 + 报告）提交到 GitHub
