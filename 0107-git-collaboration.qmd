@@ -67,7 +67,7 @@ git config --list
 ```
 
 ::: {.callout-warning}
-## 邮箱要和 GitHub 账号一致
+### 邮箱要和 GitHub 账号一致
 
 `user.email` 应该填你注册 GitHub 时使用的邮箱，否则 GitHub 无法正确关联你的提交记录。
 :::
@@ -189,7 +189,7 @@ RStudio 右上角的 Git 面板提供了常用操作：
 4. **推送/拉取**：点击 Push/Pull 按钮（等同于 `git push`/`git pull`）
 
 ::: {.callout-note}
-## RStudio 中的 Git 快捷键
+### RStudio 中的 Git 快捷键
 
 - `Ctrl + Alt + M`：打开 Commit 窗口
 - `Ctrl + Alt + D`：查看 Diff（文件差异）
@@ -225,7 +225,7 @@ git commit -m "解决合并冲突：统一使用均值计算株高"
 ```
 
 ::: {.callout-tip}
-## 预防冲突的好习惯
+### 预防冲突的好习惯
 
 - 每次开始工作前先 `git pull` 拉取最新代码
 - 团队成员尽量编辑不同的文件
@@ -266,7 +266,7 @@ git restore filename.R
 ```
 
 ::: {.callout-warning}
-## `git restore` 不可撤销
+### `git restore` 不可撤销
 
 `git restore` 会丢弃你未提交的修改，且无法恢复。使用前请确认你确实不需要这些修改。
 :::
@@ -295,7 +295,7 @@ _freeze/
 ```
 
 ::: {.callout-warning}
-## 不要把敏感信息提交到 Git
+### 不要把敏感信息提交到 Git
 
 API 密钥、密码、个人隐私数据等绝对不能提交到 Git 仓库，尤其是公开仓库。一旦提交，即使删除文件，历史记录中仍然可以找到。
 :::

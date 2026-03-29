@@ -19,7 +19,7 @@ RStudio 界面分为四个区域：
 - **右下**：文件/图表/帮助（Files/Plots/Help）
 
 ::: {.callout-tip}
-## 快捷键
+### 快捷键
 
 - `Ctrl + Enter`：运行当前行代码
 - `Ctrl + Shift + Enter`：运行整个脚本
@@ -118,7 +118,7 @@ table(habitat)
 ```
 
 ::: {.callout-note}
-## 为什么需要因子？
+### 为什么需要因子？
 
 在统计分析和绘图中，R 需要知道哪些变量是分类变量。因子告诉 R："这个变量有固定的几个类别"，而不是随意的文本。
 :::
@@ -180,7 +180,7 @@ tree_data[1, 2]        # 第 1 行第 2 列
 实际研究中，数据通常存储在文件中。R 提供了多种读取方式。
 
 ::: {.callout-tip}
-## 安装所需包
+### 安装所需包
 
 读取数据前，需要先安装相应的 R 包。只需安装一次，之后每次使用 `library()` 加载即可：
 
@@ -226,7 +226,7 @@ data <- readRDS("data/processed.rds")
 ```
 
 ::: {.callout-tip}
-## 文件路径
+### 文件路径
 
 - 使用 `/` 而不是 `\` 作为路径分隔符
 - 使用相对路径而不是绝对路径，这样别人也能运行你的代码
@@ -267,7 +267,7 @@ hist(soil_ph, main = "土壤 pH 分布", xlab = "pH", col = "lightblue")
 boxplot(soil_ph, main = "土壤 pH", ylab = "pH")
 ```
 
-## 获取帮助
+### 获取帮助
 
 ```{r}
 #| eval: false

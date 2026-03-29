@@ -44,7 +44,7 @@ pip install tqdm
 ```
 
 ::: {.callout-tip}
-## pip 与 conda 的区别
+### pip 与 conda 的区别
 
 `conda` 是一个通用的包管理器和环境管理器，可以安装 Python 包以及非 Python 的依赖（如 C 库）。`pip` 是 Python 专用的包管理器，包的数量更多。在 conda 环境中，推荐优先用 `conda install` 安装包，找不到时再用 `pip install`。
 :::
@@ -103,7 +103,7 @@ response = requests.get(url, headers=headers)
 ```
 
 ::: {.callout-important}
-## 礼貌的爬虫
+### 礼貌的爬虫
 
 在请求头中标明你的身份（如课程项目、研究用途）是一种良好的实践。这不仅是礼貌，也有助于网站管理员在出现问题时联系你。
 :::
@@ -334,7 +334,7 @@ print(monthly)
 ```
 
 ::: {.callout-note}
-## 关于 API Key
+### 关于 API Key
 
 许多 API 需要注册账号并获取 **API Key**（密钥）才能使用。API Key 是你的身份凭证，不要将其公开分享或上传到 GitHub。Open-Meteo 和 GBIF 的基础查询不需要 API Key，因此非常适合课堂练习。
 :::
@@ -396,7 +396,7 @@ print("数据已保存为 CSV 文件")
 ```
 
 ::: {.callout-tip}
-## 编码问题
+### 编码问题
 
 保存包含中文的 CSV 文件时，建议使用 `encoding="utf-8-sig"`。这样用 Excel 打开时不会出现乱码。如果只在 Python 或 R 中使用，`utf-8` 即可。
 :::
@@ -460,7 +460,7 @@ Crawl-delay: 10
 6. **不采集个人信息**：不要采集涉及个人隐私的数据。
 
 ::: {.callout-warning}
-## 法律风险
+### 法律风险
 
 未经授权的大规模数据采集可能违反《中华人民共和国网络安全法》和《数据安全法》。在进行任何数据采集之前，请确保你了解并遵守相关法律法规和网站的使用条款。课堂练习中，我们只使用明确允许数据访问的公共数据库。
 :::
@@ -575,7 +575,7 @@ print(f"\n采集完成！共 {len(df)} 条记录，已保存至 guangxi_birds_gb
 4. 将最终数据保存为 CSV，并用几句话描述数据的基本特征（记录数、物种数、坐标范围等）
 
 ::: {.callout-tip}
-## 提示
+### 提示
 
 处理网络请求异常的基本模式：
 
