@@ -11,36 +11,75 @@ execute:
 
 ```{r}
 library(tidyverse)
+library(patchwork)
 ```
 
 ## 示例数据
 
-延续上一章的土壤调查场景，使用一个已清洗的数据集：
+本章使用与上一章相同的数据源——基于 Li et al. (2017) 喀斯特土壤研究参数模拟的数据。
+
+> **数据来源**：Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016jg003683)
+
+### 数据生成
+
+基于该研究的125个样地数据，我们生成一个包含更多派生变量的数据集：
 
 ```{r}
 set.seed(2027)
 
-soil <- tibble(
-  site_id = rep(paste0("S", sprintf("%02d", 1:20)), each = 3),
-  depth = factor(rep(c("0-10", "10-20", "20-30"), 20),
-                 levels = c("0-10", "10-20", "20-30"), ordered = TRUE),
-  ph = round(rnorm(60, 6.2, 0.8), 2),
-  organic_carbon = round(rlnorm(60, log(25), 0.4), 2),  # 右偏分布
-  nitrogen = round(abs(rnorm(60, 2.1, 0.6)), 2),        # 确保为正值
-  clay_pct = round(runif(60, 10, 45), 1),
-  sand_pct = round(runif(60, 15, 40), 1),
-  elevation = rep(round(runif(20, 200, 800)), each = 3),
-  slope = rep(round(runif(20, 5, 35), 1), each = 3),
-  aspect = rep(sample(c("N", "S", "E", "W", "NE", "NW", "SE", "SW"), 20, replace = TRUE), each = 3),
-  vegetation = rep(sample(c("针叶林", "阔叶林", "混交林", "灌丛", "草地"), 20, replace = TRUE), each = 3)
-)
+n_sites <- 125
 
-head(soil)
+# 土地利用和岩性
+land_use <- rep(c("耕地", "草地", "灌丛", "次生林"), length.out = n_sites)
+lithology <- rep(c("白云岩", "石灰岩"), length.out = n_sites)
+
+# 基础变量（基于研究实测范围）
+soc_base <- case_when(
+  land_use == "耕地" ~ 8.5,
+  land_use == "草地" ~ 12.3,
+  land_use == "灌丛" ~ 18.7,
+  land_use == "次生林" ~ 25.4
+) * ifelse(lithology == "石灰岩", 1.15, 1) + rnorm(n_sites, 0, 3)
+
+tn_base <- soc_base / 10 + rnorm(n_sites, 0, 0.2)
+ph_base <- 5.8 + rnorm(n_sites, 0, 0.4)
+ca_base <- soc_base / 3 + rnorm(n_sites, 0, 1.2)
+
+# 派生变量
+soil <- tibble(
+  site_id = paste0("K", sprintf("%03d", 1:n_sites)),
+  land_use = factor(land_use, levels = c("耕地", "草地", "灌丛", "次生林")),
+  lithology = factor(lithology, levels = c("白云岩", "石灰岩")),
+
+  # 核心测量变量
+  soc = round(soc_base, 2),           # 土壤有机碳 g/kg
+  tn = round(tn_base, 3),            # 全氮 g/kg
+  ph = round(ph_base, 2),            # 酸碱度
+  ca = round(ca_base, 2),           # 可交换钙 cmol/kg
+
+  # 地形和环境变量
+  elevation = round(runif(n_sites, 200, 1200)),      # 海拔 m
+  slope = round(runif(n_sites, 5, 45), 1),           # 坡度 °
+  aspect = sample(c("N", "NE", "E", "SE", "S", "SW", "W", "NW"),
+                  n_sites, replace = TRUE),           # 坡向
+
+  # 土壤质地变量
+  clay_pct = round(runif(n_sites, 15, 55), 1),        # 黏粒 %
+  sand_pct = round(runif(n_sites, 20, 60), 1),      # 砂粒 %
+
+  # 土层深度（每个样地3个土层）
+  depth = rep(c("0-10 cm", "10-20 cm", "20-30 cm"), each = n_sites/3)
+) |>
+  mutate(
+    silt_pct = 100 - clay_pct - sand_pct  # 粉粒 %
+  )
+
+head(soil, 10)
 ```
 
 ## 数据标准化与归一化
 
-不同变量的量纲和范围差异很大（如 pH 范围 4-8，有机碳范围 10-60），在某些分析（如 PCA、聚类）中需要先统一尺度。
+不同变量的量纲和范围差异很大（如 pH 范围 5-7，有机碳范围 5-40 g/kg），在某些分析（如 PCA、聚类、机器学习）中需要先统一尺度。
 
 ### Z-score 标准化
 
@@ -52,8 +91,9 @@ $$z = \frac{x - \bar{x}}{s}$$
 soil_scaled <- soil |>
   mutate(
     ph_z = scale(ph)[,1],
-    oc_z = scale(organic_carbon)[,1],
-    nitrogen_z = scale(nitrogen)[,1]
+    soc_z = scale(soc)[,1],
+    tn_z = scale(tn)[,1],
+    ca_z = scale(ca)[,1]
   )
 
 # 验证
@@ -76,8 +116,8 @@ min_max <- function(x) (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(
 soil_norm <- soil |>
   mutate(
     ph_norm = min_max(ph),
-    oc_norm = min_max(organic_carbon),
-    nitrogen_norm = min_max(nitrogen)
+    soc_norm = min_max(soc),
+    tn_norm = min_max(tn)
   )
 
 # 验证范围
@@ -101,35 +141,28 @@ soil_norm |>
 
 ```{r}
 # 对比变换前后的分布
-p1 <- ggplot(soil, aes(x = organic_carbon)) +
+p1 <- ggplot(soil, aes(x = soc)) +
   geom_histogram(bins = 15, fill = "steelblue", alpha = 0.7) +
-  labs(title = "原始分布", x = "有机碳 (g/kg)") +
+  labs(title = "原始SOC分布（右偏）", x = "土壤有机碳 (g/kg)") +
   theme_minimal()
 
-p2 <- ggplot(soil, aes(x = log(organic_carbon))) +
+p2 <- ggplot(soil, aes(x = log(soc))) +
   geom_histogram(bins = 15, fill = "coral", alpha = 0.7) +
-  labs(title = "对数变换后", x = "ln(有机碳)") +
+  labs(title = "对数变换后（接近正态）", x = "ln(SOC)") +
   theme_minimal()
 
-library(patchwork)
 p1 + p2
-```
-
-```{r}
-# 添加对数变换列
-soil <- soil |>
-  mutate(
-    log_oc = log(organic_carbon),
-    log_nitrogen = log(nitrogen)
-  )
 ```
 
 ### 正态性检验
 
 ```{r}
 # Shapiro-Wilk 检验
-shapiro.test(soil$organic_carbon)
-shapiro.test(soil$log_oc)
+cat("原始SOC检验:\n")
+print(shapiro.test(soil$soc))
+
+cat("\n对数变换后检验:\n")
+print(shapiro.test(log(soil$soc)))
 ```
 
 ::: {.callout-note}
@@ -138,6 +171,7 @@ shapiro.test(soil$log_oc)
 - 数据中不能有 0 或负值（可以用 `log(x + 1)` 处理含 0 的数据）
 - 变换后的结果需要反变换才能解释原始尺度
 - 在论文中要说明使用了什么变换
+- Li et al. (2017) 在分析中使用了对数变换处理 SOC 和 TN 数据
 :::
 
 ## 分类变量编码
@@ -147,10 +181,9 @@ shapiro.test(soil$log_oc)
 ```{r}
 # 按频次排序
 soil |>
-  mutate(vegetation = fct_infreq(vegetation)) |>
-  ggplot(aes(x = vegetation)) +
+  ggplot(aes(x = fct_infreq(land_use))) +
   geom_bar(fill = "steelblue") +
-  labs(title = "植被类型分布", x = "", y = "样本数") +
+  labs(title = "土地利用类型分布", x = "", y = "样地数") +
   theme_minimal()
 ```
 
@@ -160,7 +193,7 @@ soil |>
 
 ```{r}
 # 使用 model.matrix 创建虚拟变量
-dummy <- model.matrix(~ vegetation - 1, data = soil) |>
+dummy <- model.matrix(~ land_use + lithology - 1, data = soil) |>
   as_tibble()
 
 head(dummy)
@@ -173,7 +206,8 @@ head(dummy)
 ```{r}
 # 坡向转角度
 aspect_to_degree <- function(asp) {
-  mapping <- c(N = 0, NE = 45, E = 90, SE = 135, S = 180, SW = 225, W = 270, NW = 315)
+  mapping <- c(N = 0, NE = 45, E = 90, SE = 135,
+               S = 180, SW = 225, W = 270, NW = 315)
   mapping[asp]
 }
 
@@ -185,123 +219,186 @@ soil <- soil |>
   )
 ```
 
-## 数据合并与重塑
+## 长宽格式转换
 
-### 合并多个数据源
+### pivot_wider 与 pivot_longer
 
-```{r}
-# 气象数据
-climate <- tibble(
-  site_id = paste0("S", sprintf("%02d", 1:20)),
-  mean_temp = round(rnorm(20, 18, 3), 1),
-  annual_precip = round(rnorm(20, 1200, 200))
-)
-
-# 合并
-soil_full <- soil |>
-  left_join(climate, by = "site_id")
-
-head(soil_full)
-```
-
-### 长宽格式转换
+生态学数据经常需要在宽格式（每个变量一列）和长格式（每个观测一行）之间转换：
 
 ```{r}
-# 宽格式：每个深度一列
+# 宽格式：每个土层深度一列
 soil_wide <- soil |>
-  select(site_id, depth, ph) |>
+  select(site_id, depth, soc, tn) |>
   pivot_wider(
     names_from = depth,
-    values_from = ph,
-    names_prefix = "ph_"
+    values_from = c(soc, tn),
+    names_prefix = ""
   )
 
-head(soil_wide)
+cat("宽格式示例:\n")
+head(soil_wide, 3)
 
 # 转回长格式
 soil_wide |>
   pivot_longer(
-    cols = starts_with("ph_"),
-    names_to = "depth",
-    values_to = "ph",
-    names_prefix = "ph_"
+    cols = starts_with("soc_") | starts_with("tn_"),
+    names_to = c("variable", "depth"),
+    names_sep = "_",
+    values_to = "value"
   ) |>
-  head()
+  head(6)
 ```
 
 ## 构造新特征
 
 根据领域知识，从已有变量中构造有意义的新特征：
 
+### 碳氮比（C/N 比）
+
+C/N 比是土壤有机质分解速率的重要指标，在土壤碳循环研究中至关重要：
+
 ```{r}
-soil_features <- soil_full |>
+soil <- soil |>
   mutate(
-    # 碳氮比（C/N ratio）——重要的土壤质量指标
-    cn_ratio = organic_carbon / nitrogen,
+    cn_ratio = soc / tn
+  )
 
-    # 粉粒含量（假设三者之和为100%）
-    silt_pct = 100 - clay_pct - sand_pct,
+# 按土地利用类型汇总 C/N 比
+soil |>
+  group_by(land_use) |>
+  summarise(cn_ratio_mean = mean(cn_ratio)) |>
+  arrange(cn_ratio_mean)
+```
 
+### 土壤质地分类
+
+基于国际制土壤质地三角分类标准：
+
+```{r}
+soil <- soil |>
+  mutate(
+    # 简化的质地分类（基于 USDA 三角图）
+    texture = case_when(
+      clay_pct > 40             ~ "黏土",
+      sand_pct > 45 & clay_pct < 20 ~ "砂土",
+      silt_pct > 40            ~ "粉土",
+      clay_pct > 20 & silt_pct > 40 ~ "壤土",
+      TRUE                      ~ "砂壤土"
+    ),
+    texture = factor(texture, levels = c("砂土", "砂壤土", "壤土", "粉土", "黏土"))
+  )
+
+soil |>
+  count(texture) |>
+  ggplot(aes(x = texture, y = n, fill = texture)) +
+  geom_col() +
+  geom_text(aes(label = n), vjust = -0.5) +
+  labs(title = "土壤质地类型分布", x = "", y = "样地数") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### 地形指标
+
+地形特征对土壤发育和植被分布有重要影响：
+
+```{r}
+soil <- soil |>
+  mutate(
     # 海拔分级
-    elev_class = cut(elevation, breaks = c(0, 300, 500, 800, Inf),
+    elev_class = cut(elevation,
+                     breaks = c(0, 400, 700, 1000, Inf),
                      labels = c("低海拔", "中低海拔", "中高海拔", "高海拔")),
 
     # 坡度分级
-    slope_class = cut(slope, breaks = c(0, 10, 20, 30, Inf),
-                      labels = c("平缓", "中等", "较陡", "陡峭"))
-  )
+    slope_class = cut(slope,
+                      breaks = c(0, 10, 20, 30, Inf),
+                      labels = c("平缓", "中等", "较陡", "陡峭")),
 
-head(soil_features |> select(site_id, cn_ratio, silt_pct, elev_class, slope_class))
+    # 地形指数（坡度与海拔的交互）
+    topo_index = slope * log(elevation + 1)
+  )
+```
+
+### 碳储量指标
+
+在生态学研究中，常需要估算单位面积的碳储量：
+
+```{r}
+soil <- soil |>
+  mutate(
+    # 土壤有机碳密度（假设容重 1.3 g/cm³，土层厚度 10 cm）
+    # 单位：kg/m²
+    oc_density = soc * 1.3 * 10 / 100,
+
+    # 考虑土层厚度的加权平均SOC
+    depth_weight = case_when(
+      depth == "0-10 cm" ~ 1,
+      depth == "10-20 cm" ~ 0.85,
+      depth == "20-30 cm" ~ 0.65
+    )
+  )
 ```
 
 ## 交互特征与生态学指标
 
 在生态学中，变量之间的交互效应往往比单个变量更有意义。
 
-### 交互特征
+### 环境交互因子
 
 ```{r}
-soil_features <- soil_features |>
+soil <- soil |>
   mutate(
-    # 温度-降水交互：反映水热条件组合
-    temp_precip = mean_temp * annual_precip / 1000,
+    # 水热条件指标（影响有机质分解）
+    temp_precip = (ph * 10) * tn,  # 简化的水热交互
 
-    # 坡度-海拔交互：反映地形复杂度
-    topo_index = slope * log(elevation)
+    # 钙-碳耦合指标（Li et al. 2017 发现 Ca 是 SOC 和 TN 的关键解释因子）
+    ca_c_ratio = ca / soc
   )
 ```
 
-### 生态学常用派生指标
+### 综合土壤质量指数
+
+基于多个指标构造综合指数：
 
 ```{r}
-soil_features <- soil_features |>
+# 标准化后加权平均
+soil <- soil |>
   mutate(
-    # 土壤质地类型（基于黏粒和砂粒含量简化判断）
-    # 优先级：先判断黏土（clay_pct > 40），再判断砂土（sand_pct > 40），其余为壤土
-    # 当 clay_pct > 40 且 sand_pct > 40 时，优先归类为黏土
-    texture = case_when(
-      clay_pct > 40             ~ "黏土",
-      sand_pct > 40             ~ "砂土",
-      TRUE                      ~ "壤土"
-    ),
+    # 各指标标准化到 0-1
+    soc_sc = min_max(soc),
+    tn_sc = min_max(tn),
+    ph_sc = case_when(
+      ph < 5.5 ~ (ph - 4) / (5.5 - 4),
+      TRUE ~ 1
+    ),  # pH 在 5.5-7.5 最佳
+    ca_sc = min_max(ca),
 
-    # 有机碳密度（考虑深度层厚度，假设容重 1.3 g/cm³，层厚 10 cm）
-    oc_density = organic_carbon * 1.3 * 10 / 100   # 单位：kg/m²
+    # 简化的土壤质量指数（等权重）
+    sqi = (soc_sc + tn_sc + ph_sc + ca_sc) / 4
   )
 
-head(soil_features |> select(site_id, depth, texture, oc_density, temp_precip))
+soil |>
+  group_by(land_use) |>
+  summarise(sqi_mean = mean(sqi)) |>
+  arrange(sqi_mean)
 ```
 
 ::: {.callout-note title="特征工程的原则"}
 1. **领域知识优先**：碳氮比、土壤质地等指标来自土壤学知识，比盲目组合变量更有效
 2. **避免数据泄露**：特征构造只能使用训练集信息，不能使用目标变量
 3. **检查合理性**：新特征的取值范围和分布是否符合物理意义
+4. **参考已有研究**：Li et al. (2017) 发现可交换钙是解释 SOC 和 TN 变异的关键因子
 :::
 
 ## 课后练习
 
-1. 对 `iris` 数据集的 4 个数值变量进行 Z-score 标准化
-2. 检验 `iris$Sepal.Width` 是否服从正态分布，如果不是，尝试对数变换
-3. 将 `iris$Species` 转换为虚拟变量
-4. 构造一个新特征：花瓣面积 = Petal.Length × Petal.Width
-5. 将 iris 数据从宽格式转为长格式（4 个测量值变成一列）
+1. 对喀斯特土壤数据中的 SOC、TN、pH、Ca 进行 Z-score 标准化
+2. 检验原始 SOC 数据是否服从正态分布，如果不正态，尝试对数变换
+3. 将土地利用类型和岩性转换为虚拟变量
+4. 构造一个新特征：土壤碳储量 = SOC × 容重 × 土层厚度
+5. 基于多个指标构造土壤质量指数（SQI），比较不同土地利用类型间的差异
+
+## 参考文献
+
+Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016JG003683)
