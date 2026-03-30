@@ -11,6 +11,10 @@ execute:
 
 好的图表胜过千言万语。本章介绍 ggplot2 的语法体系和科研论文级图表的制作方法。
 
+> **数据来源**：本章示例数据结合两个真实数据源：
+> 1. Li et al. (2017) 喀斯特土壤碳氮研究 (DOI: 10.1002/2016JG003683)
+> 2. Du et al. (2020) 广西木论保护区物种组成数据 (DOI: 10.11922/csdata.2019.0031.zh)
+
 ```{r}
 library(tidyverse)
 library(patchwork)
@@ -58,19 +62,32 @@ ggplot(data, aes(x, y))
 
 ## 示例数据
 
+基于 Li et al. (2017) 喀斯特土壤研究的参数范围，生成模拟数据：
+
 ```{r}
 set.seed(2027)
 n <- 100
 
+# 基于Li et al. (2017)的实际参数范围生成
 ecology <- tibble(
-  species_richness = rpois(n, 15),
-  soil_ph = rnorm(n, 6.2, 0.8),
-  organic_carbon = rlnorm(n, log(25), 0.4),
-  elevation = runif(n, 200, 1200),
-  habitat = sample(c("森林", "草地", "湿地", "灌丛"), n, replace = TRUE,
-                   prob = c(0.4, 0.25, 0.15, 0.2)),
+  # 土地利用类型
+  land_use = sample(c("耕地", "草地", "灌丛", "次生林"), n, replace = TRUE,
+                    prob = c(0.25, 0.30, 0.25, 0.20)),
+
+  # 岩性类型
+  lithology = sample(c("白云岩", "石灰岩"), n, replace = TRUE),
+
+  # 土壤理化性质（基于实测范围）
+  species_richness = rpois(n, lambda = 15 + rnorm(n, 0, 5)),  # 物种丰富度
+  soil_ph = rnorm(n, 6.0, 0.6),                                # pH 5-7
+  organic_carbon = rlnorm(n, log(20), 0.5),                   # SOC 右偏分布
+  elevation = round(runif(n, 200, 1200)),                      # 海拔
+
+  # 季节
   season = sample(c("春", "夏", "秋", "冬"), n, replace = TRUE)
 )
+
+head(ecology, 10)
 ```
 
 ## 常用图表类型
@@ -88,20 +105,20 @@ ggplot(ecology, aes(x = soil_ph, y = species_richness)) +
 ### 分组散点图
 
 ```{r}
-ggplot(ecology, aes(x = soil_ph, y = species_richness, color = habitat)) +
+ggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +
   geom_point(alpha = 0.7, size = 2) +
   geom_smooth(method = "lm", se = FALSE) +
-  labs(x = "土壤 pH", y = "物种丰富度", color = "生境类型") +
+  labs(x = "土壤 pH", y = "物种丰富度", color = "土地利用") +
   theme_minimal()
 ```
 
 ### 箱线图
 
 ```{r}
-ggplot(ecology, aes(x = habitat, y = species_richness, fill = habitat)) +
+ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
   geom_boxplot(alpha = 0.7, outlier.shape = 21) +
   geom_jitter(width = 0.2, alpha = 0.3, size = 1) +
-  labs(x = "", y = "物种丰富度", title = "不同生境的物种丰富度") +
+  labs(x = "", y = "物种丰富度", title = "不同土地利用类型的物种丰富度") +
   scale_fill_brewer(palette = "Set2") +
   theme_minimal() +
   theme(legend.position = "none")
@@ -115,9 +132,9 @@ p1 <- ggplot(ecology, aes(x = organic_carbon)) +
   labs(x = "有机碳 (g/kg)", y = "频次", title = "直方图") +
   theme_minimal()
 
-p2 <- ggplot(ecology, aes(x = organic_carbon, fill = habitat)) +
+p2 <- ggplot(ecology, aes(x = organic_carbon, fill = land_use)) +
   geom_density(alpha = 0.5) +
-  labs(x = "有机碳 (g/kg)", y = "密度", title = "密度图", fill = "生境") +
+  labs(x = "有机碳 (g/kg)", y = "密度", title = "密度图", fill = "土地利用") +
   theme_minimal()
 
 p1 + p2
@@ -127,16 +144,16 @@ p1 + p2
 
 ```{r}
 ecology |>
-  group_by(habitat) |>
+  group_by(land_use) |>
   summarise(
     mean_richness = mean(species_richness),
     se = sd(species_richness) / sqrt(n())
   ) |>
-  ggplot(aes(x = reorder(habitat, -mean_richness), y = mean_richness, fill = habitat)) +
+  ggplot(aes(x = reorder(land_use, -mean_richness), y = mean_richness, fill = land_use)) +
   geom_col(alpha = 0.8) +
   geom_errorbar(aes(ymin = mean_richness - se, ymax = mean_richness + se),
                 width = 0.2) +
-  labs(x = "", y = "平均物种丰富度 (± SE)") +
+  labs(x = "", y = "平均物种丰富度 (± SE)", title = "不同土地利用类型的平均物种丰富度") +
   scale_fill_brewer(palette = "Set2") +
   theme_minimal() +
   theme(legend.position = "none")
@@ -191,14 +208,14 @@ theme_paper <- function(base_size = 12) {
 #| fig-asp: 0.5
 
 p_scatter <- ggplot(ecology, aes(x = elevation, y = species_richness)) +
-  geom_point(aes(color = habitat), alpha = 0.6) +
+  geom_point(aes(color = land_use), alpha = 0.6) +
   geom_smooth(method = "lm", color = "black", linewidth = 0.8) +
-  labs(x = "海拔 (m)", y = "物种丰富度", color = "生境") +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用") +
   theme_paper()
 
-p_box <- ggplot(ecology, aes(x = habitat, y = organic_carbon, fill = habitat)) +
+p_box <- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +
   geom_boxplot(alpha = 0.7) +
-  labs(x = "", y = "有机碳 (g/kg)") +
+  labs(x = "", y = "有机碳 (g/kg)", title = "不同土地利用类型") +
   scale_fill_brewer(palette = "Set2") +
   theme_paper() +
   theme(legend.position = "none")
@@ -248,10 +265,10 @@ viridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度
 
 ```{r}
 # 离散变量：scale_color_viridis_d()
-p1 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = habitat)) +
+p1 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +
   geom_point(alpha = 0.7, size = 2) +
   scale_color_viridis_d(option = "D") +
-  labs(x = "土壤 pH", y = "物种丰富度", color = "生境", title = "viridis 离散配色") +
+  labs(x = "土壤 pH", y = "物种丰富度", color = "土地利用", title = "viridis 离散配色") +
   theme_minimal()
 
 # 连续变量：scale_color_viridis_c()
@@ -290,3 +307,9 @@ p1 + p2
 3. 创建一个 2×2 的组合图（散点图 + 箱线图 + 直方图 + 密度图）
 4. 应用自定义主题，导出为 PDF
 5. 尝试使用 `scale_color_viridis_d()` 替换默认配色
+
+## 参考文献
+
+- Wilkinson, L. (2005). *The Grammar of Graphics* (2nd ed.). Springer. DOI: 10.1007/0-387-28695-0
+- Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: 10.1002/2016JG003683
+- Du, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh
