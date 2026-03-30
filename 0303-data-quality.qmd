@@ -9,6 +9,10 @@ execute:
 
 数据清洗和特征工程解决了"数据怎么处理"的问题，数据质量控制解决的是"怎么确保数据可靠、可追溯、可复用"。这是可重复性研究的核心环节。
 
+> **数据来源背景**：Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016jg003683)
+>
+> 本章示例数据基于该研究的参数范围模拟，重点演示数据质量控制的技术和方法。
+
 ```{r}
 library(tidyverse)
 library(lubridate)
@@ -353,3 +357,7 @@ quality_report |>
 3. 用 `generate_codebook()` 函数为你的数据生成 codebook
 4. 将原始数据保存为 CSV，处理后的数据保存为 RDS
 5. 确保你的数据处理流程完全可重复：删除 `data/processed/` 中的文件，重新运行脚本能得到相同结果
+
+## 参考文献
+
+Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016JG003683)
