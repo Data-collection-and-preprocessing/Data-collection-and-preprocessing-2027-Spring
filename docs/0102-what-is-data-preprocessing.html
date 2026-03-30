@@ -23,6 +23,41 @@ ul.task-list li input[type="checkbox"] {
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
 }
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
 </style>
 
 
@@ -146,7 +181,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -210,31 +245,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -321,7 +356,7 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -348,20 +383,19 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#为什么需要数据预处理" id="toc-为什么需要数据预处理" class="nav-link active" data-scroll-target="#为什么需要数据预处理"><span class="header-section-number">2.1</span> 为什么需要数据预处理？</a></li>
-  <li><a href="#数据预处理的完整流程" id="toc-数据预处理的完整流程" class="nav-link" data-scroll-target="#数据预处理的完整流程"><span class="header-section-number">2.2</span> 数据预处理的完整流程</a>
+  <li><a href="#什么是数据预处理" id="toc-什么是数据预处理" class="nav-link active" data-scroll-target="#什么是数据预处理"><span class="header-section-number">3</span> 什么是数据预处理</a>
   <ul class="collapse">
-  <li><a href="#数据检查" id="toc-数据检查" class="nav-link" data-scroll-target="#数据检查"><span class="header-section-number">2.2.1</span> ① 数据检查</a></li>
-  <li><a href="#数据清洗" id="toc-数据清洗" class="nav-link" data-scroll-target="#数据清洗"><span class="header-section-number">2.2.2</span> ② 数据清洗</a></li>
-  <li><a href="#数据转换" id="toc-数据转换" class="nav-link" data-scroll-target="#数据转换"><span class="header-section-number">2.2.3</span> ③ 数据转换</a></li>
-  <li><a href="#特征工程" id="toc-特征工程" class="nav-link" data-scroll-target="#特征工程"><span class="header-section-number">2.2.4</span> ④ 特征工程</a></li>
-  <li><a href="#数据标准化与归一化" id="toc-数据标准化与归一化" class="nav-link" data-scroll-target="#数据标准化与归一化"><span class="header-section-number">2.2.5</span> ⑤ 数据标准化与归一化</a></li>
-  <li><a href="#数据质量评估" id="toc-数据质量评估" class="nav-link" data-scroll-target="#数据质量评估"><span class="header-section-number">2.2.6</span> ⑥ 数据质量评估</a></li>
+  <li><a href="#为什么需要数据预处理" id="toc-为什么需要数据预处理" class="nav-link" data-scroll-target="#为什么需要数据预处理"><span class="header-section-number">3.1</span> 为什么需要数据预处理？</a></li>
+  <li><a href="#数据预处理的完整流程" id="toc-数据预处理的完整流程" class="nav-link" data-scroll-target="#数据预处理的完整流程"><span class="header-section-number">3.2</span> 数据预处理的完整流程</a>
+  <ul class="collapse">
+  <li><a href="#数据检查先看再动手" id="toc-数据检查先看再动手" class="nav-link" data-scroll-target="#数据检查先看再动手"><span class="header-section-number">3.2.1</span> 数据检查：先看，再动手</a></li>
+  <li><a href="#数据标准化与归一化" id="toc-数据标准化与归一化" class="nav-link" data-scroll-target="#数据标准化与归一化"><span class="header-section-number">3.2.2</span> 数据标准化与归一化</a></li>
   </ul></li>
-  <li><a href="#一个完整的示例" id="toc-一个完整的示例" class="nav-link" data-scroll-target="#一个完整的示例"><span class="header-section-number">2.3</span> 一个完整的示例</a></li>
-  <li><a href="#数据预处理与可重复性" id="toc-数据预处理与可重复性" class="nav-link" data-scroll-target="#数据预处理与可重复性"><span class="header-section-number">2.4</span> 数据预处理与可重复性</a></li>
-  <li><a href="#本课程的预处理章节预览" id="toc-本课程的预处理章节预览" class="nav-link" data-scroll-target="#本课程的预处理章节预览"><span class="header-section-number">2.5</span> 本课程的预处理章节预览</a></li>
-  <li><a href="#课后思考" id="toc-课后思考" class="nav-link" data-scroll-target="#课后思考"><span class="header-section-number">2.6</span> 课后思考</a></li>
+  <li><a href="#常见问题类型示例" id="toc-常见问题类型示例" class="nav-link" data-scroll-target="#常见问题类型示例"><span class="header-section-number">3.3</span> 常见问题类型示例</a></li>
+  <li><a href="#数据预处理与可重复性" id="toc-数据预处理与可重复性" class="nav-link" data-scroll-target="#数据预处理与可重复性"><span class="header-section-number">3.4</span> 数据预处理与可重复性</a></li>
+  <li><a href="#本课程的预处理章节预览" id="toc-本课程的预处理章节预览" class="nav-link" data-scroll-target="#本课程的预处理章节预览"><span class="header-section-number">3.5</span> 本课程的预处理章节预览</a></li>
+  <li><a href="#课后思考" id="toc-课后思考" class="nav-link" data-scroll-target="#课后思考"><span class="header-section-number">3.6</span> 课后思考</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
@@ -387,10 +421,12 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
+<section id="什么是数据预处理" class="level1" data-number="3">
+<h1 data-number="3"><span class="header-section-number">3</span> 什么是数据预处理</h1>
 <p>你辛辛苦苦在野外采集了三个月的土壤数据，兴冲冲地导入 R 准备分析，却发现：有些样点的 pH 值是 -2（显然不可能），有些行的有机碳含量是空白，日期格式有的写”2027-03-15”有的写”15/3/2027”……</p>
 <p>这就是真实数据的常态。<strong>数据预处理</strong>（Data Preprocessing）就是将”原始的、混乱的”数据转化为”干净的、可分析的”数据的过程。</p>
-<section id="为什么需要数据预处理" class="level2" data-number="2.1">
-<h2 data-number="2.1" class="anchored" data-anchor-id="为什么需要数据预处理"><span class="header-section-number">2.1</span> 为什么需要数据预处理？</h2>
+<section id="为什么需要数据预处理" class="level2" data-number="3.1">
+<h2 data-number="3.1" class="anchored" data-anchor-id="为什么需要数据预处理"><span class="header-section-number">3.1</span> 为什么需要数据预处理？</h2>
 <p>原始数据几乎不可能直接用于分析，原因包括：</p>
 <ul>
 <li><strong>缺失值</strong>：传感器故障、记录遗漏、问卷未填写</li>
@@ -401,34 +437,34 @@ ul.task-list li input[type="checkbox"] {
 </ul>
 <p>如果不处理这些问题就直接建模，结果将不可靠——这就是”垃圾进，垃圾出”（Garbage In, Garbage Out）。</p>
 </section>
-<section id="数据预处理的完整流程" class="level2" data-number="2.2">
-<h2 data-number="2.2" class="anchored" data-anchor-id="数据预处理的完整流程"><span class="header-section-number">2.2</span> 数据预处理的完整流程</h2>
-<p>数据预处理不是单一步骤，而是一个系统化的流程：</p>
+<section id="数据预处理的完整流程" class="level2" data-number="3.2">
+<h2 data-number="3.2" class="anchored" data-anchor-id="数据预处理的完整流程"><span class="header-section-number">3.2</span> 数据预处理的完整流程</h2>
+<p>数据预处理不是单一步骤，而是一个系统化的流程。本节提供总览，具体策略将在第四单元（0301 数据清洗、0302 特征工程、0303 数据质量评估）中详细展开。</p>
 <pre><code>原始数据
   │
   ▼
 ① 数据检查（Data Inspection）
   │  了解数据结构、类型、维度、缺失情况
   ▼
-② 数据清洗（Data Cleaning）
+② 数据清洗（Data Cleaning）          → 详见 0301
   │  处理缺失值、异常值、重复值、格式问题
   ▼
 ③ 数据转换（Data Transformation）
   │  类型转换、编码转换、单位统一
   ▼
-④ 特征工程（Feature Engineering）
+④ 特征工程（Feature Engineering）     → 详见 0302
   │  创建新变量、变量选择、降维
   ▼
 ⑤ 数据标准化/归一化（Scaling）
   │  消除量纲差异，使变量可比较
   ▼
-⑥ 数据质量评估（Quality Assessment）
+⑥ 数据质量评估（Quality Assessment）  → 详见 0303
   │  验证处理后的数据是否满足分析要求
   ▼
 可分析数据</code></pre>
-<section id="数据检查" class="level3" data-number="2.2.1">
-<h3 data-number="2.2.1" class="anchored" data-anchor-id="数据检查"><span class="header-section-number">2.2.1</span> ① 数据检查</h3>
-<p>拿到数据后的第一件事：<strong>先看，再动手</strong>。</p>
+<section id="数据检查先看再动手" class="level3" data-number="3.2.1">
+<h3 data-number="3.2.1" class="anchored" data-anchor-id="数据检查先看再动手"><span class="header-section-number">3.2.1</span> 数据检查：先看，再动手</h3>
+<p>拿到数据后的第一件事是了解数据的基本情况：</p>
 <ul>
 <li>数据有多少行、多少列？</li>
 <li>每个变量是什么类型（数值、分类、日期）？</li>
@@ -466,87 +502,24 @@ ul.task-list li input[type="checkbox"] {
 </tr>
 </tbody>
 </table>
-</section>
-<section id="数据清洗" class="level3" data-number="2.2.2">
-<h3 data-number="2.2.2" class="anchored" data-anchor-id="数据清洗"><span class="header-section-number">2.2.2</span> ② 数据清洗</h3>
-<p>数据清洗是预处理中最耗时的环节，通常占整个数据分析工作量的 60-80%。</p>
-<p><strong>缺失值处理</strong>的常见策略：</p>
-<table class="caption-top table">
-<thead>
-<tr class="header">
-<th style="text-align: left;">策略</th>
-<th style="text-align: left;">适用场景</th>
-<th style="text-align: left;">R 实现</th>
-</tr>
-</thead>
-<tbody>
-<tr class="odd">
-<td style="text-align: left;">删除含缺失值的行</td>
-<td style="text-align: left;">缺失比例很小（&lt;5%）</td>
-<td style="text-align: left;"><code>drop_na()</code></td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">均值/中位数填充</td>
-<td style="text-align: left;">数值变量，随机缺失</td>
-<td style="text-align: left;"><code>replace_na()</code></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">众数填充</td>
-<td style="text-align: left;">分类变量</td>
-<td style="text-align: left;">手动替换</td>
-</tr>
-<tr class="even">
-<td style="text-align: left;">插值法</td>
-<td style="text-align: left;">时间序列数据</td>
-<td style="text-align: left;"><code>zoo::na.approx()</code></td>
-</tr>
-<tr class="odd">
-<td style="text-align: left;">保留缺失</td>
-<td style="text-align: left;">缺失本身有意义</td>
-<td style="text-align: left;">标记为单独类别</td>
-</tr>
-</tbody>
-</table>
-<p><strong>异常值处理</strong>的常见方法：</p>
-<ul>
-<li><strong>箱线图法</strong>：超出 Q1 - 1.5×IQR 或 Q3 + 1.5×IQR 的值</li>
-<li><strong>Z-score 法</strong>：|Z| &gt; 3 的值视为异常</li>
-<li><strong>领域知识</strong>：pH 值不可能为负数，温度不可能超过 60°C</li>
-</ul>
-<div class="callout callout-style-default callout-warning callout-titled">
-<div class="callout-header d-flex align-content-center">
-<div class="callout-icon-container">
-<i class="callout-icon"></i>
-</div>
-<div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>异常值 ≠ 错误值
-</div>
-</div>
-<div class="callout-body-container callout-body">
-<p>异常值不一定是错误。一个极端的降雨量可能是真实的极端天气事件。处理异常值前，务必结合领域知识判断：是数据错误，还是真实的极端情况？</p>
-</div>
+<p><strong>最小 R 代码示例</strong>：快速诊断一份数据的健康状况：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读入数据</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read.csv</span>(<span class="st">"soil_survey.csv"</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 基本结构</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dim</span>(df)</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(df)</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 缺失值概览</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(df))</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 数值摘要</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="数据转换" class="level3" data-number="2.2.3">
-<h3 data-number="2.2.3" class="anchored" data-anchor-id="数据转换"><span class="header-section-number">2.2.3</span> ③ 数据转换</h3>
-<ul>
-<li><strong>日期格式统一</strong>：全部转为 <code>YYYY-MM-DD</code> 格式</li>
-<li><strong>分类变量编码</strong>：将文本标签转为因子（factor）</li>
-<li><strong>单位统一</strong>：确保同一变量使用相同单位（如全部用 g/kg，不要混用 mg/kg 和 %）</li>
-</ul>
-</section>
-<section id="特征工程" class="level3" data-number="2.2.4">
-<h3 data-number="2.2.4" class="anchored" data-anchor-id="特征工程"><span class="header-section-number">2.2.4</span> ④ 特征工程</h3>
-<p>特征工程是从现有变量中创造新的、更有信息量的变量：</p>
-<ul>
-<li><strong>数学变换</strong>：对偏态分布的变量取对数（如生物量、面积）</li>
-<li><strong>交互项</strong>：温度 × 湿度 可能比单独的温度或湿度更能预测物种分布</li>
-<li><strong>时间特征</strong>：从日期中提取月份、季节、年份</li>
-<li><strong>空间特征</strong>：从经纬度计算样点间距离</li>
-</ul>
-</section>
-<section id="数据标准化与归一化" class="level3" data-number="2.2.5">
-<h3 data-number="2.2.5" class="anchored" data-anchor-id="数据标准化与归一化"><span class="header-section-number">2.2.5</span> ⑤ 数据标准化与归一化</h3>
+<section id="数据标准化与归一化" class="level3" data-number="3.2.2">
+<h3 data-number="3.2.2" class="anchored" data-anchor-id="数据标准化与归一化"><span class="header-section-number">3.2.2</span> 数据标准化与归一化</h3>
 <p>当不同变量的量纲差异很大时（如海拔 0-4000m vs.&nbsp;pH 4-9），需要进行标准化：</p>
 <table class="caption-top table">
 <colgroup>
@@ -576,35 +549,32 @@ ul.task-list li input[type="checkbox"] {
 <td style="text-align: left;">[0, 1]</td>
 <td style="text-align: left;">神经网络、距离计算</td>
 </tr>
-<tr class="odd">
-<td style="text-align: left;">对数变换</td>
-<td style="text-align: left;">log(x)</td>
-<td style="text-align: left;">取决于数据</td>
-<td style="text-align: left;">右偏分布</td>
-</tr>
 </tbody>
 </table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>对数变换
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>对数变换 log(x) 严格来说不属于标准化/归一化，而是一种<strong>分布变换</strong>，用于将右偏分布拉向对称。它常在特征工程阶段使用，详见 0302。</p>
+</div>
+</div>
 </section>
-<section id="数据质量评估" class="level3" data-number="2.2.6">
-<h3 data-number="2.2.6" class="anchored" data-anchor-id="数据质量评估"><span class="header-section-number">2.2.6</span> ⑥ 数据质量评估</h3>
-<p>处理完成后，需要验证数据质量：</p>
-<ul>
-<li>缺失值是否已全部处理？</li>
-<li>数值范围是否合理？</li>
-<li>变量类型是否正确？</li>
-<li>样本量是否满足分析需求？</li>
-</ul>
 </section>
-</section>
-<section id="一个完整的示例" class="level2" data-number="2.3">
-<h2 data-number="2.3" class="anchored" data-anchor-id="一个完整的示例"><span class="header-section-number">2.3</span> 一个完整的示例</h2>
-<p>假设我们有一份土壤调查的原始数据：</p>
+<section id="常见问题类型示例" class="level2" data-number="3.3">
+<h2 data-number="3.3" class="anchored" data-anchor-id="常见问题类型示例"><span class="header-section-number">3.3</span> 常见问题类型示例</h2>
+<p>假设我们有一份土壤调查的原始数据，以下是常见的问题类型及处理思路：</p>
 <table class="caption-top table">
 <thead>
 <tr class="header">
-<th style="text-align: left;">问题</th>
+<th style="text-align: left;">问题类型</th>
 <th style="text-align: left;">原始数据示例</th>
-<th style="text-align: left;">处理后</th>
+<th style="text-align: left;">处理思路</th>
 </tr>
 </thead>
 <tbody>
@@ -636,15 +606,15 @@ ul.task-list li input[type="checkbox"] {
 </tbody>
 </table>
 </section>
-<section id="数据预处理与可重复性" class="level2" data-number="2.4">
-<h2 data-number="2.4" class="anchored" data-anchor-id="数据预处理与可重复性"><span class="header-section-number">2.4</span> 数据预处理与可重复性</h2>
+<section id="数据预处理与可重复性" class="level2" data-number="3.4">
+<h2 data-number="3.4" class="anchored" data-anchor-id="数据预处理与可重复性"><span class="header-section-number">3.4</span> 数据预处理与可重复性</h2>
 <p>数据预处理是可重复性研究中最容易出问题的环节。为什么？</p>
 <ul>
-<li>预处理步骤往往是”手动”的，缺乏记录</li>
+<li>预处理步骤如果缺乏代码记录，事后难以追溯</li>
 <li>不同研究者对”异常值”的判断标准不同</li>
 <li>缺失值的处理方式会显著影响最终结果</li>
 </ul>
-<p>因此，<strong>所有预处理步骤都应该用代码实现，而不是在 Excel 中手动操作</strong>。代码是可追溯、可重复的；手动操作不是。</p>
+<p>因此，<strong>所有预处理步骤都应该用代码实现，而不是在 Excel 中手动操作</strong>。代码是可追溯、可重复的；手动操作则难以复现和审查。</p>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -664,8 +634,8 @@ ul.task-list li input[type="checkbox"] {
 </div>
 </div>
 </section>
-<section id="本课程的预处理章节预览" class="level2" data-number="2.5">
-<h2 data-number="2.5" class="anchored" data-anchor-id="本课程的预处理章节预览"><span class="header-section-number">2.5</span> 本课程的预处理章节预览</h2>
+<section id="本课程的预处理章节预览" class="level2" data-number="3.5">
+<h2 data-number="3.5" class="anchored" data-anchor-id="本课程的预处理章节预览"><span class="header-section-number">3.5</span> 本课程的预处理章节预览</h2>
 <p>本课程将在第四单元详细讲解数据预处理的实操技术：</p>
 <ul>
 <li><strong>第 0301 章 数据清洗</strong>：缺失值、异常值、重复值的检测与处理</li>
@@ -673,15 +643,16 @@ ul.task-list li input[type="checkbox"] {
 <li><strong>第 0303 章 数据质量评估</strong>：质量指标、验证方法</li>
 </ul>
 </section>
-<section id="课后思考" class="level2" data-number="2.6">
-<h2 data-number="2.6" class="anchored" data-anchor-id="课后思考"><span class="header-section-number">2.6</span> 课后思考</h2>
+<section id="课后思考" class="level2" data-number="3.6">
+<h2 data-number="3.6" class="anchored" data-anchor-id="课后思考"><span class="header-section-number">3.6</span> 课后思考</h2>
 <ol type="1">
-<li>回顾你最近使用的一份数据，其中存在哪些需要预处理的问题？</li>
-<li>你的预处理步骤是用代码实现的，还是在 Excel 中手动完成的？</li>
-<li>如果删除所有含缺失值的行，你的数据会损失多少？这种损失可以接受吗？</li>
+<li>找一份你正在使用（或曾经使用）的数据集，用上面的 R 代码运行一次数据检查，记录：共有多少缺失值？哪些列的缺失最严重？数值范围是否有明显异常？</li>
+<li>如果删除所有含缺失值的行，你的数据会损失多少比例？这种损失可以接受吗？</li>
+<li>你的预处理步骤是用代码实现的，还是在 Excel 中手动完成的？如果是手动完成的，尝试用 R 代码重写其中一步。</li>
 </ol>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1090,8 +1061,8 @@ ul.task-list li input[type="checkbox"] {
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="课程资源">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span>
+      <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="什么是数据采集">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

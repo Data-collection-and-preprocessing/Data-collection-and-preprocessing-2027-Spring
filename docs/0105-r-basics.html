@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -245,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -751,17 +751,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(iris)</span>
 <span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 按物种分组统计花瓣长度</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(iris<span class="sc">$</span>Petal.Length, iris<span class="sc">$</span>Species, mean)</span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 简单散点图</span></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, iris<span class="sc">$</span>Petal.Length,</span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(iris<span class="sc">$</span>Species),</span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>,</span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"花萼长度 (cm)"</span>,</span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"花瓣长度 (cm)"</span>,</span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"鸢尾花花萼与花瓣长度关系"</span>)</span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">levels</span>(iris<span class="sc">$</span>Species),</span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># tapply(数据, 分组变量, 函数) —— 对每组分别计算</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="fu">tapply</span>(iris<span class="sc">$</span>Petal.Length, iris<span class="sc">$</span>Species, mean)</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 简单散点图</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(iris<span class="sc">$</span>Sepal.Length, iris<span class="sc">$</span>Petal.Length,</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">as.numeric</span>(iris<span class="sc">$</span>Species),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>     <span class="at">pch =</span> <span class="dv">16</span>,</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>     <span class="at">xlab =</span> <span class="st">"花萼长度 (cm)"</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>     <span class="at">ylab =</span> <span class="st">"花瓣长度 (cm)"</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>     <span class="at">main =</span> <span class="st">"鸢尾花花萼与花瓣长度关系"</span>)</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="fu">legend</span>(<span class="st">"topleft"</span>, <span class="fu">levels</span>(iris<span class="sc">$</span>Species),</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>       <span class="at">col =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">3</span>, <span class="at">pch =</span> <span class="dv">16</span>, <span class="at">cex =</span> <span class="fl">0.8</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="课后练习" class="level2" data-number="5.10">
@@ -770,7 +771,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列</li>
 <li>计算株高的平均值、标准差和变异系数（CV = sd/mean × 100%）</li>
 <li>筛选出株高大于平均值的植物</li>
-<li>用 <code>hist()</code> 绑制 <code>iris</code> 数据集中 <code>Sepal.Width</code> 的分布直方图</li>
+<li>用 <code>hist()</code> 绘制 <code>iris</code> 数据集中 <code>Sepal.Width</code> 的分布直方图</li>
 <li>将你的代码保存为 <code>.R</code> 文件，提交到 GitHub 仓库</li>
 </ol>
 

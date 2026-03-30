@@ -210,7 +210,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -274,31 +274,31 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -385,7 +385,7 @@ window.Quarto = {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -527,7 +527,7 @@ window.Quarto = {
 <h3 data-number="14.1.2" class="anchored" data-anchor-id="荟萃分析的基本流程"><span class="header-section-number">14.1.2</span> 荟萃分析的基本流程</h3>
 <p>一个完整的荟萃分析通常包括以下步骤：</p>
 <pre><code>提出研究问题 → 系统检索文献 → 筛选纳入研究 → 提取数据 → 计算效应量 → 合并分析 → 结果可视化</code></pre>
-<p>本章将聚焦于后半段——从数据提取到结果可视化，帮助你掌握荟萃分析的核心技术。</p>
+<p>本章将聚焦于效应量计算、模型拟合、森林图绘制、异质性分析和发表偏倚检验这几个核心环节，帮助你掌握荟萃分析的核心技术。</p>
 </section>
 </section>
 <section id="效应量荟萃分析的通用货币" class="level2" data-number="14.2">
@@ -741,7 +741,7 @@ V_{lnRR} = \frac{SD_T^2}{n_T \cdot \bar{X}_T^2} + \frac{SD_C^2}{n_C \cdot \bar{X
 </section>
 <section id="拟合随机效应模型" class="level3" data-number="14.4.3">
 <h3 data-number="14.4.3" class="anchored" data-anchor-id="拟合随机效应模型"><span class="header-section-number">14.4.3</span> 拟合随机效应模型</h3>
-<p>在生态学荟萃分析中，我们几乎总是使用<strong>随机效应模型（random-effects model）</strong>，因为不同研究之间的真实效应量很可能不完全相同——不同地点、不同生态系统、不同施肥量都会导致效应的异质性。</p>
+<p>在生态学荟萃分析中，我们通常使用<strong>随机效应模型（random-effects model）</strong>，因为不同研究之间的真实效应量很可能不完全相同——不同地点、不同生态系统、不同施肥量都会导致效应的异质性。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合随机效应模型（默认使用 REML 估计）</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>res <span class="ot">&lt;-</span> <span class="fu">rma</span>(yi, vi, <span class="at">data =</span> meta_es)</span>
@@ -768,7 +768,7 @@ V_{lnRR} = \frac{SD_T^2}{n_T \cdot \bar{X}_T^2} + \frac{SD_C^2}{n_C \cdot \bar{X
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p><strong>固定效应模型</strong>假设所有研究估计的是同一个真实效应，研究间的差异仅来自抽样误差。<strong>随机效应模型</strong>则假设每个研究有自己的真实效应，这些效应围绕一个总体均值波动。在生态学中，由于研究条件的多样性，随机效应模型几乎总是更合理的选择。</p>
+<p><strong>固定效应模型</strong>假设所有研究估计的是同一个真实效应，研究间的差异仅来自抽样误差。<strong>随机效应模型</strong>则假设每个研究有自己的真实效应，这些效应围绕一个总体均值波动。在生态学中，由于研究条件的多样性，随机效应模型通常是更合理的选择。</p>
 </div>
 </div>
 </section>
@@ -842,7 +842,7 @@ V_{lnRR} = \frac{SD_T^2}{n_T \cdot \bar{X}_T^2} + \frac{SD_C^2}{n_C \cdot \bar{X
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">regtest</span>(res)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
-<p>如果 p 值显著（通常 &lt; 0.05），则提示可能存在发表偏倚。但需要注意，当纳入研究数量较少（&lt; 10）时，这些检验的统计效力较低。</p>
+<p>如果 p 值显著（通常 &lt; 0.05），则提示可能存在发表偏倚。但需要注意，当纳入研究数量较少（&lt; 10）时，这些检验的统计效力较低，结果可能不可靠。一般建议纳入研究数量 ≥ 10 时再使用 Egger 检验；若研究数量不足 10，应以漏斗图目视检查为主，并在报告中说明检验效力的局限性。</p>
 </section>
 </section>
 <section id="完整分析流程总结" class="level2" data-number="14.8">
@@ -1336,8 +1336,8 @@ V_{lnRR} = \frac{SD_T^2}{n_T \cdot \bar{X}_T^2} + \frac{SD_C^2}{n_C \cdot \bar{X
   </script>
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
-      <a href="./0206-references.html" class="pagination-link" aria-label="数据采集方法扩展阅读">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span>
+      <a href="./0206-references.html" class="pagination-link" aria-label="扩展阅读与参考资源">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">

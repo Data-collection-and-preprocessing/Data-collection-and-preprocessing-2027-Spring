@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -245,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -511,7 +511,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">cn_ratio =</span> organic_carbon <span class="sc">/</span> total_nitrogen,</span>
 <span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">elev_band =</span> <span class="fu">cut</span>(elevation, <span class="at">breaks =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">400</span>, <span class="dv">700</span>, <span class="dv">1000</span>, <span class="dv">1500</span>),</span>
 <span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>                    <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"低海拔"</span>, <span class="st">"中低海拔"</span>, <span class="st">"中高海拔"</span>, <span class="st">"高海拔"</span>)),</span>
-<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_biomass =</span> <span class="fu">log</span>(organic_carbon)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">log_oc =</span> <span class="fu">log</span>(organic_carbon)</span>
 <span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  )</span>
 <span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">清洗后:"</span>, <span class="fu">nrow</span>(clean_data), <span class="st">"行</span><span class="sc">\n</span><span class="st">"</span>)</span>
@@ -678,7 +678,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li><label><input type="checkbox" checked="">使用了相对路径</label></li>
 <li><label><input type="checkbox" checked="">代码有注释说明每一步的目的</label></li>
 <li><label><input type="checkbox" checked="">清洗后的数据和 codebook 已导出</label></li>
+<li><label><input type="checkbox" checked="">依赖包在脚本开头统一加载</label></li>
+<li><label><input type="checkbox" checked="">记录了运行环境信息（R 版本、包版本）</label></li>
 </ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 记录运行环境，确保可重复</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
 </section>
 </section>
 <section id="课后练习" class="level2" data-number="21.9">
@@ -1105,8 +1111,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       </a>          
   </div>
   <div class="nav-page nav-page-next">
-      <a href="./0602-project-workshop.html" class="pagination-link" aria-label="项目工作坊">
-        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span> <i class="bi bi-arrow-right-short"></i>
+      <a href="./0602-project-workshop.html" class="pagination-link" aria-label="综合实战与项目工作坊">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

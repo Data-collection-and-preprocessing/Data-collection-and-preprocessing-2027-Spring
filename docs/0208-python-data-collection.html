@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -245,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -515,7 +515,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 向 GBIF 首页发送 GET 请求</span></span>
 <span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://www.gbif.org"</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看响应状态码（200 表示成功）</span></span>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"状态码: </span><span class="sc">{</span>response<span class="sc">.</span>status_code<span class="sc">}</span><span class="ss">"</span>)</span>
@@ -569,14 +569,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {</span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">"User-Agent"</span>: <span class="st">"EcologyResearchBot/1.0 (university-course-project)"</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>}</span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, headers<span class="op">=</span>headers)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, headers<span class="op">=</span>headers, timeout<span class="op">=</span><span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-important callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Important</span>礼貌的爬虫
+Important
 </div>
 </div>
 <div class="callout-body-container callout-body">
@@ -734,7 +734,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>species_url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/species/match"</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {<span class="st">"name"</span>: <span class="st">"Egretta garzetta"</span>}</span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(species_url, params<span class="op">=</span>params)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(species_url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>species_data <span class="op">=</span> response.json()</span>
 <span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>taxon_key <span class="op">=</span> species_data[<span class="st">"usageKey"</span>]</span>
@@ -750,17 +750,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">"hasCoordinate"</span>: <span class="va">True</span>    <span class="co"># 只返回有经纬度坐标的记录</span></span>
 <span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params)</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> response.json()</span>
 <span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"共找到 </span><span class="sc">{</span>data[<span class="st">'count'</span>]<span class="sc">}</span><span class="ss"> 条记录"</span>)</span>
 <span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"本次返回 </span><span class="sc">{</span><span class="bu">len</span>(data[<span class="st">'results'</span>])<span class="sc">}</span><span class="ss"> 条"</span>)</span>
 <span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看第一条记录的关键字段</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>record <span class="op">=</span> data[<span class="st">"results"</span>][<span class="dv">0</span>]</span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"观测地点: (</span><span class="sc">{</span>record[<span class="st">'decimalLatitude'</span>]<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>record[<span class="st">'decimalLongitude'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
-<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"观测日期: </span><span class="sc">{</span>record<span class="sc">.</span>get(<span class="st">'eventDate'</span>, <span class="st">'未记录'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"数据来源: </span><span class="sc">{</span>record<span class="sc">.</span>get(<span class="st">'datasetName'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> data[<span class="st">"results"</span>]:</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    record <span class="op">=</span> data[<span class="st">"results"</span>][<span class="dv">0</span>]</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"观测地点: (</span><span class="sc">{</span>record[<span class="st">'decimalLatitude'</span>]<span class="sc">}</span><span class="ss">, </span><span class="sc">{</span>record[<span class="st">'decimalLongitude'</span>]<span class="sc">}</span><span class="ss">)"</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"观测日期: </span><span class="sc">{</span>record<span class="sc">.</span>get(<span class="st">'eventDate'</span>, <span class="st">'未记录'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"数据来源: </span><span class="sc">{</span>record<span class="sc">.</span>get(<span class="st">'datasetName'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"未返回任何记录，请检查查询参数"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>第三步：批量获取并整理为 DataFrame</strong></p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -797,7 +800,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"timezone"</span>: <span class="st">"Asia/Shanghai"</span></span>
 <span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>}</span>
 <span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>weather_data <span class="op">=</span> response.json()</span>
 <span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 将日数据转换为 DataFrame</span></span>
@@ -849,7 +852,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"hasCoordinate"</span>: <span class="va">True</span></span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    }</span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
 <span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> data.get(<span class="st">"results"</span>, [])</span>
@@ -957,7 +960,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="15.6.1" class="anchored" data-anchor-id="robots.txt-协议"><span class="header-section-number">15.6.1</span> robots.txt 协议</h3>
 <p><code>robots.txt</code> 是网站根目录下的一个文本文件，它告诉爬虫哪些页面可以访问、哪些不可以。在采集任何网站之前，你应该先检查它的 robots.txt：</p>
 <div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看 GBIF 的 robots.txt</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">"https://www.gbif.org/robots.txt"</span>)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">"https://www.gbif.org/robots.txt"</span>, timeout<span class="op">=</span><span class="dv">10</span>)</span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>一个典型的 robots.txt 文件内容如下：</p>
 <pre><code>User-agent: *
@@ -982,7 +985,7 @@ Crawl-delay: 10</code></pre>
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Warning</span>法律风险
+Warning
 </div>
 </div>
 <div class="callout-body-container callout-body">

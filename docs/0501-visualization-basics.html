@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -245,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -403,7 +403,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#导出高质量图片" id="toc-导出高质量图片" class="nav-link" data-scroll-target="#导出高质量图片"><span class="header-section-number">19.4.3</span> 导出高质量图片</a></li>
   </ul></li>
   <li><a href="#色盲友好配色viridis" id="toc-色盲友好配色viridis" class="nav-link" data-scroll-target="#色盲友好配色viridis"><span class="header-section-number">19.5</span> 色盲友好配色：viridis</a></li>
-  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">19.6</span> 课后练习</a></li>
+  <li><a href="#图表类型选择指南" id="toc-图表类型选择指南" class="nav-link" data-scroll-target="#图表类型选择指南"><span class="header-section-number">19.6</span> 图表类型选择指南</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">19.7</span> 课后练习</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -643,15 +644,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>p_final <span class="ot">&lt;-</span> p_scatter <span class="sc">+</span> p_box <span class="sc">+</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">plot_annotation</span>(<span class="at">tag_levels =</span> <span class="st">"a"</span>, <span class="at">tag_prefix =</span> <span class="st">"("</span>, <span class="at">tag_suffix =</span> <span class="st">")"</span>)</span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 PDF（矢量图，论文首选）</span></span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.pdf"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 确保输出目录存在</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"output/figures"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 PNG（位图，PPT/网页用）</span></span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.png"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 PDF（矢量图，论文首选）</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.pdf"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
 <span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 TIFF（某些期刊要求）</span></span>
-<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.tiff"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">600</span>,</span>
-<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>       <span class="at">compression =</span> <span class="st">"lzw"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 PNG（位图，PPT/网页用）</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.png"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">300</span>)</span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 TIFF（某些期刊要求）</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="st">"output/figures/fig1_diversity.tiff"</span>, <span class="at">plot =</span> p_final, <span class="at">width =</span> <span class="dv">10</span>, <span class="at">height =</span> <span class="dv">5</span>, <span class="at">dpi =</span> <span class="dv">600</span>,</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>       <span class="at">compression =</span> <span class="st">"lzw"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
@@ -708,8 +712,58 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </section>
-<section id="课后练习" class="level2" data-number="19.6">
-<h2 data-number="19.6" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">19.6</span> 课后练习</h2>
+<section id="图表类型选择指南" class="level2" data-number="19.6">
+<h2 data-number="19.6" class="anchored" data-anchor-id="图表类型选择指南"><span class="header-section-number">19.6</span> 图表类型选择指南</h2>
+<p>在开始绑图之前，先根据数据类型和分析目的选择合适的图表：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">数据组合</th>
+<th style="text-align: left;">推荐图表</th>
+<th style="text-align: left;">ggplot2 函数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">连续 vs 连续</td>
+<td style="text-align: left;">散点图</td>
+<td style="text-align: left;"><code>geom_point()</code> + <code>geom_smooth()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">分类 vs 连续</td>
+<td style="text-align: left;">箱线图 / 小提琴图</td>
+<td style="text-align: left;"><code>geom_boxplot()</code> / <code>geom_violin()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">单变量分布</td>
+<td style="text-align: left;">直方图 / 密度图</td>
+<td style="text-align: left;"><code>geom_histogram()</code> / <code>geom_density()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">多变量相关</td>
+<td style="text-align: left;">热力图（相关矩阵）</td>
+<td style="text-align: left;"><code>geom_tile()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">分类计数</td>
+<td style="text-align: left;">柱状图</td>
+<td style="text-align: left;"><code>geom_bar()</code> / <code>geom_col()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">时间序列</td>
+<td style="text-align: left;">折线图</td>
+<td style="text-align: left;"><code>geom_line()</code></td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="课后练习" class="level2" data-number="19.7">
+<h2 data-number="19.7" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">19.7</span> 课后练习</h2>
 <ol type="1">
 <li>用 <code>iris</code> 数据集绘制花瓣长度 vs 花瓣宽度的散点图，按物种着色</li>
 <li>绘制三个物种花萼长度的箱线图，添加抖动点</li>

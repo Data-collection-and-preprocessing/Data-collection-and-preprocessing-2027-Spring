@@ -181,7 +181,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">课程资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -245,31 +245,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学模型采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据采集数据方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">数据采集方法扩展阅读</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -356,7 +356,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
@@ -488,7 +488,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="管道操作符" class="level2" data-number="6.2">
 <h2 data-number="6.2" class="anchored" data-anchor-id="管道操作符"><span class="header-section-number">6.2</span> 管道操作符</h2>
-<p>管道操作符 <code>|&gt;</code> 是 tidyverse 编程风格的核心。它的作用很简单：<strong>把左边的结果，作为右边函数的第一个参数传入</strong>。</p>
+<p>管道操作符 <code>|&gt;</code> 是 tidyverse 编程风格的核心。它的作用是：<strong>把左边的结果传给右边函数的第一个参数</strong>。这意味着右边的函数必须在第一个参数位置接收数据，tidyverse 的函数都遵循这个设计。</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 传统写法（从内向外读，难以理解）</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">round</span>(<span class="fu">mean</span>(<span class="fu">c</span>(<span class="fl">1.5</span>, <span class="fl">2.3</span>, <span class="fl">3.7</span>, <span class="fl">4.1</span>)), <span class="dv">1</span>)</span>
@@ -527,12 +527,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>你可能在网上看到另一种管道 <code>%&gt;%</code>（来自 magrittr 包）。两者功能基本相同，区别在于：</p>
+<p>你可能在网上看到另一种管道 <code>%&gt;%</code>（来自 magrittr 包）。主要区别：</p>
 <ul>
 <li><code>|&gt;</code> 是 R 4.1+ 内置的<strong>原生管道</strong>，不需要加载任何包</li>
 <li><code>%&gt;%</code> 是 magrittr 包提供的管道，需要加载 tidyverse 或 magrittr</li>
+<li><code>%&gt;%</code> 支持用 <code>.</code> 作为占位符（如 <code>x %&gt;% f(2, .)</code>），<code>|&gt;</code> 不支持这种写法</li>
 </ul>
-<p>本课程统一使用 <code>|&gt;</code>。如果你在旧教程中看到 <code>%&gt;%</code>，直接替换为 <code>|&gt;</code> 即可。</p>
+<p>本课程统一使用 <code>|&gt;</code>。在大多数场景下两者可以互换，但如果你在旧教程中看到 <code>%&gt;%</code> 配合 <code>.</code> 占位符的用法，需要改写为中间变量或匿名函数的形式。</p>
 </div>
 </div>
 <section id="示例数据" class="level3" data-number="6.2.1">
@@ -600,12 +601,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">basal_area =</span> pi <span class="sc">*</span> (dbh <span class="sc">/</span> <span class="dv">200</span>)<span class="sc">^</span><span class="dv">2</span>,    <span class="co"># 单位：m²</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">height_class =</span> <span class="fu">case_when</span>(</span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      height <span class="sc">&lt;</span> <span class="dv">8</span>  <span class="sc">~</span> <span class="st">"矮"</span>,</span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      height <span class="sc">&lt;</span> <span class="dv">15</span> <span class="sc">~</span> <span class="st">"中"</span>,</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>        <span class="sc">~</span> <span class="st">"高"</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>      <span class="fu">is.na</span>(height) <span class="sc">~</span> <span class="cn">NA_character_</span>,   <span class="co"># 先处理缺失值，避免被误判</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>      height <span class="sc">&lt;</span> <span class="dv">8</span>    <span class="sc">~</span> <span class="st">"矮"</span>,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>      height <span class="sc">&lt;</span> <span class="dv">15</span>   <span class="sc">~</span> <span class="st">"中"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span>          <span class="sc">~</span> <span class="st">"高"</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">head</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="arrange-排序" class="level3" data-number="6.3.4">
