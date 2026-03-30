@@ -18,7 +18,7 @@ library(patchwork)
 
 ## ggplot2 语法体系
 
-ggplot2 基于"图形语法"（Grammar of Graphics），将图表分解为几个核心组件：
+ggplot2 基于 Wilkinson 提出的"图形语法"（Grammar of Graphics）理论（Wilkinson, 2005, *The Grammar of Graphics*, 2nd ed., Springer, DOI: 10.1007/0-387-28695-0），将图表分解为几个核心组件：
 
 ```
 ggplot(data, aes(x, y)) +   # 数据和映射
