@@ -68,7 +68,55 @@ diversity |>
   filter(n_missing > 0)
 ```
 
-本示例数据没有缺失值（因为是模拟生成的）。在真实数据中，你可能会看到如下模式：
+本示例数据没有缺失值（因为是模拟生成的）。为了演示缺失值可视化，我们人为引入一些缺失：
+
+```{r}
+#| fig-width: 8
+#| fig-asp: 0.5
+
+# 创建含缺失值的演示数据
+diversity_miss <- diversity
+diversity_miss$soil_ph[c(3, 15, 27, 42, 58)] <- NA
+diversity_miss$biomass[c(8, 15, 33, 60, 71)] <- NA
+diversity_miss$organic_carbon[c(15, 22, 45)] <- NA
+diversity_miss$richness[c(15, 50)] <- NA
+
+# 缺失值模式热力图
+miss_matrix <- diversity_miss |>
+  select(where(is.numeric)) |>
+  mutate(across(everything(), ~ if_else(is.na(.), 1L, 0L))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "is_missing")
+
+miss_matrix$row <- rep(seq_len(nrow(diversity_miss)),
+                       times = sum(sapply(diversity_miss, is.numeric)))
+
+ggplot(miss_matrix, aes(x = variable, y = row, fill = factor(is_missing))) +
+  geom_tile() +
+  scale_fill_manual(values = c("0" = "grey90", "1" = "coral"),
+                    labels = c("有值", "缺失")) +
+  labs(x = "", y = "观测行号", fill = "",
+       title = "缺失值模式热力图") +
+  theme_minimal(base_size = 10) +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
+
+```{r}
+# 各变量缺失比例柱状图
+diversity_miss |>
+  summarise(across(everything(), ~ sum(is.na(.)))) |>
+  pivot_longer(everything(), names_to = "variable", values_to = "n_missing") |>
+  filter(n_missing > 0) |>
+  mutate(pct = n_missing / nrow(diversity_miss) * 100) |>
+  ggplot(aes(x = reorder(variable, -n_missing), y = pct)) +
+  geom_col(fill = "coral", alpha = 0.8) +
+  geom_text(aes(label = paste0(n_missing, " (", round(pct, 1), "%)")),
+            vjust = -0.3, size = 3.5) +
+  labs(x = "", y = "缺失比例 (%)",
+       title = "各变量缺失值数量与比例") +
+  theme_minimal()
+```
+
+注意上图中第 15 行同时缺失了 4 个变量——这种"共同缺失"模式暗示该样点可能存在系统性的数据采集问题（如设备故障或天气原因导致整个样点数据不完整），而非随机缺失。
 
 ::: {.callout-note}
 ### 缺失值的常见模式
@@ -77,7 +125,7 @@ diversity |>
 - **随机缺失（MAR）**：缺失与其他观测变量有关（如高海拔样点更容易缺失土壤数据）
 - **非随机缺失（MNAR）**：缺失与缺失值本身有关（如极端 pH 值更容易测量失败）
 
-识别缺失模式有助于选择合适的处理策略。
+识别缺失模式有助于选择合适的处理策略。可视化是判断缺失模式的第一步——热力图能直观显示缺失是否集中在特定行或列。
 :::
 
 ## 异常值检测

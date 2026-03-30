@@ -87,7 +87,7 @@ clean_data <- raw_data |>
     cn_ratio = organic_carbon / total_nitrogen,
     elev_band = cut(elevation, breaks = c(0, 400, 700, 1000, 1500),
                     labels = c("低海拔", "中低海拔", "中高海拔", "高海拔")),
-    log_biomass = log(organic_carbon)
+    log_oc = log(organic_carbon)
   )
 
 cat("\n清洗后:", nrow(clean_data), "行\n")
@@ -261,6 +261,13 @@ my_project/
 - [x] 使用了相对路径
 - [x] 代码有注释说明每一步的目的
 - [x] 清洗后的数据和 codebook 已导出
+- [x] 依赖包在脚本开头统一加载
+- [x] 记录了运行环境信息（R 版本、包版本）
+
+```{r}
+# 记录运行环境，确保可重复
+sessionInfo()
+```
 
 ## 课后练习
 

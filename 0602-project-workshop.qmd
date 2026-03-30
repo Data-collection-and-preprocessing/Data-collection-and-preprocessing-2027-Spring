@@ -1,10 +1,10 @@
 ---
-title: "项目工作坊"
+title: "综合实战与项目工作坊"
 execute:
   eval: false
 ---
 
-# 项目工作坊
+# 综合实战与项目工作坊
 
 本章为期末小组项目提供系统指导。你将以 3-5 人小组为单位，完成一个完整的生态学数据采集与分析项目。这是将课程所学技能融会贯通的实践机会。
 
@@ -199,16 +199,27 @@ git push origin feature/data-cleaning
 
 ### 提交信息规范
 
+在第一单元中我们学习了用简洁中文描述提交内容的基本方法。在团队项目中，我们进一步采用 **Conventional Commits** 格式，通过类型前缀让提交历史更易检索：
+
 ```
 feat(data): add species abundance data     # 新增功能
 fix(analysis): correct diversity index formula  # 修复错误
 docs(report): update methods section       # 文档更新
+style(viz): adjust color palette           # 格式调整（不影响逻辑）
+refactor(clean): simplify outlier detection    # 重构代码
 ```
+
+::: {.callout-note}
+## 从简单到规范
+
+第一单元的中文提交信息（如"添加土壤pH数据清洗脚本"）适合个人练习。团队协作时，Conventional Commits 的 `type(scope): description` 格式能帮助队友快速理解每次提交的性质和影响范围。
+:::
 
 ### .gitignore 模板
 
 ```
 # 数据文件（大文件不入库）
+data/raw/*.csv
 data/raw/*.xlsx
 *.csv.gz
 
@@ -216,6 +227,10 @@ data/raw/*.xlsx
 .Rhistory
 .RData
 .Rproj.user/
+
+# Quarto 编译产物
+docs/
+_freeze/
 
 # 系统文件
 .DS_Store
@@ -279,9 +294,9 @@ format: html
 | 数据质量 | 20% | 数据完整，记录规范，有质控措施 | 数据基本完整，格式统一 | 数据有缺失，格式不统一 |
 | 分析方法 | 20% | 方法恰当，代码规范，结果可靠 | 方法基本正确，代码可运行 | 方法有误或代码无法运行 |
 | 可视化 | 15% | 图表美观专业，信息传达清晰 | 图表基本规范，能传达信息 | 图表粗糙，信息不清晰 |
-| 报告撰写 | 15% | 逻辑清晰，表述准确，格式规范 | 结构完整，表述基本清楚 | 结构混乱，表述不清 |
+| 报告撰写 | 10% | 逻辑清晰，表述准确，格式规范 | 结构完整，表述基本清楚 | 结构混乱，表述不清 |
 | 团队协作 | 10% | Git 记录完整，分工明确，贡献均衡 | 有协作记录，分工基本合理 | 协作记录缺失，分工不均 |
-| 可重复性 | 5% | 一键运行，结果完全可复现 | 基本可复现，需少量调整 | 无法复现 |
+| 可重复性 | 10% | 一键运行，结果完全可复现，环境记录完整 | 基本可复现，需少量调整 | 无法复现 |
 
 ### 可重复性检查清单
 
