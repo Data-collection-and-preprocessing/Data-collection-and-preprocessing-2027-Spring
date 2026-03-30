@@ -405,6 +405,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#色盲友好配色viridis" id="toc-色盲友好配色viridis" class="nav-link" data-scroll-target="#色盲友好配色viridis"><span class="header-section-number">19.5</span> 色盲友好配色：viridis</a></li>
   <li><a href="#图表类型选择指南" id="toc-图表类型选择指南" class="nav-link" data-scroll-target="#图表类型选择指南"><span class="header-section-number">19.6</span> 图表类型选择指南</a></li>
   <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">19.7</span> 课后练习</a></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献"><span class="header-section-number">19.8</span> 参考文献</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -434,6 +435,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="数据可视化基础" class="level1" data-number="19">
 <h1 data-number="19"><span class="header-section-number">19</span> 数据可视化基础</h1>
 <p>好的图表胜过千言万语。本章介绍 ggplot2 的语法体系和科研论文级图表的制作方法。</p>
+<blockquote class="blockquote">
+<p><strong>数据来源</strong>：本章示例数据结合两个真实数据源： 1. Li et al.&nbsp;(2017) 喀斯特土壤碳氮研究 (DOI: 10.1002/2016JG003683) 2. Du et al.&nbsp;(2020) 广西木论保护区物种组成数据 (DOI: 10.11922/csdata.2019.0031.zh)</p>
+</blockquote>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(patchwork)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -488,19 +492,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="示例数据" class="level2" data-number="19.2">
 <h2 data-number="19.2" class="anchored" data-anchor-id="示例数据"><span class="header-section-number">19.2</span> 示例数据</h2>
+<p>基于 Li et al.&nbsp;(2017) 喀斯特土壤研究的参数范围，生成模拟数据：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2027</span>)</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">100</span></span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>ecology <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">species_richness =</span> <span class="fu">rpois</span>(n, <span class="dv">15</span>),</span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_ph =</span> <span class="fu">rnorm</span>(n, <span class="fl">6.2</span>, <span class="fl">0.8</span>),</span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_carbon =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">25</span>), <span class="fl">0.4</span>),</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">runif</span>(n, <span class="dv">200</span>, <span class="dv">1200</span>),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"森林"</span>, <span class="st">"草地"</span>, <span class="st">"湿地"</span>, <span class="st">"灌丛"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>                   <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.4</span>, <span class="fl">0.25</span>, <span class="fl">0.15</span>, <span class="fl">0.2</span>)),</span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"春"</span>, <span class="st">"夏"</span>, <span class="st">"秋"</span>, <span class="st">"冬"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 基于Li et al. (2017)的实际参数范围生成</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>ecology <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 土地利用类型</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">land_use =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"耕地"</span>, <span class="st">"草地"</span>, <span class="st">"灌丛"</span>, <span class="st">"次生林"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                    <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.25</span>, <span class="fl">0.30</span>, <span class="fl">0.25</span>, <span class="fl">0.20</span>)),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 岩性类型</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">lithology =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"白云岩"</span>, <span class="st">"石灰岩"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 土壤理化性质（基于实测范围）</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">species_richness =</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> <span class="dv">15</span> <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">5</span>)),  <span class="co"># 物种丰富度</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_ph =</span> <span class="fu">rnorm</span>(n, <span class="fl">6.0</span>, <span class="fl">0.6</span>),                                <span class="co"># pH 5-7</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_carbon =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">20</span>), <span class="fl">0.5</span>),                   <span class="co"># SOC 右偏分布</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">200</span>, <span class="dv">1200</span>)),                      <span class="co"># 海拔</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 季节</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">season =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"春"</span>, <span class="st">"夏"</span>, <span class="st">"秋"</span>, <span class="st">"冬"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(ecology, <span class="dv">10</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="常用图表类型" class="level2" data-number="19.3">
@@ -518,20 +534,20 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="分组散点图" class="level3" data-number="19.3.2">
 <h3 data-number="19.3.2" class="anchored" data-anchor-id="分组散点图"><span class="header-section-number">19.3.2</span> 分组散点图</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> soil_ph, <span class="at">y =</span> species_richness, <span class="at">color =</span> habitat)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> soil_ph, <span class="at">y =</span> species_richness, <span class="at">color =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"土壤 pH"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"生境类型"</span>) <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"土壤 pH"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"土地利用"</span>) <span class="sc">+</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="箱线图" class="level3" data-number="19.3.3">
 <h3 data-number="19.3.3" class="anchored" data-anchor-id="箱线图"><span class="header-section-number">19.3.3</span> 箱线图</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> habitat, <span class="at">y =</span> species_richness, <span class="at">fill =</span> habitat)) <span class="sc">+</span></span>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> land_use, <span class="at">y =</span> species_richness, <span class="at">fill =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">outlier.shape =</span> <span class="dv">21</span>) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_jitter</span>(<span class="at">width =</span> <span class="fl">0.2</span>, <span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">title =</span> <span class="st">"不同生境的物种丰富度"</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">title =</span> <span class="st">"不同土地利用类型的物种丰富度"</span>) <span class="sc">+</span></span>
 <span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
 <span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -545,9 +561,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"有机碳 (g/kg)"</span>, <span class="at">y =</span> <span class="st">"频次"</span>, <span class="at">title =</span> <span class="st">"直方图"</span>) <span class="sc">+</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> organic_carbon, <span class="at">fill =</span> habitat)) <span class="sc">+</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> organic_carbon, <span class="at">fill =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_density</span>(<span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"有机碳 (g/kg)"</span>, <span class="at">y =</span> <span class="st">"密度"</span>, <span class="at">title =</span> <span class="st">"密度图"</span>, <span class="at">fill =</span> <span class="st">"生境"</span>) <span class="sc">+</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"有机碳 (g/kg)"</span>, <span class="at">y =</span> <span class="st">"密度"</span>, <span class="at">title =</span> <span class="st">"密度图"</span>, <span class="at">fill =</span> <span class="st">"土地利用"</span>) <span class="sc">+</span></span>
 <span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>p1 <span class="sc">+</span> p2</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -557,16 +573,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="19.3.5" class="anchored" data-anchor-id="柱状图"><span class="header-section-number">19.3.5</span> 柱状图</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>ecology <span class="sc">|&gt;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(habitat) <span class="sc">|&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_richness =</span> <span class="fu">mean</span>(species_richness),</span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">se =</span> <span class="fu">sd</span>(species_richness) <span class="sc">/</span> <span class="fu">sqrt</span>(<span class="fu">n</span>())</span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(habitat, <span class="sc">-</span>mean_richness), <span class="at">y =</span> mean_richness, <span class="at">fill =</span> habitat)) <span class="sc">+</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> <span class="fu">reorder</span>(land_use, <span class="sc">-</span>mean_richness), <span class="at">y =</span> mean_richness, <span class="at">fill =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">alpha =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
 <span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(<span class="fu">aes</span>(<span class="at">ymin =</span> mean_richness <span class="sc">-</span> se, <span class="at">ymax =</span> mean_richness <span class="sc">+</span> se),</span>
 <span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>                <span class="at">width =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"平均物种丰富度 (± SE)"</span>) <span class="sc">+</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"平均物种丰富度 (± SE)"</span>, <span class="at">title =</span> <span class="st">"不同土地利用类型的平均物种丰富度"</span>) <span class="sc">+</span></span>
 <span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
 <span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
 <span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
@@ -619,14 +635,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h3 data-number="19.4.2" class="anchored" data-anchor-id="多面板组合图"><span class="header-section-number">19.4.2</span> 多面板组合图</h3>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>p_scatter <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> elevation, <span class="at">y =</span> species_richness)) <span class="sc">+</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> habitat), <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> land_use), <span class="at">alpha =</span> <span class="fl">0.6</span>) <span class="sc">+</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"black"</span>, <span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"海拔 (m)"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"生境"</span>) <span class="sc">+</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"海拔 (m)"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"土地利用"</span>) <span class="sc">+</span></span>
 <span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_paper</span>()</span>
 <span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>p_box <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> habitat, <span class="at">y =</span> organic_carbon, <span class="at">fill =</span> habitat)) <span class="sc">+</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>p_box <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> land_use, <span class="at">y =</span> organic_carbon, <span class="at">fill =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"有机碳 (g/kg)"</span>) <span class="sc">+</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">""</span>, <span class="at">y =</span> <span class="st">"有机碳 (g/kg)"</span>, <span class="at">title =</span> <span class="st">"不同土地利用类型"</span>) <span class="sc">+</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_brewer</span>(<span class="at">palette =</span> <span class="st">"Set2"</span>) <span class="sc">+</span></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_paper</span>() <span class="sc">+</span></span>
 <span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"none"</span>)</span>
@@ -683,10 +699,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <p>viridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度图时也能区分。ggplot2 内置了 viridis 系列函数：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 离散变量：scale_color_viridis_d()</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> soil_ph, <span class="at">y =</span> species_richness, <span class="at">color =</span> habitat)) <span class="sc">+</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(ecology, <span class="fu">aes</span>(<span class="at">x =</span> soil_ph, <span class="at">y =</span> species_richness, <span class="at">color =</span> land_use)) <span class="sc">+</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>(<span class="at">option =</span> <span class="st">"D"</span>) <span class="sc">+</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"土壤 pH"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"生境"</span>, <span class="at">title =</span> <span class="st">"viridis 离散配色"</span>) <span class="sc">+</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"土壤 pH"</span>, <span class="at">y =</span> <span class="st">"物种丰富度"</span>, <span class="at">color =</span> <span class="st">"土地利用"</span>, <span class="at">title =</span> <span class="st">"viridis 离散配色"</span>) <span class="sc">+</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 连续变量：scale_color_viridis_c()</span></span>
@@ -771,6 +787,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>应用自定义主题，导出为 PDF</li>
 <li>尝试使用 <code>scale_color_viridis_d()</code> 替换默认配色</li>
 </ol>
+</section>
+<section id="参考文献" class="level2" data-number="19.8">
+<h2 data-number="19.8" class="anchored" data-anchor-id="参考文献"><span class="header-section-number">19.8</span> 参考文献</h2>
+<ul>
+<li>Wilkinson, L. (2005). <em>The Grammar of Graphics</em> (2nd ed.). Springer. DOI: 10.1007/0-387-28695-0</li>
+<li>Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … &amp; Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. <em>Journal of Geophysical Research: Biogeosciences</em>, 122(11), 2849-2864. DOI: 10.1002/2016JG003683</li>
+<li>Du, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh</li>
+</ul>
 
 
 </section>

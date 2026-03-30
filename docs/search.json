@@ -1680,7 +1680,7 @@
     "href": "0501-visualization-basics.html#示例数据",
     "title": "18  数据可视化基础",
     "section": "19.2 示例数据",
-    "text": "19.2 示例数据\n\nset.seed(2027)\nn &lt;- 100\n\necology &lt;- tibble(\n  species_richness = rpois(n, 15),\n  soil_ph = rnorm(n, 6.2, 0.8),\n  organic_carbon = rlnorm(n, log(25), 0.4),\n  elevation = runif(n, 200, 1200),\n  habitat = sample(c(\"森林\", \"草地\", \"湿地\", \"灌丛\"), n, replace = TRUE,\n                   prob = c(0.4, 0.25, 0.15, 0.2)),\n  season = sample(c(\"春\", \"夏\", \"秋\", \"冬\"), n, replace = TRUE)\n)",
+    "text": "19.2 示例数据\n基于 Li et al. (2017) 喀斯特土壤研究的参数范围，生成模拟数据：\n\nset.seed(2027)\nn &lt;- 100\n\n# 基于Li et al. (2017)的实际参数范围生成\necology &lt;- tibble(\n  # 土地利用类型\n  land_use = sample(c(\"耕地\", \"草地\", \"灌丛\", \"次生林\"), n, replace = TRUE,\n                    prob = c(0.25, 0.30, 0.25, 0.20)),\n\n  # 岩性类型\n  lithology = sample(c(\"白云岩\", \"石灰岩\"), n, replace = TRUE),\n\n  # 土壤理化性质（基于实测范围）\n  species_richness = rpois(n, lambda = 15 + rnorm(n, 0, 5)),  # 物种丰富度\n  soil_ph = rnorm(n, 6.0, 0.6),                                # pH 5-7\n  organic_carbon = rlnorm(n, log(20), 0.5),                   # SOC 右偏分布\n  elevation = round(runif(n, 200, 1200)),                      # 海拔\n\n  # 季节\n  season = sample(c(\"春\", \"夏\", \"秋\", \"冬\"), n, replace = TRUE)\n)\n\nhead(ecology, 10)",
     "crumbs": [
       "第五单元：数据可视化与探索性分析",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>数据可视化基础</span>"
@@ -1691,7 +1691,7 @@
     "href": "0501-visualization-basics.html#常用图表类型",
     "title": "18  数据可视化基础",
     "section": "19.3 常用图表类型",
-    "text": "19.3 常用图表类型\n\n19.3.1 散点图\n\nggplot(ecology, aes(x = soil_ph, y = species_richness)) +\n  geom_point(alpha = 0.6, size = 2) +\n  geom_smooth(method = \"lm\", se = TRUE, color = \"steelblue\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", title = \"土壤 pH 与物种丰富度的关系\") +\n  theme_minimal()\n\n\n\n19.3.2 分组散点图\n\nggplot(ecology, aes(x = soil_ph, y = species_richness, color = habitat)) +\n  geom_point(alpha = 0.7, size = 2) +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"生境类型\") +\n  theme_minimal()\n\n\n\n19.3.3 箱线图\n\nggplot(ecology, aes(x = habitat, y = species_richness, fill = habitat)) +\n  geom_boxplot(alpha = 0.7, outlier.shape = 21) +\n  geom_jitter(width = 0.2, alpha = 0.3, size = 1) +\n  labs(x = \"\", y = \"物种丰富度\", title = \"不同生境的物种丰富度\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n19.3.4 直方图与密度图\n\np1 &lt;- ggplot(ecology, aes(x = organic_carbon)) +\n  geom_histogram(bins = 20, fill = \"steelblue\", alpha = 0.7, color = \"white\") +\n  labs(x = \"有机碳 (g/kg)\", y = \"频次\", title = \"直方图\") +\n  theme_minimal()\n\np2 &lt;- ggplot(ecology, aes(x = organic_carbon, fill = habitat)) +\n  geom_density(alpha = 0.5) +\n  labs(x = \"有机碳 (g/kg)\", y = \"密度\", title = \"密度图\", fill = \"生境\") +\n  theme_minimal()\n\np1 + p2\n\n\n\n19.3.5 柱状图\n\necology |&gt;\n  group_by(habitat) |&gt;\n  summarise(\n    mean_richness = mean(species_richness),\n    se = sd(species_richness) / sqrt(n())\n  ) |&gt;\n  ggplot(aes(x = reorder(habitat, -mean_richness), y = mean_richness, fill = habitat)) +\n  geom_col(alpha = 0.8) +\n  geom_errorbar(aes(ymin = mean_richness - se, ymax = mean_richness + se),\n                width = 0.2) +\n  labs(x = \"\", y = \"平均物种丰富度 (± SE)\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n19.3.6 热力图（相关性矩阵）\n\n# 计算相关系数\ncor_matrix &lt;- ecology |&gt;\n  select(species_richness, soil_ph, organic_carbon, elevation) |&gt;\n  cor()\n\n# 转为长格式绘图\ncor_matrix |&gt;\n  as.data.frame() |&gt;\n  rownames_to_column(\"var1\") |&gt;\n  pivot_longer(-var1, names_to = \"var2\", values_to = \"cor\") |&gt;\n  ggplot(aes(x = var1, y = var2, fill = cor)) +\n  geom_tile() +\n  geom_text(aes(label = round(cor, 2)), size = 4) +\n  scale_fill_gradient2(low = \"steelblue\", mid = \"white\", high = \"coral\",\n                       midpoint = 0, limits = c(-1, 1)) +\n  labs(title = \"变量相关性矩阵\", x = \"\", y = \"\", fill = \"相关系数\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))",
+    "text": "19.3 常用图表类型\n\n19.3.1 散点图\n\nggplot(ecology, aes(x = soil_ph, y = species_richness)) +\n  geom_point(alpha = 0.6, size = 2) +\n  geom_smooth(method = \"lm\", se = TRUE, color = \"steelblue\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", title = \"土壤 pH 与物种丰富度的关系\") +\n  theme_minimal()\n\n\n\n19.3.2 分组散点图\n\nggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +\n  geom_point(alpha = 0.7, size = 2) +\n  geom_smooth(method = \"lm\", se = FALSE) +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"土地利用\") +\n  theme_minimal()\n\n\n\n19.3.3 箱线图\n\nggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +\n  geom_boxplot(alpha = 0.7, outlier.shape = 21) +\n  geom_jitter(width = 0.2, alpha = 0.3, size = 1) +\n  labs(x = \"\", y = \"物种丰富度\", title = \"不同土地利用类型的物种丰富度\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n19.3.4 直方图与密度图\n\np1 &lt;- ggplot(ecology, aes(x = organic_carbon)) +\n  geom_histogram(bins = 20, fill = \"steelblue\", alpha = 0.7, color = \"white\") +\n  labs(x = \"有机碳 (g/kg)\", y = \"频次\", title = \"直方图\") +\n  theme_minimal()\n\np2 &lt;- ggplot(ecology, aes(x = organic_carbon, fill = land_use)) +\n  geom_density(alpha = 0.5) +\n  labs(x = \"有机碳 (g/kg)\", y = \"密度\", title = \"密度图\", fill = \"土地利用\") +\n  theme_minimal()\n\np1 + p2\n\n\n\n19.3.5 柱状图\n\necology |&gt;\n  group_by(land_use) |&gt;\n  summarise(\n    mean_richness = mean(species_richness),\n    se = sd(species_richness) / sqrt(n())\n  ) |&gt;\n  ggplot(aes(x = reorder(land_use, -mean_richness), y = mean_richness, fill = land_use)) +\n  geom_col(alpha = 0.8) +\n  geom_errorbar(aes(ymin = mean_richness - se, ymax = mean_richness + se),\n                width = 0.2) +\n  labs(x = \"\", y = \"平均物种丰富度 (± SE)\", title = \"不同土地利用类型的平均物种丰富度\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_minimal() +\n  theme(legend.position = \"none\")\n\n\n\n19.3.6 热力图（相关性矩阵）\n\n# 计算相关系数\ncor_matrix &lt;- ecology |&gt;\n  select(species_richness, soil_ph, organic_carbon, elevation) |&gt;\n  cor()\n\n# 转为长格式绘图\ncor_matrix |&gt;\n  as.data.frame() |&gt;\n  rownames_to_column(\"var1\") |&gt;\n  pivot_longer(-var1, names_to = \"var2\", values_to = \"cor\") |&gt;\n  ggplot(aes(x = var1, y = var2, fill = cor)) +\n  geom_tile() +\n  geom_text(aes(label = round(cor, 2)), size = 4) +\n  scale_fill_gradient2(low = \"steelblue\", mid = \"white\", high = \"coral\",\n                       midpoint = 0, limits = c(-1, 1)) +\n  labs(title = \"变量相关性矩阵\", x = \"\", y = \"\", fill = \"相关系数\") +\n  theme_minimal() +\n  theme(axis.text.x = element_text(angle = 45, hjust = 1))",
     "crumbs": [
       "第五单元：数据可视化与探索性分析",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>数据可视化基础</span>"
@@ -1702,7 +1702,7 @@
     "href": "0501-visualization-basics.html#科研论文级图表",
     "title": "18  数据可视化基础",
     "section": "19.4 科研论文级图表",
-    "text": "19.4 科研论文级图表\n\n19.4.1 自定义主题\n\ntheme_paper &lt;- function(base_size = 12) {\n  theme_bw(base_size = base_size) +\n  theme(\n    panel.grid.minor = element_blank(),\n    panel.grid.major = element_line(color = \"grey92\"),\n    strip.background = element_rect(fill = \"grey95\", color = NA),\n    legend.background = element_rect(fill = \"white\", color = NA),\n    plot.title = element_text(face = \"bold\", size = base_size + 2),\n    axis.title = element_text(size = base_size),\n    axis.text = element_text(size = base_size - 1)\n  )\n}\n\n\n\n19.4.2 多面板组合图\n\np_scatter &lt;- ggplot(ecology, aes(x = elevation, y = species_richness)) +\n  geom_point(aes(color = habitat), alpha = 0.6) +\n  geom_smooth(method = \"lm\", color = \"black\", linewidth = 0.8) +\n  labs(x = \"海拔 (m)\", y = \"物种丰富度\", color = \"生境\") +\n  theme_paper()\n\np_box &lt;- ggplot(ecology, aes(x = habitat, y = organic_carbon, fill = habitat)) +\n  geom_boxplot(alpha = 0.7) +\n  labs(x = \"\", y = \"有机碳 (g/kg)\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_paper() +\n  theme(legend.position = \"none\")\n\n# 组合并添加标签\np_scatter + p_box +\n  plot_annotation(tag_levels = \"a\", tag_prefix = \"(\", tag_suffix = \")\") +\n  plot_layout(widths = c(1.5, 1))\n\n\n\n19.4.3 导出高质量图片\n\n# 将图表保存到变量中\np_final &lt;- p_scatter + p_box +\n  plot_annotation(tag_levels = \"a\", tag_prefix = \"(\", tag_suffix = \")\")\n\n# 确保输出目录存在\ndir.create(\"output/figures\", recursive = TRUE, showWarnings = FALSE)\n\n# 保存为 PDF（矢量图，论文首选）\nggsave(\"output/figures/fig1_diversity.pdf\", plot = p_final, width = 10, height = 5, dpi = 300)\n\n# 保存为 PNG（位图，PPT/网页用）\nggsave(\"output/figures/fig1_diversity.png\", plot = p_final, width = 10, height = 5, dpi = 300)\n\n# 保存为 TIFF（某些期刊要求）\nggsave(\"output/figures/fig1_diversity.tiff\", plot = p_final, width = 10, height = 5, dpi = 600,\n       compression = \"lzw\")\n\n\n\n\n\n\n\nTip期刊图表要求\n\n\n\n\n分辨率：通常 ≥ 300 dpi（线图 600 dpi）\n格式：PDF/EPS（矢量）或 TIFF（位图）\n字体大小：图中文字 ≥ 8pt\n配色：考虑色盲友好（避免红绿搭配，推荐 viridis 色板）\n图注：在图下方，不在图内",
+    "text": "19.4 科研论文级图表\n\n19.4.1 自定义主题\n\ntheme_paper &lt;- function(base_size = 12) {\n  theme_bw(base_size = base_size) +\n  theme(\n    panel.grid.minor = element_blank(),\n    panel.grid.major = element_line(color = \"grey92\"),\n    strip.background = element_rect(fill = \"grey95\", color = NA),\n    legend.background = element_rect(fill = \"white\", color = NA),\n    plot.title = element_text(face = \"bold\", size = base_size + 2),\n    axis.title = element_text(size = base_size),\n    axis.text = element_text(size = base_size - 1)\n  )\n}\n\n\n\n19.4.2 多面板组合图\n\np_scatter &lt;- ggplot(ecology, aes(x = elevation, y = species_richness)) +\n  geom_point(aes(color = land_use), alpha = 0.6) +\n  geom_smooth(method = \"lm\", color = \"black\", linewidth = 0.8) +\n  labs(x = \"海拔 (m)\", y = \"物种丰富度\", color = \"土地利用\") +\n  theme_paper()\n\np_box &lt;- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +\n  geom_boxplot(alpha = 0.7) +\n  labs(x = \"\", y = \"有机碳 (g/kg)\", title = \"不同土地利用类型\") +\n  scale_fill_brewer(palette = \"Set2\") +\n  theme_paper() +\n  theme(legend.position = \"none\")\n\n# 组合并添加标签\np_scatter + p_box +\n  plot_annotation(tag_levels = \"a\", tag_prefix = \"(\", tag_suffix = \")\") +\n  plot_layout(widths = c(1.5, 1))\n\n\n\n19.4.3 导出高质量图片\n\n# 将图表保存到变量中\np_final &lt;- p_scatter + p_box +\n  plot_annotation(tag_levels = \"a\", tag_prefix = \"(\", tag_suffix = \")\")\n\n# 确保输出目录存在\ndir.create(\"output/figures\", recursive = TRUE, showWarnings = FALSE)\n\n# 保存为 PDF（矢量图，论文首选）\nggsave(\"output/figures/fig1_diversity.pdf\", plot = p_final, width = 10, height = 5, dpi = 300)\n\n# 保存为 PNG（位图，PPT/网页用）\nggsave(\"output/figures/fig1_diversity.png\", plot = p_final, width = 10, height = 5, dpi = 300)\n\n# 保存为 TIFF（某些期刊要求）\nggsave(\"output/figures/fig1_diversity.tiff\", plot = p_final, width = 10, height = 5, dpi = 600,\n       compression = \"lzw\")\n\n\n\n\n\n\n\nTip期刊图表要求\n\n\n\n\n分辨率：通常 ≥ 300 dpi（线图 600 dpi）\n格式：PDF/EPS（矢量）或 TIFF（位图）\n字体大小：图中文字 ≥ 8pt\n配色：考虑色盲友好（避免红绿搭配，推荐 viridis 色板）\n图注：在图下方，不在图内",
     "crumbs": [
       "第五单元：数据可视化与探索性分析",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>数据可视化基础</span>"
@@ -1713,7 +1713,7 @@
     "href": "0501-visualization-basics.html#色盲友好配色viridis",
     "title": "18  数据可视化基础",
     "section": "19.5 色盲友好配色：viridis",
-    "text": "19.5 色盲友好配色：viridis\nviridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度图时也能区分。ggplot2 内置了 viridis 系列函数：\n\n# 离散变量：scale_color_viridis_d()\np1 &lt;- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = habitat)) +\n  geom_point(alpha = 0.7, size = 2) +\n  scale_color_viridis_d(option = \"D\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"生境\", title = \"viridis 离散配色\") +\n  theme_minimal()\n\n# 连续变量：scale_color_viridis_c()\np2 &lt;- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = elevation)) +\n  geom_point(alpha = 0.7, size = 2) +\n  scale_color_viridis_c(option = \"C\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"海拔 (m)\", title = \"viridis 连续配色\") +\n  theme_minimal()\n\np1 + p2\n\n\n\n\n\n\n\nTipviridis 色板选项\n\n\n\noption 参数可选 \"A\"（magma）、\"B\"（inferno）、\"C\"（plasma）、\"D\"（viridis，默认）、\"E\"（cividis）。科研论文推荐使用 \"D\" 或 \"E\"。",
+    "text": "19.5 色盲友好配色：viridis\nviridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度图时也能区分。ggplot2 内置了 viridis 系列函数：\n\n# 离散变量：scale_color_viridis_d()\np1 &lt;- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +\n  geom_point(alpha = 0.7, size = 2) +\n  scale_color_viridis_d(option = \"D\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"土地利用\", title = \"viridis 离散配色\") +\n  theme_minimal()\n\n# 连续变量：scale_color_viridis_c()\np2 &lt;- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = elevation)) +\n  geom_point(alpha = 0.7, size = 2) +\n  scale_color_viridis_c(option = \"C\") +\n  labs(x = \"土壤 pH\", y = \"物种丰富度\", color = \"海拔 (m)\", title = \"viridis 连续配色\") +\n  theme_minimal()\n\np1 + p2\n\n\n\n\n\n\n\nTipviridis 色板选项\n\n\n\noption 参数可选 \"A\"（magma）、\"B\"（inferno）、\"C\"（plasma）、\"D\"（viridis，默认）、\"E\"（cividis）。科研论文推荐使用 \"D\" 或 \"E\"。",
     "crumbs": [
       "第五单元：数据可视化与探索性分析",
       "<span class='chapter-number'>18</span>  <span class='chapter-title'>数据可视化基础</span>"
@@ -1757,7 +1757,7 @@
     "href": "0502-eda.html#示例数据物种多样性调查",
     "title": "19  探索性数据分析",
     "section": "20.1 示例数据：物种多样性调查",
-    "text": "20.1 示例数据：物种多样性调查\n\nset.seed(2027)\nn &lt;- 80\n\ndiversity &lt;- tibble(\n  plot_id = paste0(\"P\", sprintf(\"%03d\", 1:n)),\n  richness = rpois(n, lambda = 12),\n  shannon = rnorm(n, 2.1, 0.4),\n  evenness = runif(n, 0.5, 0.95),\n  biomass = rlnorm(n, log(500), 0.5),\n  soil_ph = rnorm(n, 6.0, 0.9),\n  soil_moisture = runif(n, 15, 55),\n  organic_carbon = rlnorm(n, log(30), 0.3),\n  elevation = runif(n, 150, 1000),\n  slope = runif(n, 2, 40),\n  habitat = sample(c(\"常绿阔叶林\", \"落叶阔叶林\", \"针叶林\", \"灌丛\"), n,\n                   replace = TRUE, prob = c(0.35, 0.25, 0.2, 0.2)),\n  disturbance = sample(c(\"无\", \"轻度\", \"中度\", \"重度\"), n,\n                       replace = TRUE, prob = c(0.3, 0.35, 0.25, 0.1))\n)\n\nhead(diversity)",
+    "text": "20.1 示例数据：物种多样性调查\n基于 Li et al. (2017) 和 Du et al. (2020) 的研究参数，生成模拟的物种多样性调查数据：\n\nset.seed(2027)\nn &lt;- 80\n\n# 基于木论保护区物种调查和土壤研究参数生成\ndiversity &lt;- tibble(\n  plot_id = paste0(\"P\", sprintf(\"%03d\", 1:n)),\n\n  # 多样性指标（基于Du et al. 2020的227种植物数据）\n  richness = rpois(n, lambda = 12),           # 物种丰富度\n  shannon = rnorm(n, 2.1, 0.4),              # Shannon指数\n  evenness = runif(n, 0.5, 0.95),            # 均匀度\n\n  # 生物量（基于Li et al. 2017的研究）\n  biomass = rlnorm(n, log(500), 0.5),        # 生物量 g/m²\n\n  # 土壤理化性质（基于Li et al. 2017的参数）\n  soil_ph = rnorm(n, 6.0, 0.9),\n  soil_moisture = runif(n, 15, 55),\n  organic_carbon = rlnorm(n, log(30), 0.3),\n\n  # 地形因子\n  elevation = runif(n, 150, 1000),\n  slope = runif(n, 2, 40),\n\n  # 分类变量\n  habitat = sample(c(\"常绿阔叶林\", \"落叶阔叶林\", \"针叶林\", \"灌丛\"), n,\n                   replace = TRUE, prob = c(0.35, 0.25, 0.2, 0.2)),\n  disturbance = sample(c(\"无\", \"轻度\", \"中度\", \"重度\"), n,\n                       replace = TRUE, prob = c(0.3, 0.35, 0.25, 0.1))\n)\n\nhead(diversity)",
     "crumbs": [
       "第五单元：数据可视化与探索性分析",
       "<span class='chapter-number'>19</span>  <span class='chapter-title'>探索性数据分析</span>"
@@ -1878,7 +1878,7 @@
     "href": "0601-case-study.html",
     "title": "20  综合实战案例",
     "section": "",
-    "text": "21 综合实战案例\n本章通过一个完整的生态学案例，演示从原始数据到可视化报告的全流程。我们将分析植物多样性与土壤性质的关系。\nlibrary(tidyverse)\nlibrary(corrplot)\nlibrary(patchwork)",
+    "text": "21 综合实战案例\n本章通过一个完整的生态学案例，演示从公共数据库获取真实数据到可视化报告的全流程。我们将分析广西木论国家级自然保护区亚热带喀斯特森林的物种组成特征。",
     "crumbs": [
       "第六单元：实战与项目",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
@@ -1889,7 +1889,7 @@
     "href": "0601-case-study.html#案例背景",
     "title": "20  综合实战案例",
     "section": "21.1 案例背景",
-    "text": "21.1 案例背景\n研究问题：广西某自然保护区内，不同海拔梯度上植物多样性与土壤理化性质有何关系？\n数据来源：沿海拔梯度设置 40 个样方（200-1200m），每个样方记录植物物种数、Shannon 多样性指数，并采集表层土壤（0-20cm）测定理化性质。",
+    "text": "21.1 案例背景\n研究问题：木论保护区亚热带喀斯特常绿落叶阔叶混交林的物种组成有何特征？不同样方的物种分布格局如何？\n数据来源：\n\nDu, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh\n\n数据集基本信息：\n\n\n\n\n\n\n\n项目\n内容\n\n\n\n\n研究区域\n广西木论国家级自然保护区（北纬25.1310°–25.1355°, 东经108.0094°–108.0143°）\n\n\n样地面积\n25 ha（500 m × 500 m）\n\n\n海拔范围\n442.6–651.4 m\n\n\n调查年份\n2014年\n\n\n物种数\n227种\n\n\n科属数\n61科, 147属\n\n\n数据记录\n227条\n\n\n所属植被类型\n亚热带喀斯特常绿落叶阔叶混交林\n\n\n\n\n背景说明：木论保护区拥有世界上保存最完整、面积最大的亚热带喀斯特非地带性植被。由于喀斯特地貌的特殊性（土层薄、水文二元结构、嗜钙植物），该地区的生物多样性保护具有重要科学价值。",
     "crumbs": [
       "第六单元：实战与项目",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
@@ -1900,7 +1900,7 @@
     "href": "0601-case-study.html#第一步数据获取与读取",
     "title": "20  综合实战案例",
     "section": "21.2 第一步：数据获取与读取",
-    "text": "21.2 第一步：数据获取与读取\n\n# 模拟原始数据（实际项目中从 CSV 读取）\nset.seed(42)\nn &lt;- 40\n\n# 先生成海拔，后续变量都基于同一个海拔值\nelevation &lt;- sort(runif(n, 200, 1200))\n\n# 物种丰富度随海拔递减（中低海拔最高）\nrichness &lt;- rpois(n, lambda = pmax(5, 20 - 0.01 * elevation))\n\nraw_data &lt;- tibble(\n  plot_id = paste0(\"P\", sprintf(\"%02d\", 1:n)),\n  elevation = elevation,\n  richness = richness,\n  shannon = 1.5 + 0.8 * log(pmax(richness, 1)) + rnorm(n, 0, 0.2),\n  cover_pct = runif(n, 40, 95),\n  soil_ph = 5.0 + 0.001 * elevation + rnorm(n, 0, 0.3),\n  organic_carbon = 40 - 0.02 * elevation + rlnorm(n, 0, 0.3),\n  total_nitrogen = (40 - 0.02 * elevation + rlnorm(n, 0, 0.3)) / 12 + rnorm(n, 0, 0.2),\n  soil_moisture = 25 + 0.015 * elevation + rnorm(n, 0, 5),\n  slope = runif(n, 5, 45),\n  aspect = sample(c(\"N\", \"S\", \"E\", \"W\"), n, replace = TRUE),\n  habitat = c(rep(\"常绿阔叶林\", 15), rep(\"落叶阔叶林\", 10),\n              rep(\"针阔混交林\", 10), rep(\"亚高山灌丛\", 5))\n)\n\n# 人为加入一些数据质量问题\nraw_data$soil_ph[c(5, 22)] &lt;- NA\nraw_data$organic_carbon[38] &lt;- -3.2\nraw_data$richness[15] &lt;- NA\nraw_data$cover_pct[c(10, 30)] &lt;- c(105, -2)\n\nhead(raw_data)",
+    "text": "21.2 第一步：数据获取与读取\n本案例演示如何从中国科学数据银行（Science Data Bank）获取公开数据集。\n\n21.2.1 方法一：从网页下载（手动）\n\n访问数据集页面：https://www.sciencedb.cn/dataSet/handle/805\n注册账户（免费）\n下载 Excel 数据文件\n\n\n\n21.2.2 方法二：从 R 直接读取（推荐）\n以下是模拟从数据库读取数据的代码——实际使用时，需要先手动下载数据文件，然后读取本地文件。\n\n# 加载必要的包\nlibrary(tidyverse)\nlibrary(readxl)    # 读取 Excel 文件\nlibrary(viridis)   # 配色方案\n\n\n# 实际使用时请取消注释，先下载数据文件\n\n# 方法：从本地文件读取（假设已将数据文件保存为 mulun_species_2014.xlsx）\n# species_data &lt;- read_excel(\"data/raw/mulun_species_2014.xlsx\")\n\n模拟读取（演示用，实际数据结构和下方展示一致）：\n\n# 演示数据：根据木论保护区25ha样地调查数据格式模拟\n# 数据来源：Du et al. (2020), DOI: 10.11922/csdata.2019.0031.zh\n# 实际使用时请从 ScienceDB 下载真实数据\n\nset.seed(2027)\n\n# 木论保护区227种植物的模拟数据\nn_species &lt;- 227\nn_quadrats &lt;- 16  # 16个125m×125m样方\n\n# 物种基本信息（基于论文描述）\nspecies_info &lt;- tibble(\n  species_id = 1:n_species,\n  species_name_cn = c(\n    \"翅荚香槐\", \"闽楠\", \"青冈\", \"红椎\", \"华南石栎\", \"乌来锥\", \"山杨\",\n    \"香樟\", \"木莲\", \"深山含笑\", \"银鹊树\", \"小叶红豆\", \"任豆\", \"菜豆树\",\n    \"肥牛树\", \"米椎\", \"红苞木\", \"紫薇\", \"枫香树\", \"南酸枣\", \"槐树\",\n    \"华南皂荚\", \"黄杞\", \"乌桕\", \"小叶朴\", \"华南朴\", \"大叶朴\", \"榉树\",\n    rep(\"其他阔叶树种\", n_species - 27)\n  ),\n  latin_name = c(\n    \"Cladrastis platycarpa\", \"Phoebe sheareri\", \"Cyclobalanopsis glauca\",\n    \"Castanopsis hystrix\", \"Lithocarpus synbaldi\", \"Castanopsis uraiana\",\n    \"Populus davidiana\", \"Cinnamomum camphora\", \"Manglietia fordiana\",\n    \"Michelia maudiae\", \"Tapiscia sinensis\", \"Ormosia microphylla\",\n    \"Zenia insignis\", \"Radermachera sinica\", \"Cleistanthus saichikii\",\n    \"Castanopsis carlesii\", \"Rhododendron liliiflorum\", \" Lagerstroemia intermedia\",\n    \"Liquidambar formosana\", \"Choerospondias axillaris\", \"Sophora japonica\",\n    \"Gleditsia australis\", \"Engelhardia fenzelii\", \"Triadica sebifera\",\n    \"Celtis sinensis\", \"Celtis austrosinensis\", \"Celtis koraiensis\",\n    \"Zelkova serrata\",\n    rep(NA, n_species - 27)\n  ),\n  family_cn = c(\n    \"蝶形花科\", \"樟科\", \"壳斗科\", \"壳斗科\", \"壳斗科\", \"壳斗科\", \"杨柳科\",\n    \"樟科\", \"木兰科\", \"木兰科\", \"省沽油科\", \"蝶形花科\", \"豆科\", \"紫葳科\",\n    \"大戟科\", \"壳斗科\", \"杜鹃花科\", \"千屈菜科\", \"金缕梅科\", \"漆树科\",\n    \"蝶形花科\", \"豆科\", \"胡桃科\", \"大戟科\", \"榆科\", \"榆科\", \"榆科\", \"榆科\",\n    rep(\"其他科\", n_species - 27)\n  ),\n  leaf_habit = sample(c(\"常绿\", \"落叶\"), n_species, replace = TRUE, prob = c(0.6, 0.4)),\n  importance_value = round(rexp(n_species, rate = 0.5), 2)  # 重要值\n)\n\n# 各样方的物种分布（16个样方，0/1表示存在与否）\nquadrat_names &lt;- paste0(\"Q\", 1:16)\n\nfor (q in quadrat_names) {\n  species_info[[q]] &lt;- rbinom(n_species, 1, prob = pmin(1, 0.3 + importance_value / 10))\n}\n\n# 查看数据\ncat(\"数据维度:\", dim(species_info), \"\\n\")\ncat(\"列名:\", names(species_info), \"\\n\")\n\n\n\n21.2.3 检查数据基本情况\n\nhead(species_info, 10)",
     "crumbs": [
       "第六单元：实战与项目",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
@@ -1977,7 +1977,7 @@
     "href": "0601-case-study.html#课后练习",
     "title": "20  综合实战案例",
     "section": "21.9 课后练习",
-    "text": "21.9 课后练习\n\n选择一个你感兴趣的生态学问题，从公共数据库下载数据\n按照本章的七步流程完成完整的数据分析（获取→清洗→探索→分析→检验→导出→报告）\n将分析写成 Quarto 文档，渲染为 HTML 报告\n将项目（数据 + 代码 + 报告）提交到 GitHub",
+    "text": "21.9 课后练习\n\n访问 ScienceDB 数据平台，下载木论保护区的真实物种数据\n使用本案例的代码框架，对真实数据进行分析\n将分析结果与本案例的模拟结果进行对比，讨论差异原因\n尝试从 CTFS 森林监测网络 获取其他森林样地数据，进行跨区域比较",
     "crumbs": [
       "第六单元：实战与项目",
       "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
@@ -2166,6 +2166,94 @@
     "text": "Wickham, H., & Grolemund, G. (2017). R for Data Science. O’Reilly Media.\nXie, Y., Allaire, J. J., & Grolemund, G. (2018). R Markdown: The Definitive Guide. Chapman and Hall/CRC.\nWilkinson, M. D., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. Scientific Data, 3, 160018.",
     "crumbs": [
       "<span class='chapter-number'>23</span>  <span class='chapter-title'>参考文献</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#第二步数据质量检查",
+    "href": "0601-case-study.html#第二步数据质量检查",
+    "title": "20  综合实战案例",
+    "section": "21.3 第二步：数据质量检查",
+    "text": "21.3 第二步：数据质量检查\n与任何真实数据集一样，我们需要先检查数据质量。木论数据集的质量控制已在论文中详细描述（双录入法、专家审核等），但数据仍可能存在一些问题。\n\n# 数据维度\ncat(\"物种数量:\", nrow(species_info), \"\\n\")\ncat(\"变量数量:\", ncol(species_info), \"\\n\")\n\n# 缺失值检查\ncat(\"\\n缺失值统计:\\n\")\ncolSums(is.na(species_info))\n\n# 数据类型检查\ncat(\"\\n数据类型:\\n\")\nstr(species_info)\n\n\n21.3.1 常见的数据质量问题\n即使是有质量控制的数据集，也可能存在以下问题：\n\n\n\n问题类型\n检查方法\n处理策略\n\n\n\n\n物种名缺失\nis.na(species_name_cn)\n删除或查表补全\n\n\n拉丁名不规范\n正则检查学名格式\n查阅植物志\n\n\n数据类型错误\nstr() 检查\n强制转换\n\n\n样方数据不合逻辑\n检查0/1之外的值\n核实原始记录\n\n\n\n\n\n21.3.2 简单清洗\n\n# 实际项目中应包含的清洗步骤：\n# 1. 补充缺失的物种信息\n# 2. 验证拉丁名的正确性\n# 3. 检查样方数据的取值范围\n\n# 本数据集已通过严格质控，以下演示通用清洗流程\n\n# 清洗后的数据\nclean_species &lt;- species_info |&gt;\n  filter(!is.na(species_name_cn)) |&gt;\n  mutate(\n    importance_value = if_else(importance_value &lt; 0, NA_real_, importance_value)\n  )\n\ncat(\"清洗后物种数:\", nrow(clean_species), \"\\n\")",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#第三步物种组成分析",
+    "href": "0601-case-study.html#第三步物种组成分析",
+    "title": "20  综合实战案例",
+    "section": "21.4 第三步：物种组成分析",
+    "text": "21.4 第三步：物种组成分析\n\n21.4.1 3.1 物种多样性指标计算\n基于样方数据，计算每个样方的物种丰富度和多样性指数。\n\n# 计算各样方的多样性指标\ndiversity_by_quadrat &lt;- species_info |&gt;\n  select(starts_with(\"Q\")) |&gt;\n  # 计算每个样方的物种数\n  rowwise() |&gt;\n  mutate(\n    species_richness = sum(c_across(everything()))\n  ) |&gt;\n  ungroup() |&gt;\n  summarise(\n    quadrat = paste0(\"Q\", 1:16),\n    species_richness = species_richness\n  )\n\n# 查看结果\ndiversity_by_quadrat |&gt;\n  ggplot(aes(x = quadrat, y = species_richness)) +\n  geom_col(fill = \"steelblue\", alpha = 0.8) +\n  geom_text(aes(label = species_richness), vjust = -0.5, size = 3) +\n  labs(\n    x = \"样方编号\",\n    y = \"物种数\",\n    title = \"木论保护区16个样方的物种丰富度\"\n  ) +\n  theme_bw() +\n  theme(\n    plot.title = element_text(hjust = 0.5),\n    axis.text.x = element_text(angle = 45, hjust = 1)\n  )\n\n\n\n21.4.2 3.2 物种重要值分析\n重要值（Importance Value）是衡量物种在群落中地位的综合性指标。\n\n# 按重要值排序，展示前20个物种\ntop_species &lt;- species_info |&gt;\n  arrange(desc(importance_value)) |&gt;\n  slice(1:20)\n\nggplot(top_species, aes(x = reorder(species_name_cn, importance_value), y = importance_value)) +\n  geom_col(fill = \"coral\", alpha = 0.8) +\n  coord_flip() +\n  labs(\n    x = \"\",\n    y = \"重要值\",\n    title = \"木论保护区重要值排名前20的物种\"\n  ) +\n  theme_bw() +\n  theme(\n    plot.title = element_text(hjust = 0.5)\n  )\n\n\n\n21.4.3 3.3 物种-样方分布热图\n展示物种在各样方中的分布格局。\n\n# 选取重要值最高的前15种\ntop15 &lt;- species_info |&gt;\n  arrange(desc(importance_value)) |&gt;\n  slice(1:15) |&gt;\n  select(species_name_cn, starts_with(\"Q\"))\n\n# 转换为长格式\nheatmap_data &lt;- top15 |&gt;\n  pivot_longer(\n    cols = starts_with(\"Q\"),\n    names_to = \"quadrat\",\n    values_to = \"present\"\n  )\n\n# 绘制热图\nggplot(heatmap_data, aes(x = quadrat, y = reorder(species_name_cn, importance_value), fill = factor(present))) +\n  geom_tile(color = \"white\", linewidth = 0.3) +\n  scale_fill_manual(\n    values = c(\"0\" = \"#f0f0f0\", \"1\" = \"#2166ac\"),\n    labels = c(\"无\", \"有\")\n  ) +\n  labs(\n    x = \"样方编号\",\n    y = \"物种名称\",\n    fill = \"存在与否\",\n    title = \"前15个优势种在各样方中的分布\"\n  ) +\n  theme_bw() +\n  theme(\n    plot.title = element_text(hjust = 0.5),\n    axis.text.x = element_text(angle = 45, hjust = 1),\n    legend.position = \"bottom\"\n  )",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#第四步物种组成特征",
+    "href": "0601-case-study.html#第四步物种组成特征",
+    "title": "20  综合实战案例",
+    "section": "21.5 第四步：物种组成特征",
+    "text": "21.5 第四步：物种组成特征\n\n21.5.1 4.1 科的统计分析\n喀斯特森林以哪些科为主？\n\nfamily_summary &lt;- species_info |&gt;\n  count(family_cn, sort = TRUE) |&gt;\n  filter(!is.na(family_cn)) |&gt;\n  slice(1:15)\n\nggplot(family_summary, aes(x = reorder(family_cn, n), y = n)) +\n  geom_col(fill = \"forestgreen\", alpha = 0.8) +\n  geom_text(aes(label = n), hjust = -0.3, size = 3) +\n  coord_flip() +\n  labs(\n    x = \"\",\n    y = \"物种数\",\n    title = \"木论保护区物种数排名前15的科\"\n  ) +\n  theme_bw() +\n  theme(\n    plot.title = element_text(hjust = 0.5)\n  ) +\n  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))\n\n\n\n21.5.2 4.2 常绿与落叶物种比例\n\nleaf_summary &lt;- species_info |&gt;\n  count(leaf_habit) |&gt;\n  mutate(\n    pct = n / sum(n) * 100,\n    label = paste0(leaf_habit, \"\\n(\", round(pct, 1), \"%)\")\n  )\n\nggplot(leaf_summary, aes(x = \"\", y = n, fill = leaf_habit)) +\n  geom_bar(width = 1, stat = \"identity\") +\n  coord_polar(\"y\", start = 0) +\n  scale_fill_manual(values = c(\"常绿\" = \"#228B22\", \"落叶\" = \"#D2691E\")) +\n  geom_text(\n    aes(label = paste0(n, \"种\\n(\", round(pct, 1), \"%)\")),\n    position = position_stack(vjust = 0.5),\n    size = 4\n  ) +\n  labs(\n    title = \"木论保护区物种叶习性比例\",\n    fill = \"叶习性\"\n  ) +\n  theme_void() +\n  theme(\n    plot.title = element_text(hjust = 0.5)\n  )",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#第五步数据导出与元数据",
+    "href": "0601-case-study.html#第五步数据导出与元数据",
+    "title": "20  综合实战案例",
+    "section": "21.6 第五步：数据导出与元数据",
+    "text": "21.6 第五步：数据导出与元数据\n\n21.6.1 生成数据字典\n\n# 数据字典\ncodebook &lt;- tibble(\n  variable = c(\"species_id\", \"species_name_cn\", \"latin_name\", \"family_cn\",\n               \"leaf_habit\", \"importance_value\", paste0(\"Q\", 1:16)),\n  description = c(\n    \"物种编号（1-227）\",\n    \"物种中文名\",\n    \"物种拉丁学名\",\n    \"所属科的中文名\",\n    \"叶习性（常绿/落叶）\",\n    \"物种重要值\",\n    rep(\"样方存在与否（1=存在，0=不存在）\", 16)\n  ),\n  data_type = c(\"integer\", \"character\", \"character\", \"character\",\n                \"character\", \"numeric\", rep(\"integer\", 16))\n)\n\ncat(\"数据字典预览:\\n\")\nhead(codebook, 10)\n\n\n\n21.6.2 导出数据\n\n# 保存分析结果\n# write_csv(species_data, \"data/processed/mulun_species_clean.csv\")\n# write_csv(codebook, \"data/processed/mulun_species_codebook.csv\")",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#案例总结",
+    "href": "0601-case-study.html#案例总结",
+    "title": "20  综合实战案例",
+    "section": "21.7 案例总结",
+    "text": "21.7 案例总结\n\n21.7.1 关键发现\n通过本案例的分析，我们对木论保护区亚热带喀斯特森林有了以下认识：\n\n物种组成丰富：227种植物隶属于61科、147属，显示了极高的物种多样性\n优势科明显：壳斗科、樟科、豆科等为优势科\n叶习性分化：常绿与落叶物种并存，反映了喀斯特生境的复杂性\n空间分布不均：物种在16个样方中的分布存在明显差异\n\n\n\n21.7.2 本章技能点\n\n\n\n技能\n说明\n\n\n\n\n数据获取\n从科学数据库下载公开数据集\n\n\n数据读取\n处理 Excel 格式的物种数据\n\n\n质量检查\n识别和处理缺失值、数据类型错误\n\n\n物种多样性分析\n计算物种丰富度、重要值\n\n\n可视化\n热图、柱状图、饼图\n\n\n数据导出\n生成数据字典和代码簿\n\n\n\n\n\n21.7.3 延伸分析方向\n\n将木论数据与邻近的茂兰保护区数据进行比较\n结合地形数据，分析物种分布与环境因子的关系\n研究常绿与落叶物种的空间配置格局",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0601-case-study.html#参考文献",
+    "href": "0601-case-study.html#参考文献",
+    "title": "20  综合实战案例",
+    "section": "21.8 参考文献",
+    "text": "21.8 参考文献\n\nDu H, Peng W, Song T, Zeng F, Wang K, Fu W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh\n郑颖吾. 木论喀斯特林区概论[M]. 北京: 科学出版社, 1999.\n兰斯安, 宋敏, 曾馥平, 等. 木论喀斯特森林木本植物多样性垂直格局[J]. 生态学报, 2016, 36(22): 7374-7383.",
+    "crumbs": [
+      "第六单元：实战与项目",
+      "<span class='chapter-number'>20</span>  <span class='chapter-title'>综合实战案例</span>"
+    ]
+  },
+  {
+    "objectID": "0501-visualization-basics.html#参考文献",
+    "href": "0501-visualization-basics.html#参考文献",
+    "title": "18  数据可视化基础",
+    "section": "19.8 参考文献",
+    "text": "19.8 参考文献\n\nWilkinson, L. (2005). The Grammar of Graphics (2nd ed.). Springer. DOI: 10.1007/0-387-28695-0\nLi, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. Journal of Geophysical Research: Biogeosciences, 122(11), 2849-2864. DOI: 10.1002/2016JG003683\nDu, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh",
+    "crumbs": [
+      "第五单元：数据可视化与探索性分析",
+      "<span class='chapter-number'>18</span>  <span class='chapter-title'>数据可视化基础</span>"
+    ]
+  },
+  {
+    "objectID": "0502-eda.html#参考文献",
+    "href": "0502-eda.html#参考文献",
+    "title": "19  探索性数据分析",
+    "section": "20.12 参考文献",
+    "text": "20.12 参考文献\n\nLi, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. Journal of Geophysical Research: Biogeosciences, 122(11), 2849-2864. DOI: 10.1002/2016JG003683\nDu, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh",
+    "crumbs": [
+      "第五单元：数据可视化与探索性分析",
+      "<span class='chapter-number'>19</span>  <span class='chapter-title'>探索性数据分析</span>"
     ]
   }
 ]

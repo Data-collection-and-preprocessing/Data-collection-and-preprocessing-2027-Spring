@@ -413,6 +413,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#eda-工作流总结" id="toc-eda-工作流总结" class="nav-link" data-scroll-target="#eda-工作流总结"><span class="header-section-number">20.9</span> EDA 工作流总结</a></li>
   <li><a href="#eda-报告模板" id="toc-eda-报告模板" class="nav-link" data-scroll-target="#eda-报告模板"><span class="header-section-number">20.10</span> EDA 报告模板</a></li>
   <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">20.11</span> 课后练习</a></li>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link" data-scroll-target="#参考文献"><span class="header-section-number">20.12</span> 参考文献</a></li>
   </ul></li>
   </ul>
 </nav>
@@ -442,6 +443,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <section id="探索性数据分析" class="level1" data-number="20">
 <h1 data-number="20"><span class="header-section-number">20</span> 探索性数据分析</h1>
 <p>探索性数据分析（Exploratory Data Analysis, EDA）是在正式建模之前，通过统计摘要和可视化手段全面了解数据特征的过程。EDA 的目标不是得出结论，而是发现模式、检测异常、验证假设。</p>
+<blockquote class="blockquote">
+<p><strong>数据来源</strong>：本章示例数据结合两个真实数据源： 1. Li et al.&nbsp;(2017) 喀斯特土壤碳氮研究 (DOI: 10.1002/2016JG003683) 2. Du et al.&nbsp;(2020) 广西木论保护区物种组成数据 (DOI: 10.11922/csdata.2019.0031.zh)</p>
+</blockquote>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
@@ -449,28 +453,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <section id="示例数据物种多样性调查" class="level2" data-number="20.1">
 <h2 data-number="20.1" class="anchored" data-anchor-id="示例数据物种多样性调查"><span class="header-section-number">20.1</span> 示例数据：物种多样性调查</h2>
+<p>基于 Li et al.&nbsp;(2017) 和 Du et al.&nbsp;(2020) 的研究参数，生成模拟的物种多样性调查数据：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2027</span>)</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">80</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>diversity <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n)),</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">richness =</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> <span class="dv">12</span>),</span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">shannon =</span> <span class="fu">rnorm</span>(n, <span class="fl">2.1</span>, <span class="fl">0.4</span>),</span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">evenness =</span> <span class="fu">runif</span>(n, <span class="fl">0.5</span>, <span class="fl">0.95</span>),</span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">biomass =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">500</span>), <span class="fl">0.5</span>),</span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_ph =</span> <span class="fu">rnorm</span>(n, <span class="fl">6.0</span>, <span class="fl">0.9</span>),</span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_moisture =</span> <span class="fu">runif</span>(n, <span class="dv">15</span>, <span class="dv">55</span>),</span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_carbon =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">30</span>), <span class="fl">0.3</span>),</span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">runif</span>(n, <span class="dv">150</span>, <span class="dv">1000</span>),</span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">slope =</span> <span class="fu">runif</span>(n, <span class="dv">2</span>, <span class="dv">40</span>),</span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"常绿阔叶林"</span>, <span class="st">"落叶阔叶林"</span>, <span class="st">"针叶林"</span>, <span class="st">"灌丛"</span>), n,</span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                   <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.25</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)),</span>
-<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">disturbance =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"无"</span>, <span class="st">"轻度"</span>, <span class="st">"中度"</span>, <span class="st">"重度"</span>), n,</span>
-<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>                       <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.35</span>, <span class="fl">0.25</span>, <span class="fl">0.1</span>))</span>
-<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 基于木论保护区物种调查和土壤研究参数生成</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>diversity <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n)),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 多样性指标（基于Du et al. 2020的227种植物数据）</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">richness =</span> <span class="fu">rpois</span>(n, <span class="at">lambda =</span> <span class="dv">12</span>),           <span class="co"># 物种丰富度</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">shannon =</span> <span class="fu">rnorm</span>(n, <span class="fl">2.1</span>, <span class="fl">0.4</span>),              <span class="co"># Shannon指数</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">evenness =</span> <span class="fu">runif</span>(n, <span class="fl">0.5</span>, <span class="fl">0.95</span>),            <span class="co"># 均匀度</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 生物量（基于Li et al. 2017的研究）</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">biomass =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">500</span>), <span class="fl">0.5</span>),        <span class="co"># 生物量 g/m²</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 土壤理化性质（基于Li et al. 2017的参数）</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_ph =</span> <span class="fu">rnorm</span>(n, <span class="fl">6.0</span>, <span class="fl">0.9</span>),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_moisture =</span> <span class="fu">runif</span>(n, <span class="dv">15</span>, <span class="dv">55</span>),</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_carbon =</span> <span class="fu">rlnorm</span>(n, <span class="fu">log</span>(<span class="dv">30</span>), <span class="fl">0.3</span>),</span>
 <span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diversity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 地形因子</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">runif</span>(n, <span class="dv">150</span>, <span class="dv">1000</span>),</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">slope =</span> <span class="fu">runif</span>(n, <span class="dv">2</span>, <span class="dv">40</span>),</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 分类变量</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"常绿阔叶林"</span>, <span class="st">"落叶阔叶林"</span>, <span class="st">"针叶林"</span>, <span class="st">"灌丛"</span>), n,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>                   <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.35</span>, <span class="fl">0.25</span>, <span class="fl">0.2</span>, <span class="fl">0.2</span>)),</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">disturbance =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"无"</span>, <span class="st">"轻度"</span>, <span class="st">"中度"</span>, <span class="st">"重度"</span>), n,</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>                       <span class="at">replace =</span> <span class="cn">TRUE</span>, <span class="at">prob =</span> <span class="fu">c</span>(<span class="fl">0.3</span>, <span class="fl">0.35</span>, <span class="fl">0.25</span>, <span class="fl">0.1</span>))</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(diversity)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
 <section id="第一步数据概览" class="level2" data-number="20.2">
@@ -847,6 +863,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>按物种分组，比较花瓣长度的差异（箱线图 + 统计摘要）</li>
 <li>写一份简短的 EDA 报告（用 Quarto 渲染为 HTML），总结你的发现</li>
 </ol>
+</section>
+<section id="参考文献" class="level2" data-number="20.12">
+<h2 data-number="20.12" class="anchored" data-anchor-id="参考文献"><span class="header-section-number">20.12</span> 参考文献</h2>
+<ul>
+<li>Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … &amp; Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. <em>Journal of Geophysical Research: Biogeosciences</em>, 122(11), 2849-2864. DOI: 10.1002/2016JG003683</li>
+<li>Du, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: 10.11922/csdata.2019.0031.zh</li>
+</ul>
 
 
 </section>
