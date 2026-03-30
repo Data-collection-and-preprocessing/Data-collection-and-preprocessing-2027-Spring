@@ -70,7 +70,7 @@ import requests
 
 # 向 GBIF 首页发送 GET 请求
 url = "https://www.gbif.org"
-response = requests.get(url)
+response = requests.get(url, timeout=10)
 
 # 查看响应状态码（200 表示成功）
 print(f"状态码: {response.status_code}")
@@ -99,12 +99,10 @@ print(response.text[:500])
 headers = {
     "User-Agent": "EcologyResearchBot/1.0 (university-course-project)"
 }
-response = requests.get(url, headers=headers)
+response = requests.get(url, headers=headers, timeout=10)
 ```
 
 ::: {.callout-important}
-### 礼貌的爬虫
-
 在请求头中标明你的身份（如课程项目、研究用途）是一种良好的实践。这不仅是礼貌，也有助于网站管理员在出现问题时联系你。
 :::
 
@@ -236,7 +234,7 @@ import requests
 species_url = "https://api.gbif.org/v1/species/match"
 params = {"name": "Egretta garzetta"}
 
-response = requests.get(species_url, params=params)
+response = requests.get(species_url, params=params, timeout=10)
 species_data = response.json()
 
 taxon_key = species_data["usageKey"]
@@ -256,17 +254,20 @@ params = {
     "hasCoordinate": True    # 只返回有经纬度坐标的记录
 }
 
-response = requests.get(occurrence_url, params=params)
+response = requests.get(occurrence_url, params=params, timeout=10)
 data = response.json()
 
 print(f"共找到 {data['count']} 条记录")
 print(f"本次返回 {len(data['results'])} 条")
 
 # 查看第一条记录的关键字段
-record = data["results"][0]
-print(f"观测地点: ({record['decimalLatitude']}, {record['decimalLongitude']})")
-print(f"观测日期: {record.get('eventDate', '未记录')}")
-print(f"数据来源: {record.get('datasetName', '未知')}")
+if data["results"]:
+    record = data["results"][0]
+    print(f"观测地点: ({record['decimalLatitude']}, {record['decimalLongitude']})")
+    print(f"观测日期: {record.get('eventDate', '未记录')}")
+    print(f"数据来源: {record.get('datasetName', '未知')}")
+else:
+    print("未返回任何记录，请检查查询参数")
 ```
 
 **第三步：批量获取并整理为 DataFrame**
@@ -311,7 +312,7 @@ params = {
     "timezone": "Asia/Shanghai"
 }
 
-response = requests.get(url, params=params)
+response = requests.get(url, params=params, timeout=10)
 weather_data = response.json()
 
 # 将日数据转换为 DataFrame
@@ -359,7 +360,7 @@ while True:
         "hasCoordinate": True
     }
 
-    response = requests.get(occurrence_url, params=params)
+    response = requests.get(occurrence_url, params=params, timeout=10)
     data = response.json()
 
     results = data.get("results", [])
@@ -435,7 +436,7 @@ print("原始数据已保存为 JSON 文件")
 
 ```python
 # 查看 GBIF 的 robots.txt
-response = requests.get("https://www.gbif.org/robots.txt")
+response = requests.get("https://www.gbif.org/robots.txt", timeout=10)
 print(response.text)
 ```
 
@@ -460,8 +461,6 @@ Crawl-delay: 10
 6. **不采集个人信息**：不要采集涉及个人隐私的数据。
 
 ::: {.callout-warning}
-### 法律风险
-
 未经授权的大规模数据采集可能违反《中华人民共和国网络安全法》和《数据安全法》。在进行任何数据采集之前，请确保你了解并遵守相关法律法规和网站的使用条款。课堂练习中，我们只使用明确允许数据访问的公共数据库。
 :::
 

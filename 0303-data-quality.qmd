@@ -318,7 +318,7 @@ quality_report <- clean_soil |>
     ph_flagged = sum(ph_flag != "正常"),
     oc_missing = sum(is.na(organic_carbon)),
     oc_flagged = sum(oc_flag != "正常"),
-    date_formats_fixed = sum(!is.na(date)),
+    date_parsed_ok = sum(!is.na(date)),
     site_categories = n_distinct(site)
   )
 
@@ -330,7 +330,7 @@ quality_report |>
     "ph_flagged" ~ "pH 异常标记数",
     "oc_missing" ~ "有机碳缺失数",
     "oc_flagged" ~ "有机碳异常标记数",
-    "date_formats_fixed" ~ "日期成功解析数",
+    "date_parsed_ok" ~ "日期成功解析数",
     "site_categories" ~ "站点类别数"
   ))
 ```

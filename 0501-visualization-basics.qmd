@@ -29,7 +29,7 @@ ggplot(data, aes(x, y)) +   # 数据和映射
 ```
 
 ::: {.callout-note}
-## `aes()` 是什么？
+### `aes()` 是什么？
 
 `aes()` 是 aesthetic mapping（美学映射）的缩写，它告诉 ggplot2 如何将数据变量映射到图形属性上：
 
@@ -41,7 +41,7 @@ ggplot(data, aes(x, y)) +   # 数据和映射
 :::
 
 ::: {.callout-tip}
-## `+` 运算符
+### `+` 运算符
 
 ggplot2 使用 `+` 将图层逐层叠加。每个 `+` 后面添加一个新的组件（几何对象、标度、主题等）。注意 `+` 必须放在行末，不能放在下一行的开头：
 
@@ -218,6 +218,9 @@ p_scatter + p_box +
 p_final <- p_scatter + p_box +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
 
+# 确保输出目录存在
+dir.create("output/figures", recursive = TRUE, showWarnings = FALSE)
+
 # 保存为 PDF（矢量图，论文首选）
 ggsave("output/figures/fig1_diversity.pdf", plot = p_final, width = 10, height = 5, dpi = 300)
 
@@ -266,6 +269,19 @@ p1 + p2
 
 `option` 参数可选 `"A"`（magma）、`"B"`（inferno）、`"C"`（plasma）、`"D"`（viridis，默认）、`"E"`（cividis）。科研论文推荐使用 `"D"` 或 `"E"`。
 :::
+
+## 图表类型选择指南
+
+在开始绑图之前，先根据数据类型和分析目的选择合适的图表：
+
+| 数据组合 | 推荐图表 | ggplot2 函数 |
+|:---|:---|:---|
+| 连续 vs 连续 | 散点图 | `geom_point()` + `geom_smooth()` |
+| 分类 vs 连续 | 箱线图 / 小提琴图 | `geom_boxplot()` / `geom_violin()` |
+| 单变量分布 | 直方图 / 密度图 | `geom_histogram()` / `geom_density()` |
+| 多变量相关 | 热力图（相关矩阵） | `geom_tile()` |
+| 分类计数 | 柱状图 | `geom_bar()` / `geom_col()` |
+| 时间序列 | 折线图 | `geom_line()` |
 
 ## 课后练习
 

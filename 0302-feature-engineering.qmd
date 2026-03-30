@@ -277,6 +277,8 @@ soil_features <- soil_features |>
 soil_features <- soil_features |>
   mutate(
     # 土壤质地类型（基于粘粒和砂粒含量简化判断）
+    # 优先级：先判断粘土（clay_pct > 40），再判断砂土（sand_pct > 40），其余为壤土
+    # 当 clay_pct > 40 且 sand_pct > 40 时，优先归类为粘土
     texture = case_when(
       clay_pct > 40             ~ "粘土",
       sand_pct > 40             ~ "砂土",
@@ -290,9 +292,7 @@ soil_features <- soil_features |>
 head(soil_features |> select(site_id, depth, texture, oc_density, temp_precip))
 ```
 
-::: {.callout-note}
-## 特征工程的原则
-
+::: {.callout-note title="特征工程的原则"}
 1. **领域知识优先**：碳氮比、土壤质地等指标来自土壤学知识，比盲目组合变量更有效
 2. **避免数据泄露**：特征构造只能使用训练集信息，不能使用目标变量
 3. **检查合理性**：新特征的取值范围和分布是否符合物理意义
