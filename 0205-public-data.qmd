@@ -34,7 +34,7 @@ execute:
 ### 1. 数据门户手动下载
 大多数数据库（如 GBIF）都提供直观的 Web 界面，用户可以通过筛选物种、区域和时间段，直接下载 CSV 或 Darwin Core 格式的数据。
 
-### 2. API 接口与编程获取
+### 2. API 与编程获取
 对于大规模数据采集，编程获取是更高效的选择：
 *   **R 语言生态**：利用 `rgbif` 库连接 GBIF，利用 `rnoaa` 获取气象数据。
 *   **Python 生态**：利用 `pygbif` 或直接调用 RESTful API。
@@ -70,7 +70,7 @@ execute:
 
 ### 从 GBIF 下载物种分布数据
 
-[GBIF](https://www.gbif.org/) 是全球最大的生物多样性数据平台。R 的 `rgbif` 包提供了便捷的 API 接口。
+[GBIF](https://www.gbif.org/) 是全球最大的生物多样性数据平台。R 的 `rgbif` 包提供了便捷的 API。
 
 ```{r}
 #| eval: false
@@ -212,6 +212,6 @@ write_csv(egret_climate, "data/egret_climate_data.csv")
 
 1. 访问 [GBIF](https://www.gbif.org/)，搜索一个你感兴趣的物种在中国的分布记录，下载数据并查看其 Darwin Core 元数据字段。列出至少 5 个你认为对生态分析最重要的字段及其含义。
 
-2. 访问 [WorldClim](https://www.worldclim.org/)，查阅其 19 个生物气候变量（BIO1-BIO19）的数据字典。选择 3 个你认为对物种分布建模最重要的变量，说明理由。
+2. 访问 [WorldClim](https://www.worldclim.org/)，查阅其 19 个生物气候变量（BIO1-BIO19）的数据字典。选择 3 个你认为对物种分布模型（SDMs）最重要的变量，说明理由。
 
 3. 比较 GBIF 和 eBird 两个数据平台在数据质量控制方面的异同。讨论：公民科学数据存在哪些常见偏差？在分析中如何应对？

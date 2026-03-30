@@ -276,11 +276,11 @@ soil_features <- soil_features |>
 ```{r}
 soil_features <- soil_features |>
   mutate(
-    # 土壤质地类型（基于粘粒和砂粒含量简化判断）
-    # 优先级：先判断粘土（clay_pct > 40），再判断砂土（sand_pct > 40），其余为壤土
-    # 当 clay_pct > 40 且 sand_pct > 40 时，优先归类为粘土
+    # 土壤质地类型（基于黏粒和砂粒含量简化判断）
+    # 优先级：先判断黏土（clay_pct > 40），再判断砂土（sand_pct > 40），其余为壤土
+    # 当 clay_pct > 40 且 sand_pct > 40 时，优先归类为黏土
     texture = case_when(
-      clay_pct > 40             ~ "粘土",
+      clay_pct > 40             ~ "黏土",
       sand_pct > 40             ~ "砂土",
       TRUE                      ~ "壤土"
     ),
