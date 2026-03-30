@@ -1,415 +1,355 @@
 ---
 title: "综合实战案例"
+subtitle: "从0到1的数据采集项目框架"
 execute:
   warning: false
   message: false
 ---
 
-# 综合实战案例
+# 综合实战案例：从0到1的数据采集项目框架
 
-本章通过一个完整的生态学案例，演示从**公共数据库获取真实数据**到可视化报告的全流程。我们将分析**广西木论国家级自然保护区**亚热带喀斯特森林的物种组成特征。
+本章是课程的核心——我们将把前五章的所有知识整合起来，演示如何从零开始设计并执行一个完整的数据采集项目。本章不是固定案例，而是**项目框架模板**，你可以将自己的研究问题代入这个框架，形成独立的课程项目。
 
-## 案例背景
+## 什么是"从0到1"的数据采集项目？
 
-**研究问题**：木论保护区亚热带喀斯特常绿落叶阔叶混交林的物种组成有何特征？不同样方的物种分布格局如何？
+大多数教材的案例是"给你一份数据，做分析"。但真实科研不是这样的——你需要：
 
-**数据来源**：
+1. **先想清楚要回答什么问题**
+2. **再决定需要什么数据**
+3. **然后想办法获取这些数据**
+4. **接着清洗、分析、可视化**
+5. **最后讲一个完整的故事**
 
-> Du, H., Peng, W., Song, T., Zeng, F., Wang, K., Fu, W. (2020). A species composition dataset of a typical subtropical mixed evergreen and deciduous broad-leaved forest in karst ecosystem (2014) [DB/OL]. Science Data Bank. DOI: [10.11922/csdata.2019.0031.zh](https://doi.org/10.11922/csdata.2019.0031.zh)
+```
+研究问题 ──→ 数据需求 ──→ 数据获取 ──→ 数据清洗 ──→ 分析 ──→ 可视化
+    ↑                                                                    ↓
+    └──────────────────── 迭代优化 ◀───────────────────────────────┘
+```
 
-**数据集基本信息**：
+本章将按这个顺序，演示每个环节的关键决策和常用工具。
 
-| 项目 | 内容 |
-|------|------|
-| 研究区域 | 广西木论国家级自然保护区（北纬25.1310°–25.1355°, 东经108.0094°–108.0143°） |
-| 样地面积 | 25 ha（500 m × 500 m） |
-| 海拔范围 | 442.6–651.4 m |
-| 调查年份 | 2014年 |
-| 物种数 | 227种 |
-| 科属数 | 61科, 147属 |
-| 数据记录 | 227条 |
-| 所属植被类型 | 亚热带喀斯特常绿落叶阔叶混交林 |
+## 第一步：定义研究问题
 
-> **背景说明**：木论保护区拥有世界上保存最完整、面积最大的亚热带喀斯特非地带性植被。由于喀斯特地貌的特殊性（土层薄、水文二元结构、嗜钙植物），该地区的生物多样性保护具有重要科学价值。
+好的研究问题是数据采集的起点。好的问题应该是：
 
-## 第一步：数据获取与读取
+- **具体**：不是"我想研究环境"，而是"不同土地利用类型对土壤有机碳储量的影响"
+- **可回答**：有数据获取的可能性
+- **有意义**：对学科或实际问题有贡献
 
-本案例演示如何从**中国科学数据银行**（Science Data Bank）获取公开数据集。
+### 练习：定义你的研究问题
 
-### 方法一：从网页下载（手动）
+用一句话描述你的研究问题：
 
-1. 访问数据集页面：https://www.sciencedb.cn/dataSet/handle/805
-2. 注册账户（免费）
-3. 下载 Excel 数据文件
+> "我想要研究 **[研究对象]** 在 **[空间范围/条件]** 下的 **[某个特征/行为/变化]**，以便回答 **[更大的科学/实践问题]**。"
 
-### 方法二：从 R 直接读取（推荐）
+**示例**：
+- 维管束植物的多样性-生产力关系在喀斯特和非喀斯特地区的差异
+- 广西不同植被恢复年限对土壤碳氮储量的影响
+- 校园不同功能区（教学区、生活区、绿地）土壤重金属含量分布
 
-以下是模拟从数据库读取数据的代码——实际使用时，需要先手动下载数据文件，然后读取本地文件。
+## 第二步：制定数据采集方案
+
+研究问题确定后，需要回答：**我需要什么数据？**
+
+### 数据需求清单
+
+| 问题 | 答案示例 |
+|:---|:---|
+| 目标变量（Y）是什么？ | 土壤有机碳含量（g/kg） |
+| 解释变量（X）有哪些？ | 土地利用类型、植被覆盖度、海拔 |
+| 控制变量有哪些？ | 土层深度、采样时间 |
+| 空间范围？ | 广西喀斯特地区 |
+| 时间跨度？ | 2024年单次调查 |
+| 采样精度？ | 每个样地3个重复，3个土层 |
+
+### 数据类型决策
+
+根据你的研究问题，决定使用哪种数据类型：
+
+| 类型 | 适用场景 | 获取难度 |
+|:---|:---|:---|
+| **一手观测数据** | 需要特定地点、特定时间、特定变量的原创数据 | 高（需要实地采样） |
+| **调查数据** | 从已有调查项目中获取数据 | 中（需联系数据负责人） |
+| **公开数据集** | 有现成的数据集可用 | 低（但可能不完全匹配需求） |
+| **API/爬虫采集** | 需要大规模、多源数据 | 中（需技术能力） |
+
+### 采样设计原则
+
+如果你需要采集一手数据，以下是生态学中常用的采样设计：
+
+**1. 随机布点 vs 系统布点**
+
+- **随机布点**：适合大范围、异质性高的区域
+- **系统布点**（网格/梯度）：适合研究环境梯度（如海拔、温度）
+
+**2. 样方大小**
+
+| 研究对象 | 样方大小 |
+|:---|:---|
+| 乔木 | 10m×10m 或 20m×20m |
+| 灌木 | 5m×5m |
+| 草本 | 1m×1m |
+| 土壤 | 0-10cm, 10-20cm, 20-30cm |
+
+**3. 重复数量**
+
+- 每个处理/地点至少3个重复
+- 越多越好，但考虑时间和资源限制
+
+### 案例：从研究问题到采样方案
+
+**研究问题**：广西不同土地利用类型对土壤有机碳储量的影响
+
+**数据需求**：
+
+| 变量 | 类型 | 单位 | 数据来源 |
+|:---|:---|:---|:---|
+| SOC | 目标变量 | g/kg | 实测 |
+| 土地利用类型 | 解释变量 | 分类 | 遥感/实测 |
+| 植被覆盖度 | 解释变量 | % | 遥感/实测 |
+| 海拔 | 控制变量 | m | GPS/遥感 |
+| 土层深度 | 控制变量 | cm | 实测 |
+| 岩性 | 控制变量 | 分类 | 地质图 |
+
+**采样方案**：
+- 选取4种土地利用类型：耕地、草地、灌丛、次生林
+- 每种类型3个样地，共12个样地
+- 每个样地采集0-10、10-20、20-30cm三层土壤
+- 每个样地GPS记录坐标
+
+## 第三步：数据获取
+
+有了方案后，具体怎么获取数据？
+
+### 3.1 实地采集（手动）
+
+如果需要实测数据，你需要：
+
+**现场记录表模板**：
 
 ```{r}
-# 加载必要的包
-library(tidyverse)
-library(readxl)    # 读取 Excel 文件
-library(viridis)   # 配色方案
+# 土壤采样记录表示例
+sample_record <- tibble(
+  site_id = "K001",
+  date = "2024-03-15",
+  longitude = 108.0123,
+  latitude = 25.1315,
+  land_use = "次生林",
+  elevation = 523,
+  slope = 25,
+  vegetation_cover = 85,  # %
+  sample_depth = "0-10",
+  sample_id = "K001-0-10-1",
+  notes = "表层土壤，易采"
+)
+
+print(sample_record)
 ```
+
+**数据记录规范**：
+- 纸质记录表 → 当天录入电子表格
+- 电子表格 → 当天备份到云端
+- 原始数据 → 只读不修改
+
+### 3.2 公开数据库获取
+
+**常用生态学数据平台**：
+
+| 平台 | 数据类型 | 网址 |
+|:---|:---|:---|
+| **GBIF** | 全球物种分布 | https://www.gbif.org |
+| **WorldClim** | 气候数据（温度、降水） | https://www.worldclim.org |
+| **Dryad** | 论文配套数据 | https://datadryad.org |
+| **ScienceDB** | 中国科学数据 | https://www.sciencedb.cn |
+| **国家生态科学数据中心** | 中国生态数据 | https://www.nesdc.org.cn |
+| **CTFS** | 森林动态样地 | https://www.ctfs.org |
+
+### 3.3 API 编程采集
+
+对于需要大规模自动化采集的场景，可以使用 API：
+
+**GBIF API 示例**（R语言）：
+
+```{r}
+library(httr)
+library(jsonlite)
+
+# 获取广西木论保护区的物种分布记录
+base_url <- "https://api.gbif.org/v1/occurrence/search"
+
+response <- GET(
+  url = base_url,
+  query = list(
+    country = "CN",
+    decimalLatitude = "25.13,25.14",
+    decimalLongitude = "108.01,108.02",
+    limit = 100
+  )
+)
+
+data <- fromJSON(content(response, as = "text"))
+
+cat("获取到", data$count, "条记录\n")
+cat("前5个物种：\n")
+print(data$results$species[1:5])
+```
+
+**WorldClim 获取气候数据（R语言）**：
 
 ```{r}
 #| eval: false
-#| label: data-download
-# 实际使用时请取消注释，先下载数据文件
+# 安装 worldclim2 包
+# install.packages("geodata")
 
-# 方法：从本地文件读取（假设已将数据文件保存为 mulun_species_2014.xlsx）
-# species_data <- read_excel("data/raw/mulun_species_2014.xlsx")
-```
+library(geodata)
 
-**模拟读取**（演示用，实际数据结构和下方展示一致）：
-
-```{r}
-# 演示数据：根据木论保护区25ha样地调查数据格式模拟
-# 数据来源：Du et al. (2020), DOI: 10.11922/csdata.2019.0031.zh
-# 实际使用时请从 ScienceDB 下载真实数据
-
-set.seed(2027)
-
-# 木论保护区227种植物的模拟数据
-n_species <- 227
-n_quadrats <- 16  # 16个125m×125m样方
-
-# 物种基本信息（基于论文描述）
-species_info <- tibble(
-  species_id = 1:n_species,
-  species_name_cn = c(
-    "翅荚香槐", "闽楠", "青冈", "红椎", "华南石栎", "乌来锥", "山杨",
-    "香樟", "木莲", "深山含笑", "银鹊树", "小叶红豆", "任豆", "菜豆树",
-    "肥牛树", "米椎", "红苞木", "紫薇", "枫香树", "南酸枣", "槐树",
-    "华南皂荚", "黄杞", "乌桕", "小叶朴", "华南朴", "大叶朴", "榉树",
-    rep("其他阔叶树种", n_species - 27)
-  ),
-  latin_name = c(
-    "Cladrastis platycarpa", "Phoebe sheareri", "Cyclobalanopsis glauca",
-    "Castanopsis hystrix", "Lithocarpus synbaldi", "Castanopsis uraiana",
-    "Populus davidiana", "Cinnamomum camphora", "Manglietia fordiana",
-    "Michelia maudiae", "Tapiscia sinensis", "Ormosia microphylla",
-    "Zenia insignis", "Radermachera sinica", "Cleistanthus saichikii",
-    "Castanopsis carlesii", "Rhododendron liliiflorum", " Lagerstroemia intermedia",
-    "Liquidambar formosana", "Choerospondias axillaris", "Sophora japonica",
-    "Gleditsia australis", "Engelhardia fenzelii", "Triadica sebifera",
-    "Celtis sinensis", "Celtis austrosinensis", "Celtis koraiensis",
-    "Zelkova serrata",
-    rep(NA, n_species - 27)
-  ),
-  family_cn = c(
-    "蝶形花科", "樟科", "壳斗科", "壳斗科", "壳斗科", "壳斗科", "杨柳科",
-    "樟科", "木兰科", "木兰科", "省沽油科", "蝶形花科", "豆科", "紫葳科",
-    "大戟科", "壳斗科", "杜鹃花科", "千屈菜科", "金缕梅科", "漆树科",
-    "蝶形花科", "豆科", "胡桃科", "大戟科", "榆科", "榆科", "榆科", "榆科",
-    rep("其他科", n_species - 27)
-  ),
-  leaf_habit = sample(c("常绿", "落叶"), n_species, replace = TRUE, prob = c(0.6, 0.4)),
-  importance_value = round(rexp(n_species, rate = 0.5), 2)  # 重要值
+# 下载广西的气候数据（分辨率：30秒）
+climate_data <- worldclim_global(
+  var = "bio",  # 生物气候变量
+  res = 0.5,     # 30秒 ≈ 1km
+  path = "data/raw/climate"
 )
 
-# 各样方的物种分布（16个样方，0/1表示存在与否）
-quadrat_names <- paste0("Q", 1:16)
-
-for (q in quadrat_names) {
-  species_info[[q]] <- rbinom(n_species, 1, prob = pmin(1, 0.3 + importance_value / 10))
-}
-
-# 查看数据
-cat("数据维度:", dim(species_info), "\n")
-cat("列名:", names(species_info), "\n")
+cat("气候数据下载完成\n")
+cat("变量包括：年平均温、年降水量、季节性等\n")
 ```
 
-### 检查数据基本情况
+## 第四步：数据质量控制
+
+数据采集过程中，质量控制贯穿始终。
+
+### 采集前：人员培训
+
+- 统一记录规范（单位、格式、精度）
+- 明确异常值判定标准
+- 培训采样技术（深度一致、GPS精度等）
+
+### 采集中：现场检查
+
+- 每批采样后立即检查数据完整性
+- 照片记录采样环境
+- GPS轨迹记录
+
+### 采集后：双录入验证
 
 ```{r}
-head(species_info, 10)
+# 双录入验证示例
+library(tidyverse)
+
+# 假设两个录入员分别录入数据
+data_entry_1 <- tibble(
+  site_id = c("K001", "K002", "K003"),
+  ph = c(6.2, 5.8, 7.1)
+)
+
+data_entry_2 <- tibble(
+  site_id = c("K001", "K002", "K003"),
+  ph = c(6.2, 5.9, 7.1)  # K002有差异
+)
+
+# 找出不一致的记录
+discrepancies <- data_entry_1 |>
+  inner_join(data_entry_2, by = "site_id", suffix = c("_1", "_2")) |>
+  filter(ph_1 != ph_2)
+
+cat("发现", nrow(discrepancies), "条不一致记录：\n")
+print(discrepancies)
 ```
 
-## 第二步：数据质量检查
+### 质量控制检查清单
 
-与任何真实数据集一样，我们需要先检查数据质量。木论数据集的质量控制已在论文中详细描述（双录入法、专家审核等），但数据仍可能存在一些问题。
+- [ ] 原始数据已备份
+- [ ] 所有字段都有记录，无大面积缺失
+- [ ] 数值在合理范围内（如 pH 不可能为负数）
+- [ ] GPS 坐标与样地位置吻合
+- [ ] 双录入已完成，不一致已解决
+- [ ] 有完整的采样日志（谁、何时、何地、如何采样）
 
-```{r}
-# 数据维度
-cat("物种数量:", nrow(species_info), "\n")
-cat("变量数量:", ncol(species_info), "\n")
+## 第五步：数据分析与可视化
 
-# 缺失值检查
-cat("\n缺失值统计:\n")
-colSums(is.na(species_info))
+数据清洗完成后，进行分析和可视化。分析策略取决于你的研究问题。
 
-# 数据类型检查
-cat("\n数据类型:\n")
-str(species_info)
-```
+### 分析策略框架
 
-### 常见的数据质量问题
+| 研究问题类型 | 常用分析方法 |
+|:---|:---|
+| 比较差异（如不同土地利用的SOC差异） | t检验、ANOVA、非参数检验 |
+| 寻找关系（如SOC与植被覆盖度的关系） | 相关分析、回归分析 |
+| 描述分布（如物种空间分布格局） | 空间自相关、热点分析 |
+| 降维与分类（如环境因子综合评价） | PCA、聚类分析 |
 
-即使是有质量控制的数据集，也可能存在以下问题：
-
-| 问题类型 | 检查方法 | 处理策略 |
-|---------|---------|---------|
-| 物种名缺失 | `is.na(species_name_cn)` | 删除或查表补全 |
-| 拉丁名不规范 | 正则检查学名格式 | 查阅植物志 |
-| 数据类型错误 | `str()` 检查 | 强制转换 |
-| 样方数据不合逻辑 | 检查0/1之外的值 | 核实原始记录 |
-
-### 简单清洗
-
-```{r}
-# 实际项目中应包含的清洗步骤：
-# 1. 补充缺失的物种信息
-# 2. 验证拉丁名的正确性
-# 3. 检查样方数据的取值范围
-
-# 本数据集已通过严格质控，以下演示通用清洗流程
-
-# 清洗后的数据
-clean_species <- species_info |>
-  filter(!is.na(species_name_cn)) |>
-  mutate(
-    importance_value = if_else(importance_value < 0, NA_real_, importance_value)
-  )
-
-cat("清洗后物种数:", nrow(clean_species), "\n")
-```
-
-## 第三步：物种组成分析
-
-### 3.1 物种多样性指标计算
-
-基于样方数据，计算每个样方的物种丰富度和多样性指数。
-
-```{r}
-# 计算各样方的多样性指标
-diversity_by_quadrat <- species_info |>
-  select(starts_with("Q")) |>
-  # 计算每个样方的物种数
-  rowwise() |>
-  mutate(
-    species_richness = sum(c_across(everything()))
-  ) |>
-  ungroup() |>
-  summarise(
-    quadrat = paste0("Q", 1:16),
-    species_richness = species_richness
-  )
-
-# 查看结果
-diversity_by_quadrat |>
-  ggplot(aes(x = quadrat, y = species_richness)) +
-  geom_col(fill = "steelblue", alpha = 0.8) +
-  geom_text(aes(label = species_richness), vjust = -0.5, size = 3) +
-  labs(
-    x = "样方编号",
-    y = "物种数",
-    title = "木论保护区16个样方的物种丰富度"
-  ) +
-  theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 1)
-  )
-```
-
-### 3.2 物种重要值分析
-
-重要值（Importance Value）是衡量物种在群落中地位的综合性指标。
-
-```{r}
-#| fig-width: 7
-#| fig-asp: 0.8
-
-# 按重要值排序，展示前20个物种
-top_species <- species_info |>
-  arrange(desc(importance_value)) |>
-  slice(1:20)
-
-ggplot(top_species, aes(x = reorder(species_name_cn, importance_value), y = importance_value)) +
-  geom_col(fill = "coral", alpha = 0.8) +
-  coord_flip() +
-  labs(
-    x = "",
-    y = "重要值",
-    title = "木论保护区重要值排名前20的物种"
-  ) +
-  theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
-```
-
-### 3.3 物种-样方分布热图
-
-展示物种在各样方中的分布格局。
-
-```{r}
-#| fig-width: 10
-#| fig-asp: 1.2
-
-# 选取重要值最高的前15种
-top15 <- species_info |>
-  arrange(desc(importance_value)) |>
-  slice(1:15) |>
-  select(species_name_cn, starts_with("Q"))
-
-# 转换为长格式
-heatmap_data <- top15 |>
-  pivot_longer(
-    cols = starts_with("Q"),
-    names_to = "quadrat",
-    values_to = "present"
-  )
-
-# 绘制热图
-ggplot(heatmap_data, aes(x = quadrat, y = reorder(species_name_cn, importance_value), fill = factor(present))) +
-  geom_tile(color = "white", linewidth = 0.3) +
-  scale_fill_manual(
-    values = c("0" = "#f0f0f0", "1" = "#2166ac"),
-    labels = c("无", "有")
-  ) +
-  labs(
-    x = "样方编号",
-    y = "物种名称",
-    fill = "存在与否",
-    title = "前15个优势种在各样方中的分布"
-  ) +
-  theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0.5),
-    axis.text.x = element_text(angle = 45, hjust = 1),
-    legend.position = "bottom"
-  )
-```
-
-## 第四步：物种组成特征
-
-### 4.1 科的统计分析
-
-喀斯特森林以哪些科为主？
+### 示例：土地利用类型对SOC影响的分析
 
 ```{r}
 #| fig-width: 8
 #| fig-asp: 0.6
 
-family_summary <- species_info |>
-  count(family_cn, sort = TRUE) |>
-  filter(!is.na(family_cn)) |>
-  slice(1:15)
-
-ggplot(family_summary, aes(x = reorder(family_cn, n), y = n)) +
-  geom_col(fill = "forestgreen", alpha = 0.8) +
-  geom_text(aes(label = n), hjust = -0.3, size = 3) +
-  coord_flip() +
-  labs(
-    x = "",
-    y = "物种数",
-    title = "木论保护区物种数排名前15的科"
-  ) +
-  theme_bw() +
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  ) +
-  scale_y_continuous(expand = expansion(mult = c(0, 0.15)))
-```
-
-### 4.2 常绿与落叶物种比例
-
-```{r}
-#| fig-width: 5
-#| fig-asp: 0.8
-
-leaf_summary <- species_info |>
-  count(leaf_habit) |>
-  mutate(
-    pct = n / sum(n) * 100,
-    label = paste0(leaf_habit, "\n(", round(pct, 1), "%)")
+# 模拟数据：不同土地利用的SOC
+set.seed(2027)
+analysis_data <- tibble(
+  site_id = paste0("S", sprintf("%03d", 1:60)),
+  land_use = rep(c("耕地", "草地", "灌丛", "次生林"), each = 15),
+  soc = c(
+    rnorm(15, mean = 8, sd = 2),    # 耕地
+    rnorm(15, mean = 12, sd = 3),   # 草地
+    rnorm(15, mean = 18, sd = 4),   # 灌丛
+    rnorm(15, mean = 25, sd = 5)    # 次生林
   )
-
-ggplot(leaf_summary, aes(x = "", y = n, fill = leaf_habit)) +
-  geom_bar(width = 1, stat = "identity") +
-  coord_polar("y", start = 0) +
-  scale_fill_manual(values = c("常绿" = "#228B22", "落叶" = "#D2691E")) +
-  geom_text(
-    aes(label = paste0(n, "种\n(", round(pct, 1), "%)")),
-    position = position_stack(vjust = 0.5),
-    size = 4
-  ) +
-  labs(
-    title = "木论保护区物种叶习性比例",
-    fill = "叶习性"
-  ) +
-  theme_void() +
-  theme(
-    plot.title = element_text(hjust = 0.5)
-  )
-```
-
-## 第五步：数据导出与元数据
-
-### 生成数据字典
-
-```{r}
-# 数据字典
-codebook <- tibble(
-  variable = c("species_id", "species_name_cn", "latin_name", "family_cn",
-               "leaf_habit", "importance_value", paste0("Q", 1:16)),
-  description = c(
-    "物种编号（1-227）",
-    "物种中文名",
-    "物种拉丁学名",
-    "所属科的中文名",
-    "叶习性（常绿/落叶）",
-    "物种重要值",
-    rep("样方存在与否（1=存在，0=不存在）", 16)
-  ),
-  data_type = c("integer", "character", "character", "character",
-                "character", "numeric", rep("integer", 16))
 )
 
-cat("数据字典预览:\n")
-head(codebook, 10)
+# 可视化：箱线图
+ggplot(analysis_data, aes(x = land_use, y = soc, fill = land_use)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  labs(
+    x = "土地利用类型",
+    y = "土壤有机碳 (g/kg)",
+    title = "不同土地利用类型的土壤有机碳含量"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "none")
 ```
 
-### 导出数据
+## 第六步：项目时间规划
 
-```{r}
-#| eval: false
+一个完整的数据采集项目需要合理的时间规划：
 
-# 保存分析结果
-# write_csv(species_data, "data/processed/mulun_species_clean.csv")
-# write_csv(codebook, "data/processed/mulun_species_codebook.csv")
-```
+| 阶段 | 时长 | 主要任务 |
+|:---|:---|:---|
+| 文献调研 | 1-2周 | 了解研究背景、确定创新点 |
+| 方案设计 | 1周 | 细化采样方案、准备物资 |
+| 预采样 | 1-2天 | 测试方案可行性 |
+| 正式采样 | 2-4周 | 取决于样地数量和距离 |
+| 数据录入 | 1周 | 纸质→电子、初步检查 |
+| 数据清洗 | 1-2周 | 处理缺失值、异常值 |
+| 统计分析 | 1-2周 | 根据问题选择方法 |
+| 报告撰写 | 2-3周 | 图表制作、结果描述、讨论 |
 
-## 案例总结
+## 本章技能点
 
-### 关键发现
+| 技能 | 应用场景 |
+|:---|:---|
+| 研究问题定义 | 项目启动的第一步 |
+| 数据需求清单 | 明确需要什么数据 |
+| 采样方案设计 | 一手数据采集必备 |
+| 公开数据库获取 | 二手数据的获取 |
+| API数据采集 | 规模化数据获取 |
+| 质量控制 | 保证数据可靠性 |
+| 时间规划 | 项目管理 |
 
-通过本案例的分析，我们对木论保护区亚热带喀斯特森林有了以下认识：
+## 课后练习
 
-1. **物种组成丰富**：227种植物隶属于61科、147属，显示了极高的物种多样性
-2. **优势科明显**：壳斗科、樟科、豆科等为优势科
-3. **叶习性分化**：常绿与落叶物种并存，反映了喀斯特生境的复杂性
-4. **空间分布不均**：物种在16个样方中的分布存在明显差异
+1. **定义你的研究问题**：结合你自己的专业背景或兴趣，定义一个具体的数据采集研究问题（不少于50字）
+2. **制定数据需求清单**：针对你定义的研究问题，列出需要的目标变量、解释变量、控制变量，以及预期的数据来源
+3. **设计采样方案**（可选，如果研究需要一手数据）：绘制采样点的分布示意图，标注采样数量、样方大小
+4. **获取一组数据**：从 GBIF、WorldClim 或 ScienceDB 下载一组真实数据，记录获取过程和遇到的问题
+5. **项目规划**：使用上述时间规划模板，为你的课程项目制定初步时间表
 
-### 本章技能点
+## 小组项目任务
 
-| 技能 | 说明 |
-|------|------|
-| 数据获取 | 从科学数据库下载公开数据集 |
-| 数据读取 | 处理 Excel 格式的物种数据 |
-| 质量检查 | 识别和处理缺失值、数据类型错误 |
-| 物种多样性分析 | 计算物种丰富度、重要值 |
-| 可视化 | 热图、柱状图、饼图 |
-| 数据导出 | 生成数据字典和代码簿 |
-
-### 延伸分析方向
-
-- 将木论数据与邻近的茂兰保护区数据进行比较
-- 结合地形数据，分析物种分布与环境因子的关系
-- 研究常绿与落叶物种的空间配置格局
+> 📋 课程采用项目制学习，3-5人为一组，每组独立完成一个完整的数据采集与预处理项目。
+>
+> 小组任务分配和评分标准见第 0602 章（@sec-project-workshop）。
 
 ## 参考文献
 
@@ -417,11 +357,4 @@ head(codebook, 10)
 
 2. 郑颖吾. 木论喀斯特林区概论[M]. 北京: 科学出版社, 1999.
 
-3. 兰斯安, 宋敏, 曾馥平, 等. 木论喀斯特森林木本植物多样性垂直格局[J]. 生态学报, 2016, 36(22): 7374-7383.
-
-## 课后练习
-
-1. 访问 [ScienceDB 数据平台](https://www.sciencedb.cn/dataSet/handle/805)，下载木论保护区的真实物种数据
-2. 使用本案例的代码框架，对真实数据进行分析
-3. 将分析结果与本案例的模拟结果进行对比，讨论差异原因
-4. 尝试从 [CTFS 森林监测网络](https://www.ctfs.org/) 获取其他森林样地数据，进行跨区域比较
+3. Li D, Wen L, Yang L, Luo P, Xiao W, Chen H, et al. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. Journal of Geophysical Research: Biogeosciences, 122(11), 2849-2864. DOI: 10.1002/2016JG003683
