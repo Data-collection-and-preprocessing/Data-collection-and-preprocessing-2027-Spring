@@ -1,0 +1,20 @@
+1|0|0103-data-management-workflow.qmd|### 推荐的项目结构
+2|0|0105-r-basics.qmd|### 逻辑型（logical）
+3|0|0105-r-basics.qmd|### 向量索引
+4|0|0105-r-basics.qmd|### 访问数据框
+5|0|0105-r-basics.qmd|### 获取帮助
+6|0|0106-r-data-wrangling.qmd|### Step 4：合并环境数据
+7|0|0106-r-data-wrangling.qmd|### Step 5：生成汇总报告
+8|0|0202-observation.qmd|### 土壤因子测定
+9|0|0202-observation.qmd|### 数据录入质量控制
+10|0|0202-observation.qmd|### 保存为CSV文件
+11|0|0204-modeling.qmd|### 可视化回归结果
+12|0|0501-visualization-basics.qmd|### 散点图
+13|0|0501-visualization-basics.qmd|### 分组散点图
+14|0|0501-visualization-basics.qmd|### 箱线图
+15|0|0501-visualization-basics.qmd|### 直方图与密度图
+16|0|0501-visualization-basics.qmd|### 柱状图
+17|0|0501-visualization-basics.qmd|### 热力图（相关性矩阵）
+18|0|0501-visualization-basics.qmd|### 分组小提琴图
+19|0|0501-visualization-basics.qmd|### 分组山脊图
+20|0|0501-visualization-basics.qmd|### 等高线叠加散点图
