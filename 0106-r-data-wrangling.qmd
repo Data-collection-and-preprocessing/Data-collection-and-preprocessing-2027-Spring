@@ -1263,6 +1263,22 @@ cat("处理后缺失值：", sum(is.na(survey_clean3$height)), sum(is.na(survey_
 
 ### Step 4：合并环境数据
 
+在生态学研究中，物种数据和环境数据通常分别采集和存储。物种数据记录每个样方或样地内的物种组成、个体数量、生物量等信息，而环境数据记录样地的海拔、坡度、土壤性质、气候因子等背景信息。将这两类数据合并是进行环境-物种关系分析的前提。数据合并的核心是找到两个数据表之间的"连接键"（join key），通常是样地编号（plot_id）或样方编号（quadrat_id）。
+
+**数据合并的类型**：
+
+1. **左连接（left_join）**：保留左表的所有行，右表中没有匹配的行用 `NA` 填充。这是最常用的合并方式，适合"以物种数据为主，补充环境数据"的场景。
+
+2. **右连接（right_join）**：保留右表的所有行，左表中没有匹配的行用 `NA` 填充。
+
+3. **内连接（inner_join）**：只保留两表都有匹配的行，适合"只分析同时有物种和环境数据的样地"的场景。
+
+4. **全连接（full_join）**：保留两表的所有行，没有匹配的用 `NA` 填充。
+
+**生态学应用场景**：
+
+假设我们有 50 个样地的树木调查数据（每个样地有多行记录，每行代表一棵树），以及 50 个样地的环境数据（每个样地一行）。我们需要将环境数据合并到树木数据中，以便分析"不同海拔、不同生境类型下的树木生长差异"。
+
 ```r
 cat("=== Step 4: 合并环境数据 ===\n")
 survey_final <- survey_clean3 |>
@@ -1275,7 +1291,94 @@ survey_final <- survey_clean3 |>
 glimpse(survey_final)
 ```
 
+**代码解析**：
+
+1. **`left_join(plot_env, by = "plot_id")`**：将 `plot_env` 表（环境数据）按 `plot_id` 列合并到 `survey_clean3` 表（树木数据）中。由于使用左连接，即使某个样地在 `plot_env` 中没有记录，该样地的树木数据仍会保留，只是环境变量为 `NA`。
+
+2. **`mutate()` 计算派生变量**：
+   - `basal_area`：胸高断面积（m²），公式为 π × (胸径/200)²。胸径单位为 cm，除以 200 转换为半径（m）。
+   - `volume`：树木材积（m³），简化公式为 0.5 × 胸高断面积 × 树高。实际研究中应使用树种特定的材积公式。
+
+**合并后的数据检查**：
+
+合并数据后，务必检查以下几点：
+
+1. **行数是否正确**：左连接后，行数应等于左表的行数。如果行数增加，说明右表中有重复的连接键（一个 `plot_id` 对应多行），需要检查数据是否有误。
+
+2. **是否有未匹配的行**：检查合并后环境变量是否有 `NA`。如果有，说明某些样地在环境数据表中缺失，需要补充数据或在分析中排除这些样地。
+
+3. **连接键是否唯一**：环境数据表中，每个 `plot_id` 应该只有一行。如果有重复，合并后会产生笛卡尔积（每棵树的记录会重复多次），导致数据错误。
+
+**常见错误与解决方案**：
+
+1. **连接键名称不一致**：如果左表的连接键是 `plot_id`，右表的连接键是 `PlotID`，需要在合并前统一列名，或使用 `by = c("plot_id" = "PlotID")` 指定不同的列名。
+
+2. **连接键数据类型不一致**：如果左表的 `plot_id` 是字符型（"P01"），右表的 `plot_id` 是数值型（1），合并会失败。需要先统一数据类型：`mutate(plot_id = as.character(plot_id))`。
+
+3. **连接键有前导/尾随空格**：Excel 数据中常见的问题。使用 `mutate(plot_id = str_trim(plot_id))` 去除空格。
+
+**实战示例**：
+
+假设我们有马尾松林 30 个样地的树木调查数据和环境数据，需要分析"海拔和生境类型对树木生长的影响"：
+
+```r
+# 树木数据（每个样地多行）
+tree_data <- tibble(
+  plot_id = rep(paste0("P", 1:30), each = 10),  # 每个样地 10 棵树
+  species = sample(c("马尾松", "杉木", "樟树"), 300, replace = TRUE),
+  dbh = rnorm(300, mean = 15, sd = 5),
+  height = rnorm(300, mean = 12, sd = 3)
+)
+
+# 环境数据（每个样地一行）
+env_data <- tibble(
+  plot_id = paste0("P", 1:30),
+  elevation = runif(30, 500, 1500),
+  habitat = sample(c("阳坡", "阴坡", "山脊"), 30, replace = TRUE),
+  soil_ph = rnorm(30, mean = 5.5, sd = 0.8)
+)
+
+# 合并数据
+combined_data <- tree_data |>
+  left_join(env_data, by = "plot_id") |>
+  mutate(
+    basal_area = pi * (dbh / 200)^2,
+    volume = 0.5 * basal_area * height
+  )
+
+# 检查合并结果
+cat("合并前树木数据行数：", nrow(tree_data), "\n")
+cat("合并后数据行数：", nrow(combined_data), "\n")
+cat("环境变量缺失数：", sum(is.na(combined_data$elevation)), "\n")
+
+# 按海拔和生境分组统计
+summary_stats <- combined_data |>
+  mutate(elevation_class = cut(elevation, breaks = c(0, 800, 1200, 2000),
+                                labels = c("低海拔", "中海拔", "高海拔"))) |>
+  group_by(elevation_class, habitat) |>
+  summarise(
+    mean_dbh = mean(dbh, na.rm = TRUE),
+    mean_height = mean(height, na.rm = TRUE),
+    total_volume = sum(volume, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+print(summary_stats)
+```
+
+这个流程展示了从数据合并到分组统计的完整过程。掌握数据合并技巧，是进行多源数据整合分析的关键能力。
+
 ### Step 5：生成汇总报告
+
+数据清洗和合并完成后，生成汇总报告是数据分析流程的重要环节。汇总报告不仅用于检查数据质量，还能快速呈现研究的核心发现，为后续的统计建模和可视化提供基础信息。在生态学研究中，汇总报告通常包括样本量统计、物种多样性指数、环境因子的描述性统计、以及按分组变量（如生境类型、海拔梯度）的对比分析。
+
+**生态学汇总报告的核心内容**：
+
+1. **样本量统计**：每个样地的个体数量、物种数量、样地数量等基础信息。
+2. **多样性指数**：Shannon 指数、Simpson 指数、物种丰富度、均匀度等。
+3. **生物量/材积统计**：总生物量、平均生物量、生物量分布等。
+4. **环境因子统计**：海拔范围、土壤 pH 范围、坡度分布等。
+5. **分组对比**：不同生境类型、不同海拔梯度、不同处理组之间的差异。
 
 ```r
 cat("=== Step 5: 多样性汇总报告 ===\n")
@@ -1287,6 +1390,139 @@ diversity_report <- survey_final |>
     shannon_H = -sum((table(species_cn_clean) / n_individuals) *
                        log(table(species_cn_clean) / n_individuals)),
     total_volume = round(sum(volume, na.rm = TRUE), 2),
+```
+
+**代码解析**：
+
+1. **`group_by(plot_id, habitat, elevation)`**：按样地编号、生境类型和海拔分组。这意味着后续的统计函数会在每个样地内分别计算。
+
+2. **`n_individuals = n()`**：统计每个样地的个体数量（行数）。`n()` 是 dplyr 包提供的计数函数，返回当前分组的行数。
+
+3. **`n_species = n_distinct(species_cn_clean)`**：统计每个样地的物种数量（物种丰富度）。`n_distinct()` 返回不重复的值的数量。
+
+4. **`shannon_H`**：计算 Shannon 多样性指数。公式为 H' = -Σ(p_i × ln(p_i))，其中 p_i 是第 i 个物种的相对多度。这里用 `table(species_cn_clean) / n_individuals` 计算每个物种的相对多度，然后乘以其对数并求和。
+
+5. **`total_volume`**：计算每个样地的总材积，`na.rm = TRUE` 排除缺失值。
+
+**Shannon 指数的生态学意义**：
+
+Shannon 指数（H'）综合考虑了物种丰富度和均匀度，是生态学中最常用的多样性指数之一。H' 值越大，表示群落的多样性越高。典型取值范围：
+
+- H' < 1：多样性很低，群落由少数优势种主导
+- 1 ≤ H' < 3：多样性中等
+- H' ≥ 3：多样性较高，物种分布较均匀
+
+**扩展汇总指标**：
+
+除了上述基础指标，还可以计算以下生态学指标：
+
+```r
+diversity_report_extended <- survey_final |>
+  group_by(plot_id, habitat, elevation) |>
+  summarise(
+    # 基础统计
+    n_individuals = n(),
+    n_species = n_distinct(species_cn_clean),
+
+    # 多样性指数
+    shannon_H = -sum((table(species_cn_clean) / n_individuals) *
+                       log(table(species_cn_clean) / n_individuals)),
+    simpson_D = sum((table(species_cn_clean) / n_individuals)^2),
+    evenness = shannon_H / log(n_species),  # Pielou 均匀度
+
+    # 生物量统计
+    total_volume = sum(volume, na.rm = TRUE),
+    mean_volume = mean(volume, na.rm = TRUE),
+    sd_volume = sd(volume, na.rm = TRUE),
+
+    # 树木大小统计
+    mean_dbh = mean(dbh, na.rm = TRUE),
+    max_dbh = max(dbh, na.rm = TRUE),
+    mean_height = mean(height, na.rm = TRUE),
+
+    # 优势种识别
+    dominant_species = names(sort(table(species_cn_clean), decreasing = TRUE))[1],
+    dominant_abundance = max(table(species_cn_clean)) / n_individuals,
+
+    .groups = "drop"
+  )
+```
+
+**汇总报告的输出与检查**：
+
+生成汇总报告后，应进行以下检查：
+
+1. **数值合理性**：Shannon 指数是否在合理范围内？材积是否为正值？物种数量是否小于等于个体数量？
+
+2. **缺失值检查**：是否有样地的统计指标为 `NA`？如果有，需要追溯原因（可能是该样地的原始数据有问题）。
+
+3. **异常值检查**：是否有样地的统计指标明显偏离其他样地？例如，某个样地的 Shannon 指数远高于其他样地，可能是数据录入错误或该样地确实具有特殊性。
+
+**汇总报告的可视化**：
+
+生成汇总报告后，通常需要可视化展示：
+
+```r
+library(ggplot2)
+
+# 物种丰富度与海拔的关系
+ggplot(diversity_report, aes(x = elevation, y = n_species, color = habitat)) +
+  geom_point(size = 3, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "生境类型",
+       title = "物种丰富度沿海拔梯度的变化") +
+  theme_minimal()
+
+# Shannon 指数的箱线图
+ggplot(diversity_report, aes(x = habitat, y = shannon_H, fill = habitat)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.2, alpha = 0.3) +
+  labs(x = "生境类型", y = "Shannon 指数", fill = "生境类型",
+       title = "不同生境类型的 Shannon 多样性指数") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+**实战示例**：
+
+假设我们完成了马尾松林 30 个样地的数据清洗和合并，现在生成汇总报告并导出为 Excel 文件，供团队成员查看：
+
+```r
+library(openxlsx)
+
+# 生成汇总报告
+diversity_report <- survey_final |>
+  group_by(plot_id, habitat, elevation) |>
+  summarise(
+    n_individuals = n(),
+    n_species = n_distinct(species_cn_clean),
+    shannon_H = round(-sum((table(species_cn_clean) / n_individuals) *
+                             log(table(species_cn_clean) / n_individuals)), 3),
+    total_volume = round(sum(volume, na.rm = TRUE), 2),
+    mean_dbh = round(mean(dbh, na.rm = TRUE), 2),
+    .groups = "drop"
+  )
+
+# 导出为 Excel
+write.xlsx(diversity_report, "output/diversity_summary_report.xlsx")
+
+# 打印前 10 行
+print(head(diversity_report, 10))
+
+# 生成总体统计
+overall_summary <- diversity_report |>
+  summarise(
+    total_plots = n(),
+    total_species = sum(n_species),
+    mean_shannon = mean(shannon_H, na.rm = TRUE),
+    total_volume = sum(total_volume, na.rm = TRUE)
+  )
+
+cat("\n=== 总体统计 ===\n")
+print(overall_summary)
+```
+
+这个流程展示了从数据清洗到汇总报告生成的完整过程。掌握汇总报告的生成技巧，是数据分析能力的重要体现，也是向合作者和审稿人展示研究质量的关键环节。
     .groups = "drop"
   ) |>
   arrange(desc(shannon_H))
