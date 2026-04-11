@@ -1145,5 +1145,121 @@ diversity_report
 
 ::: {.callout-tip}
 ### 提交要求
-将以上练习代码保存为 `.qmd` 文件（至少包含一个代码块和简要说明），渲染为 HTML 后提交到课程 GitHub 仓库。
+
+将以上练习代码保存为 `.qmd` 文件（至少包含一个代码块和简要说明），渲染为 HTML 后提交到课程 GitHub 仓库。完整的提交流程包括代码编写、本地测试、版本控制和远程同步四个关键步骤。
+
+#### 1. 文件组织与命名规范
+
+作业文件应遵循统一的命名规范，便于教师批改和同学间交流。推荐格式为 `homework-0106-姓名拼音.qmd`，例如 `homework-0106-zhangsan.qmd`。文件应保存在课程仓库的 `homework/` 目录下，并按章节建立子目录（如 `homework/chapter01/`）。
+
+```r
+# 在 R 中检查当前工作目录
+getwd()
+
+# 如果不在课程仓库根目录，使用 setwd() 切换
+setwd("E:/Github/Data-collection-and-preprocessing-2027-Spring")
+
+# 创建作业目录（如果不存在）
+if (!dir.exists("homework/chapter01")) {
+  dir.create("homework/chapter01", recursive = TRUE)
+}
+```
+
+#### 2. Quarto 文档渲染与检查
+
+在提交前，务必在本地完成渲染测试，确保代码无误、图表正常显示。使用 RStudio 的 "Render" 按钮或命令行工具：
+
+```bash
+# 在终端中渲染 Quarto 文档
+quarto render homework/chapter01/homework-0106-zhangsan.qmd
+
+# 检查生成的 HTML 文件
+ls homework/chapter01/*.html
+```
+
+渲染成功后，应检查以下内容：
+
+- 所有代码块是否正常执行（无报错信息）
+- 数据框输出是否完整（未被截断）
+- 图表是否清晰可见（分辨率适中）
+- 中文字符是否正常显示（避免乱码）
+
+#### 3. Git 版本控制流程
+
+课程采用 Git 进行版本管理，标准提交流程如下：
+
+```bash
+# 1. 查看当前分支和文件状态
+git status
+
+# 2. 将作业文件添加到暂存区
+git add homework/chapter01/homework-0106-zhangsan.qmd
+git add homework/chapter01/homework-0106-zhangsan.html
+
+# 3. 提交到本地仓库（commit message 要清晰）
+git commit -m "feat(homework): 完成第1章第6节 dplyr 数据处理练习"
+
+# 4. 推送到远程仓库
+git push origin main
+```
+
+**Commit Message 规范**：
+
+- `feat`: 新增功能或作业
+- `fix`: 修复错误
+- `docs`: 文档更新
+- `style`: 代码格式调整（不影响功能）
+
+#### 4. GitHub Pull Request 创建（协作模式）
+
+如果课程采用 Fork + Pull Request 的协作模式，需要额外步骤：
+
+1. **Fork 课程仓库**到个人 GitHub 账号
+2. **Clone 个人仓库**到本地：`git clone https://github.com/你的用户名/仓库名.git`
+3. **创建功能分支**：`git checkout -b homework-0106`
+4. 完成作业并提交到个人仓库
+5. 在 GitHub 网页端创建 Pull Request，目标分支为课程仓库的 `main`
+
+**PR 标题示例**：`[作业提交] 张三 - 第1章第6节 dplyr 练习`
+
+**PR 描述模板**：
+
+```markdown
+## 作业信息
+- 章节：第1章第6节 R 数据处理
+- 完成日期：2026-04-11
+- 学号：202401001
+
+## 完成情况
+- [x] 练习1：select 和 filter 基础操作
+- [x] 练习2：mutate 创建新列
+- [x] 练习3：条件筛选与分组统计
+- [x] 练习4：完整数据处理流水线
+- [x] 练习5：mtcars 实战练习
+
+## 遇到的问题
+在练习4中，最初使用 `summarise()` 时忘记 `group_by()`，导致结果不符合预期。通过查阅文档和调试，最终解决。
+```
+
+#### 5. 代码审查注意事项
+
+提交后，教师或助教会进行代码审查（Code Review）。常见反馈包括：
+
+- **代码风格**：变量命名是否规范（使用 `snake_case`）
+- **注释质量**：关键步骤是否有中文注释
+- **可重现性**：是否使用相对路径（避免硬编码绝对路径）
+- **效率问题**：是否存在冗余操作（如重复读取数据）
+
+**生态学案例**：某研究团队在分析全球森林碳汇数据时，因未统一文件路径规范，导致协作者无法重现分析结果。后采用 RStudio Project + 相对路径 + Git 版本控制的标准流程，大幅提升了团队协作效率。该案例强调了规范化提交流程在科研协作中的重要性。
+
+#### 6. 常见问题排查
+
+| 问题 | 原因 | 解决方案 |
+|------|------|----------|
+| 渲染失败 | 代码块存在语法错误 | 逐块运行代码，定位错误位置 |
+| 推送被拒绝 | 远程仓库有新提交 | 先 `git pull` 再 `git push` |
+| 中文乱码 | 文件编码非 UTF-8 | RStudio 中设置 File > Reopen with Encoding > UTF-8 |
+| 图片不显示 | 相对路径错误 | 使用 `here::here()` 管理路径 |
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 :::

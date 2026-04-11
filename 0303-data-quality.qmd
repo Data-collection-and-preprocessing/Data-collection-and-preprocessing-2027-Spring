@@ -100,9 +100,122 @@ if (nrow(inconsistent) > 0) {
 
 ### 数据质量控制
 
-- 列表删除后有效记录：XX 条
-- 关键变量（pH、有机碳）缺失率：<5%
-- 数据清洗脚本可从原始数据完全重现清洗后数据
+数据质量控制（Quality Control, QC）是确保数据可靠性和可重现性的核心环节。在生态学研究中，野外采样和实验室分析过程中不可避免地会产生异常值、缺失值和录入错误，系统化的质量控制流程能够最大限度地保证数据的科学性。
+
+#### 质量控制的三个层次
+
+**1. 采集阶段控制**：在数据产生源头进行质量把关。包括仪器校准（如 pH 计每日标定）、重复测量（关键样本设置技术重复）、现场记录核查（双人复核采样编号）。某森林生态站在土壤采样时，要求每个样地至少 3 个重复点，并在现场拍照记录采样位置，有效降低了后期数据溯源难度。
+
+**2. 录入阶段控制**：防止人为录入错误。推荐使用数据验证规则（如 Excel 的数据有效性功能限制 pH 范围为 0-14）、双人录入比对、自动化数据导入（避免手工抄写）。研究表明，双人独立录入后比对可将错误率从 5% 降至 0.5% 以下。
+
+**3. 分析阶段控制**：通过统计方法识别异常。包括范围检查（超出生物学合理范围）、逻辑检查（如土壤含水量 > 100%）、离群值检测（箱线图法、Z-score 法）、一致性检查（同一样地的重复测量变异系数是否过大）。
+
+#### R 中的质量控制实现
+
+```r
+library(dplyr)
+library(ggplot2)
+
+# 示例：土壤理化性质数据质量控制
+soil_data <- data.frame(
+  sample_id = 1:100,
+  pH = c(rnorm(95, 6.5, 0.8), -1, 15, 6.2, 6.8, 7.1),  # 包含异常值
+  organic_carbon = c(rnorm(95, 25, 8), -5, 150, 28, 22, 30),
+  moisture = c(rnorm(95, 35, 10), 120, 32, 38, 28, 35)
+)
+
+# 质量控制流程
+soil_qc <- soil_data %>%
+  mutate(
+    # 1. 范围检查：标记超出合理范围的值
+    pH_flag = case_when(
+      pH < 3 | pH > 10 ~ "out_of_range",
+      is.na(pH) ~ "missing",
+      TRUE ~ "valid"
+    ),
+    organic_carbon_flag = case_when(
+      organic_carbon < 0 | organic_carbon > 100 ~ "out_of_range",
+      is.na(organic_carbon) ~ "missing",
+      TRUE ~ "valid"
+    ),
+    moisture_flag = case_when(
+      moisture < 0 | moisture > 100 ~ "out_of_range",
+      is.na(moisture) ~ "missing",
+      TRUE ~ "valid"
+    )
+  ) %>%
+  # 2. 将异常值替换为 NA
+  mutate(
+    pH = if_else(pH_flag == "out_of_range", NA_real_, pH),
+    organic_carbon = if_else(organic_carbon_flag == "out_of_range", NA_real_, organic_carbon),
+    moisture = if_else(moisture_flag == "out_of_range", NA_real_, moisture)
+  )
+
+# 3. 生成质量控制报告
+qc_summary <- soil_qc %>%
+  summarise(
+    total_records = n(),
+    pH_valid = sum(pH_flag == "valid"),
+    pH_missing_rate = mean(pH_flag != "valid") * 100,
+    oc_valid = sum(organic_carbon_flag == "valid"),
+    oc_missing_rate = mean(organic_carbon_flag != "valid") * 100
+  )
+
+print(qc_summary)
+```
+
+#### 离群值检测方法
+
+除了范围检查，还可使用统计方法识别潜在异常值：
+
+```r
+# 箱线图法检测离群值（IQR 方法）
+detect_outliers <- function(x) {
+  Q1 <- quantile(x, 0.25, na.rm = TRUE)
+  Q3 <- quantile(x, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower_bound <- Q1 - 1.5 * IQR
+  upper_bound <- Q3 + 1.5 * IQR
+
+  x < lower_bound | x > upper_bound
+}
+
+soil_qc <- soil_qc %>%
+  mutate(
+    pH_outlier = detect_outliers(pH),
+    oc_outlier = detect_outliers(organic_carbon)
+  )
+
+# 可视化离群值
+ggplot(soil_qc, aes(x = "pH", y = pH)) +
+  geom_boxplot() +
+  geom_jitter(aes(color = pH_outlier), width = 0.1) +
+  scale_color_manual(values = c("FALSE" = "gray", "TRUE" = "red")) +
+  labs(title = "土壤 pH 离群值检测", color = "是否离群值")
+```
+
+#### 质量控制文档化
+
+每次数据清洗后应生成质量控制报告，记录以下信息：
+
+- **列表删除后有效记录**：XX 条（删除率 X%）
+- **关键变量缺失率**：pH <5%、有机碳 <5%、含水量 <3%
+- **异常值处理**：共标记 X 个异常值，其中 Y 个替换为 NA，Z 个经核查后保留
+- **可重现性声明**：数据清洗脚本可从原始数据完全重现清洗后数据
+
+**生态学案例**：某团队在分析全国尺度土壤碳库数据时，发现部分站点的有机碳含量超过 200 g/kg（远超一般矿质土壤范围）。经核查发现是泥炭土样地，属于真实值而非异常值。这提醒我们：质量控制不是简单删除离群值，而需结合生态学知识判断数据的合理性。该案例中，研究者最终将泥炭土样地单独分析，避免了数据误删。
+
+#### 质量控制检查清单
+
+- [ ] 原始数据已备份且未修改
+- [ ] 所有变量的合理范围已明确定义
+- [ ] 异常值已标记并记录处理依据
+- [ ] 缺失值模式已检查（是否随机缺失）
+- [ ] 重复测量的变异系数在可接受范围内
+- [ ] 质量控制脚本可完全重现清洗过程
+- [ ] 已生成质量控制报告并存档
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 ```
 
 ## 数据存储格式

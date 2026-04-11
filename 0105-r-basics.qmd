@@ -2159,13 +2159,212 @@ lapply(measurements, length)
 
 ### sapply()：简化版 lapply()，返回向量或矩阵
 
+`sapply()` 是 `lapply()` 的简化版本，会自动尝试将结果简化（simplify）为向量或矩阵，而不是返回列表。这使得结果更易于阅读和后续处理，特别适合需要数值型输出的场景。
+
+#### sapply() 与 lapply() 的核心区别
+
+两者的主要区别在于返回值类型：
+
+- **lapply()**：始终返回列表（list），无论函数返回什么
+- **sapply()**：尝试简化结果为向量或矩阵，简化失败时退化为列表
+
 ```{r}
-# 返回向量
+# 示例数据：三个样地的土壤 pH 测量值
+measurements <- list(
+  plot1 = c(6.2, 6.5, 6.3, 6.4),
+  plot2 = c(7.1, 7.3, 7.2),
+  plot3 = c(5.8, 5.9, 6.0, 6.1, 5.7)
+)
+
+# lapply() 返回列表
+result_lapply <- lapply(measurements, mean)
+class(result_lapply)  # "list"
+result_lapply
+
+# sapply() 返回命名向量
+result_sapply <- sapply(measurements, mean)
+class(result_sapply)  # "numeric"
+result_sapply
+
+# sapply() 的结果可以直接用于数值运算
+result_sapply + 1  # 所有均值加 1
+```
+
+#### 返回值类型的自动判断
+
+`sapply()` 根据函数返回值的长度和类型自动决定输出格式：
+
+**1. 返回向量（函数返回单个值）**
+
+```{r}
+# 计算每个样地的平均值 → 返回向量
 sapply(measurements, mean)
 
-# 返回矩阵
-sapply(measurements, summary)
+# 计算每个样地的样本量 → 返回向量
+sapply(measurements, length)
+
+# 计算每个样地的标准差 → 返回向量
+sapply(measurements, sd)
 ```
+
+**2. 返回矩阵（函数返回多个值）**
+
+```{r}
+# 计算每个样地的汇总统计 → 返回矩阵
+result_matrix <- sapply(measurements, summary)
+class(result_matrix)  # "matrix"
+result_matrix
+
+# 每列对应一个样地，每行对应一个统计量
+# 可以方便地提取特定统计量
+result_matrix["Mean", ]  # 提取所有样地的均值
+result_matrix[, "plot1"]  # 提取 plot1 的所有统计量
+```
+
+**3. 返回列表（函数返回不规则结果）**
+
+```{r}
+# 当结果长度不一致时，sapply() 退化为列表
+irregular_function <- function(x) {
+  if (length(x) > 3) return(c(mean(x), sd(x)))
+  else return(mean(x))
+}
+
+result_irregular <- sapply(measurements, irregular_function)
+class(result_irregular)  # "list"（因为结果长度不一致）
+```
+
+#### simplify 参数控制
+
+`sapply()` 的 `simplify` 参数可以控制是否简化结果：
+
+```{r}
+# simplify = TRUE（默认）：尝试简化
+sapply(measurements, mean, simplify = TRUE)  # 返回向量
+
+# simplify = FALSE：强制返回列表（等同于 lapply）
+sapply(measurements, mean, simplify = FALSE)  # 返回列表
+
+# simplify = "array"：尝试简化为数组
+sapply(measurements, summary, simplify = "array")  # 返回矩阵
+```
+
+#### 常见使用场景
+
+**场景 1：批量计算统计量**
+
+```{r}
+# 对 iris 数据集的所有数值列计算均值
+iris_numeric <- iris[, 1:4]
+sapply(iris_numeric, mean)
+
+# 对比 lapply() 的结果（列表形式，不便于查看）
+lapply(iris_numeric, mean)
+```
+
+**场景 2：批量应用自定义函数**
+
+```{r}
+# 计算变异系数（CV = sd / mean * 100）
+calculate_cv <- function(x) {
+  sd(x) / mean(x) * 100
+}
+
+sapply(iris_numeric, calculate_cv)
+```
+
+**场景 3：提取列表元素的特定属性**
+
+```{r}
+# 创建多个线性模型
+models <- list(
+  model1 = lm(Sepal.Length ~ Sepal.Width, data = iris),
+  model2 = lm(Petal.Length ~ Petal.Width, data = iris),
+  model3 = lm(Sepal.Length ~ Petal.Length, data = iris)
+)
+
+# 提取每个模型的 R²
+sapply(models, function(m) summary(m)$r.squared)
+
+# 提取每个模型的 AIC
+sapply(models, AIC)
+```
+
+#### sapply() 的常见错误
+
+**错误 1：假设结果总是向量**
+
+```{r}
+# 当函数返回多个值时，结果是矩阵而非向量
+result <- sapply(measurements, summary)
+# 错误用法：result[1]（这会提取矩阵的第一个元素，而非第一个样地）
+# 正确用法：result[, 1]（提取第一列，即第一个样地的所有统计量）
+```
+
+**错误 2：忽略 NA 值**
+
+```{r}
+# 数据中包含 NA
+measurements_na <- list(
+  plot1 = c(6.2, 6.5, NA, 6.4),
+  plot2 = c(7.1, 7.3, 7.2),
+  plot3 = c(5.8, NA, 6.0, 6.1, 5.7)
+)
+
+# 错误：未处理 NA，结果包含 NA
+sapply(measurements_na, mean)
+
+# 正确：使用 na.rm = TRUE
+sapply(measurements_na, mean, na.rm = TRUE)
+```
+
+**错误 3：对数据框使用 sapply()**
+
+```{r}
+# sapply() 会将数据框的每一列作为独立元素处理
+# 如果列类型不同（如数值列和字符列混合），结果可能不符合预期
+mixed_df <- data.frame(
+  numeric_col = 1:5,
+  character_col = letters[1:5]
+)
+
+# 结果会将字符列转换为因子水平
+sapply(mixed_df, class)
+
+# 更安全的做法：先筛选数值列
+sapply(mixed_df[sapply(mixed_df, is.numeric)], mean)
+```
+
+#### 性能对比
+
+对于大规模数据，`sapply()` 和 `lapply()` 的性能几乎相同（简化步骤的开销可忽略）。选择哪个主要取决于输出格式的需求：
+
+```{r}
+# 性能测试（需要 microbenchmark 包）
+library(microbenchmark)
+
+large_list <- replicate(1000, rnorm(100), simplify = FALSE)
+
+microbenchmark(
+  lapply = lapply(large_list, mean),
+  sapply = sapply(large_list, mean),
+  times = 100
+)
+# 结果显示两者性能相近
+```
+
+**生态学案例**：某研究团队在分析 50 个森林样地的土壤养分数据时，需要计算每个样地的 pH、有机碳、全氮的均值和标准差。最初使用 `lapply()` 返回列表，导致后续提取结果时代码冗长。改用 `sapply()` 后，直接得到矩阵格式的结果，大幅简化了数据整理流程。该案例展示了 `sapply()` 在批量统计分析中的便利性。
+
+#### 何时使用 sapply()
+
+| 场景 | 推荐函数 | 原因 |
+|------|----------|------|
+| 需要向量或矩阵输出 | `sapply()` | 结果更简洁，便于后续处理 |
+| 需要保持列表结构 | `lapply()` | 避免意外简化 |
+| 结果长度不确定 | `lapply()` | `sapply()` 可能产生意外的列表 |
+| 需要明确控制输出类型 | `vapply()` | 更安全，需显式指定返回类型 |
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 
 ### tapply()：分组操作
 

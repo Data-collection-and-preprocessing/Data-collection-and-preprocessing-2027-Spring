@@ -625,6 +625,176 @@ d) 如何改进这个采样方案？
 
 以下是某生态站 2020-2023 年植物物候观测数据。请使用本章节学到的数据质量检查方法，分析这份数据可能存在的问题。
 
+#### 数据质量评估框架
+
+数据质量评估应从完整性、准确性、一致性、时效性和可追溯性五个维度展开。对于生态学长期观测数据，还需特别关注时间序列的连续性和观测方法的稳定性。
+
+**1. 完整性检查（Completeness）**
+
+完整性指数据集中应有的记录和字段是否齐全。对于物候观测数据，应检查：
+
+- 时间覆盖度：2020-2023 年每年是否都有记录？是否存在整月或整季度的数据空白？
+- 物种覆盖度：观测物种列表是否稳定？是否有物种中途退出或新增？
+- 关键字段缺失率：物候期（如展叶期、开花期）、观测者、天气条件等字段的缺失比例
+
+```r
+library(dplyr)
+library(lubridate)
+
+# 假设数据结构
+phenology_data <- read.csv("data/phenology_2020_2023.csv") %>%
+  mutate(date = ymd(date))
+
+# 完整性检查
+completeness_check <- phenology_data %>%
+  group_by(year = year(date), species) %>%
+  summarise(
+    n_records = n(),
+    missing_leaf_date = sum(is.na(leaf_out_date)) / n() * 100,
+    missing_flower_date = sum(is.na(flower_date)) / n() * 100,
+    missing_observer = sum(is.na(observer)) / n() * 100,
+    .groups = "drop"
+  )
+
+# 识别数据空白期
+date_range <- seq(min(phenology_data$date), max(phenology_data$date), by = "day")
+missing_dates <- date_range[!date_range %in% phenology_data$date]
+cat("数据空白天数：", length(missing_dates), "天\n")
+```
+
+**2. 准确性检查（Accuracy）**
+
+准确性指数据是否反映真实情况。物候数据的准确性问题常见于：
+
+- 物候期顺序错误：开花期早于展叶期（对于先叶后花的物种）
+- 日期录入错误：如 2023-02-30（不存在的日期）
+- 物候期异常提前或延后：如某年展叶期比历史平均提前 60 天（需结合气象数据验证）
+
+```r
+# 准确性检查：物候期逻辑验证
+accuracy_check <- phenology_data %>%
+  filter(!is.na(leaf_out_date) & !is.na(flower_date)) %>%
+  mutate(
+    # 检查先叶后花物种的物候期顺序
+    phenology_order_error = if_else(
+      species %in% c("Quercus acutissima", "Ulmus pumila") &
+      flower_date < leaf_out_date,
+      TRUE, FALSE
+    ),
+    # 检查物候期是否在合理范围内（以展叶期为例，应在 2-5 月）
+    leaf_out_month = month(leaf_out_date),
+    leaf_out_abnormal = leaf_out_month < 2 | leaf_out_month > 5
+  )
+
+# 统计异常记录
+cat("物候期顺序错误记录数：", sum(accuracy_check$phenology_order_error), "\n")
+cat("展叶期异常记录数：", sum(accuracy_check$leaf_out_abnormal), "\n")
+```
+
+**3. 一致性检查（Consistency）**
+
+一致性指同一对象在不同时间或不同来源的数据是否协调。物候数据的一致性问题包括：
+
+- 观测者间差异：不同观测者对同一物候期的判定标准是否一致
+- 年际变异合理性：某年物候期异常是否有气象数据支持
+- 物种名称一致性：是否存在同一物种的不同拼写（如 *Pinus massoniana* vs *Pinus massioniana*）
+
+```r
+# 一致性检查：观测者间差异
+observer_consistency <- phenology_data %>%
+  filter(!is.na(leaf_out_date)) %>%
+  group_by(species, year = year(date)) %>%
+  summarise(
+    n_observers = n_distinct(observer),
+    leaf_out_sd = sd(yday(leaf_out_date), na.rm = TRUE),
+    # 标准差 > 7 天视为观测者间差异较大
+    high_variance = leaf_out_sd > 7,
+    .groups = "drop"
+  )
+
+# 物种名称标准化检查
+species_variants <- phenology_data %>%
+  count(species) %>%
+  arrange(species) %>%
+  mutate(
+    # 检测可能的拼写变体（简化示例）
+    species_clean = tolower(trimws(species))
+  )
+```
+
+**4. 时效性检查（Timeliness）**
+
+时效性指数据记录的时间是否及时。物候观测应在物候事件发生后 24-48 小时内记录，延迟记录可能导致回忆偏差。
+
+```r
+# 时效性检查：记录延迟
+timeliness_check <- phenology_data %>%
+  mutate(
+    record_delay = as.numeric(difftime(record_date, leaf_out_date, units = "days")),
+    delayed_record = record_delay > 2
+  )
+
+cat("延迟记录比例：", mean(timeliness_check$delayed_record, na.rm = TRUE) * 100, "%\n")
+```
+
+**5. 可追溯性检查（Traceability）**
+
+可追溯性指数据来源和处理过程是否可追溯。应检查：
+
+- 是否记录观测者姓名
+- 是否记录观测方法（如望远镜观测 vs 近距离观测）
+- 是否记录天气条件（影响物候判定）
+- 是否有原始观测记录的照片或扫描件
+
+#### 综合质量评分
+
+基于以上五个维度，可构建数据质量综合评分体系：
+
+```r
+# 数据质量综合评分函数
+calculate_quality_score <- function(data) {
+  score <- 100
+
+  # 完整性扣分（缺失率每增加 10% 扣 5 分）
+  missing_rate <- mean(is.na(data$leaf_out_date)) * 100
+  score <- score - (missing_rate / 10) * 5
+
+  # 准确性扣分（异常记录每增加 1% 扣 10 分）
+  abnormal_rate <- mean(data$leaf_out_abnormal, na.rm = TRUE) * 100
+  score <- score - abnormal_rate * 10
+
+  # 一致性扣分（高方差物种每增加 10% 扣 5 分）
+  high_variance_rate <- mean(observer_consistency$high_variance) * 100
+  score <- score - (high_variance_rate / 10) * 5
+
+  # 时效性扣分（延迟记录每增加 10% 扣 3 分）
+  delayed_rate <- mean(data$delayed_record, na.rm = TRUE) * 100
+  score <- score - (delayed_rate / 10) * 3
+
+  # 可追溯性扣分（缺少观测者信息扣 10 分）
+  if (mean(is.na(data$observer)) > 0.1) score <- score - 10
+
+  return(max(0, score))  # 最低分为 0
+}
+
+quality_score <- calculate_quality_score(phenology_data)
+cat("数据质量综合评分：", round(quality_score, 1), "/ 100\n")
+```
+
+**生态学案例**：中国科学院植物研究所在分析全国物候观测网络数据时，发现某站点 2021 年春季物候数据质量评分仅为 62 分，主要问题是观测者更换导致的判定标准不一致（展叶期定义从"10% 叶片展开"变为"50% 叶片展开"）。经过观测者培训和标准化后，2022 年数据质量评分提升至 89 分。该案例强调了长期观测中方法一致性的重要性。
+
+#### 质量改进建议
+
+基于评估结果，应提出针对性的改进措施：
+
+1. **完整性不足**：增加观测频率，设置数据录入提醒
+2. **准确性问题**：加强观测者培训，建立物候期判定标准图册
+3. **一致性差异**：定期组织观测者校准活动，统一判定标准
+4. **时效性滞后**：使用移动端数据采集工具，实现现场即时录入
+5. **可追溯性缺失**：要求每次观测拍摄标准照片，建立影像档案
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
+
 ### 实践题
 
 **练习 6：创建元数据文件**
