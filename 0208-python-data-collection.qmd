@@ -399,7 +399,57 @@ print("数据已保存为 CSV 文件")
 ::: {.callout-tip}
 ### 编码问题
 
-保存包含中文的 CSV 文件时，建议使用 `encoding="utf-8-sig"`。这样用 Excel 打开时不会出现乱码。如果只在 Python 或 R 中使用，`utf-8` 即可。
+文件编码是数据保存中最常见的"坑"，尤其是处理中文数据时。编码（encoding）是将字符转换为字节序列的规则，不同编码方式会导致同一字符的字节表示不同，从而引发乱码问题。
+
+**常见编码格式对比**：
+
+| 编码格式 | 特点 | 适用场景 | Excel 兼容性 |
+|:---------|:-----|:---------|:------------|
+| `utf-8` | 国际标准，支持所有语言 | Python/R 内部使用 | ❌ 打开中文会乱码 |
+| `utf-8-sig` | UTF-8 + BOM 标记 | 需要 Excel 打开的中文数据 | ✅ 完美支持 |
+| `gbk` | 中文 Windows 默认编码 | 旧系统兼容 | ✅ 支持但不推荐 |
+| `latin-1` | 西欧语言编码 | 不含中文的数据 | ✅ 支持 |
+
+**为什么 Excel 打开 UTF-8 会乱码？**
+
+Excel 在打开 CSV 文件时，默认使用系统编码（中文 Windows 是 GBK）。当文件是 UTF-8 编码时，Excel 会错误地用 GBK 解析，导致中文显示为乱码。`utf-8-sig` 在文件开头添加了 BOM（Byte Order Mark）标记，告诉 Excel"这是 UTF-8 文件"，从而正确显示中文。
+
+**实战示例**：
+
+```python
+# 错误示例：Excel 打开会乱码
+df.to_csv("data.csv", index=False, encoding="utf-8")
+
+# 正确示例：Excel 可正常打开
+df.to_csv("data.csv", index=False, encoding="utf-8-sig")
+
+# 如果只在 Python/R 中使用，utf-8 即可
+df.to_csv("data_for_analysis.csv", index=False, encoding="utf-8")
+```
+
+**读取文件时的编码问题**：
+
+```python
+# 读取时指定编码（避免 UnicodeDecodeError）
+df = pd.read_csv("data.csv", encoding="utf-8")
+
+# 如果不确定编码，可以尝试自动检测
+import chardet
+with open("data.csv", "rb") as f:
+    result = chardet.detect(f.read())
+    print(f"检测到的编码: {result['encoding']}")
+```
+
+**生态学案例**：某研究团队从中国植物志网站下载了物种名录 CSV 文件，用 Excel 打开后发现所有中文都是乱码。原因是网站导出的文件使用 UTF-8 编码，而 Excel 默认用 GBK 解析。解决方案是用 Python 重新保存为 `utf-8-sig` 编码，或在 Excel 中通过"数据 → 从文本/CSV"手动指定 UTF-8 编码导入。
+
+**最佳实践**：
+
+1. **保存给他人的数据**：使用 `utf-8-sig`（兼容 Excel）
+2. **自己分析用的数据**：使用 `utf-8`（标准编码）
+3. **读取未知编码文件**：先用 `chardet` 检测编码
+4. **跨平台协作**：统一使用 UTF-8，避免 GBK/Latin-1
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 :::
 
 ### 保存为 JSON

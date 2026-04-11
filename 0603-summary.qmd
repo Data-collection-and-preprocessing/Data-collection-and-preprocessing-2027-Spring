@@ -139,9 +139,46 @@ title: "课程总结"
 
 ### Python 辅助技能
 
-- [ ] 用 `requests` 和 `BeautifulSoup` 进行基础网络数据采集
-- [ ] 用 `pandas` 进行简单的数据处理
-- [ ] 理解 API 数据获取的基本流程
+虽然本课程以 R 为主要工具，但 Python 在数据采集和特定领域（如机器学习、深度学习）具有独特优势。掌握 Python 的基础技能可以让你在科研中更加灵活，尤其是在需要跨语言协作或使用特定 Python 库时。
+
+**为什么需要学习 Python？**
+
+1. **数据采集优势**：Python 的 `requests`、`BeautifulSoup`、`Selenium` 等库在网络爬虫和 API 调用方面比 R 更成熟，适合从网站或在线数据库批量获取数据。
+2. **机器学习生态**：`scikit-learn`、`TensorFlow`、`PyTorch` 等主流机器学习框架主要基于 Python，深度学习研究几乎离不开 Python。
+3. **跨平台集成**：Python 可以轻松调用 R 代码（通过 `rpy2`），也可以与 C/C++ 集成，适合构建复杂的数据处理流水线。
+4. **社区资源丰富**：Python 在数据科学、生物信息学、地理信息系统等领域有大量成熟的工具包和教程。
+
+**本课程涉及的 Python 核心技能**：
+
+- **网络数据采集**：用 `requests` 发送 HTTP 请求，用 `BeautifulSoup` 解析 HTML 页面，从 GBIF、气象站等公开数据库获取数据
+- **数据处理**：用 `pandas` 进行数据清洗、筛选、汇总，与 R 的 `dplyr` 功能类似
+- **API 调用**：理解 RESTful API 的基本原理，用 Python 获取结构化数据（如 JSON 格式）
+
+**Python 与 R 的协同使用**：
+
+| 任务 | 推荐工具 | 原因 |
+|:-----|:--------|:-----|
+| 网络爬虫 | Python | `requests` + `BeautifulSoup` 更成熟 |
+| 数据清洗 | R 或 Python | R 的 `tidyverse` 更直观，Python 的 `pandas` 更灵活 |
+| 统计分析 | R | 统计模型更丰富（如 `lme4`、`vegan`） |
+| 机器学习 | Python | `scikit-learn`、`XGBoost` 生态更完善 |
+| 可视化 | R | `ggplot2` 出版级图表质量更高 |
+
+**生态学案例**：某研究团队需要分析全球森林碳汇数据。他们用 Python 从 FAO 数据库爬取各国森林面积数据，用 `pandas` 清洗后导出 CSV，然后在 R 中用 `dplyr` 合并气候数据，最后用 `ggplot2` 绘制时空变化图。这种"Python 采集 + R 分析"的组合发挥了两种语言的优势。
+
+**进阶学习路径**：
+
+1. **基础阶段**（本课程）：掌握 `requests` 发送请求、`pandas` 读写 CSV、基本的数据筛选和汇总
+2. **进阶阶段**：学习正则表达式、`Selenium` 处理动态网页、`asyncio` 异步爬虫
+3. **专业阶段**：根据研究方向选择深入学习机器学习（`scikit-learn`）、深度学习（`PyTorch`）或地理信息系统（`geopandas`）
+
+**注意事项**：
+
+- Python 和 R 的语法差异较大（如索引从 0 开始 vs 从 1 开始），初学时容易混淆，建议分阶段学习
+- 不需要精通 Python 的所有功能，掌握数据采集和基础处理即可满足大部分科研需求
+- 优先学好 R，再根据实际需求补充 Python 技能
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 
 ### 数据采集与实验设计
 

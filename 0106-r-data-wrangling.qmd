@@ -468,14 +468,100 @@ long_data
 
 ### 长格式 → 宽格式：pivot_wider()
 
+`pivot_wider()` 是 `pivot_longer()` 的逆操作，用于将长格式数据转换为宽格式。在生态学数据分析中，这种转换常用于以下场景：
+
+**典型应用场景**：
+
+1. **物种多度矩阵构建**：将样方-物种-多度的长格式数据转换为"样方×物种"矩阵，用于排序分析（PCA、NMDS）或多样性指数计算。
+2. **时间序列数据展示**：将监测站点-日期-指标的长格式数据转换为"日期×站点"表格，便于横向对比不同站点的变化趋势。
+3. **实验数据汇总**：将处理-重复-测量值的长格式数据转换为"处理×重复"表格，用于方差分析或制作汇总表。
+
+**基本语法**：
+
 ```{r}
 # 转回宽格式
 long_data |>
   pivot_wider(
-    names_from = species,
-    values_from = count
+    names_from = species,    # 哪一列的值变成新列名
+    values_from = count      # 哪一列的值填充到新列中
   )
 ```
+
+**参数说明**：
+
+- `names_from`：指定哪一列的唯一值将成为新列的列名（如物种名）
+- `values_from`：指定哪一列的值将填充到新列中（如多度值）
+- `values_fill`：当某些组合缺失时，用什么值填充（默认 `NA`，常用 `0`）
+- `names_prefix`：为新列名添加前缀（如 `"sp_"`）
+
+**生态学实战案例——物种多度矩阵构建**：
+
+```{r}
+# 模拟样方调查长格式数据
+set.seed(2027)
+survey_long <- tibble(
+  plot_id = rep(paste0("P", 1:5), each = 3),
+  species = rep(c("马尾松", "杉木", "桉树"), 5),
+  abundance = sample(0:20, 15, replace = TRUE)
+) |>
+  filter(abundance > 0)  # 移除未出现的物种
+
+# 转换为物种×样方矩阵（用于 vegan 包的排序分析）
+species_matrix <- survey_long |>
+  pivot_wider(
+    names_from = species,
+    values_from = abundance,
+    values_fill = 0  # 未记录的物种填充为 0
+  )
+
+species_matrix
+```
+
+**处理重复值问题**：
+
+当 `names_from` 和 `id_cols`（标识列）的组合不唯一时，`pivot_wider()` 会报错或产生列表列。此时需要先聚合数据：
+
+```{r}
+# 错误示例：同一样方同一物种有多条记录
+duplicate_data <- tibble(
+  plot = c("P1", "P1", "P2"),
+  species = c("马尾松", "马尾松", "杉木"),
+  count = c(5, 8, 10)
+)
+
+# 解决方案：先聚合再转换
+duplicate_data |>
+  group_by(plot, species) |>
+  summarise(total_count = sum(count), .groups = "drop") |>
+  pivot_wider(names_from = species, values_from = total_count, values_fill = 0)
+```
+
+**高级用法——多值列转换**：
+
+```{r}
+# 同时转换多个测量值（如均值和标准差）
+survey_stats <- tibble(
+  plot = rep(paste0("P", 1:3), each = 2),
+  species = rep(c("马尾松", "杉木"), 3),
+  mean_height = round(rnorm(6, 12, 2), 1),
+  sd_height = round(rnorm(6, 1.5, 0.3), 2)
+)
+
+survey_stats |>
+  pivot_wider(
+    names_from = species,
+    values_from = c(mean_height, sd_height),
+    names_glue = "{species}_{.value}"  # 自定义列名格式
+  )
+```
+
+**注意事项**：
+
+- 转换前确保 `names_from` 列的值适合作为列名（避免特殊字符或过长）
+- 如果原数据中某些组合缺失，`values_fill = 0` 可避免 `NA` 干扰后续计算
+- 宽格式数据占用内存较大，仅在必要时转换（如输出报告或特定分析需求）
+
+**扩展记录**: 2026-04-11 | 扩展者：Clawd | 目标字数：800+
 
 ::: {.callout-note}
 ### 什么时候用长格式？什么时候用宽格式？
