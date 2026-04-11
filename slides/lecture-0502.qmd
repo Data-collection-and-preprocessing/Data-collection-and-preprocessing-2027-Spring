@@ -1,0 +1,208 @@
+---
+title: "探索性数据分析"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0502 探索性数据分析
+
+[教材章节：0502]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 探索性数据分析（EDA）的目标与八步工作流
+- 掌握 缺失值诊断、异常值检测、描述性统计的核心方法
+- 了解 分布检验（Shapiro-Wilk）、相关分析（corrplot）与分组比较的标准流程
+- 能够应用 EDA 报告模板系统总结数据探索结果
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. **第一节**：EDA 八步工作流
+2. **第二节**：缺失值与异常值分析
+3. **第三节**：描述性统计与分布检验
+4. **第四节**：相关分析与分组比较
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+- **概念一**：探索性数据分析（EDA）：在正式建模前，通过统计摘要和可视化全面了解数据特征，目标是发现模式而非得出结论
+- **概念二**：变异系数（CV）：标准差与均值之比（CV = sd/mean × 100%），用于比较不同量纲变量的离散程度
+- **概念三**：正态性检验：通过 Shapiro-Wilk 检验和 Q-Q 图判断数据是否符合正态分布，决定后续使用参数或非参数方法
+
+::: callout-note
+EDA 是数据分析的"侦察阶段"——先了解数据长什么样，再决定怎么分析。
+:::
+
+------------------------------------------------------------------------
+
+## EDA 八步工作流
+
+| 步骤 | 内容 | 关键函数 |
+|:---|:---|:---|
+| 1. 数据概览 | 维度、类型、前几行 | `dim()`, `str()`, `head()` |
+| 2. 缺失值分析 | 缺失计数、模式可视化 | `naniar::vis_miss()` |
+| 3. 异常值检测 | 箱线图、IQR 规则 | `boxplot()`, `geom_boxplot()` |
+| 4. 描述性统计 | 均值、标准差、CV | `summary()`, `summarise()` |
+| 5. 分布检验 | 直方图、Q-Q 图、Shapiro-Wilk | `shapiro.test()`, `qqnorm()` |
+| 6. 相关分析 | 相关矩阵、散点图 | `cor()`, `corrplot()` |
+| 7. 分组比较 | 按类别变量分组可视化 | `geom_boxplot()` + `facet` |
+| 8. 记录发现 | 汇总 EDA 报告 | Quarto / R Markdown |
+
+------------------------------------------------------------------------
+
+## 代码示例：描述性统计与分布检验
+
+```r
+#| eval: false
+library(tidyverse)
+
+# 描述性统计（含变异系数 CV）
+diversity |>
+  summarise(
+    across(
+      c(richness, shannon, biomass, soil_ph, organic_carbon),
+      list(
+        mean = ~mean(.x, na.rm = TRUE),
+        sd   = ~sd(.x, na.rm = TRUE),
+        cv   = ~sd(.x, na.rm = TRUE) / mean(.x, na.rm = TRUE) * 100
+      ),
+      .names = "{.col}_{.fn}"
+    )
+  ) |>
+  pivot_longer(everything()) |>
+  print(n = Inf)
+
+# 正态性检验
+shapiro.test(diversity$biomass)
+
+# Q-Q 图
+ggplot(diversity, aes(sample = biomass)) +
+  stat_qq() + stat_qq_line() +
+  labs(title = "Biomass Q-Q Plot")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：相关分析
+
+```r
+#| eval: false
+library(corrplot)
+
+# 相关系数矩阵
+cor_matrix <- diversity |>
+  select(where(is.numeric)) |>
+  cor(use = "complete.obs")
+
+# 可视化相关矩阵
+corrplot(cor_matrix,
+         method = "color",
+         type = "lower",
+         tl.cex = 0.8,
+         addCoef.col = "black",
+         number.cex = 0.6)
+
+# 关键散点图：多样性 vs 环境因子
+ggplot(diversity, aes(x = organic_carbon, y = richness)) +
+  geom_point(alpha = 0.6) +
+  geom_smooth(method = "lm", color = "steelblue") +
+  labs(x = "有机碳 (g/kg)", y = "物种丰富度")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：分组比较
+
+```r
+#| eval: false
+# 按生境类型比较物种丰富度
+ggplot(diversity, aes(x = habitat, y = richness, fill = habitat)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(width = 0.2, alpha = 0.4) +
+  labs(x = "生境类型", y = "物种丰富度") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# 按干扰强度比较生物量
+ggplot(diversity, aes(x = disturbance, y = biomass, fill = disturbance)) +
+  geom_boxplot() +
+  scale_y_log10() +
+  labs(x = "干扰强度", y = "生物量 (g/m², log scale)")
+```
+
+------------------------------------------------------------------------
+
+## 缺失值模式分类
+
+| 类型 | 全称 | 特征 | 处理建议 |
+|:---|:---|:---|:---|
+| MCAR | 完全随机缺失 | 缺失与任何变量无关 | 删除或简单填充 |
+| MAR | 随机缺失 | 缺失与其他观测变量有关 | 多重插补 |
+| MNAR | 非随机缺失 | 缺失与自身值有关 | 需建模处理 |
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **要点一**：EDA 应在任何正式分析之前完成——先探索再建模，避免"盲人摸象"
+- **要点二**：变异系数（CV）比标准差更适合跨变量比较离散程度，CV > 100% 提示高度异质
+- **要点三**：正态性检验决定后续方法选择——通过用参数检验（t-test, ANOVA），不通过用非参数检验（Wilcoxon, Kruskal-Wallis）
+
+::: callout-tip
+动手实践是学习本课程的关键，请在电脑前跟随课程一起操作。
+:::
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1**：Shapiro-Wilk 检验 p 值很小（p < 0.05），但直方图看起来接近正态怎么办？
+
+**A1**：大样本时 Shapiro-Wilk 对微小偏离也很敏感。建议结合 Q-Q 图和直方图综合判断。如果样本量 > 30 且 Q-Q 图大致沿直线分布，通常仍可使用参数方法。
+
+**Q2**：相关系数高就说明两个变量有因果关系吗？
+
+**A2**：不是。相关性 ≠ 因果性。高相关可能由第三个混杂变量导致（如海拔同时影响温度和物种丰富度）。因果推断需要实验设计或更复杂的统计方法。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. EDA 八步工作流提供了系统化的数据探索框架：概览 → 缺失 → 异常 → 描述 → 分布 → 相关 → 分组 → 记录
+2. 描述性统计（均值、标准差、CV）和分布检验（Shapiro-Wilk、Q-Q 图）是理解数据特征的基础工具
+3. 相关分析发现变量间关联，分组比较揭示类别效应，两者共同为后续建模提供方向
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+- 对你的数据集执行完整的 EDA 八步流程，生成描述性统计表
+- 用 `corrplot` 绘制数值变量的相关矩阵，识别强相关变量对
+- 对至少一个连续变量进行正态性检验，根据结果选择合适的检验方法
+- **选做**：撰写一份完整的 EDA 报告（使用 Quarto），涵盖八个步骤的所有发现
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- Tukey, J. W. (1977). *Exploratory Data Analysis*. Addison-Wesley.
+- Zuur et al. 2010, *Methods in Ecology and Evolution* - 生态学数据探索的协议
+- `naniar` 包文档 - 缺失值可视化与分析

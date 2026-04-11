@@ -1,0 +1,292 @@
+---
+title: "数据清洗"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0301 数据清洗
+
+[教材章节：0301]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 数据清洗的完整工作流及各步骤的逻辑顺序
+- 掌握 重复值检测与去重、异常值识别与处理的方法
+- 了解 缺失值可视化诊断及多种填充策略的适用场景
+- 能够应用 将清洗流程封装为可重复执行的 R 函数
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. **第一节**：数据清洗工作流总览
+2. **第二节**：重复值检测与去重
+3. **第三节**：异常值检测与处理
+4. **第四节**：缺失值诊断与填充
+5. **第五节**：格式统一与完整清洗管道
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: callout-note
+## 概念一：数据清洗工作流
+理解数据 → 去重 → 处理异常值 → 处理缺失值 → 统一格式 → 验证。注意顺序：**先处理异常值，再处理缺失值**，因为异常值会污染插补结果。
+:::
+
+::: callout-note
+## 概念二：异常值检测
+基于统计方法（箱线图 IQR 规则）与领域知识（如 SOC 0--80 g/kg、pH 3.5--9.5、TN 0--10 g/kg）双重判断，标记而非直接删除。
+:::
+
+::: callout-note
+## 概念三：缺失值机制
+缺失并非随机发生。完全随机缺失（MCAR）、随机缺失（MAR）与非随机缺失（MNAR）决定了应采用删除、均值填充还是分组填充等不同策略。
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 类别 | 工具/方法 | 用途 |
+|:---|:---|:---|
+| 去重 | `duplicated()` / `distinct()` | 检测和移除重复行 |
+| 异常值 | `boxplot()` / IQR 规则 | 统计异常值识别 |
+| 异常值 | 领域知识阈值 | 基于专业判断的范围检查 |
+| 缺失值 | `naniar::vis_miss()` | 缺失值热力图可视化 |
+| 缺失值 | `mean()` / `median()` / 分组填充 | 缺失值插补策略 |
+| 格式 | `lubridate::parse_date_time()` | 日期格式统一 |
+
+------------------------------------------------------------------------
+
+## 代码示例：重复值检测与去重
+
+```r
+#| eval: false
+library(tidyverse)
+
+# 以 Li et al. (2017) 喀斯特土壤数据为例
+soil <- read.csv("karst_soil.csv")
+
+# 检测重复行
+sum(duplicated(soil))
+
+# 查看重复记录
+soil |> filter(duplicated(soil) | duplicated(soil, fromLast = TRUE))
+
+# 去重：保留首次出现的记录
+soil_unique <- soil |> distinct()
+cat("去重前:", nrow(soil), "行; 去重后:", nrow(soil_unique), "行\n")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：异常值检测（先于缺失值处理）
+
+```r
+#| eval: false
+# 方法一：箱线图 + IQR 规则
+detect_outliers_iqr <- function(x) {
+  q1 <- quantile(x, 0.25, na.rm = TRUE)
+  q3 <- quantile(x, 0.75, na.rm = TRUE)
+  iqr <- q3 - q1
+  x < (q1 - 1.5 * iqr) | x > (q3 + 1.5 * iqr)
+}
+
+# 方法二：领域知识阈值（喀斯特土壤）
+domain_rules <- list(
+  SOC = c(0, 80),    # g/kg
+  pH  = c(3.5, 9.5),
+  TN  = c(0, 10)     # g/kg
+)
+
+# 标记异常值（先标记，后决策）
+soil_flagged <- soil_unique |>
+  mutate(
+    SOC_outlier = detect_outliers_iqr(SOC) | SOC < 0 | SOC > 80,
+    pH_outlier  = detect_outliers_iqr(pH)  | pH < 3.5 | pH > 9.5,
+    TN_outlier  = detect_outliers_iqr(TN)  | TN < 0 | TN > 10
+  )
+
+# 可视化异常值
+boxplot(soil_unique$SOC, main = "SOC 分布", ylab = "g/kg")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：缺失值诊断与填充
+
+```r
+#| eval: false
+library(naniar)
+
+# 缺失值可视化：热力图
+vis_miss(soil_flagged)
+
+# 缺失比例汇总
+miss_var_summary(soil_flagged)
+
+# 策略一：删除缺失行（缺失比例 < 5% 时可用）
+soil_complete <- soil_flagged |> drop_na()
+
+# 策略二：均值/中位数填充
+soil_filled <- soil_flagged |>
+  mutate(SOC = ifelse(is.na(SOC), median(SOC, na.rm = TRUE), SOC))
+
+# 策略三：分组填充（按土地利用类型）
+soil_group_filled <- soil_flagged |>
+  group_by(land_use) |>
+  mutate(SOC = ifelse(is.na(SOC), median(SOC, na.rm = TRUE), SOC)) |>
+  ungroup()
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：格式统一
+
+```r
+#| eval: false
+library(lubridate)
+
+# 日期格式统一：处理多种格式混合输入
+soil_clean <- soil_group_filled |>
+  mutate(
+    # 统一日期格式
+    sample_date = parse_date_time(
+      sample_date,
+      orders = c("ymd", "dmy", "mdy", "Y-m-d", "d/m/Y")
+    ),
+    # 因子标准化：统一分类变量的标签
+    land_use = land_use |>
+      str_trim() |>
+      str_to_lower() |>
+      recode(
+        "forest"    = "林地",
+        "farmland"  = "耕地",
+        "grassland" = "草地"
+      ) |>
+      factor()
+  )
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：完整清洗管道
+
+```r
+#| eval: false
+clean_soil_data <- function(raw_data) {
+  raw_data |>
+    # Step 1: 去重
+    distinct() |>
+    # Step 2: 标记异常值（先于缺失值处理）
+    mutate(
+      SOC_outlier = detect_outliers_iqr(SOC) | SOC < 0 | SOC > 80,
+      pH_outlier  = detect_outliers_iqr(pH)  | pH < 3.5 | pH > 9.5
+    ) |>
+    # Step 3: 将异常值设为 NA
+    mutate(
+      SOC = ifelse(SOC_outlier, NA_real_, SOC),
+      pH  = ifelse(pH_outlier,  NA_real_, pH)
+    ) |>
+    # Step 4: 分组填充缺失值
+    group_by(land_use) |>
+    mutate(
+      SOC = ifelse(is.na(SOC), median(SOC, na.rm = TRUE), SOC),
+      pH  = ifelse(is.na(pH),  median(pH,  na.rm = TRUE), pH)
+    ) |>
+    ungroup() |>
+    # Step 5: 统一日期格式
+    mutate(sample_date = parse_date_time(sample_date, orders = c("ymd", "dmy")))
+}
+
+soil_cleaned <- clean_soil_data(soil)
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：清洗前后对比报告
+
+```r
+#| eval: false
+# 清洗前后对比
+compare_report <- function(before, after) {
+  cat("=== 数据清洗报告 ===\n")
+  cat("行数变化:", nrow(before), "->", nrow(after), "\n")
+  cat("重复行移除:", nrow(before) - nrow(after |> distinct()), "\n")
+  cat("\n--- 缺失值变化 ---\n")
+  cat("清洗前缺失:", sum(is.na(before)), "\n")
+  cat("清洗后缺失:", sum(is.na(after)), "\n")
+  cat("\n--- 数值摘要对比 (SOC) ---\n")
+  cat("清洗前: mean =", mean(before$SOC, na.rm = TRUE),
+      ", sd =", sd(before$SOC, na.rm = TRUE), "\n")
+  cat("清洗后: mean =", mean(after$SOC, na.rm = TRUE),
+      ", sd =", sd(after$SOC, na.rm = TRUE), "\n")
+}
+
+compare_report(soil, soil_cleaned)
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **要点一**：顺序至关重要——先去重、再处理异常值、最后处理缺失值。异常值会污染均值和中位数，导致插补结果失真
+- **要点二**：先标记（flag），后决策（treat）。为异常值和缺失值创建标记列，保留原始信息，方便回溯和敏感性分析
+- **要点三**：将完整清洗流程封装为函数，确保对不同批次数据应用一致的处理逻辑
+
+::: callout-tip
+动手实践是学习本课程的关键，请在电脑前跟随课程一起操作。
+:::
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1**：为什么要先处理异常值，再处理缺失值？
+
+**A1**：异常值会扭曲均值和中位数等统计量。如果先做缺失值填充，填充值会被异常值污染，导致插补结果不准确。先将异常值标记或替换为 NA，再统一处理所有缺失值，才能获得可靠的填充结果。
+
+**Q2**：检测到异常值后应该直接删除吗？
+
+**A2**：不应立即删除。正确做法是先标记（添加 flag 列），然后结合领域知识判断：是测量错误（应删除或替换）、还是真实极端值（应保留）。在论文中需说明异常值处理的依据。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. 数据清洗的标准流程为：理解 → 去重 → 异常值 → 缺失值 → 格式统一 → 验证，顺序不可颠倒
+2. 异常值检测需结合统计方法（IQR 规则）和领域知识（合理取值范围），采用"先标记后决策"策略
+3. 缺失值处理应根据缺失比例和机制选择策略，分组填充通常优于全局填充
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+- 用 `duplicated()` 和 `distinct()` 检查你的数据集中是否存在重复记录
+- 对至少两个数值变量执行 IQR 异常值检测，并用领域知识验证结果
+- 使用 `naniar::vis_miss()` 可视化你的数据缺失模式
+- **选做**：将清洗流程封装为函数，生成清洗前后对比报告
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- Li et al. 2017 - 喀斯特地区土壤调查数据采集与处理
+- Wickham & Grolemund, R for Data Science - 数据整理与清洗章节
+- naniar 包文档 - 缺失值可视化与分析工具

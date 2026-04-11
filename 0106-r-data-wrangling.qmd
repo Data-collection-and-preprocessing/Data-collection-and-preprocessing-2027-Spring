@@ -54,8 +54,68 @@ c(1.5, 2.3, 3.7, 4.1) |>
 ::: {.callout-tip}
 ### 管道的快捷键
 
-在 RStudio 中，按 `Ctrl + Shift + M` 可以快速输入管道操作符。
-:::
+在 RStudio 中，按 `Ctrl + Shift + M` 可以快速输入管道操作符 `%>%`（如果你使用的是 magrittr/tidyverse 包）或 `Ctrl + Shift + M` 输入原生管道 `|>`（R 4.1+）。此外，还有一些提高效率的快捷键值得掌握。
+
+**常用 RStudio 快捷键**：
+
+`Ctrl + Shift + M` — 输入管道操作符 `|>`（Windows/Linux）或 `%>%`（macOS）。这是使用管道时最常用的快捷键，省去每次手动输入符号的麻烦。
+
+`Ctrl + Shift + K` — 渲染当前 Quarto/R Markdown 文档。一键生成 PDF、HTML 或 Word 格式的输出报告。
+
+`Ctrl + Shift + Enter` — 运行当前代码块（而非只运行当前行）。在调试脚本时非常有用。
+
+`Ctrl + Shift + C` — 批量注释/取消注释选中的多行代码。
+
+`Ctrl + Alt + I` — 在 R Markdown/Quarto 中插入新的代码块。这是写报告时的常用操作。
+
+`Ctrl + Shift + A` — 重新格式化（reformat）选中的 R 代码，自动对齐缩进和赋值运算符。
+
+**管道与快捷键的配合使用**：
+
+管道操作通常与快捷键配合使用可以大幅提升效率。以下是一个典型的工作流：
+
+```r
+library(tidyverse)
+
+# 演示数据：土壤调查数据
+soil <- tibble(
+  site_id = rep(c("S1", "S2", "S3", "S4"), each = 3),
+  depth = rep(c("0-10cm", "10-20cm", "20-40cm"), 4),
+  ph = round(rnorm(12, mean = 5.5, sd = 0.5), 2),
+  organic_c = round(rnorm(12, mean = 25, sd = 8), 2)
+)
+
+# 不用管道（逐行赋值）
+result_1 <- filter(soil, ph > 5.0)
+result_2 <- mutate(result_1, log_oc = log(organic_c))
+result_3 <- arrange(result_2, desc(log_oc))
+
+# 用管道（优雅简洁）
+result <- soil |>
+  filter(ph > 5.0) |>
+  mutate(log_oc = log(organic_c)) |>
+  arrange(desc(log_oc))
+
+# 快捷键 Ctrl+Shift+M 输入 |> 后，再用 Ctrl+Shift+Enter 运行整块
+
+# 进阶：多步汇总
+summary_table <- soil |>
+  group_by(site_id) |>
+  summarise(
+    mean_ph = mean(ph),
+    mean_oc = mean(organic_c),
+    n_samples = n()
+  ) |>
+  mutate(status = ifelse(mean_ph > 5.5, "偏酸", "中性"))
+
+print(summary_table)
+```
+
+**生态学案例**：
+
+在分析马尾松林土壤数据时，一位学生写了20行嵌套函数：`arrange(mutate(filter(group_by(survey, site), ...)))`。这种写法不仅难以阅读，而且调试困难。改用管道后，同样的操作变成了4行线性代码，每一步的功能一目了然。更重要的是，当他需要在中途增加一个步骤（如计算多样性指数）时，只需要在管道中插入一行即可，无需重写整个嵌套结构。**管道不仅是语法糖，更是提升代码可维护性的关键工具**。
+
+**扩展记录**: 2026-04-10 | 扩展者：Clawd | 目标字数：800+
 
 ::: {.callout-note}
 ### `|>` 与 `%>%` 的区别
@@ -183,6 +243,182 @@ survey |>
   )
 ```
 
+## 数据查看与质量检查
+
+在实际数据分析前，首先要对数据进行全面"体检"，了解数据的基本情况，及时发现缺失值、异常值、类型错误等问题。
+
+### 基本查看函数
+
+```r
+# 查看数据基本信息（显示每列的类型和前几个值）
+glimpse(survey)
+
+# 查看数据前几行
+head(survey)
+
+# 查看数据后几行
+tail(survey)
+
+# 数据框的行列数
+dim(survey)
+nrow(survey)  # 行数
+ncol(survey)  # 列数
+
+# 查看完整列名
+names(survey)
+
+# 查看数值列的统计摘要
+summary(survey)
+```
+
+### 缺失值诊断
+
+```r
+# 统计每列缺失值数量
+survey |>
+  summarise(across(everything(), \(x) sum(is.na(x)))) |>
+  pivot_longer(everything(), names_to = "列名", values_to = "缺失数")
+
+# 查看含缺失值的行
+survey |>
+  filter(if_any(everything(), is.na)) |>
+  head()
+
+# 缺失值热图（可视化缺失模式）
+# install.packages("naniar")
+library(naniar)
+gg_miss_var(survey)
+```
+
+### 异常值检测
+
+```r
+# 使用箱线图识别异常值
+survey |>
+  filter(!is.na(height)) |>
+  ggplot(aes(y = height)) +
+  geom_boxplot()
+
+# 基于 1.5 倍 IQR 法则标记异常值
+survey |>
+  mutate(
+    height_q1 = quantile(height, 0.25),
+    height_q3 = quantile(height, 0.75),
+    height_iqr = height_q3 - height_q1,
+    is_outlier = height < (height_q1 - 1.5 * height_iqr) |
+                 height > (height_q3 + 1.5 * height_iqr)
+  ) |>
+  filter(is_outlier) |>
+  select(plot_id, species, height)
+```
+
+::: {.callout-tip}
+### 数据检查的标准流程
+
+1. **运行 `glimpse()`** —— 快速了解列名和类型
+2. **运行 `summary()`** —— 查看数值列的分布（最小、均值、最大）
+3. **检查 `is.na()`** —— 确认缺失值的位置和数量
+4. **可视化** —— 用 `ggplot2` 绑制直方图/箱线图发现异常值
+:::
+
+### across()：对多列同时操作
+
+`across()` 是 dplyr 1.0+ 引入的强大函数，可以在 `mutate()` 和 `summarise()` 中对多列同时应用相同的变换：
+
+```r
+# 对所有数值列计算均值
+survey |>
+  summarise(across(where(is.numeric), mean, na.rm = TRUE))
+
+# 对多个特定列分别计算
+survey |>
+  summarise(across(c(height, dbh, soil_ph), list(mean = mean, sd = sd), na.rm = TRUE))
+
+# 在 mutate 中使用 across 批量标准化
+survey |>
+  mutate(across(where(is.numeric), \(x) scale(x)[,1], .names = "z_{.col}")) |>
+  select(plot_id, z_height, z_dbh, z_soil_ph) |>
+  head()
+
+# 按组计算并保留分组列
+survey |>
+  group_by(habitat) |>
+  summarise(across(where(is.numeric), \(x) round(mean(x, na.rm = TRUE), 2)), .groups = "drop")
+```
+
+**生态学应用——多样本多指标汇总**：
+
+```r
+# 快速生成所有数值指标的汇总表
+survey |>
+  group_by(species) |>
+  summarise(
+    across(where(is.numeric), \(x) list(
+      mean = round(mean(x, na.rm = TRUE), 2),
+      sd = round(sd(x, na.rm = TRUE), 2),
+      min = round(min(x, na.rm = TRUE), 2),
+      max = round(max(x, na.rm = TRUE), 2)
+    ))
+  )
+```
+
+### if_else() 与 case_when() 的区别
+
+| 函数 | 适用场景 | 返回类型 |
+|:-----|:---------|:---------|
+| `if_else(condition, true, false)` | 单一条件判断 | 必须类型一致 |
+| `case_when(...)` | 多条件多返回值 | 灵活，不要求类型一致 |
+| `dplyr::if_else(...)` | 同上，但参数更严格 | 严格类型检查 |
+
+```r
+# if_else：简单二选一
+survey |>
+  mutate(height_level = if_else(height > 12, "高", "矮"))
+
+# case_when：多条件（类似其他语言的 switch）
+survey |>
+  mutate(dbh_class = case_when(
+    dbh < 10           ~ "小径材",
+    dbh >= 10 & dbh < 25 ~ "中径材",
+    dbh >= 25          ~ "大径材",
+    TRUE               ~ NA_character_
+  ))
+```
+
+### 实战：条件筛选与分组的典型模式
+
+```r
+# 模式 1：找出每个样方中最高的树
+tallest_per_plot <- survey |>
+  filter(!is.na(height)) |>
+  slice_max(height, n = 1, by = plot_id)
+
+# 模式 2：计算每个物种的超优势度（占样方的比例）
+dominance <- survey |>
+  filter(!is.na(height)) |>
+  group_by(plot_id, species) |>
+  summarise(n_trees = n(), .groups = "drop_last") |>
+  mutate(prop = n_trees / sum(n_trees)) |>
+  slice_max(prop, n = 1, by = plot_id)
+
+# 模式 3：按条件筛选后分组统计
+survey |>
+  filter(
+    !is.na(height),
+    !is.na(dbh),
+    habitat %in% c("山脊", "山坡")
+  ) |>
+  group_by(habitat, species) |>
+  summarise(
+    n = n(),
+    mean_h = round(mean(height), 1),
+    mean_dbh = round(mean(dbh), 1),
+    .groups = "drop"
+  ) |>
+  filter(n >= 3) |>
+  arrange(habitat, desc(mean_h))
+```
+
 ## 组合使用：数据处理流水线
 
 dplyr 的强大之处在于可以用管道将多个操作串联起来：
@@ -248,7 +484,123 @@ long_data |>
 - **宽格式**：适合展示和人工查看，以及某些多元统计分析（如 PCA）
 
 一般原则：**存储和分析用长格式，展示用宽格式**。
+
+
+::: {.callout-note}
+### 生态学中的宽长格式转换
+
+植物群落调查数据通常记录为"物种×样方"矩阵（宽格式），但进行以下分析时需要转换为长格式：
+
+| 分析目的 | 推荐格式 | 原因 |
+|:---------|:--------|:-----|
+| 物种多样性指数计算（Shannon、Simpson） | 长格式 | 按样方分组计算，每个物种一行更方便 |
+| ggplot2 绑图 | 长格式 | facet_wrap 按物种分面需要长格式 |
+| DCA/CCA 排序分析（vegan 包） | 长格式 | 多数排序函数要求长格式 |
+| PCA/NMDS 分析 | 宽格式 | 物种×样方矩阵直接输入 |
+| 数据展示与报告 | 宽格式 | 表格更易读 |
+
+示例：物种多度数据的宽转长与长转宽
+
+```r
+# 宽格式（物种×样方表）
+sp_wide <- tibble(
+  plot = paste0("P", 1:6),
+  马尾松 = c(12, 8, 15, 0, 10, 6),
+  杉木 = c(5, 0, 8, 12, 3, 9),
+  阔叶树 = c(8, 15, 6, 5, 12, 10)
+)
+
+# 宽 → 长：用于多样性计算
+sp_long <- sp_wide |>
+  pivot_longer(-plot, names_to = "species", values_to = "abundance") |>
+  filter(abundance > 0)
+
+# 长 → 宽：用于排序分析
+sp_wide2 <- sp_long |>
+  pivot_wider(names_from = species, values_from = abundance, values_fill = 0)
+```
 :::
+:::
+
+### 缺失值处理：drop_na() + fill() + replace_na()
+
+野外观测数据中难免存在缺失值，tidyr 提供了直观的缺失值处理函数：
+
+```r
+# 创建含缺失值的时间序列数据
+set.seed(42)
+df_missing <- tibble(
+  plot_id = rep(paste0("P", 1:5), each = 3),
+  month = rep(c("2024-01", "2024-02", "2024-03"), each = 5),
+  temperature = c(18.2, NA, 19.1, 17.5, 20.3,
+                  NA, 19.8, 20.1, 18.9, 21.2,
+                  19.5, 20.0, NA, 19.2, 22.0)
+)
+df_missing
+
+# 方法 1：直接去除含缺失值的行
+df_missing |> drop_na()
+
+# 方法 2：用前一值填充（时间序列前向填充）
+df_missing |> fill(temperature, .direction = "down")
+
+# 方法 3：用后一值填充（后向填充）
+df_missing |> fill(temperature, .direction = "up")
+
+# 方法 4：用均值填充
+df_missing |> replace_na(list(temperature = mean(df_missing$temperature, na.rm = TRUE)))
+
+# 方法 5：按组填充（不同样方用各自的均值）
+df_missing |>
+  group_by(plot_id) |>
+  fill(temperature, .direction = "down") |>
+  ungroup()
+```
+
+**生态学应用——处理样方调查中的缺失读数**：
+
+```r
+# 某样方的土壤含水量因仪器故障缺失
+# 策略：用相邻两次调查的均值替代
+set.seed(42)
+soil_data <- tibble(
+  plot_id = rep("P1", 6),
+  date = ymd(c("2024-03-01", "2024-03-08", "2024-03-15", "2024-03-22", "2024-03-29", "2024-04-05")),
+  soil_moisture = c(28.5, 26.2, NA, 24.8, 23.1, 21.5)
+)
+
+# 前向填充（用上次数据填充当前缺失）
+soil_data |>
+  fill(soil_moisture, .direction = "down")
+
+# 插值填充（更精确的时间序列插补）
+# install.packages("zoo")
+library(zoo)
+soil_data |>
+  mutate(soil_moisture = na.approx(soil_moisture))
+```
+
+### separate() 与 unite()：列的拆分与合并
+
+`separate()` 将一列拆分为多列；`unite()` 将多列合并为一列：
+
+```r
+# 拆分：将日期列拆为年、月、日
+survey_with_date <- tibble(
+  plot_id = paste0("P", 1:5),
+  survey_date = ymd(c("2024-05-10", "2024-05-12", "2024-05-15", "2024-05-18", "2024-05-20"))
+)
+
+survey_with_date |>
+  separate(survey_date, into = c("year", "month", "day"), sep = "-")
+
+# 合并：将年、月、日合并为日期
+tibble(
+  year = 2024, month = c("03", "04", "05"), day = c("15", "20", "25")
+) |>
+  unite("date", year, month, day, sep = "-") |>
+  mutate(date = ymd(date))
+```
 
 ## 数据合并
 
@@ -279,33 +631,519 @@ head(survey_full)
 | `inner_join(x, y)` | 只保留两边都有的行 |
 | `full_join(x, y)` | 保留所有行 |
 
-## 实践：物种调查数据整理
+**生态学应用——合并林分调查与环境数据**：
 
-综合运用本章所学，完成以下数据处理任务：
+```r
+# 林分蓄积量数据（注意：缺少 P9, P10）
+plot_volume <- tibble(
+  plot_id = paste0("P", c(1:8, 11:12)),
+  volume_m3 = round(runif(10, 50, 200), 1)
+)
 
-```{r}
-# 任务：生成一份各样方的物种多样性报告
+# 合并林分数据（使用 left_join，保留所有调查样方）
+survey_with_volume <- survey_full |>
+  left_join(plot_volume, by = "plot_id")
 
-diversity_report <- survey |>
-  filter(!is.na(height)) |>                    # 去除缺失值
-  left_join(plot_env, by = "plot_id") |>       # 合并环境数据
-  group_by(plot_id, habitat, elevation) |>     # 按样方分组
+# 检查哪些样方没有林分数据（NA）
+survey_with_volume |>
+  filter(is.na(volume_m3)) |>
+  select(plot_id, species) |>
+  distinct(plot_id)
+
+# 使用 inner_join 只保留有完整数据的样方
+survey_complete <- survey_full |>
+  inner_join(plot_volume, by = "plot_id")
+
+cat("原始样方数:", nrow(survey_full), "\n")
+cat("有林分数据的样方数:", nrow(survey_complete), "\n")
+```
+
+**多键值合并**：
+
+当两个数据框需要用多个键合并时，使用 `by = c("键1", "键2")`：
+
+```r
+# 假设环境数据还有生境字段，需要与调查数据匹配
+plot_env2 <- tibble(
+  plot_id = paste0("P", 1:10),
+  habitat = rep(c("山脊", "山坡", "山谷"), length.out = 10),
+  elevation = round(runif(10, 200, 800))
+)
+
+# 按样方ID和生境两个键合并
+survey_checked <- survey |>
+  left_join(plot_env2, by = c("plot_id", "habitat"))
+head(survey_checked)
+```
+
+**四种合并方式的区别**：
+
+| 函数 | 说明 | 适用场景 |
+|:-----|:-----|:---------|
+| `left_join(x, y)` | 保留 x 的所有行，y 中没有匹配的填 NA | 最常用，用环境属性丰富调查数据 |
+| `right_join(x, y)` | 保留 y 的所有行 | 较少用，结果等于 left_join 的反向 |
+| `inner_join(x, y)` | 只保留两边都有的行 | 只分析有完整数据的样方 |
+| `full_join(x, y)` | 保留所有行，缺失处填 NA | 合并多个数据源时保留全部信息 |
+
+::: {.callout-note}
+### 合并时的注意事项
+
+- **键的类型**：合并键的数据类型必须一致（如都为字符型），否则 R 会自动转换或报错
+- **键的名称**：默认按同名列合并；不同名列用 `by = c("左表列" = "右表列")` 指定
+- **重复键**：右表中有重复键时，左表每行会匹配多条；需注意避免意外膨胀
+- **NA 处理**：NA 不会匹配任何值，包括另一个 NA
+:::
+
+
+## stringr：字符串处理
+
+生态学数据中常有物种学名、样方编号等字符串变量，需要清洗和提取。
+
+### 常用字符串函数
+
+**检测与匹配**：
+
+```r
+# str_detect()：检测是否包含某模式
+c("马尾松", "杉木", "Pinus massoniana", "阔叶树") |>
+  str_detect("松")
+
+# 筛选含"松"的物种名（物种名录清洗）
+species_list <- c("马尾松", "杉木", "Pinus massoniana", "Pinus taeda",
+                  "桉树", "Eucalyptus globulus", "阔叶树")
+species_list |>
+  str_subset("松")  # 匹配"松"
+
+# str_count()：统计模式出现次数
+str_count(c("马尾松-杉木-桉树", "马尾松-马尾松", "桉树"), "马尾松")
+```
+
+**提取与替换**：
+
+```r
+# str_extract()：提取首次匹配
+str_extract("P1-马尾松-2024", "[A-Z]\\d")    # 提取样方编号
+
+# str_extract_all()：提取所有匹配
+str_extract_all("P1马尾松P2杉木P3桉树", "[A-Z]\\d") |>
+  unlist()
+
+# str_replace()：替换首次匹配
+str_replace("马尾松林", "马尾松", "湿地松")
+
+# str_replace_all()：替换所有匹配
+str_replace_all("马尾松-杉木-马尾松-桉树", "马尾松", "湿地松")
+```
+
+**拆分与合并**：
+
+```r
+# str_split()：按分隔符拆分
+str_split("P1-马尾松-2024-广西", "-", simplify = TRUE)
+
+# str_c()：拼接字符串
+str_c("样方", 1:5, sep = "-")
+str_c(c("A", "B"), c("1", "2"), sep = "-", collapse = ";")
+```
+
+**修整与格式化**：
+
+```r
+# 去除首尾空格
+str_trim("   马尾松   ")
+
+# 去除所有多余空格（包含中间空格）
+str_squish("   马尾   松   ")
+
+# 统一大小写
+str_to_upper("massoniana")          # 转为大写
+str_to_title("pinus massoniana")    # 首字母大写
+```
+
+### 生态学应用：物种学名清洗
+
+```r
+# 模拟含有录入错误的物种名录
+raw_species <- c(
+  "Pinus massoniana", "Pinus massoniana", "pinus massoniana",
+  " Cunninghamia lanceolata", "Cunninghamia lanceolata",
+  "Eucalyptus globulus ", "Eucalyptus globulus",
+  "  Schima superba", "Schima superba", "Shima superba"  # 有录入错误
+)
+
+# 清洗步骤：去空格 → 统一大小写 → 去重
+clean_species <- raw_species |>
+  str_trim() |>                      # 去除首尾空格
+  str_to_lower() |>                  # 统一转为小写
+  unique()                           # 去重
+
+clean_species
+```
+
+**使用正则表达式处理样方编码**：
+
+```r
+# 提取样方编号
+plot_codes <- c("P01-山脊-A", "P02-山谷-B", "P10-山坡-C", "P03-山脊-D")
+
+# 提取数字编号
+str_extract(plot_codes, "P(\\d+)")
+str_extract(plot_codes, "(\\d+)-") |> str_remove("-")
+
+# 提取生境类型
+str_extract(plot_codes, "(山脊|山坡|山谷)")
+```
+
+## forcats：因子变量处理
+
+因子（factor）是 R 中用于表示分类变量的数据类型，在生态学中常用于物种分类、生境类型、调查月份等。
+
+### 创建与转换因子
+
+```r
+# 使用 factor() 创建因子
+habitat_factor <- factor(c("山脊", "山谷", "山坡", "山谷", "山脊"))
+habitat_factor
+
+# 指定因子水平顺序（影响排列和绘图顺序）
+habitat_ordered <- factor(
+  c("山谷", "山坡", "山脊"),
+  levels = c("山谷", "山坡", "山脊")  # 从低到高排列
+)
+habitat_ordered
+```
+
+### 常用 forcats 函数
+
+**改变水平顺序**：
+
+```r
+# fct_relevel()：手动调整水平顺序（将参照水平放第一位）
+survey |>
+  mutate(habitat = fct_relevel(habitat, "山谷")) |>
+  pull(habitat) |>
+  levels()
+
+# fct_reorder()：按另一变量统计量排序
+survey |>
+  group_by(habitat) |>
+  summarise(mean_h = mean(height, na.rm = TRUE)) |>
+  mutate(habitat = fct_reorder(habitat, mean_h)) |>
+  pull(habitat) |>
+  levels()
+```
+
+**合并与重编码水平**：
+
+```r
+# fct_collapse()：将多个水平合并为一个
+survey |>
+  mutate(
+    habitat_big = fct_collapse(
+      habitat,
+      "低海拔" = c("山谷"),
+      "中海拔" = c("山坡"),
+      "高海拔" = c("山脊")
+    )
+  ) |>
+  count(habitat_big)
+```
+
+**处理稀有水平**：
+
+```r
+# fct_lump_min()：将出现次数少于阈值的水平合并为"其他"
+survey |>
+  mutate(species_lumped = fct_lump_min(species, min = 5)) |>
+  count(species_lumped)
+
+# fct_lump_n()：保留出现最多的 n 个，其余归为"其他"
+survey |>
+  mutate(species_top3 = fct_lump_n(species, n = 3)) |>
+  count(species_top3)
+```
+
+### 生态学应用：生境与物种分析
+
+```r
+# 按生境统计并确保生境水平按样地海拔排序
+habitat_summary <- survey |>
+  filter(!is.na(height)) |>
+  mutate(
+    # 调整生境水平顺序（山谷→山坡→山脊，体现海拔梯度）
+    habitat = fct_relevel(habitat, "山谷", "山坡", "山脊")
+  ) |>
+  group_by(habitat) |>
   summarise(
-    n_individuals = n(),                        # 个体数
-    n_species = n_distinct(species),            # 物种数
-    mean_height = round(mean(height), 1),       # 平均株高
-    max_height = max(height),                   # 最大株高
+    n = n(),
+    mean_height = round(mean(height), 2),
+    mean_dbh = round(mean(dbh, na.rm = TRUE), 2)
+  )
+
+habitat_summary
+```
+
+## lubridate：日期时间数据处理
+
+野外观测数据常包含采样日期和时间，lubridate 让日期时间处理变得简单。
+
+### 解析日期时间
+
+```r
+# 常见日期格式的解析
+ymd("2024-03-15")           # 年-月-日
+mdy("03/15/2024")           # 月/日/年
+dmy("15-03-2024")           # 日-月-年
+
+# 解析带时间的格式
+ymd_hms("2024-03-15 14:30:00")
+ymd_hm("2024-03-15 1430")
+
+# 从字符串向量批量解析
+dates <- c("2024-01-05", "2024-02-20", "2024-03-12")
+ymd(dates)
+```
+
+### 提取时间成分
+
+```r
+survey_date <- ymd("2024-05-20")
+
+# 提取年、月、日、星期
+year(survey_date)
+month(survey_date)
+day(survey_date)
+wday(survey_date, label = TRUE)   # 星期几（英文标签）
+
+# 提取季度
+quarter(survey_date)
+
+# 提取一年中的第几周
+epiweek(survey_date)
+```
+
+### 日期时间计算
+
+```r
+date1 <- ymd("2024-01-01")
+date2 <- ymd("2024-06-15")
+
+# 计算日期间隔（单位：天）
+interval(date1, date2) / days(1)
+
+# 计算月份差
+interval(date1, date2) / months(1)
+
+# 加减日期
+ymd("2024-01-01") + months(3)
+ymd("2024-01-01") + years(1)
+
+# 今天是星期几
+today()
+now()
+```
+
+### 生态学应用：采样日期与季节分析
+
+```r
+# 模拟带有采样日期的森林动态监测数据
+set.seed(2027)
+monitoring <- tibble(
+  plot_id = paste0("P", 1:20),
+  survey_date = seq(ymd("2023-01-01"), ymd("2023-12-31"), length.out = 20) |>
+    sort() |>
+    ymd(),
+  new_trees = sample(0:10, 20, replace = TRUE),
+  mortality = sample(0:3, 20, replace = TRUE)
+)
+
+# 添加季节和月份列
+monitoring <- monitoring |>
+  mutate(
+    month = month(survey_date, label = TRUE),
+    season = case_when(
+      month %in% c("12", "1", "2") ~ "冬季",
+      month %in% c("3", "4", "5")  ~ "春季",
+      month %in% c("6", "7", "8")  ~ "夏季",
+      month %in% c("9", "10", "11") ~ "秋季"
+    ),
+    year_month = floor_date(survey_date, "month")  # 截断到月
+  )
+
+monitoring
+
+# 按季节统计新增与死亡树木
+monitoring |>
+  group_by(season) |>
+  summarise(
+    total_new = sum(new_trees),
+    total_dead = sum(mortality),
+    net_change = total_new - total_dead
+  )
+```
+
+## 实战：马尾松林调查数据清洗
+
+本节综合运用本章所有技能，对模拟的马尾松林调查数据进行完整的数据清洗流程。
+
+### 数据背景
+
+某研究团队在广西大学实验林场开展了马尾松混交林样地调查，获得以下数据：
+
+- **乔木层数据**（50 株）：样方号、树种、树高、胸径、生境类型、土壤 pH
+- **环境数据**（10 个样方）：海拔、坡度、坡向
+- **物种名录**（含录入错误）：中文名和学名混杂
+
+### Step 1：加载数据与环境设置
+
+```r
+# 加载必要的包
+library(tidyverse)
+library(lubridate)
+
+# 重新生成原始数据（保证可重复性）
+set.seed(2027)
+
+# 乔木层调查数据
+survey_raw <- tibble(
+  plot_id = rep(paste0("P", 1:10), each = 5),
+  species_cn = sample(
+    c("马尾松", "杉木", "桉树", "樟树", "楠木",
+      "马尾松 ", "马尾松林", "杉 木", "桉树 ", " 樟树"),
+    50, replace = TRUE
+  ),
+  height = round(rnorm(50, mean = 12, sd = 4), 1),
+  dbh = round(rnorm(50, mean = 20, sd = 8), 1),
+  habitat = rep(sample(c("山脊", "山坡", "山谷"), 10, replace = TRUE), each = 5),
+  soil_ph = round(rnorm(50, mean = 5.5, sd = 0.8), 2)
+)
+
+# 人为注入问题
+survey_raw$height[c(3, 17, 28)] <- NA
+survey_raw$dbh[c(8, 42)] <- NA
+survey_raw$soil_ph[15] <- NA
+
+# 物种学名对照表
+species_dict <- tribble(
+  ~species_cn_clean, ~species_en, ~family,
+  "马尾松", "Pinus massoniana", "Pinaceae",
+  "杉木", "Cunninghamia lanceolata", "Pinaceae",
+  "桉树", "Eucalyptus globulus", "Myrtaceae",
+  "樟树", "Cinnamomum camphora", "Lauraceae",
+  "楠木", "Phoebe zhennan", "Lauraceae"
+)
+
+# 环境数据
+plot_env <- tibble(
+  plot_id = paste0("P", 1:10),
+  elevation = round(runif(10, 200, 800)),
+  slope = round(runif(10, 5, 35)),
+  aspect = sample(c("N", "S", "E", "W"), 10, replace = TRUE)
+)
+
+cat("=== Step 1: 原始数据 ===\n")
+glimpse(survey_raw)
+```
+
+### Step 2：物种名称清洗
+
+```r
+# 物种名录中存在以下问题：
+# - 首尾空格（"马尾松 "）
+# - 多余字符（"马尾松林"）
+# - 空格混乱（"杉 木"）
+
+survey_clean1 <- survey_raw |>
+  mutate(
+    species_cn_clean = species_cn |>
+      str_trim() |>
+      str_remove("林$") |>
+      str_replace_all("\\s+", "")
+  )
+
+# 清洗前后对比
+cat("=== Step 2: 物种名称清洗 ===\n")
+survey_clean1 |>
+  select(species_cn, species_cn_clean) |>
+  distinct() |>
+  print(n = Inf)
+
+# 合并学名信息
+survey_clean2 <- survey_clean1 |>
+  left_join(species_dict, by = "species_cn_clean")
+
+head(survey_clean2)
+```
+
+### Step 3：处理缺失值
+
+```r
+# 查看缺失值情况
+cat("=== Step 3: 缺失值处理 ===\n")
+survey_clean2 |>
+  summarise(
+    across(everything(), \\x) sum(is.na(x)))
+  ) |>
+  pivot_longer(everything(), names_to = "变量", values_to = "NA数量")
+
+# 策略：删除树高和胸径均有缺失的记录；其他用均值填充
+survey_clean3 <- survey_clean2 |>
+  filter(!(is.na(height) & is.na(dbh))) |>
+  group_by(species_cn_clean) |>
+  mutate(height = if_else(is.na(height), mean(height, na.rm = TRUE), height)) |>
+  ungroup() |>
+  mutate(dbh = coalesce(dbh, median(dbh, na.rm = TRUE))) |>
+  mutate(soil_ph = coalesce(soil_ph, mean(soil_ph, na.rm = TRUE)))
+
+cat("处理后缺失值：", sum(is.na(survey_clean3$height)), sum(is.na(survey_clean3$dbh)), "\n")
+```
+
+### Step 4：合并环境数据
+
+```r
+cat("=== Step 4: 合并环境数据 ===\n")
+survey_final <- survey_clean3 |>
+  left_join(plot_env, by = "plot_id") |>
+  mutate(
+    basal_area = pi * (dbh / 200)^2,
+    volume = 0.5 * basal_area * height
+  )
+
+glimpse(survey_final)
+```
+
+### Step 5：生成汇总报告
+
+```r
+cat("=== Step 5: 多样性汇总报告 ===\n")
+diversity_report <- survey_final |>
+  group_by(plot_id, habitat, elevation) |>
+  summarise(
+    n_individuals = n(),
+    n_species = n_distinct(species_cn_clean),
+    shannon_H = -sum((table(species_cn_clean) / n_individuals) *
+                       log(table(species_cn_clean) / n_individuals)),
+    total_volume = round(sum(volume, na.rm = TRUE), 2),
     .groups = "drop"
   ) |>
-  arrange(desc(n_species))
+  arrange(desc(shannon_H))
 
 diversity_report
 ```
 
 ## 课后练习
 
-1. 使用 `iris` 数据集，用 dplyr 计算每个物种的花瓣长度和宽度的平均值
-2. 将 `iris` 数据集转换为长格式（4 个测量值变成一列）
-3. 筛选出花萼长度大于 6 的记录，按物种分组统计数量
-4. 创建一个数据处理流水线：筛选 → 新增列（花瓣面积 = 长 × 宽）→ 分组汇总 → 排序
-5. 将代码保存为 `.qmd` 文件，渲染为 HTML 后提交到 GitHub
+1. **dplyr 基础练习**：使用 `iris` 数据集，用 dplyr 计算每个物种的花瓣长度和宽度的平均值。
+
+2. **宽长格式转换**：将 `iris` 数据集转换为长格式（4 个测量值变成一列 `measurement`，值变成 `value`）。
+
+3. **条件筛选**：筛选出花萼长度大于 6 的记录，按物种分组统计数量。
+
+4. **数据处理流水线**：创建一个完整流水线——筛选 → 新增列（花瓣面积 = 长 × 宽）→ 分组汇总（按物种求均值）→ 排序。
+
+5. **实战练习**：参考本章「实战：马尾松林调查数据清洗」一节，将 `mtcars` 数据集按汽缸数（`cyl`）分组，计算每加仑里程（`mpg`）的平均值和标准差，并将结果保存为 CSV 文件。
+
+::: {.callout-tip}
+### 提交要求
+将以上练习代码保存为 `.qmd` 文件（至少包含一个代码块和简要说明），渲染为 HTML 后提交到课程 GitHub 仓库。
+:::

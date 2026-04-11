@@ -1,0 +1,170 @@
+---
+title: "生态学公共数据获取方法"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0205 生态学公共数据获取方法
+
+[教材章节：0205]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 生态学四大类公共数据资源（生物多样性、遥感、气候、分子）的特点与来源
+- 掌握 公共数据的主要获取方式（网页门户、API、元数据字典、网络爬虫）
+- 了解 数据使用伦理（引用规范、CC 许可协议）和质量挑战
+- 能够应用 R 包 rgbif 获取 GBIF 物种分布数据
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. **第一节**：四大类公共数据资源
+2. **第二节**：公共数据获取方式
+3. **第三节**：数据使用伦理与许可
+4. **第四节**：公共数据的质量挑战
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+- **概念一**：GBIF（Global Biodiversity Information Facility）：全球最大的开放生物多样性数据平台，汇集超过 20 亿条物种出现记录
+- **概念二**：API（Application Programming Interface）：允许程序自动化访问数据库的编程接口，是大规模数据获取的关键工具
+- **概念三**：元数据字典（Metadata Dictionary）：描述数据集中每个字段的含义、类型、取值范围和单位的文档，是正确使用公共数据的前提
+
+::: callout-note
+使用公共数据前务必阅读元数据字典和数据使用协议，避免误用和违规。
+:::
+
+------------------------------------------------------------------------
+
+## 四大类公共数据资源
+
+| 数据类型 | 主要平台 | 数据内容 | 典型用途 |
+|:---|:---|:---|:---|
+| 生物多样性 | GBIF, iNaturalist, OBIS | 物种出现记录、标本数据 | 物种分布建模、多样性分析 |
+| 遥感数据 | Landsat, MODIS, GEE | 地表反射率、植被指数、地表温度 | 土地覆盖变化、植被动态 |
+| 气候数据 | WorldClim, CRU, ERA5 | 温度、降水、辐射 | 物种分布模型、气候变化影响 |
+| 分子数据 | GenBank, BOLD, UniProt | DNA序列、蛋白质序列 | 系统发育、种群遗传学 |
+
+------------------------------------------------------------------------
+
+## 公共数据获取方式
+
+| 获取方式 | 适用场景 | 优势 | 工具示例 |
+|:---|:---|:---|:---|
+| 网页门户（Web Portal） | 小规模、探索性下载 | 可视化界面，上手容易 | GBIF.org, EarthExplorer |
+| API 编程接口 | 大规模、自动化获取 | 可重复、可批量处理 | rgbif, rnoaa, spocc |
+| 元数据/数据字典 | 理解数据结构 | 避免误用字段 | Darwin Core 标准 |
+| 网络爬虫（Web Scraping） | 无 API 的网站 | 灵活获取 | rvest, httr2 |
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 类别 | 工具/方法 | 用途 |
+|:---|:---|:---|
+| 生物多样性 | rgbif / spocc | GBIF 数据下载与物种出现记录整合 |
+| 遥感 | rgee / terra | Google Earth Engine 接口与栅格数据处理 |
+| 气候 | geodata / rnoaa | WorldClim 生物气候变量与 NOAA 气象数据 |
+| 分子 | rentrez / seqinr | GenBank 序列检索与分析 |
+| 爬虫 | rvest / httr2 | 网页数据提取与 HTTP 请求 |
+
+------------------------------------------------------------------------
+
+## 代码示例
+
+```r
+#| eval: false
+library(rgbif)
+library(tibble)
+
+# 从 GBIF 获取大熊猫分布记录
+panda_records <- occ_search(
+  scientificName = "Ailuropoda melanoleuca",
+  hasCoordinate = TRUE,
+  limit = 500,
+  fields = c("species", "decimalLatitude", "decimalLongitude",
+             "country", "year", "basisOfRecord")
+)
+
+# 转换为 tibble 并查看
+panda_data <- as_tibble(panda_records$data)
+glimpse(panda_data)
+
+# 基本质量检查
+panda_clean <- panda_data |>
+  dplyr::filter(
+    !is.na(decimalLatitude),
+    !is.na(decimalLongitude),
+    decimalLatitude != 0,
+    decimalLongitude != 0,
+    year >= 2000
+  )
+
+cat("原始记录数:", nrow(panda_data), "\n")
+cat("清洗后记录数:", nrow(panda_clean), "\n")
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **要点一**：使用公共数据必须引用数据来源，GBIF 提供标准引用格式（DOI），下载时记录 download key
+- **要点二**：注意 CC 许可协议的差异：CC0（无限制）、CC-BY（需署名）、CC-BY-NC（非商业）
+- **要点三**：公共数据存在系统性偏差（如分类偏差、空间偏差），分析前需评估并在论文中讨论
+
+::: callout-tip
+养成为每次数据下载记录日期、查询参数和数据版本的习惯，这是可重复研究的基本要求。
+:::
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1**：GBIF 数据中常见哪些质量问题？
+
+**A1**：常见问题包括：(1) 坐标错误（如经纬度颠倒、落入海洋的陆生物种记录）；(2) 分类学不一致（同物异名、过时学名）；(3) 采样偏差（靠近公路和城市的记录过多，偏远地区覆盖不足）。建议使用 CoordinateCleaner 包进行系统清洗。
+
+**Q2**：如何处理不同公共数据集之间空间分辨率不一致的问题？
+
+**A2**：需要进行空间重采样（resampling）。通常以研究中最粗分辨率的数据集为准，将高分辨率数据聚合到同一网格。R 中可使用 terra 包的 `resample()` 和 `aggregate()` 函数完成。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. 生态学公共数据涵盖生物多样性、遥感、气候、分子四大类，极大拓展了研究的时空范围
+2. API 编程接口是大规模、可重复获取公共数据的推荐方式，优于手动下载
+3. 使用公共数据必须注意引用规范、许可协议，并充分评估数据质量偏差
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+- 用 rgbif 包下载你研究物种的 GBIF 分布数据，并进行基本质量检查
+- 比较同一区域在 WorldClim 和 CRU 两个气候数据集中温度数据的差异
+- **选做**：尝试用 rvest 包爬取一个生态学相关数据网站的表格数据
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- Zizka et al. 2019, *Methods in Ecology and Evolution* - CoordinateCleaner：GBIF 数据清洗 R 包
+- Fick & Hijmans 2017, *International Journal of Climatology* - WorldClim 2：新一代全球气候数据
+- Chamberlain & Boettiger 2017, *R Journal* - R 语言生物多样性数据获取工具综述

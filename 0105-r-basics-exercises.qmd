@@ -1,0 +1,935 @@
+---
+title: "R 语言基础 - 课后练习"
+execute:
+  warning: false
+  message: false
+---
+
+## 课后练习
+
+### 基础练习（必做）
+
+#### 练习 1：创建和操作数据框
+
+创建一个包含 5 种植物的数据框，包含物种名、株高、叶面积、是否为乔木四列，并进行基本统计分析。
+
+```{r}
+#| eval: false
+# 你的代码：
+# 1. 创建数据框
+plant_data <- data.frame(
+  species = c("___", "___", "___", "___", "___"),
+  height = c(___, ___, ___, ___, ___),
+  leaf_area = c(___, ___, ___, ___, ___),
+  is_tree = c(___, ___, ___, ___, ___)
+)
+
+# 2. 查看数据结构
+str(plant_data)
+
+# 3. 计算株高的统计量
+mean_height <- ___
+sd_height <- ___
+cv_height <- ___
+
+cat("平均株高:", mean_height, "\n")
+cat("标准差:", sd_height, "\n")
+cat("变异系数:", cv_height, "%\n")
+```
+
+#### 练习 2：数据筛选
+
+筛选出株高大于平均值的植物。
+
+```{r}
+#| eval: false
+# 你的代码：
+tall_plants <- plant_data[___, ]
+print(tall_plants)
+```
+
+#### 练习 3：数据可视化
+
+用 `hist()` 绘制 `iris` 数据集中 `Sepal.Width` 的分布直方图。
+
+```{r}
+#| eval: false
+# 你的代码：
+hist(___, 
+     main = "___",
+     xlab = "___",
+     col = "___")
+```
+
+#### 练习 4：编写函数
+
+编写一个函数计算 Shannon 多样性指数，并用 `c(10, 5, 3, 2, 1)` 测试。
+
+```{r}
+#| eval: false
+# 你的代码：
+shannon_index <- function(abundance) {
+  # 计算相对丰度
+  p <- ___
+  
+  # 计算 Shannon 指数: H' = -Σ(pi * ln(pi))
+  H <- ___
+  
+  return(H)
+}
+
+# 测试
+test_data <- c(10, 5, 3, 2, 1)
+result <- shannon_index(test_data)
+cat("Shannon 多样性指数:", result, "\n")
+```
+
+#### 练习 5：管道操作符
+
+使用管道操作符分析 `iris` 数据：筛选 `Petal.Length > 4` 的记录，按物种分组计算平均花瓣宽度。
+
+```{r}
+#| eval: false
+library(dplyr)
+
+# 你的代码：
+result <- iris %>%
+  filter(___) %>%
+  group_by(___) %>%
+  summarise(___)
+
+print(result)
+```
+
+### 进阶练习（选做）
+
+#### 练习 6：综合数据处理
+
+创建一个森林样地数据集，计算每个样地的生物量，并按物种分组统计。
+
+```{r}
+#| eval: false
+# 你的代码：
+set.seed(2024)
+forest_data <- data.frame(
+  plot_id = rep(1:5, each = 4),
+  species = rep(c("马尾松", "杉木", "桉树", "樟树"), 5),
+  dbh = rnorm(20, mean = 20, sd = 5),
+  height = rnorm(20, mean = 12, sd = 3)
+) %>%
+  mutate(
+    dbh = round(pmax(dbh, 5), 1),
+    height = round(pmax(height, 3), 1),
+    biomass = ___  # 使用公式: 0.05 * dbh^2 * height
+  )
+
+# 按物种分组统计
+species_summary <- forest_data %>%
+  group_by(___) %>%
+  summarise(
+    n_trees = ___,
+    mean_biomass = ___,
+    total_biomass = ___
+  )
+
+print(species_summary)
+```
+
+#### 练习 7：错误处理
+
+编写一个带错误处理的函数，计算土壤质量指数。
+
+```{r}
+#| eval: false
+# 你的代码：
+calculate_soil_quality <- function(ph, organic_matter) {
+  # 参数检查
+  if (___) {
+    stop("pH 必须是数值型")
+  }
+  
+  if (___) {
+    stop("有机质含量必须是数值型")
+  }
+  
+  # 计算质量指数
+  tryCatch(
+    {
+      ph_score <- ___
+      om_score <- ___
+      quality_index <- ___
+      return(quality_index)
+    },
+    error = function(e) {
+      cat("计算出错:", e$message, "\n")
+      return(NA)
+    }
+  )
+}
+
+# 测试
+calculate_soil_quality(6.5, 3.2)
+calculate_soil_quality("invalid", 3.2)  # 应该报错
+```
+
+#### 练习 8：数据重塑
+
+将宽格式数据转换为长格式，并进行可视化。
+
+```{r}
+#| eval: false
+library(tidyr)
+library(ggplot2)
+
+# 创建宽格式数据
+wide_data <- data.frame(
+  site = paste0("Site", 1:5),
+  spring = c(15, 18, 16, 20, 17),
+  summer = c(28, 30, 27, 32, 29),
+  autumn = c(20, 22, 19, 24, 21),
+  winter = c(8, 10, 7, 12, 9)
+)
+
+# 转换为长格式
+long_data <- wide_data %>%
+  pivot_longer(
+    cols = ___,
+    names_to = ___,
+    values_to = ___
+  )
+
+# 可视化
+ggplot(long_data, aes(x = ___, y = ___, fill = ___)) +
+  geom_boxplot() +
+  labs(title = "不同季节的温度分布") +
+  theme_minimal()
+```
+
+#### 练习 9：字符串处理
+
+处理物种名称数据，提取属名和种加词。
+
+```{r}
+#| eval: false
+library(stringr)
+
+# 物种学名列表
+species_names <- c(
+  "Pinus massoniana",
+  "Cunninghamia lanceolata",
+  "Eucalyptus robusta",
+  "Cinnamomum camphora"
+)
+
+# 提取属名（第一个单词）
+genus <- str_extract(species_names, ___)
+
+# 提取种加词（第二个单词）
+specific_epithet <- str_extract(species_names, ___)
+
+# 创建数据框
+species_df <- data.frame(
+  full_name = species_names,
+  genus = genus,
+  species = specific_epithet
+)
+
+print(species_df)
+```
+
+#### 练习 10：循环与向量化
+
+比较循环和向量化操作的性能差异。
+
+```{r}
+#| eval: false
+# 创建测试数据
+n <- 10000
+x <- rnorm(n)
+
+# 方法1：使用循环
+system.time({
+  result1 <- numeric(n)
+  for (i in 1:n) {
+    result1[i] <- x[i]^2 + 2*x[i] + 1
+  }
+})
+
+# 方法2：向量化操作
+system.time({
+  result2 <- ___  # 你的代码
+})
+
+# 验证结果是否相同
+all.equal(result1, result2)
+```
+
+### 挑战练习
+
+#### 练习 11：生态学指数计算器
+
+编写一个完整的生态学多样性指数计算器，包含多个指数。
+
+```{r}
+#| eval: false
+# 你的代码：
+ecological_indices <- function(abundance) {
+  # 移除零值
+  abundance <- abundance[abundance > 0]
+  
+  # 计算相对丰度
+  p <- abundance / sum(abundance)
+  
+  # Shannon 指数
+  shannon <- -sum(p * log(p))
+  
+  # Simpson 指数
+  simpson <- ___  # 1 - Σ(pi^2)
+  
+  # Pielou 均匀度
+  pielou <- ___  # H' / ln(S), S为物种数
+  
+  # 物种丰富度
+  richness <- ___
+  
+  # 返回结果
+  return(list(
+    shannon = shannon,
+    simpson = simpson,
+    pielou = pielou,
+    richness = richness
+  ))
+}
+
+# 测试
+test_community <- c(50, 30, 15, 10, 8, 5, 2)
+result <- ecological_indices(test_community)
+print(result)
+```
+
+#### 练习 12：数据清洗流程
+
+处理一个包含缺失值和异常值的真实数据集。
+
+```{r}
+#| eval: false
+# 创建模拟的"脏"数据
+set.seed(2024)
+dirty_data <- data.frame(
+  id = 1:20,
+  temperature = c(25, 28, NA, 30, 150, 26, 27, NA, 29, 31,
+                  24, 26, 28, -50, 27, 29, 30, 28, NA, 26),
+  humidity = c(60, 65, 70, 68, 72, NA, 66, 64, 69, 71,
+               63, 67, 69, 70, 68, NA, 65, 67, 68, 66),
+  ph = c(6.5, 6.8, 7.0, 6.9, 7.2, 6.7, NA, 6.6, 7.1, 6.8,
+         6.9, 7.0, 6.8, 6.7, NA, 6.9, 7.1, 6.8, 6.9, 7.0)
+)
+
+# 任务：
+# 1. 识别缺失值
+missing_summary <- ___
+
+# 2. 识别异常值（3倍标准差法）
+identify_outliers <- function(x) {
+  mean_x <- mean(x, na.rm = TRUE)
+  sd_x <- sd(x, na.rm = TRUE)
+  outliers <- abs(x - mean_x) > 3 * sd_x
+  return(outliers)
+}
+
+# 3. 清洗数据
+clean_data <- dirty_data %>%
+  mutate(
+    temperature = ifelse(___, NA, temperature),  # 替换异常值为NA
+    humidity = ifelse(___, NA, humidity)
+  ) %>%
+  filter(___)  # 移除缺失值过多的行
+
+# 4. 填补缺失值（用均值）
+clean_data <- clean_data %>%
+  mutate(
+    temperature = ifelse(is.na(temperature), ___, temperature),
+    humidity = ifelse(is.na(humidity), ___, humidity),
+    ph = ifelse(is.na(ph), ___, ph)
+  )
+
+print(clean_data)
+```
+
+#### 练习 13：自定义 ggplot2 主题
+
+创建一个适合学术论文的自定义绘图主题。
+
+```{r}
+#| eval: false
+library(ggplot2)
+
+# 创建自定义主题
+theme_academic <- function() {
+  theme_minimal() +
+  theme(
+    # 标题
+    plot.title = element_text(size = 14, face = "bold", hjust = 0.5),
+    # 坐标轴标签
+    axis.title = element_text(size = 12, face = "bold"),
+    axis.text = element_text(size = 10),
+    # 图例
+    legend.title = element_text(size = 11, face = "bold"),
+    legend.text = element_text(size = 10),
+    legend.position = "top",
+    # 网格线
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "gray90"),
+    # 背景
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA)
+  )
+}
+
+# 测试主题
+ggplot(iris, aes(x = Sepal.Length, y = Sepal.Width, color = Species)) +
+  geom_point(size = 3, alpha = 0.7) +
+  labs(
+    title = "鸢尾花萼片尺寸关系",
+    x = "萼片长度 (cm)",
+    y = "萼片宽度 (cm)"
+  ) +
+  theme_academic()
+```
+
+#### 练习 14：批量数据处理
+
+编写函数批量读取和处理多个CSV文件。
+
+```{r}
+#| eval: false
+library(purrr)
+
+# 假设有多个CSV文件：data_2020.csv, data_2021.csv, data_2022.csv
+
+# 批量读取函数
+read_and_process <- function(file_path) {
+  data <- read.csv(file_path)
+  
+  # 数据处理
+  processed <- data %>%
+    filter(___) %>%
+    mutate(___) %>%
+    summarise(___)
+  
+  return(processed)
+}
+
+# 获取所有CSV文件
+file_list <- list.files(pattern = "data_.*\\.csv")
+
+# 批量处理
+all_data <- map_dfr(file_list, read_and_process, .id = "file_id")
+
+print(all_data)
+```
+
+#### 练习 15：交互式数据探索
+
+使用 `plotly` 创建交互式图表。
+
+```{r}
+#| eval: false
+library(plotly)
+
+# 创建交互式散点图
+p <- plot_ly(
+  data = iris,
+  x = ~Sepal.Length,
+  y = ~Sepal.Width,
+  color = ~Species,
+  type = "scatter",
+  mode = "markers",
+  marker = list(size = 10),
+  text = ~paste("物种:", Species, "<br>萼片长:", Sepal.Length, "<br>萼片宽:", Sepal.Width)
+) %>%
+  layout(
+    title = "鸢尾花数据交互式探索",
+    xaxis = list(title = "萼片长度 (cm)"),
+    yaxis = list(title = "萼片宽度 (cm)")
+  )
+
+p
+```
+
+### 提交要求
+
+1. 将你的代码保存为 `r-basics-exercises.R` 文件
+2. 确保代码可以运行，没有语法错误
+3. 添加必要的注释说明你的思路
+4. 提交到 GitHub 仓库的 `homework/` 目录
+5. 在 README.md 中记录完成情况和遇到的问题
+
+### 评分标准
+
+| 项目 | 分值 | 说明 |
+|------|------|------|
+| 代码正确性 | 40% | 代码能正确运行，结果准确 |
+| 代码规范性 | 30% | 变量命名清晰，代码格式规范 |
+| 注释完整性 | 20% | 关键步骤有注释说明 |
+| 创新性 | 10% | 使用了课程中学到的高级技巧 |
+
+### 参考答案
+
+#### 练习 1 参考答案
+
+```{r}
+# 创建植物数据框
+plant_data <- data.frame(
+  species = c("马尾松", "杉木", "桉树", "樟树", "枫香"),
+  height = c(15.5, 12.3, 18.7, 10.2, 14.8),
+  leaf_area = c(25.3, 18.5, 32.1, 22.7, 28.4),
+  is_tree = c(TRUE, TRUE, TRUE, TRUE, TRUE)
+)
+
+# 查看数据结构
+str(plant_data)
+
+# 计算株高统计量
+mean_height <- mean(plant_data$height)
+sd_height <- sd(plant_data$height)
+cv_height <- (sd_height / mean_height) * 100
+
+cat("平均株高:", round(mean_height, 2), "m\n")
+cat("标准差:", round(sd_height, 2), "m\n")
+cat("变异系数:", round(cv_height, 2), "%\n")
+```
+
+#### 练习 2 参考答案
+
+```{r}
+# 筛选株高大于平均值的植物
+mean_height <- mean(plant_data$height)
+tall_plants <- plant_data[plant_data$height > mean_height, ]
+print(tall_plants)
+
+# 或使用 dplyr
+library(dplyr)
+tall_plants <- plant_data %>%
+  filter(height > mean(height))
+print(tall_plants)
+```
+
+#### 练习 3 参考答案
+
+```{r}
+# 绘制萼片宽度分布直方图
+hist(iris$Sepal.Width, 
+     main = "鸢尾花萼片宽度分布",
+     xlab = "萼片宽度 (cm)",
+     ylab = "频数",
+     col = "lightblue",
+     breaks = 15,
+     border = "white")
+
+# 添加均值线
+abline(v = mean(iris$Sepal.Width), col = "red", lwd = 2, lty = 2)
+legend("topright", legend = "均值", col = "red", lty = 2, lwd = 2)
+```
+
+#### 练习 4 参考答案
+
+```{r}
+# Shannon 多样性指数计算
+shannon_index <- function(abundance) {
+  # 移除零值
+  abundance <- abundance[abundance > 0]
+  
+  # 计算相对丰度
+  p <- abundance / sum(abundance)
+  
+  # 计算 Shannon 指数: H' = -Σ(pi * ln(pi))
+  H <- -sum(p * log(p))
+  
+  return(H)
+}
+
+# 测试
+test_data <- c(10, 5, 3, 2, 1)
+result <- shannon_index(test_data)
+cat("Shannon 多样性指数:", round(result, 3), "\n")
+```
+
+#### 练习 5 参考答案
+
+```{r}
+library(dplyr)
+
+# 使用管道操作符分析 iris 数据
+result <- iris %>%
+  filter(Petal.Length > 4) %>%
+  group_by(Species) %>%
+  summarise(
+    n = n(),
+    mean_petal_width = mean(Petal.Width),
+    sd_petal_width = sd(Petal.Width),
+    .groups = "drop"
+  )
+
+print(result)
+```
+
+#### 练习 6 参考答案
+
+```{r}
+library(dplyr)
+
+set.seed(2024)
+forest_data <- data.frame(
+  plot_id = rep(1:5, each = 4),
+  species = rep(c("马尾松", "杉木", "桉树", "樟树"), 5),
+  dbh = rnorm(20, mean = 20, sd = 5),
+  height = rnorm(20, mean = 12, sd = 3)
+) %>%
+  mutate(
+    dbh = round(pmax(dbh, 5), 1),
+    height = round(pmax(height, 3), 1),
+    biomass = 0.05 * dbh^2 * height  # 生物量计算公式
+  )
+
+# 按物种分组统计
+species_summary <- forest_data %>%
+  group_by(species) %>%
+  summarise(
+    n_trees = n(),
+    mean_biomass = round(mean(biomass), 2),
+    total_biomass = round(sum(biomass), 2),
+    .groups = "drop"
+  )
+
+print(species_summary)
+```
+
+#### 练习 7 参考答案
+
+```{r}
+# 土壤质量指数计算函数
+calculate_soil_quality <- function(ph, organic_matter) {
+  # 参数检查
+  if (!is.numeric(ph)) {
+    stop("pH 必须是数值型")
+  }
+  
+  if (!is.numeric(organic_matter)) {
+    stop("有机质含量必须是数值型")
+  }
+  
+  # 计算质量指数
+  tryCatch(
+    {
+      # pH 评分 (最优范围 6.0-7.5)
+      ph_score <- ifelse(ph >= 6.0 & ph <= 7.5, 100,
+                        ifelse(ph < 6.0, 100 - (6.0 - ph) * 20,
+                               100 - (ph - 7.5) * 20))
+      
+      # 有机质评分 (>3% 为优)
+      om_score <- min(organic_matter / 3 * 100, 100)
+      
+      # 综合质量指数
+      quality_index <- (ph_score + om_score) / 2
+      
+      return(round(quality_index, 2))
+    },
+    error = function(e) {
+      cat("计算出错:", e$message, "\n")
+      return(NA)
+    }
+  )
+}
+
+# 测试
+cat("质量指数:", calculate_soil_quality(6.5, 3.2), "\n")
+calculate_soil_quality("invalid", 3.2)  # 应该报错
+```
+
+#### 练习 11 参考答案
+
+```{r}
+# 生态学多样性指数计算器
+ecological_indices <- function(abundance) {
+  # 移除零值
+  abundance <- abundance[abundance > 0]
+  
+  # 计算相对丰度
+  p <- abundance / sum(abundance)
+  
+  # Shannon 指数
+  shannon <- -sum(p * log(p))
+  
+  # Simpson 指数
+  simpson <- 1 - sum(p^2)
+  
+  # 物种丰富度
+  richness <- length(abundance)
+  
+  # Pielou 均匀度
+  pielou <- shannon / log(richness)
+  
+  # 返回结果
+  return(list(
+    shannon = round(shannon, 3),
+    simpson = round(simpson, 3),
+    pielou = round(pielou, 3),
+    richness = richness,
+    total_abundance = sum(abundance)
+  ))
+}
+
+# 测试
+test_community <- c(50, 30, 15, 10, 8, 5, 2)
+result <- ecological_indices(test_community)
+cat("\n生态学多样性指数:\n")
+cat("Shannon 指数:", result$shannon, "\n")
+cat("Simpson 指数:", result$simpson, "\n")
+cat("Pielou 均匀度:", result$pielou, "\n")
+cat("物种丰富度:", result$richness, "\n")
+cat("总个体数:", result$total_abundance, "\n")
+```
+
+### 学习资源
+
+#### 在线教程
+
+1. **R for Data Science** (https://r4ds.had.co.nz/)
+   - Hadley Wickham 的经典教材
+   - 涵盖 tidyverse 生态系统
+   - 免费在线阅读
+
+2. **Advanced R** (https://adv-r.hadley.nz/)
+   - R 语言进阶内容
+   - 深入理解 R 的工作原理
+   - 适合有一定基础的学习者
+
+3. **RStudio Cheatsheets** (https://www.rstudio.com/resources/cheatsheets/)
+   - 各种 R 包的速查表
+   - 图文并茂，便于快速查阅
+
+#### 视频课程
+
+1. **Coursera - R Programming** (Johns Hopkins University)
+   - 系统的 R 语言入门课程
+   - 包含编程作业和项目
+
+2. **DataCamp - Introduction to R**
+   - 交互式学习平台
+   - 边学边练
+
+#### 书籍推荐
+
+1. **《R语言实战》** (R in Action, Robert Kabacoff)
+   - 全面的 R 语言参考书
+   - 适合初学者到中级用户
+
+2. **《ggplot2: 数据分析与图形艺术》** (ggplot2: Elegant Graphics for Data Analysis)
+   - ggplot2 的权威指南
+   - 大量可视化案例
+
+3. **《R数据科学》** (R for Data Science, 中文版)
+   - tidyverse 生态系统入门
+   - 实战导向
+
+#### 社区资源
+
+1. **Stack Overflow** (https://stackoverflow.com/questions/tagged/r)
+   - 最大的编程问答社区
+   - 搜索 R 相关问题
+
+2. **RStudio Community** (https://community.rstudio.com/)
+   - RStudio 官方社区
+   - 友好的学习氛围
+
+3. **R-bloggers** (https://www.r-bloggers.com/)
+   - R 语言博客聚合网站
+   - 最新技术和案例分享
+
+### 常见错误与调试技巧
+
+#### 常见错误类型
+
+1. **对象未找到 (object not found)**
+   ```r
+   # 错误示例
+   mean(my_data$height)  # Error: object 'my_data' not found
+   
+   # 解决方法
+   ls()  # 查看当前环境中的对象
+   ```
+
+2. **下标越界 (subscript out of bounds)**
+   ```r
+   # 错误示例
+   x <- c(1, 2, 3)
+   x[5]  # NA (不会报错，但返回 NA)
+   
+   # 检查长度
+   length(x)
+   ```
+
+3. **类型不匹配**
+   ```r
+   # 错误示例
+   "5" + 3  # Error: non-numeric argument
+   
+   # 解决方法
+   as.numeric("5") + 3  # 8
+   ```
+
+#### 调试工具
+
+1. **print() 和 cat()**
+   ```r
+   my_function <- function(x) {
+     cat("输入值:", x, "\n")  # 调试输出
+     result <- x^2
+     cat("结果:", result, "\n")
+     return(result)
+   }
+   ```
+
+2. **browser()**
+   ```r
+   my_function <- function(x) {
+     browser()  # 在此处暂停，进入交互式调试
+     result <- x^2
+     return(result)
+   }
+   ```
+
+3. **traceback()**
+   ```r
+   # 运行出错后
+   traceback()  # 查看错误调用栈
+   ```
+
+4. **debug() 和 undebug()**
+   ```r
+   debug(my_function)  # 开启调试模式
+   my_function(5)      # 逐步执行
+   undebug(my_function)  # 关闭调试模式
+   ```
+
+### 代码风格指南
+
+#### 命名规范
+
+```r
+# 推荐：使用小写字母和下划线
+plant_height <- 15.5
+species_name <- "Pinus massoniana"
+
+# 不推荐：驼峰命名或大写字母
+PlantHeight <- 15.5  # 不推荐
+SPECIES_NAME <- "Pinus massoniana"  # 不推荐
+```
+
+#### 代码格式
+
+```r
+# 推荐：运算符两侧加空格
+x <- 5 + 3
+y <- x * 2
+
+# 不推荐：没有空格
+x<-5+3
+y<-x*2
+
+# 推荐：逗号后加空格
+data.frame(x = 1:5, y = 6:10)
+
+# 不推荐：没有空格
+data.frame(x=1:5,y=6:10)
+```
+
+#### 注释规范
+
+```r
+# 推荐：清晰的注释说明
+# 计算 Shannon 多样性指数
+shannon <- -sum(p * log(p))
+
+# 不推荐：无意义的注释
+x <- 5  # 赋值 5 给 x
+```
+
+### 性能优化技巧
+
+#### 向量化操作
+
+```r
+# 慢：使用循环
+result <- numeric(1000)
+for (i in 1:1000) {
+  result[i] <- i^2
+}
+
+# 快：向量化操作
+result <- (1:1000)^2
+```
+
+#### 预分配内存
+
+```r
+# 慢：动态增长
+result <- c()
+for (i in 1:1000) {
+  result <- c(result, i^2)
+}
+
+# 快：预分配内存
+result <- numeric(1000)
+for (i in 1:1000) {
+  result[i] <- i^2
+}
+```
+
+#### 使用 apply 族函数
+
+```r
+# 对矩阵的每一行求和
+mat <- matrix(1:12, nrow = 3)
+
+# 使用 apply
+row_sums <- apply(mat, 1, sum)
+
+# 更快：使用专门的函数
+row_sums <- rowSums(mat)
+```
+
+### 常见问题解答
+
+**Q1: 如何检查我的代码是否正确？**
+
+A: 使用 `source()` 函数运行整个脚本，确保没有报错：
+
+```{r}
+#| eval: false
+source("r-basics-exercises.R")
+```
+
+**Q2: 遇到错误怎么办？**
+
+A: 
+1. 仔细阅读错误信息
+2. 使用 `traceback()` 查看错误发生位置
+3. 使用 `browser()` 进入调试模式
+4. 在课程讨论区提问
+
+**Q3: 如何提高代码质量？**
+
+A:
+1. 使用有意义的变量名
+2. 添加注释说明复杂逻辑
+3. 遵循 tidyverse 风格指南
+4. 使用 `lintr` 包检查代码风格
+
+```{r}
+#| eval: false
+install.packages("lintr")
+library(lintr)
+lint("r-basics-exercises.R")
+```

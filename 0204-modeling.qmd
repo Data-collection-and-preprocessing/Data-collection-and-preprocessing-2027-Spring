@@ -7,35 +7,52 @@ execute:
 
 ## 引言
 
-在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来 100 年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，**生态学模型（Ecological Modeling）**成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的"数据生成器"，它能够产生跨越时空限制的虚拟数据，帮助我们探索"如果……会怎样"的情景。
+在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来100年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，**生态学模型（Ecological Modeling）**成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的"数据生成器"，它能够产生跨越时空限制的虚拟数据，帮助我们探索"如果……会怎样"的情景。
+
+生态学建模的本质是用数学语言描述生态系统的结构与过程。从逻辑斯蒂增长模型（Logistic Growth Model）到最大熵生态位模型（MaxEnt），从单物种种群动态到多营养级食物网模型，建模技术的发展始终与生态学理论演进紧密交织（Case, 2000, *An Illustrated Guide to Theoretical Ecology*, Oxford University Press）。在本章中，我们将系统介绍生态学建模的基本框架、数据生成流程，并重点演示两类与生态学研究生科研实践密切相关的模型：**种群动态模型**和**物种分布模型（SDM）**。
 
 ## 模型作为"数据生成器"
 
 模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。
+
 *   **输入数据**：模型需要真实的观测或实验数据作为初始条件和参数。
 *   **输出数据**：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。
+
+### 为什么生态学家需要模型生成数据？
+
+1. **时空尺度的跨越**：野外实验往往受限于有限的时空范围。例如，气候变化对森林演替的影响需要数十年甚至数百年的观测，而模型可以在数分钟内模拟这一过程。
+2. **不可逆实验的替代**：某些生态学实验（如外来物种引入）一旦实施就无法撤回，模型可以在实验前评估潜在风险。
+3. **数据稀缺场景的推断**：对于濒危物种或未调查区域，模型可以利用已有数据和环境变量关系进行空间推断。
 
 ## 主要的生态学模型类型
 
 ### 1. 统计模型 (Statistical Models)
+
 利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。
+
 *   **特点**：侧重于相关性，对历史数据依赖性强。
 *   **应用**：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。
 
 ### 2. 机理模型 (Process-based Models)
+
 基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。
+
 *   **特点**：具有较强的生物学解释力，能够预测超出历史经验范围的情景。
-*   **应用**：植被动态模型（DGVMs），模拟全球植被对大气 CO2 浓度升高的响应。
+*   **应用**：植被动态模型（DGVMs），模拟全球植被对大气CO₂浓度升高的响应。
 
 ### 3. 个体为本模型 (Agent-Based Models, ABM)
+
 模拟大量具有独立决策能力的个体（如动物、植物或人类）及其相互作用。
+
 *   **特点**：能够观察到从微观行为中"涌现"出的宏观群体模式。
 *   **应用**：动物迁徙路径模拟、流行病在野生动物种群中的传播。
 
 ### 4. 地球系统模型 (Earth System Models)
+
 集成大气、海洋、陆地生态系统的超大规模数值模拟系统。
+
 *   **特点**：处理全球尺度的复杂反馈关系。
-*   **应用**：IPCC 气候变化评估报告中的生态系统响应预测。
+*   **应用**：IPCC气候变化评估报告中的生态系统响应预测。
 
 ## 模型数据的生成流程
 
@@ -46,13 +63,443 @@ execute:
 ## 模型数据的验证与不确定性
 
 模型生成的数据并非"真实"数据，其可靠性取决于：
+
 *   **模型校准 (Calibration)**：调整参数使模型输出尽可能接近已知的观测值。
 *   **模型验证 (Validation)**：使用未参与建模的独立数据集来检验模型的预测准确性。
 *   **不确定性分析**：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。
 
-## R 代码示例：简单统计模型
+## 种群动态模型：逻辑斯蒂增长与Ricker模型
 
-下面以一个经典的生态学问题——**树高与胸径的关系**——为例，演示如何在 R 中构建线性回归模型、进行模型诊断和结果解读。
+种群动态是生态学最基础的研究主题之一。理解种群如何随时间变化，对于野生动植物管理、生物多样性保护、入侵物种防控等领域具有直接的应用价值。
+
+### 1. 逻辑斯蒂增长模型 (Logistic Growth Model)
+
+逻辑斯蒂模型假设资源有限，种群增长呈S型曲线，密度制约效应使增长率随种群规模增加而下降。其微分形式为：
+
+$$\frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)$$
+
+其中：$N$ 为种群大小，$r$ 为内禀增长率，$K$ 为环境容纳量。
+
+**R代码实现**：
+
+```{r}
+library(tibble)
+library(ggplot2)
+library(dplyr)
+
+# 定义逻辑斯蒂增长函数
+logistic_growth <- function(N0, r, K, t) {
+  # N(t) = K / (1 + ((K - N0) / N0) * exp(-r * t))
+  K / (1 + ((K - N0) / N0) * exp(-r * t))
+}
+
+# 参数设置
+N0 <- 10       # 初始种群大小
+r <- 0.3       # 内禀增长率
+K <- 500       # 环境容纳量
+t_max <- 50    # 模拟时间步
+
+# 生成时间序列
+time_steps <- 0:t_max
+N_sim <- logistic_growth(N0, r, K, time_steps)
+
+# 创建数据框
+logistic_df <- tibble(
+  time = time_steps,
+  population = N_sim
+)
+
+# 可视化
+ggplot(logistic_df, aes(x = time, y = population)) +
+  geom_line(color = "steelblue", linewidth = 1) +
+  geom_hline(yintercept = K, linetype = "dashed", color = "gray40") +
+  annotate("text", x = t_max * 0.7, y = K + 20, label = "K (环境容纳量)") +
+  labs(
+    x = "时间 (年)",
+    y = "种群大小 N(t)",
+    title = "逻辑斯蒂增长曲线",
+    subtitle = paste0("N0 = ", N0, ", r = ", r, ", K = ", K)
+  ) +
+  theme_minimal()
+```
+
+::: {.callout-note title="逻辑斯蒂模型的两个关键阈值"}
+- **拐点** ($N = K/2$)：种群增长速率达到最大，之后开始下降
+- **环境容纳量** ($K$)：种群长期平均规模的上限
+:::
+
+### 2. Ricker模型：考虑过度补偿效应
+
+Ricker模型在逻辑斯蒂基础上增加了过度补偿（overcompensation）效应，即种群在低密度时可能超调K值，导致振荡：
+
+$$N_{t+1} = N_t \cdot e^{r\left(1 - \frac{N_t}{K}\right)}$$
+
+**R代码实现**：
+
+```{r}
+# Ricker差分方程模型
+ricker_model <- function(N0, r, K, t_max) {
+  N <- numeric(t_max + 1)
+  N[1] <- N0
+  for (t in 1:t_max) {
+    N[t + 1] <- N[t] * exp(r * (1 - N[t] / K))
+  }
+  return(N)
+}
+
+# 参数设置：不同的r值展示不同动态
+params <- list(
+  "低增长率 (r=0.5)" = list(r = 0.5, K = 500, color = "steelblue"),
+  "中增长率 (r=1.5)" = list(r = 1.5, K = 500, color = "forestgreen"),
+  "高增长率 (r=2.5)" = list(r = 2.5, K = 500, color = "darkorange"),
+  "混沌动态 (r=3.5)" = list(r = 3.5, K = 500, color = "firebrick")
+)
+
+# 模拟不同r值的种群动态
+ricker_df <- lapply(names(params), function(name) {
+  p <- params[[name]]
+  N <- ricker_model(N0 = 50, r = p$r, K = p$K, t_max = 100)
+  tibble(
+    time = 0:100,
+    population = N,
+    scenario = name,
+    color = p$color
+  )
+}) |> bind_rows()
+
+# 可视化种群动态
+ggplot(ricker_df, aes(x = time, y = population, color = scenario)) +
+  geom_line(linewidth = 0.8) +
+  geom_hline(yintercept = 500, linetype = "dashed", alpha = 0.5) +
+  scale_color_manual(values = setNames(sapply(params, `[[`, "color"), names(params))) +
+  labs(
+    x = "时间 (年)",
+    y = "种群大小 N(t)",
+    title = "Ricker模型的种群动态",
+    color = "情景"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+```
+
+::: {.callout-tip title="Ricker模型的生态学意义"}
+当 $r > 2.692$ 时，Ricker模型进入混沌动态——这意味着长期种群预测变得不可能，但短期内仍可管理。这一发现对渔业管理（如MSY最大可持续产量）有重要启示。
+:::
+
+### 3. 矩阵模型 (Leslie矩阵)
+
+对于具有年龄或阶段结构的种群，需要使用矩阵模型来描述不同阶段之间的转移概率：
+
+$$\mathbf{N}_{t+1} = \mathbf{A} \cdot \mathbf{N}_t$$
+
+**R代码实现**：
+
+```{r}
+library(expm)  # 矩阵指数运算
+
+# 定义Leslie矩阵（假设三阶段：幼体、亚成体、成体）
+# 行：下一个阶段
+# 列：从当前阶段转移
+leslie_matrix <- matrix(c(
+  0,    0,    0.8,   # 幼体：来自成体的繁殖
+  0.5,  0,    0,     # 亚成体：来自幼体的存活
+  0,    0.7,  0.9    # 成体：来自亚成体和成体的存活
+), nrow = 3, ncol = 3, byrow = TRUE)
+
+# 初始种群向量：100幼体、50亚成体、30成体
+N0_vec <- c(100, 50, 30)
+
+# 模拟30年的种群动态
+n_years <- 50
+pop_matrix <- matrix(NA, nrow = 3, ncol = n_years + 1)
+pop_matrix[, 1] <- N0_vec
+
+for (t in 1:n_years) {
+  pop_matrix[, t + 1] <- leslie_matrix %*% pop_matrix[, t]
+}
+
+# 转换为长格式数据
+stage_names <- c("幼体", "亚成体", "成体")
+pop_df <- tibble(
+  year = rep(0:n_years, each = 3),
+  stage = rep(stage_names, times = n_years + 1),
+  population = as.vector(pop_matrix)
+)
+
+# 可视化
+ggplot(pop_df, aes(x = year, y = population, color = stage)) +
+  geom_line(linewidth = 1) +
+  labs(
+    x = "时间 (年)",
+    y = "种群大小",
+    title = "三阶段种群的年龄结构动态 (Leslie矩阵模型)",
+    color = "生命阶段"
+  ) +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# 计算种群增长率和稳定阶段分布
+eigen_result <- eigen(leslie_matrix)
+lambda <- max(Re(eigen_result$values))  # 主导特征值 = 种群增长率
+stable_stage <- Re(eigen_result$vectors[, which.max(Re(eigen_result$values))])
+stable_stage <- stable_stage / sum(stable_stage)  # 归一化
+
+cat("种群增长率 (λ) =", round(lambda, 4), "\n")
+cat("稳定阶段分布:", round(stable_stage * 100, 1), "%\n")
+```
+
+::: {.callout-note title="矩阵模型的实际应用"}
+矩阵模型（如Lefkovitch矩阵、Leslie矩阵）广泛应用于濒危物种的生命周期分析。例如，树木的芽库-幼苗-成体转移矩阵、昆虫的卵-幼虫-蛹-成虫矩阵等。`popbio` 包提供了专门的分析函数。
+:::
+
+## 物种分布模型 (Species Distribution Models, SDM)
+
+物种分布模型是生态学研究中应用最广泛的统计建模技术之一。其核心思想是：根据已知物种分布点（presence）和环境变量（如气候、土壤、地形），建立物种"在哪里可能存在"的预测模型。
+
+### 基本原理
+
+SDM假设物种的当前分布是其生态位（niche）的映射。通过分析已知分布点的环境特征，模型可以推断物种的生态位边界，进而预测在其他地点的存在概率。
+
+SDM类型繁多，本章重点介绍两类：
+
+1. **MaxEnt（最大熵模型）**：基于Presence-only数据，适合调查不充分的物种
+2. **GLM/GAM（广义线性/可加模型）**：基于Presence-Absence数据，适合调查设计完善的数据
+
+### 数据准备：模拟物种分布数据
+
+在实际研究中，物种分布数据可能来自：
+- 样方调查（presence/absence）
+- 公民科学数据库（GBIF, eBird）
+- 遥感影像（植被指数、地表温度）
+
+这里我们使用模拟数据演示完整流程：
+
+```{r}
+library(tibble)
+library(dplyr)
+library(ggplot2)
+
+set.seed(123)
+
+# 模拟研究区域：100m × 100m 栅格
+grid_size <- 100
+n_cells <- grid_size^2
+
+# 环境变量：温度（随纬度/经度梯度变化）和降水（空间自相关）
+env_data <- tibble(
+  cell_id = 1:n_cells,
+  x = rep(1:grid_size, each = grid_size),
+  y = rep(1:grid_size, times = grid_size),
+  temperature = 15 + 0.1 * y + rnorm(n_cells, 0, 1),  # 温度随纬度增加
+  precipitation = 800 + 0.05 * x + 0.08 * y + rnorm(n_cells, 0, 30)  # 降水梯度
+)
+
+# 物种生态位参数（假设该物种偏好温暖湿润环境）
+beta0 <- -5  # 基础出现率
+beta_temp <- 0.15  # 温度效应
+beta_precip <- 0.005  # 降水效应
+prob_presence <- plogis(beta0 + beta_temp * env_data$temperature + 
+                         beta_precip * env_data$precipitation)
+
+# 生成物种分布（Presence-Absence）
+env_data <- env_data |>
+  mutate(
+    presence = rbinom(n_cells, 1, prob_presence),
+    probability = prob_presence
+  )
+
+# 可视化真实分布
+ggplot(env_data, aes(x = x, y = y, fill = presence)) +
+  geom_raster() +
+  scale_fill_viridis_c(name = "Presence", na.value = "white", direction = -1) +
+  labs(
+    x = "X坐标",
+    y = "Y坐标",
+    title = "模拟物种的真实分布"
+  ) +
+  theme_minimal()
+```
+
+### 使用GLM建模物种分布
+
+**R代码实现**：
+
+```{r}
+# 拟合广义线性模型（Binomial家族）
+sdm_glm <- glm(
+  presence ~ temperature + precipitation,
+  data = env_data,
+  family = binomial(link = "logit")
+)
+
+summary(sdm_glm)
+
+# 预测：计算每个栅格的存在概率
+env_data <- env_data |>
+  mutate(
+    pred_prob = predict(sdm_glm, type = "response"),
+    pred_binary = ifelse(pred_prob > 0.5, 1, 0)
+  )
+
+# 模型评估：计算AUC（Area Under the ROC Curve）
+library(pROC)
+
+roc_result <- roc(env_data$presence, env_data$pred_prob)
+auc_value <- auc(roc_result)
+cat("模型AUC =", round(auc_value, 4), "\n")
+
+# 可视化ROC曲线
+ggroc(roc_result, color = "steelblue", size = 1) +
+  annotate("text", x = 0.7, y = 0.2, label = paste("AUC =", round(auc_value, 3))) +
+  labs(
+    title = "物种分布模型的ROC曲线",
+    x = "假阳性率 (1 - 特异性)",
+    y = "真阳性率 (敏感性)"
+  ) +
+  theme_minimal()
+```
+
+::: {.callout-tip title="AUC值的解读"}
+- AUC > 0.9：优秀模型
+- AUC 0.8-0.9：良好模型
+- AUC 0.7-0.8：可接受模型
+- AUC < 0.7：模型预测能力差
+- AUC = 0.5：随机预测（无预测能力）
+:::
+
+### 可视化预测结果
+
+```{r}
+#| layout-ncol: 2
+#| fig-height: 5
+
+# 1. 预测概率空间分布
+p1 <- ggplot(env_data, aes(x = x, y = y, fill = pred_prob)) +
+  geom_raster() +
+  scale_fill_viridis_c(name = "存在概率", direction = -1) +
+  labs(title = "SDM预测的存在概率分布") +
+  theme_minimal() +
+  theme(legend.position = "bottom")
+
+# 2. 预测 vs 真实分布对比
+p2 <- ggplot(env_data, aes(x = probability, y = pred_prob)) +
+  geom_point(alpha = 0.3, size = 0.5) +
+  geom_abline(slope = 1, intercept = 0, color = "red", linetype = "dashed") +
+  labs(
+    x = "真实存在概率",
+    y = "模型预测概率",
+    title = "预测精度检验"
+  ) +
+  theme_minimal()
+
+print(p1)
+print(p2)
+```
+
+### 使用MaxEnt建模（通过dismo包）
+
+MaxEnt是物种分布建模中最流行的Presence-only方法之一。它通过最大化物种分布信息的熵来估计物种的生态位边界。
+
+**R代码实现**：
+
+```{r}
+#| eval: false
+library(dismo)
+
+# 检查MaxEnt程序是否可用
+if (file.exists(system.file("java/maxent.jar", package = "dismo"))) {
+  cat("MaxEnt JAR文件已安装\n")
+} else {
+  cat("请下载MaxEnt并将maxent.jar放置在正确位置\n")
+}
+
+# 注意：在实际使用中，需要提供环境变量的栅格文件（.asc或.tiff格式）
+# 以下为伪代码演示分析流程：
+
+# 1. 读取环境变量栅格
+# env_layers <- stack(c("temperature.asc", "precipitation.asc"))
+
+# 2. 提取存在点的环境值
+# presence_points <- extract(env_layers, known_sites)
+
+# 3. 运行MaxEnt（需要maxent.jar）
+# maxent_model <- maxent(env_layers, presence_points)
+
+# 4. 预测物种分布
+# prediction <- predict(maxent_model, env_layers)
+```
+
+::: {.callout-note title="MaxEnt的实际使用注意事项"}
+MaxEnt模型需要从 https://biodiversityinformatics.amnh.org/open_source/maxent/ 下载独立的Java程序（maxent.jar），并放置在R库目录的正确位置。详细的安装说明和操作流程请参考Phillips等人的原始论文（Phillips et al., 2006, *Ecological Modelling*, 190: 231-259, DOI: 10.1016/j.ecolmodel.2005.03.026）。
+:::
+
+## 实战技巧
+
+### 1. 模型选择指南
+
+| 研究问题 | 推荐模型 | 理由 |
+|---------|---------|------|
+| 物种分布预测 | MaxEnt, GLM, GAM | 成熟方法，生态学解释清晰 |
+| 种群动态预测 | 逻辑斯蒂, Ricker, 矩阵模型 | 理论基础扎实，参数可估计 |
+| 群落结构分析 | RDA, CCA, NMDS | 多元统计，整合多物种信息 |
+| 空间格局分析 | Moran's I, Variogram, kriging | 考虑空间自相关 |
+| 时间序列预测 | ARIMA, STL, Prophet | 捕捉趋势和周期性 |
+
+### 2. 参数调优策略
+
+**交叉验证（Cross-Validation）**：
+
+- 将数据分为k个子集，轮流使用k-1个子集训练，1个验证
+- 避免过拟合，获得更稳健的模型性能估计
+- `caret` 包提供了统一的交叉验证框架
+
+```{r}
+# 使用caret包进行10折交叉验证
+library(caret)
+
+# 设置交叉验证
+train_control <- trainControl(
+  method = "cv",
+  number = 10,
+  savePredictions = TRUE,
+  classProbs = TRUE
+)
+
+# 训练GLM模型（以物种分布数据为例）
+sdm_cv <- train(
+  as.factor(presence) ~ temperature + precipitation,
+  data = env_data,
+  method = "glm",
+  trControl = train_control
+)
+
+cat("交叉验证准确率:", round(mean(sdm_cv$resample$Accuracy), 3), "\n")
+```
+
+**超参数搜索**（以GAM为例）：
+
+GAM中平滑项的参数（k）需要通过交叉验证来选择。k值过小会欠拟合，k值过大会过拟合。
+
+### 3. 结果解读规范
+
+发表论文时，模型结果的解读应包含：
+
+1. **模型结构报告**：列出所有自变量及其编码方式
+2. **效应大小**：回归系数、标准误、置信区间
+3. **模型性能指标**：AUC、R²、RMSE、交叉验证结果
+4. **不确定性量化**：参数不确定性和预测不确定性
+5. **模型局限性**：明确说明模型假设和外推限制
+
+::: {.callout-warning title="常见误区"}
+1. **混淆相关性与因果**：SDM揭示的是"物种分布与环境变量的关联"，不是因果关系
+2. **忽视空间自相关**：相邻样点的数据不独立，会导致虚假的高精度
+3. **过度依赖p值**：统计显著不等于生态学上重要
+4. **外推风险**：模型无法可靠预测环境条件超出训练数据范围的区域
+:::
+
+## R代码示例：简单统计模型
+
+下面以一个经典的生态学问题——**树高与胸径的关系**——为例，演示如何在R中构建线性回归模型、进行模型诊断和结果解读。
 
 ### 准备数据
 
@@ -63,7 +510,7 @@ library(tibble)
 library(ggplot2)
 library(dplyr)
 
-# 模拟 50 棵树的胸径和树高数据
+# 模拟50棵树的胸径和树高数据
 set.seed(42)
 n <- 50
 tree_data <- tibble(
@@ -90,9 +537,9 @@ summary(model)
 ```
 
 ::: {.callout-note title="如何解读 summary() 输出？"}
-- **Estimate（估计值）**：截距（Intercept）表示胸径为 0 时的预测树高，`dbh_cm` 的系数表示胸径每增加 1 cm，树高平均增加多少米
-- **Pr(>|t|)**：p 值，小于 0.05 通常认为该变量对树高有显著影响
-- **R-squared**：决定系数，表示胸径能解释树高变异的比例，越接近 1 说明模型拟合越好
+- **Estimate（估计值）**：截距（Intercept）表示胸径为0时的预测树高，`dbh_cm` 的系数表示胸径每增加1cm，树高平均增加多少米
+- **Pr(>|t|)**：p值，小于0.05通常认为该变量对树高有显著影响
+- **R-squared**：决定系数，表示胸径能解释树高变异的比例，越接近1说明模型拟合越好
 - **Residual standard error**：残差标准误，反映预测值与实际值的平均偏差
 :::
 
@@ -122,16 +569,16 @@ ggplot(tree_data, aes(x = dbh_cm, y = height_m)) +
 # 四张诊断图
 par(mar = c(4, 4, 2, 1))
 plot(model, which = 1)  # 残差 vs 拟合值：检查线性假设和等方差性
-plot(model, which = 2)  # Q-Q 图：检查残差是否服从正态分布
+plot(model, which = 2)  # Q-Q图：检查残差是否服从正态分布
 plot(model, which = 3)  # 标准化残差 vs 拟合值：检查方差齐性
 plot(model, which = 5)  # 残差 vs 杠杆值：识别强影响点
 ```
 
 ::: {.callout-tip title="诊断图怎么看？"}
-1. **残差 vs 拟合值**：点应随机分布在 0 线两侧，无明显趋势。若呈现弯曲，说明线性假设不成立
-2. **Q-Q 图**：点应大致落在对角线上。若两端偏离严重，说明残差不服从正态分布
-3. **Scale-Location 图**：红线应大致水平，否则说明存在异方差
-4. **Residuals vs Leverage**：关注 Cook's distance 超过 0.5 的点，它们可能是强影响观测值
+1. **残差 vs 拟合值**：点应随机分布在0线两侧，无明显趋势。若呈现弯曲，说明线性假设不成立
+2. **Q-Q图**：点应大致落在对角线上。若两端偏离严重，说明残差不服从正态分布
+3. **Scale-Location图**：红线应大致水平，否则说明存在异方差
+4. **Residuals vs Leverage**：关注Cook's distance超过0.5的点，它们可能是强影响观测值
 :::
 
 ### 使用模型生成预测数据
@@ -142,7 +589,7 @@ plot(model, which = 5)  # 残差 vs 杠杆值：识别强影响点
 # 为新的胸径值生成预测
 new_trees <- tibble(dbh_cm = seq(5, 40, by = 1))
 
-# 预测树高及 95% 置信区间
+# 预测树高及95%置信区间
 predictions <- predict(model, newdata = new_trees, interval = "confidence")
 pred_df <- bind_cols(new_trees, as_tibble(predictions))
 
@@ -156,12 +603,77 @@ head(pred_df)
 
 ## 总结
 
-模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家 George Box 所言："所有模型都是错的，但有些是有用的"（Box, 1976, *Journal of the American Statistical Association*, 71: 791–799, DOI: 10.1080/01621459.1976.10480949）。在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。
+模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家George Box所言："所有模型都是错的，但有些是有用的"（Box, 1976, *Journal of the American Statistical Association*, 71: 791-799, DOI: 10.1080/01621459.1976.10480949）。在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。
+
+## 延伸阅读
+
+### 经典文献
+
+1. Box, G.E.P. (1976). Science and statistics. *Journal of the American Statistical Association*, 71: 791-799. DOI: 10.1080/01621459.1976.10480949
+
+2. Caswell, H. (2001). *Matrix Population Models: Construction, Analysis, and Interpretation* (2nd ed.). Sinauer Associates.
+
+3. Elith, J. & Leathwick, J.R. (2009). Species distribution models: ecological explanation and prediction across space and time. *Annual Review of Ecology, Evolution, and Systematics*, 40: 677-697. DOI: 10.1146/annurev.ecolsys.110308.120159
+
+4. Gotelli, N.J. (2008). *A Primer of Ecology* (4th ed.). Sinauer Associates.
+
+5. Phillips, S.J., Anderson, R.P. & Schapire, R.E. (2006). Maximum entropy modeling of species geographic distributions. *Ecological Modelling*, 190: 231-259. DOI: 10.1016/j.ecolmodel.2005.03.026
+
+6. Turner, M.G., et al. (2015). Teleconnecting landscape ecology to biodiversity, ecosystem services, and human well-being. *Ecology Letters*, 18: 1189-1207. DOI: 10.1111/ele.12481
+
+### 在线资源
+
+- **MaxEnt软件**: https://biodiversityinformatics.amnh.org/open_source/maxent/
+- **Biomod2包文档**: https://biomodhub.github.io/biomod2/
+- **SDM手册**: https://consbiol.univie.ac.at/en/resources/software/sdm/
+- **R群落生态学vegandoc**: https://www.math.ntnu.no/~hrue/ECOLOGICAL/
 
 ## 课后练习
 
-1. 修改本章的线性回归代码，尝试拟合一个对数模型（`height_m ~ log(dbh_cm)`），比较其与线性模型的 R-squared 值和诊断图，判断哪个模型更合适。
+### 练习一：逻辑斯蒂模型的参数敏感性分析
 
-2. 查阅 IPCC 第六次评估报告，列举至少两种用于预测全球植被变化的机理模型（DGVM），简要说明它们的输入数据和输出数据分别是什么。
+**问题**：修改逻辑斯蒂增长模型代码，设置三组不同的参数组合（r=0.1, K=100; r=0.5, K=500; r=1.0, K=1000），将三组结果绘制在同一张图上，并讨论：（1）初始种群大小对长期平衡的影响；（2）内禀增长率r与达到K一半时间的关系。
 
-3. 使用 `predict()` 函数为胸径 50 cm 的树木生成预测树高。讨论：这个预测可靠吗？为什么？（提示：考虑外推问题）
+**参考答案**：
+
+- 当 $N_0 \ll K$ 时，逻辑斯蒂模型近似指数增长，达到K/2的时间为 $t_{1/2} = \frac{\ln(K/N_0-1)}{r}$
+- r越大，到达平衡的速度越快，但最终稳定值都是K
+- 初始条件不影响长期平衡，只影响达到平衡的过渡期
+
+### 练习二：物种分布模型评估
+
+**问题**：使用以下模拟数据，计算模型的正确率（Accuracy）、敏感性（Sensitivity）和特异性（Specificity），并绘制混淆矩阵。
+
+**提示**：可使用`caret::confusionMatrix()`函数。
+
+**参考答案**：
+
+- 正确率 = (TP + TN) / (TP + TN + FP + FN)
+- 敏感性 = TP / (TP + FN)（能正确识别多少"存在"点）
+- 特异性 = TN / (TN + FP)（能正确识别多少"不存在"点）
+
+### 练习三：模型选择与AIC比较
+
+**问题**：分别拟合以下三个模型并使用AIC比较：
+
+1. 简单线性模型：height_m ~ dbh_cm
+2. 多项式模型：height_m ~ poly(dbh_cm, 2)
+3. 对数模型：height_m ~ log(dbh_cm)
+
+哪个模型最优？使用调整R²验证AIC的结论是否一致。
+
+**参考答案**：
+
+- AIC越小越好，差异>2通常认为有实质差异
+- 多项式模型可能获得更高的R²，但可能过拟合
+- 需要结合生态学解释和预测能力综合判断
+
+### 练习四：思考外推风险
+
+**问题**：假设某物种分布模型使用温度范围为15-25°C的数据训练。如果要将模型应用于温度达到30°C的未来气候情景，讨论：（1）模型预测是否可靠？（2）哪些类型的SDM方法在外推方面更具鲁棒性？（3）如何量化外推不确定性？
+
+**参考答案**：
+
+- 超过训练数据范围的预测属于"外推"，可靠性显著下降
+- 机理模型（process-based）通常比统计模型具有更好的外推能力
+- 可以使用"novel climate space"分析识别外推区域

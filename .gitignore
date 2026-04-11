@@ -89,3 +89,18 @@ logs/
 wandb/
 
 **/*.quarto_ipynb
+
+# 临时工作文件
+*_backup.qmd
+*_expanded.qmd
+b64_backup.txt
+temp_append.txt
+check_*.py
+expand_*.py
+find_short.py
+gap-report.csv
+TEMPLATE.txt
+test.txt
+
+# 幻灯片构建产物
+slides/*.html

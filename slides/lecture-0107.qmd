@@ -1,0 +1,129 @@
+---
+title: "版本控制与协作"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+## 第七讲：版本控制与协作 {.center}
+
+[第七章 在线版本](https://data-collection-and-preprocessing.github.io/Data-collection-and-preprocessing-2027-Spring/lectures/lecture-0107.html)
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- **理解**版本控制的核心思想与 Git 的工作区、暂存区、仓库三区模型
+- **掌握** Git 基本命令：init、add、commit、push、pull、log
+- **了解** GitHub 协作模式（Collaborator 与 Fork+PR）及合并冲突解决
+- **能够应用** RStudio 内置 Git 面板进行日常版本管理
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. 为什么需要版本控制
+2. Git 核心概念与基本命令
+3. GitHub 远程协作
+4. 合并冲突解决与项目规范
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: {.incremental}
+- **本地 vs 远程仓库**：本地仓库在你电脑上，远程仓库（如 GitHub）用于备份与协作
+- **暂存区（Staging Area）**：`git add` 将文件放入暂存区，`git commit` 才正式记录——这提供了精确控制提交内容的能力
+- **合并冲突（Merge Conflict）**：当两人修改同一文件同一位置时产生，需手动选择保留哪个版本
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 命令 | 用途 | 示例 |
+|------|------|------|
+| `git init` | 初始化仓库 | `git init my-project` |
+| `git clone` | 克隆远程仓库 | `git clone URL` |
+| `git add` | 添加到暂存区 | `git add file.R` |
+| `git commit` | 提交变更 | `git commit -m "msg"` |
+| `git push` | 推送到远程 | `git push origin main` |
+| `git pull` | 拉取远程更新 | `git pull origin main` |
+| `git log` | 查看提交历史 | `git log --oneline` |
+| `git diff` | 查看差异 | `git diff file.R` |
+
+------------------------------------------------------------------------
+
+## 代码示例：Git 基本工作流
+
+```bash
+# 初始化并完成第一次提交
+git init my-project
+cd my-project
+echo "# My Project" > README.md
+
+git add README.md
+git commit -m "docs: add README"
+
+# 连接远程仓库并推送
+git remote add origin https://github.com/user/repo.git
+git push -u origin main
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- 提交信息要有意义：用 `fix: 修复数据读取编码问题` 而非 `update`
+- `.gitignore` 文件排除不需要跟踪的内容：`.Rhistory`、`.DS_Store`、`data/raw/`（大文件）
+- 养成"小步提交"习惯——每完成一个小功能就 commit，而非一天结束时一次性提交
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1：`git push` 被拒绝（rejected）怎么办？**
+
+A：通常是因为远程有你本地没有的更新。先执行 `git pull` 合并远程更改，解决可能的冲突后再 `git push`。
+
+. . .
+
+**Q2：不小心把不该提交的文件 commit 了怎么办？**
+
+A：将文件加入 `.gitignore`，然后执行 `git rm --cached filename` 从跟踪中移除（不删除本地文件），再重新提交即可。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. 版本控制解决了"final_final_FINAL.docx"问题——Git 记录每次变更，随时可回溯
+2. 工作区 → 暂存区 → 仓库的三步流程是 Git 的核心模型，`add` 和 `commit` 缺一不可
+3. GitHub 既是代码备份平台也是协作平台，掌握 push/pull 是团队协作的基础
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+1. **必做**：创建一个本地 Git 仓库，完成至少 3 次有意义的 commit，推送到 GitHub
+2. **必做**：编写一个 `.gitignore` 文件，排除 `.Rhistory`、`*.html`、`data/raw/` 等内容
+3. **选做**：与同学模拟协作——两人修改同一文件，制造并解决一次合并冲突
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+- [Pro Git Book (免费在线版)](https://git-scm.com/book/zh/v2)
+- [GitHub Docs - Hello World](https://docs.github.com/en/get-started/quickstart/hello-world)

@@ -165,14 +165,678 @@ ggplot(experiment_data, aes(x = treatment, y = biomass_g, fill = treatment)) +
 - **保留原始数据**：分析用的数据和原始记录分开存放，确保可追溯
 :::
 
+## 高级实验设计类型
+
+### 析因设计 (Factorial Design)
+
+析因设计同时考察两个或多个因子的效应及其交互作用。例如，研究温度和水分对植物生长的联合影响。
+
+#### 案例：温度×水分双因素实验
+
+```{r}
+library(tidyverse)
+
+set.seed(123)
+
+# 模拟 2×3 析因实验：2个温度水平 × 3个水分水平
+factorial_data <- expand_grid(
+  temperature = c("常温", "增温"),
+  water = c("干旱", "正常", "湿润"),
+  replicate = 1:6
+) %>%
+  mutate(
+    # 模拟生物量数据（有交互效应）
+    biomass = case_when(
+      temperature == "常温" & water == "干旱" ~ rnorm(n(), 20, 3),
+      temperature == "常温" & water == "正常" ~ rnorm(n(), 35, 4),
+      temperature == "常温" & water == "湿润" ~ rnorm(n(), 32, 4),
+      temperature == "增温" & water == "干旱" ~ rnorm(n(), 15, 3),
+      temperature == "增温" & water == "正常" ~ rnorm(n(), 45, 5),
+      temperature == "增温" & water == "湿润" ~ rnorm(n(), 50, 5)
+    ),
+    temperature = factor(temperature, levels = c("常温", "增温")),
+    water = factor(water, levels = c("干旱", "正常", "湿润"))
+  )
+
+head(factorial_data)
+```
+
+#### 双因素方差分析
+
+```{r}
+# 拟合双因素 ANOVA 模型（包含交互项）
+factorial_model <- aov(biomass ~ temperature * water, data = factorial_data)
+summary(factorial_model)
+```
+
+::: {.callout-important title="交互效应的含义"}
+- **主效应**：单个因子对响应变量的平均影响
+- **交互效应**：一个因子的效应依赖于另一个因子的水平
+- 如果交互效应显著（p < 0.05），说明两个因子不是简单相加，而是相互影响
+:::
+
+```{r}
+# 交互效应可视化
+factorial_data %>%
+  group_by(temperature, water) %>%
+  summarise(mean_biomass = mean(biomass), .groups = "drop") %>%
+  ggplot(aes(x = water, y = mean_biomass, color = temperature, group = temperature)) +
+  geom_line(linewidth = 1) +
+  geom_point(size = 3) +
+  labs(
+    x = "水分处理",
+    y = "平均生物量 (g)",
+    title = "温度与水分的交互效应",
+    color = "温度"
+  ) +
+  theme_minimal()
+```
+
+### 嵌套设计 (Nested Design)
+
+嵌套设计用于处理层级结构数据，例如：样地 → 样方 → 子样方。
+
+```{r}
+set.seed(456)
+
+# 模拟嵌套实验：3个样地，每个样地4个样方，每个样方3个子样方
+nested_data <- expand_grid(
+  site = paste0("Site", 1:3),
+  plot = 1:4,
+  subplot = 1:3
+) %>%
+  mutate(
+    plot_id = paste0(site, "_P", plot),
+    # 样地效应
+    site_effect = rep(rnorm(3, 0, 5), each = 12),
+    # 样方效应（嵌套在样地内）
+    plot_effect = rep(rnorm(12, 0, 3), each = 3),
+    # 子样方测量值
+    soil_carbon = 25 + site_effect + plot_effect + rnorm(n(), 0, 2)
+  )
+
+head(nested_data, 10)
+```
+
+#### 嵌套方差分析
+
+```{r}
+# 使用 lme4 包拟合混合效应模型
+library(lme4)
+
+# plot 嵌套在 site 内
+nested_model <- lmer(soil_carbon ~ 1 + (1|site/plot_id), data = nested_data)
+summary(nested_model)
+```
+
+### 重复测量设计 (Repeated Measures)
+
+对同一实验单元在不同时间点重复测量，常用于时间序列实验。
+
+```{r}
+set.seed(789)
+
+# 模拟植物生长的重复测量实验
+repeated_data <- expand_grid(
+  plant_id = paste0("Plant", 1:10),
+  treatment = rep(c("对照", "施肥"), each = 5),
+  time_week = 1:8
+) %>%
+  mutate(
+    # 生长曲线（施肥组生长更快）
+    height = case_when(
+      treatment == "对照" ~ 10 + 2 * time_week + rnorm(n(), 0, 1),
+      treatment == "施肥" ~ 10 + 3.5 * time_week + rnorm(n(), 0, 1.5)
+    )
+  )
+
+head(repeated_data, 12)
+```
+
+#### 重复测量可视化
+
+```{r}
+ggplot(repeated_data, aes(x = time_week, y = height, color = treatment, group = plant_id)) +
+  geom_line(alpha = 0.5) +
+  geom_smooth(aes(group = treatment), method = "lm", se = TRUE, linewidth = 1.5) +
+  labs(
+    x = "时间（周）",
+    y = "株高 (cm)",
+    title = "植物生长的重复测量实验",
+    color = "处理"
+  ) +
+  theme_minimal()
+```
+
+#### 重复测量ANOVA
+
+```{r}
+library(nlme)
+
+# 使用 nlme 包拟合重复测量模型
+rm_model <- lme(height ~ treatment * time_week, 
+                random = ~1|plant_id, 
+                data = repeated_data)
+summary(rm_model)
+```
+
+## 实验设计工具
+
+### 样本量计算
+
+在设计实验前，应估算所需的样本量以确保有足够的统计检验力。
+
+```{r}
+library(pwr)
+
+# 计算单因素 ANOVA 所需样本量
+# 假设：3个处理组，效应量 f = 0.4，检验力 = 0.8，显著性水平 = 0.05
+pwr.anova.test(
+  k = 3,           # 组数
+  f = 0.4,         # 效应量（小=0.1, 中=0.25, 大=0.4）
+  sig.level = 0.05,
+  power = 0.8
+)
+```
+
+::: {.callout-tip title="效应量的选择"}
+- **小效应** (f = 0.1)：需要大样本才能检测到
+- **中效应** (f = 0.25)：常见的生态学效应
+- **大效应** (f = 0.4)：明显的处理效应
+:::
+
+### 随机化方案生成
+
+```{r}
+library(agricolae)
+
+# 生成完全随机设计的随机化方案
+treatments <- c("对照", "低氮", "高氮")
+design_crd <- design.crd(
+  trt = treatments,
+  r = 8,  # 每个处理8个重复
+  seed = 2024
+)
+
+head(design_crd$book, 10)
+```
+
+```{r}
+# 生成随机区组设计的随机化方案
+design_rcbd <- design.rcbd(
+  trt = treatments,
+  r = 4,  # 4个区组
+  seed = 2024
+)
+
+head(design_rcbd$book, 12)
+```
+
+## 效应量计算
+
+除了 p 值，还应报告效应量（Effect Size）来量化处理效应的大小。
+
+```{r}
+# 计算 eta-squared（η²）
+library(effectsize)
+
+# 使用之前的氮添加实验数据
+eta_squared(anova_model)
+```
+
+::: {.callout-note title="效应量的解读"}
+- **η² < 0.01**：微小效应
+- **0.01 ≤ η² < 0.06**：小效应
+- **0.06 ≤ η² < 0.14**：中等效应
+- **η² ≥ 0.14**：大效应
+:::
+
 ## 总结
 
 实验数据采集是生态学从描述性科学转向预测性科学的基石。通过严谨的实验设计和多维度的技术手段，生态学家能够从复杂的自然噪声中剥离出核心的生物学规律。在实际研究中，实验数据往往需要与长期观测数据相结合，以实现对生态系统行为的全面理解。
 
 ## 课后练习
 
-1. 某同学在一块施氮样地中随机取了 10 个土壤样品测定微生物量碳，然后用这 10 个数据点与对照样地的 10 个样品做 t 检验。请指出这个设计中的问题，并提出改进方案。
+### 基础练习（必做）
 
-2. 修改本章的氮添加实验代码，将完全随机设计改为随机区组设计（假设有 4 个区组，每个区组包含对照、低氮、高氮各 1 个样方），重新进行 ANOVA 分析并比较结果。
+#### 练习 1：识别伪重复
 
-3. 对本章 ANOVA 模型的残差诊断图进行解读：残差是否满足正态性和方差齐性假设？如果不满足，你会采取什么措施？
+某同学在一块施氮样地中随机取了 10 个土壤样品测定微生物量碳，然后用这 10 个数据点与对照样地的 10 个样品做 t 检验。请指出这个设计中的问题，并提出改进方案。
+
+**提示**：
+- 这个设计中有几个真正的独立重复？
+- 什么是实验单元？什么是观测单元？
+- 如何修改设计才能避免伪重复？
+
+#### 练习 2：随机区组设计
+
+修改本章的氮添加实验代码，将完全随机设计改为随机区组设计（假设有 4 个区组，每个区组包含对照、低氮、高氮各 1 个样方），重新进行 ANOVA 分析并比较结果。
+
+```{r}
+#| eval: false
+# 你的代码：
+set.seed(2024)
+
+# 创建随机区组设计数据
+rcbd_data <- expand_grid(
+  block = paste0("Block", 1:4),
+  treatment = c("对照", "低氮", "高氮")
+) %>%
+  mutate(
+    # 添加区组效应和处理效应
+    biomass = ___
+  )
+
+# 拟合区组设计 ANOVA
+rcbd_model <- aov(___ ~ ___ + ___, data = rcbd_data)
+summary(rcbd_model)
+```
+
+#### 练习 3：残差诊断
+
+对本章 ANOVA 模型的残差诊断图进行解读：残差是否满足正态性和方差齐性假设？如果不满足，你会采取什么措施？
+
+**检查清单**：
+- [ ] 残差 vs 拟合值图：是否呈现喇叭形？
+- [ ] Q-Q 图：点是否沿对角线分布？
+- [ ] 如果假设不满足，考虑：数据变换、非参数检验、广义线性模型
+
+### 进阶练习（选做）
+
+#### 练习 4：析因实验设计与分析
+
+设计一个 2×2 析因实验，研究光照（全光、遮阴）和施肥（不施肥、施肥）对幼苗生长的影响。每个处理组合 6 个重复。
+
+```{r}
+#| eval: false
+# 你的代码：
+set.seed(2024)
+
+factorial_exp <- expand_grid(
+  light = c("全光", "遮阴"),
+  fertilizer = c("不施肥", "施肥"),
+  replicate = 1:6
+) %>%
+  mutate(
+    # 模拟生长数据（考虑交互效应）
+    growth = case_when(
+      light == "全光" & fertilizer == "不施肥" ~ rnorm(n(), ___, ___),
+      light == "全光" & fertilizer == "施肥" ~ rnorm(n(), ___, ___),
+      light == "遮阴" & fertilizer == "不施肥" ~ rnorm(n(), ___, ___),
+      light == "遮阴" & fertilizer == "施肥" ~ rnorm(n(), ___, ___)
+    )
+  )
+
+# 双因素 ANOVA
+factorial_aov <- aov(growth ~ light * fertilizer, data = factorial_exp)
+summary(factorial_aov)
+
+# 可视化交互效应
+# 你的代码：
+```
+
+**思考题**：
+- 如果交互效应显著，说明什么？
+- 如何解读主效应和交互效应的关系？
+
+#### 练习 5：样本量计算
+
+你计划进行一个单因素实验，有 4 个处理组。根据预实验，你估计效应量为中等（f = 0.25）。请计算：
+
+1. 要达到 80% 的检验力（α = 0.05），每组需要多少个重复？
+2. 如果只能做每组 5 个重复，检验力会降到多少？
+
+```{r}
+#| eval: false
+library(pwr)
+
+# 计算所需样本量
+pwr.anova.test(
+  k = ___,
+  f = ___,
+  sig.level = ___,
+  power = ___
+)
+
+# 计算实际检验力
+pwr.anova.test(
+  k = ___,
+  n = ___,  # 每组样本量
+  f = ___,
+  sig.level = ___
+)
+```
+
+#### 练习 6：混合效应模型
+
+使用本章的嵌套设计数据（`nested_data`），拟合混合效应模型，并回答：
+
+1. 样地间变异和样方间变异各占总变异的多少？
+2. 如果忽略嵌套结构，直接用 `aov()` 分析，会有什么问题？
+
+```{r}
+#| eval: false
+library(lme4)
+
+# 拟合混合效应模型
+mixed_model <- lmer(___ ~ 1 + (1|___), data = nested_data)
+
+# 提取方差成分
+VarCorr(mixed_model)
+
+# 计算组内相关系数（ICC）
+icc <- ___
+cat("组内相关系数:", round(icc, 3), "\n")
+```
+
+### 挑战练习
+
+#### 练习 7：实验设计综合案例
+
+你是一名生态学研究生，导师要求你设计一个实验，研究氮沉降和降雨变化对草地生态系统的影响。实验条件：
+
+- 有 3 块草地样地可用（环境条件略有差异）
+- 氮沉降：3 个水平（对照、低氮、高氮）
+- 降雨：2 个水平（正常、减少 30%）
+- 预算限制：最多 36 个实验单元
+
+**任务**：
+
+1. 选择合适的实验设计类型（完全随机、随机区组、裂区等）
+2. 说明你的设计如何避免伪重复
+3. 画出实验布局图
+4. 用 R 生成随机化方案
+5. 估算所需样本量（假设中等效应量）
+
+**评分标准**：
+
+| 项目 | 分值 | 说明 |
+|------|------|------|
+| 设计合理性 | 30% | 设计类型选择恰当，考虑了实际约束 |
+| 避免伪重复 | 25% | 正确识别实验单元和观测单元 |
+| 随机化方案 | 20% | 代码正确，方案可执行 |
+| 样本量计算 | 15% | 计算合理，有统计依据 |
+| 文档完整性 | 10% | 布局图清晰，说明详细 |
+
+### 参考答案（练习 2 示例）
+
+```{r}
+set.seed(2024)
+
+# 创建随机区组设计数据
+rcbd_data <- expand_grid(
+  block = paste0("Block", 1:4),
+  treatment = c("对照", "低氮", "高氮")
+) %>%
+  mutate(
+    # 区组效应（模拟环境梯度）
+    block_effect = case_when(
+      block == "Block1" ~ -5,
+      block == "Block2" ~ 0,
+      block == "Block3" ~ 3,
+      block == "Block4" ~ 2
+    ),
+    # 处理效应 + 区组效应 + 随机误差
+    biomass = case_when(
+      treatment == "对照" ~ 45 + block_effect + rnorm(n(), 0, 4),
+      treatment == "低氮" ~ 58 + block_effect + rnorm(n(), 0, 4),
+      treatment == "高氮" ~ 72 + block_effect + rnorm(n(), 0, 4)
+    ),
+    treatment = factor(treatment, levels = c("对照", "低氮", "高氮"))
+  )
+
+# 拟合区组设计 ANOVA（区组作为区组因子）
+rcbd_model <- aov(biomass ~ block + treatment, data = rcbd_data)
+summary(rcbd_model)
+
+# 与完全随机设计比较
+crd_model <- aov(biomass ~ treatment, data = rcbd_data)
+summary(crd_model)
+
+cat("\n区组设计 vs 完全随机设计：\n")
+cat("区组设计残差标准误:", sigma(rcbd_model), "\n")
+cat("完全随机设计残差标准误:", sigma(crd_model), "\n")
+cat("区组设计提高了", round((1 - sigma(rcbd_model)/sigma(crd_model)) * 100, 1), "% 的精度\n")
+```
+
+### 常见问题解答
+
+**Q1: 什么时候用完全随机设计，什么时候用区组设计？**
+
+A: 
+- **完全随机设计**：实验单元环境条件均一，无明显梯度
+- **区组设计**：存在已知的环境梯度（如坡度、土壤类型），将相似单元归入同一区组
+
+**Q2: 如何判断是否存在伪重复？**
+
+A: 问自己三个问题：
+1. 处理是施加在哪个层次上的？（样地、样方、个体）
+2. 什么是真正的独立重复？
+3. 如果重新做实验，哪些单元会得到不同的处理？
+
+**Q3: 交互效应显著时，还需要看主效应吗？**
+
+A: 交互效应显著时，主效应的解释变得复杂。应该：
+1. 先报告交互效应
+2. 用简单效应分析（Simple Effects）分别检验每个因子在另一因子不同水平下的效应
+3. 用交互图直观展示
+
+**Q4: 混合效应模型什么时候用？**
+
+A: 当数据有层级结构（嵌套或交叉）或重复测量时：
+- 嵌套设计：样地 → 样方 → 子样方
+- 重复测量：同一个体在不同时间点测量
+- 随机区组：区组作为随机效应
+
+## 实验设计检查清单
+
+在开始实验前，使用以下检查清单确保设计合理：
+
+### 设计阶段
+
+- [ ] **明确研究假设**：假设是否可检验？是否有明确的预测方向？
+- [ ] **确定实验单元**：什么是真正的独立重复单元？
+- [ ] **选择设计类型**：完全随机、区组、析因、嵌套、重复测量？
+- [ ] **计算样本量**：是否有足够的统计检验力（≥0.8）？
+- [ ] **设置对照组**：是否有合适的对照处理？
+- [ ] **随机化方案**：如何将处理随机分配到实验单元？
+- [ ] **避免伪重复**：处理是否施加在独立的实验单元上？
+
+### 执行阶段
+
+- [ ] **标准化操作**：所有处理的施加方式是否一致？
+- [ ] **盲法测量**：测量人员是否知道处理分组（可能引入偏差）？
+- [ ] **记录元数据**：环境条件、操作时间、异常事件是否记录？
+- [ ] **数据备份**：原始数据是否有多处备份？
+
+### 分析阶段
+
+- [ ] **检查假设**：残差是否满足正态性和方差齐性？
+- [ ] **报告效应量**：除了 p 值，是否报告了效应量（η²、Cohen's d）？
+- [ ] **多重比较校正**：事后检验是否进行了 p 值校正？
+- [ ] **可视化结果**：图表是否清晰展示了处理效应？
+
+## 实验设计常见错误案例
+
+### 案例 1：混淆实验单元和观测单元
+
+**错误设计**：
+- 在 1 个增温样地和 1 个对照样地中，各取 10 个土壤样品测定微生物量
+- 用这 20 个数据点做 t 检验（n=10 vs n=10）
+
+**问题**：
+- 真正的实验单元只有 2 个（1 个增温样地 + 1 个对照样地）
+- 10 个土壤样品是子样本（pseudoreplicates），不是独立重复
+- 这样的 t 检验会严重高估显著性
+
+**正确设计**：
+- 至少需要 3-4 个增温样地和 3-4 个对照样地
+- 每个样地内可以取多个子样本，但分析时应先计算样地均值
+- 用样地均值做统计检验（n=3-4 vs n=3-4）
+
+### 案例 2：忽略时间自相关
+
+**错误设计**：
+- 对同一批植物在 8 个时间点测量株高
+- 用普通 ANOVA 分析，将 8 个时间点当作独立观测
+
+**问题**：
+- 同一植物在不同时间的测量值不独立（时间自相关）
+- 违反了 ANOVA 的独立性假设
+- 会低估标准误，夸大显著性
+
+**正确设计**：
+- 使用重复测量 ANOVA 或混合效应模型
+- 将植物个体作为随机效应
+- 考虑时间点之间的相关结构
+
+### 案例 3：交互效应的错误解读
+
+**错误解读**：
+- 双因素 ANOVA 显示：温度主效应显著（p<0.001），水分主效应不显著（p=0.12），交互效应显著（p=0.03）
+- 结论："温度有显著影响，水分没有影响"
+
+**问题**：
+- 交互效应显著意味着水分的效应依赖于温度水平
+- 不能简单说"水分没有影响"
+- 应该分别检验水分在不同温度下的简单效应
+
+**正确解读**：
+- "温度和水分存在显著交互作用"
+- "水分的效应在不同温度下不同：在高温下水分效应显著，在低温下不显著"
+- 用交互图直观展示
+
+## 实验数据管理最佳实践
+
+### 数据记录模板
+
+```{r}
+#| eval: false
+# 创建标准化的实验数据记录模板
+library(tibble)
+
+experiment_template <- tibble(
+  date = as.Date(character()),           # 测量日期
+  plot_id = character(),                 # 样地编号
+  treatment = character(),               # 处理类型
+  block = character(),                   # 区组（如适用）
+  replicate = integer(),                 # 重复编号
+  response_variable = numeric(),         # 响应变量
+  notes = character()                    # 备注（异常情况）
+)
+
+# 保存为 CSV 模板
+write.csv(experiment_template, "experiment_data_template.csv", row.names = FALSE)
+```
+
+### 数据验证脚本
+
+```{r}
+#| eval: false
+# 检查实验数据的完整性和合理性
+validate_experiment_data <- function(data) {
+  
+  # 检查缺失值
+  missing_check <- data %>%
+    summarise(across(everything(), ~sum(is.na(.)))) %>%
+    pivot_longer(everything(), names_to = "variable", values_to = "n_missing") %>%
+    filter(n_missing > 0)
+  
+  if (nrow(missing_check) > 0) {
+    cat("警告：发现缺失值\n")
+    print(missing_check)
+  }
+  
+  # 检查重复是否平衡
+  balance_check <- data %>%
+    count(treatment) %>%
+    mutate(balanced = n == max(n))
+  
+  if (!all(balance_check$balanced)) {
+    cat("警告：处理组重复数不平衡\n")
+    print(balance_check)
+  }
+  
+  # 检查异常值（3倍标准差）
+  outlier_check <- data %>%
+    group_by(treatment) %>%
+    mutate(
+      z_score = (response_variable - mean(response_variable, na.rm = TRUE)) / 
+                sd(response_variable, na.rm = TRUE)
+    ) %>%
+    filter(abs(z_score) > 3)
+  
+  if (nrow(outlier_check) > 0) {
+    cat("警告：发现潜在异常值\n")
+    print(outlier_check %>% select(plot_id, treatment, response_variable, z_score))
+  }
+  
+  cat("\n数据验证完成\n")
+}
+```
+
+## 实验设计软件工具
+
+### R 包推荐
+
+| 包名 | 功能 | 典型用途 |
+|------|------|----------|
+| `agricolae` | 实验设计和分析 | 生成随机化方案、多重比较 |
+| `pwr` | 样本量计算 | 估算所需样本量和检验力 |
+| `lme4` | 混合效应模型 | 嵌套设计、重复测量 |
+| `nlme` | 非线性混合模型 | 复杂相关结构 |
+| `emmeans` | 边际均值估计 | 事后比较、简单效应分析 |
+| `effectsize` | 效应量计算 | η², Cohen's d, 置信区间 |
+| `car` | 方差分析扩展 | Type II/III SS, Levene 检验 |
+
+### 在线工具
+
+- **G*Power**：样本量和检验力计算（图形界面）
+- **ANOVA Calculator**：在线方差分析工具
+- **Randomization.com**：在线随机化方案生成器
+
+## 延伸阅读
+
+### 必读经典
+
+1. **Hurlbert, S. H. (1984).** Pseudoreplication and the design of ecological field experiments. *Ecological Monographs*, 54(2), 187-211. DOI: 10.2307/1942661
+   - 伪重复的经典文献，改变了生态学实验设计的范式
+   - 必读指数：⭐⭐⭐⭐⭐
+
+2. **Quinn, G. P., & Keough, M. J. (2002).** *Experimental Design and Data Analysis for Biologists*. Cambridge University Press.
+   - 生态学实验设计的权威教材，案例丰富
+   - 涵盖从基础到高级的所有设计类型
+
+3. **Underwood, A. J. (1997).** *Experiments in Ecology: Their Logical Design and Interpretation Using Analysis of Variance*. Cambridge University Press.
+   - 强调逻辑推理和因果推断
+   - 特别适合野外生态学实验
+
+### 统计方法
+
+4. **Zuur, A. F., Ieno, E. N., Walker, N., Saveliev, A. A., & Smith, G. M. (2009).** *Mixed Effects Models and Extensions in Ecology with R*. Springer.
+   - 混合效应模型在生态学中的应用
+   - 包含大量实际案例和 R 代码
+
+5. **Crawley, M. J. (2012).** *The R Book* (2nd ed.). Wiley.
+   - R 语言统计分析的百科全书
+   - 实验设计章节详尽
+
+6. **Gotelli, N. J., & Ellison, A. M. (2013).** *A Primer of Ecological Statistics* (2nd ed.). Sinauer Associates.
+   - 生态统计学入门，适合初学者
+   - 强调概念理解而非数学推导
+
+### 高级主题
+
+7. **Gelman, A., & Hill, J. (2006).** *Data Analysis Using Regression and Multilevel/Hierarchical Models*. Cambridge University Press.
+   - 层级模型的权威著作
+   - 贝叶斯方法在实验设计中的应用
+
+8. **Bolker, B. M. (2008).** *Ecological Models and Data in R*. Princeton University Press.
+   - 生态学建模与数据分析
+   - 包含实验设计的统计建模视角
+
+### 在线资源
+
+- **ANOVA 教程**：https://www.statmethods.net/stats/anova.html
+- **Mixed Models FAQ**：https://bbolker.github.io/mixedmodels-misc/glmmFAQ.html
+- **Experimental Design 课程**：https://www.coursera.org/learn/experimental-design-basics

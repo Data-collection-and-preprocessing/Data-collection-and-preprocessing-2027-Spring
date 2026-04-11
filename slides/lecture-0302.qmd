@@ -1,0 +1,308 @@
+---
+title: "数据转换与特征工程"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0302 数据转换与特征工程
+
+[教材章节：0302]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 Z-score 标准化与 Min-Max 归一化的原理及适用场景
+- 掌握 对数变换处理右偏数据的方法与正态性检验
+- 了解 分类变量编码（因子排序、哑变量、角度编码）的策略
+- 能够应用 长宽格式转换与特征构造提升数据分析能力
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. **第一节**：数值标准化与归一化
+2. **第二节**：数据分布变换
+3. **第三节**：分类变量编码
+4. **第四节**：长宽格式转换
+5. **第五节**：特征构造与领域知识驱动
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: callout-note
+## 概念一：标准化与归一化
+标准化（Z-score）将数据转换为均值 0、标准差 1 的分布，适合对量纲敏感的算法；归一化（Min-Max）将数据缩放到 [0, 1] 区间，适合需要固定范围的场景。
+:::
+
+::: callout-note
+## 概念二：对数变换
+对右偏分布数据取对数可使其趋近正态分布，是生态学和土壤学中最常用的变换手段。变换前后均需用 Shapiro-Wilk 检验验证。
+:::
+
+::: callout-note
+## 概念三：特征工程
+基于领域知识从原始变量构造新特征（如 C/N 比、土壤质地分类、坡度等级），通常比盲目组合变量更有效。领域知识 > 盲目特征组合。
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 类别 | 工具/方法 | 用途 |
+|:---|:---|:---|
+| 标准化 | `scale()` | Z-score 标准化 |
+| 归一化 | 自定义函数 | Min-Max 归一化到 [0, 1] |
+| 变换 | `log()` / `log1p()` | 对数变换处理右偏数据 |
+| 检验 | `shapiro.test()` | Shapiro-Wilk 正态性检验 |
+| 编码 | `model.matrix()` | 生成哑变量矩阵 |
+| 格式 | `pivot_longer()` / `pivot_wider()` | 长宽格式互转 |
+
+------------------------------------------------------------------------
+
+## 代码示例：Z-score 标准化
+
+```r
+#| eval: false
+# Z-score 标准化：z = (x - mean) / sd
+# 适用场景：PCA、聚类、距离计算等量纲敏感分析
+
+# 方法一：使用 scale() 函数
+soil_scaled <- soil |>
+  mutate(
+    SOC_z = scale(SOC)[, 1],
+    TN_z  = scale(TN)[, 1],
+    pH_z  = scale(pH)[, 1]
+  )
+
+# 验证：均值接近 0，标准差接近 1
+soil_scaled |>
+  summarise(
+    across(ends_with("_z"), list(mean = mean, sd = sd), na.rm = TRUE)
+  )
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：Min-Max 归一化
+
+```r
+#| eval: false
+# Min-Max 归一化：x_norm = (x - min) / (max - min)
+# 适用场景：神经网络输入、需要 [0, 1] 范围的指标构建
+
+min_max_norm <- function(x) {
+  (x - min(x, na.rm = TRUE)) / (max(x, na.rm = TRUE) - min(x, na.rm = TRUE))
+}
+
+soil_normed <- soil |>
+  mutate(across(c(SOC, TN, pH), min_max_norm, .names = "{.col}_norm"))
+
+# 何时选择哪种方法？
+# Z-score：变量需要可比较、存在极端值影响较小
+# Min-Max：需要固定范围、对极端值敏感
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：对数变换与正态性检验
+
+```r
+#| eval: false
+# 右偏数据的对数变换
+# 变换前检验
+shapiro.test(soil$SOC)  # p < 0.05 表示非正态
+
+# 对数变换（含零值时用 log1p）
+soil_transformed <- soil |>
+  mutate(SOC_log = log1p(SOC))
+
+# 变换后检验
+shapiro.test(soil_transformed$SOC_log)
+
+# 可视化对比
+par(mfrow = c(1, 2))
+hist(soil$SOC, main = "原始 SOC", xlab = "SOC (g/kg)")
+hist(soil_transformed$SOC_log, main = "log(SOC+1)", xlab = "log(SOC+1)")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：分类变量编码
+
+```r
+#| eval: false
+# 因子排序：指定有意义的顺序
+soil <- soil |>
+  mutate(
+    slope_class = factor(slope_class,
+      levels = c("平坡", "缓坡", "斜坡", "陡坡"),
+      ordered = TRUE
+    )
+  )
+
+# 哑变量编码：用于回归模型
+dummy_matrix <- model.matrix(~ land_use - 1, data = soil)
+
+# 坡向角度编码：将 0-360 度转换为连续变量
+# 直接用角度值会导致 0 度和 360 度被视为极端不同
+soil <- soil |>
+  mutate(
+    aspect_sin = sin(aspect * pi / 180),  # 南北分量
+    aspect_cos = cos(aspect * pi / 180)   # 东西分量
+  )
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：长宽格式转换
+
+```r
+#| eval: false
+library(tidyr)
+
+# 宽格式 → 长格式（适合 ggplot2 绑定）
+soil_long <- soil |>
+  pivot_longer(
+    cols = c(SOC, TN, TP, pH),
+    names_to = "variable",
+    values_to = "value"
+  )
+
+# 长格式 → 宽格式（适合建模矩阵）
+soil_wide <- soil_long |>
+  pivot_wider(
+    names_from = variable,
+    values_from = value
+  )
+
+# 实际应用：长格式便于分面绑图
+library(ggplot2)
+ggplot(soil_long, aes(x = value)) +
+  geom_histogram(bins = 20) +
+  facet_wrap(~ variable, scales = "free")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：特征构造
+
+```r
+#| eval: false
+# 领域知识驱动的特征构造
+soil_features <- soil |>
+  mutate(
+    # C/N 比：反映有机质分解程度
+    CN_ratio = SOC / TN,
+
+    # 土壤质地分类（基于黏粒含量）
+    texture_class = case_when(
+      clay > 40 ~ "黏土",
+      clay > 25 ~ "壤土",
+      TRUE      ~ "砂土"
+    ),
+
+    # 海拔等级
+    elev_class = cut(elevation,
+      breaks = c(0, 500, 1000, 1500, Inf),
+      labels = c("低海拔", "中海拔", "中高海拔", "高海拔")
+    ),
+
+    # 坡度等级
+    slope_class = cut(slope,
+      breaks = c(0, 5, 15, 25, Inf),
+      labels = c("平坡", "缓坡", "斜坡", "陡坡")
+    )
+  )
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：交互特征与综合指标
+
+```r
+#| eval: false
+# 交互特征：捕捉变量间的协同效应
+soil_features <- soil_features |>
+  mutate(
+    # 海拔-坡度交互
+    elev_slope = elevation * slope,
+    # 有机碳-黏粒交互（黏粒对有机碳的固持作用）
+    SOC_clay = SOC * clay
+  )
+
+# 土壤质量指数 (SQI)：多指标综合评价
+soil_features <- soil_features |>
+  mutate(
+    SOC_score = min_max_norm(SOC),
+    TN_score  = min_max_norm(TN),
+    pH_score  = 1 - abs(min_max_norm(pH) - 0.5) * 2,  # pH 中性最优
+    SQI = (SOC_score + TN_score + pH_score) / 3
+  )
+
+# 核心原则：领域知识 > 盲目特征组合
+# 每个构造特征都应有明确的科学解释
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **要点一**：选择标准化方法要匹配下游分析需求——PCA 和聚类用 Z-score，需要固定范围的指标用 Min-Max
+- **要点二**：对数变换前检查数据是否包含零值或负值，含零值时使用 `log1p()`；变换前后均需做正态性检验
+- **要点三**：特征构造应由领域知识驱动，每个新特征都应有明确的科学含义，避免盲目组合产生无意义变量
+
+::: callout-tip
+动手实践是学习本课程的关键，请在电脑前跟随课程一起操作。
+:::
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1**：Z-score 标准化和 Min-Max 归一化应该如何选择？
+
+**A1**：Z-score 适合数据近似正态且对极端值不太敏感的场景（如 PCA、线性回归）；Min-Max 适合需要固定范围（如 [0, 1]）的场景（如神经网络输入、指标构建），但对极端值敏感。如果数据存在严重异常值，优先选择 Z-score。
+
+**Q2**：为什么坡向（aspect）不能直接作为数值变量使用？
+
+**A2**：坡向是 0--360 度的循环变量，0 度和 360 度实际上是同一个方向（正北），但数值上差异最大。用正弦和余弦分解为两个连续变量（南北分量和东西分量），可以正确表示方向的连续性和周期性。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. 数值变量标准化需根据分析目标选择 Z-score 或 Min-Max，对数变换是处理右偏分布的基本工具
+2. 分类变量编码需考虑有序/无序、周期性等特征，坡向等循环变量需用三角函数编码
+3. 特征工程应以领域知识为指导，构造有科学意义的衍生变量（C/N 比、质地分类、SQI 等）
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+- 对你的数据集中至少两个数值变量分别做 Z-score 和 Min-Max 转换，比较结果差异
+- 检查你的数据是否存在右偏变量，用对数变换并做 Shapiro-Wilk 检验
+- 基于领域知识构造至少一个新特征变量，并解释其科学含义
+- **选做**：构建一个多指标综合评价指数（如 SQI）
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- Wickham, H. - tidyr 包文档：数据格式转换
+- Feature Engineering and Selection (Kuhn & Johnson) - 特征工程系统方法
+- 土壤学相关文献中 C/N 比和土壤质量指数的应用案例

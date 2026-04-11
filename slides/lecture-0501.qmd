@@ -1,0 +1,303 @@
+---
+title: "数据可视化基础"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0501 数据可视化基础
+
+[教材章节：0501]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 ggplot2 图形语法（Grammar of Graphics）的核心思想与分层构建逻辑
+- 掌握 `aes()` 映射与固定属性的区别，能正确将数据变量映射到图形属性
+- 熟练运用常见图表类型（散点图、箱线图、直方图、密度图、柱状图、热力图）展示数据
+- 掌握出版级图表的定制方法，包括自定义主题、多面板拼图与高质量导出
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. ggplot2 图形语法：六层结构
+2. `aes()` 映射 vs 固定属性
+3. 常用图表类型与适用场景
+4. 出版级图表定制
+5. 图表导出与分辨率要求
+6. 色盲友好配色方案
+7. 图表类型选择指南
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: {.callout-note}
+## 图形语法（Grammar of Graphics）
+
+ggplot2 的核心理念：图形 = **数据（data）** + **美学映射（aes）** + **几何对象（geom）** + **标度（scale）** + **标签（labs）** + **主题（theme）**。每一层独立控制，组合构建完整图形。
+:::
+
+::: {.callout-note}
+## 美学映射（Aesthetic Mapping）
+
+`aes()` 将数据变量映射到视觉属性（x轴、y轴、颜色、形状、大小等）。**数据驱动的属性**放在 `aes()` 内，**固定属性**放在 `aes()` 外。
+:::
+
+::: {.callout-note}
+## 图层叠加（Layering）
+
+ggplot2 通过 `+` 运算符逐层叠加图形元素。每一层可以有独立的数据源和映射，实现复杂图形的灵活构建。
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 工具/函数 | 用途 | 适用场景 |
+|:---|:---|:---|
+| `ggplot() + aes()` | 初始化画布与映射 | 所有 ggplot2 图形的起点 |
+| `geom_point()` | 散点图 | 两个连续变量的关系 |
+| `geom_boxplot()` | 箱线图 | 分组比较与离群值识别 |
+| `geom_histogram()` | 直方图 | 单变量分布形态 |
+| `geom_density()` | 密度曲线 | 平滑分布估计 |
+| `geom_col()` | 柱状图 | 分类汇总数据展示 |
+| `geom_tile()` | 热力图 | 矩阵数据或相关系数展示 |
+| `scale_color_viridis_d()` | 色盲友好离散配色 | 分类变量着色 |
+| `patchwork` | 多面板拼图 | 组合多个子图 |
+| `ggsave()` | 导出图片 | PDF/PNG/TIFF 多格式 |
+
+------------------------------------------------------------------------
+
+## 代码示例：ggplot2 图形语法六层结构
+
+```{r}
+#| eval: false
+
+library(ggplot2)
+library(palmerpenguins)
+
+# 完整的六层结构示例
+ggplot(data = penguins,                          # 1. 数据
+       aes(x = bill_length_mm,                   # 2. 美学映射
+           y = bill_depth_mm,
+           color = species)) +
+  geom_point(size = 2, alpha = 0.7) +            # 3. 几何对象
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_viridis_d(option = "D") +           # 4. 标度
+  labs(title = "Palmer Penguins: Bill Dimensions", # 5. 标签
+       x = "Bill Length (mm)",
+       y = "Bill Depth (mm)",
+       color = "Species") +
+  theme_minimal(base_size = 14)                   # 6. 主题
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：aes() 映射 vs 固定属性
+
+```{r}
+#| eval: false
+
+library(ggplot2)
+
+# 数据驱动的属性 —— 放在 aes() 内
+ggplot(penguins, aes(x = body_mass_g, y = flipper_length_mm,
+                     color = species,   # 颜色由 species 决定
+                     shape = island)) + # 形状由 island 决定
+  geom_point(size = 3, alpha = 0.6)     # size 和 alpha 是固定属性
+
+# 常见错误：将固定值放入 aes()
+# aes(color = "blue") 会创建一个字面量映射，而非蓝色
+# 正确写法：geom_point(color = "blue")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：常用图表类型
+
+```{r}
+#| eval: false
+
+library(ggplot2)
+library(patchwork)
+
+# 散点图 + 趋势线
+p1 <- ggplot(penguins, aes(x = bill_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species), alpha = 0.6) +
+  geom_smooth(method = "lm", color = "black")
+
+# 箱线图 + 抖动点
+p2 <- ggplot(penguins, aes(x = species, y = body_mass_g)) +
+  geom_boxplot(outlier.shape = NA) +
+  geom_jitter(aes(color = species), width = 0.2, alpha = 0.4)
+
+# 直方图
+p3 <- ggplot(penguins, aes(x = body_mass_g)) +
+  geom_histogram(bins = 30, fill = "steelblue", color = "white")
+
+# 密度曲线
+p4 <- ggplot(penguins, aes(x = body_mass_g, fill = species)) +
+  geom_density(alpha = 0.5)
+
+# 多面板拼图
+(p1 + p2) / (p3 + p4) +
+  plot_annotation(tag_levels = "A")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：柱状图与热力图
+
+```{r}
+#| eval: false
+
+library(ggplot2)
+
+# 柱状图 + 误差棒
+summary_data <- penguins |>
+  dplyr::group_by(species) |>
+  dplyr::summarise(
+    mean_mass = mean(body_mass_g, na.rm = TRUE),
+    se_mass = sd(body_mass_g, na.rm = TRUE) / sqrt(dplyr::n())
+  )
+
+ggplot(summary_data, aes(x = species, y = mean_mass, fill = species)) +
+  geom_col(width = 0.6) +
+  geom_errorbar(aes(ymin = mean_mass - se_mass,
+                    ymax = mean_mass + se_mass),
+                width = 0.2) +
+  scale_fill_viridis_d() +
+  labs(y = "Body Mass (g)")
+
+# 热力图（相关系数矩阵）
+cor_matrix <- penguins |>
+  dplyr::select(where(is.numeric)) |>
+  cor(use = "complete.obs")
+
+cor_df <- as.data.frame(as.table(cor_matrix))
+ggplot(cor_df, aes(x = Var1, y = Var2, fill = Freq)) +
+  geom_tile() +
+  scale_fill_viridis_c() +
+  labs(fill = "Correlation")
+```
+
+------------------------------------------------------------------------
+
+## 代码示例：出版级图表定制
+
+```{r}
+#| eval: false
+
+library(ggplot2)
+library(patchwork)
+
+# 自定义出版级主题
+theme_paper <- function(base_size = 12) {
+  theme_classic(base_size = base_size) %+replace%
+    theme(
+      axis.text = element_text(color = "black"),
+      axis.title = element_text(face = "bold"),
+      legend.position = "bottom",
+      legend.title = element_text(face = "bold"),
+      panel.grid.major = element_line(color = "grey90", linewidth = 0.3),
+      strip.background = element_rect(fill = "grey95", color = NA),
+      strip.text = element_text(face = "bold")
+    )
+}
+
+# 应用自定义主题 + 多面板 + 标注
+p1 <- ggplot(penguins, aes(x = bill_length_mm, y = body_mass_g,
+                            color = species)) +
+  geom_point(alpha = 0.7) +
+  scale_color_viridis_d() +
+  theme_paper()
+
+p2 <- ggplot(penguins, aes(x = species, y = body_mass_g, fill = species)) +
+  geom_boxplot() +
+  scale_fill_viridis_d() +
+  theme_paper()
+
+# 拼图并添加 A/B 标签
+p1 + p2 + plot_annotation(tag_levels = "A")
+
+# 高质量导出
+ggsave("figure1.pdf", width = 180, height = 80, units = "mm", dpi = 300)
+ggsave("figure1.tiff", width = 180, height = 80, units = "mm", dpi = 600)
+```
+
+------------------------------------------------------------------------
+
+## 图表类型选择指南
+
+| 数据类型 | 研究问题 | 推荐图表 | ggplot2 函数 |
+|:---|:---|:---|:---|
+| 连续 vs 连续 | 两变量关系 | 散点图 | `geom_point() + geom_smooth()` |
+| 分类 vs 连续 | 组间比较 | 箱线图 | `geom_boxplot() + geom_jitter()` |
+| 单个连续变量 | 分布形态 | 直方图/密度图 | `geom_histogram()` / `geom_density()` |
+| 分类汇总 | 均值比较 | 柱状图+误差棒 | `geom_col() + geom_errorbar()` |
+| 矩阵数据 | 相关性/模式 | 热力图 | `geom_tile()` |
+| 时间序列 | 趋势变化 | 折线图 | `geom_line()` |
+| 多变量 | 综合展示 | 多面板拼图 | `facet_wrap()` / `patchwork` |
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **映射先于美化**：先确保数据到图形属性的映射正确，再调整颜色、字体等视觉细节。错误的 `aes()` 映射是初学者最常见的 bug 来源
+- **色盲友好是基本要求**：始终使用 `viridis` 系列配色（`scale_color_viridis_d()` / `scale_color_viridis_c()`），避免红绿配色方案。约 8% 的男性存在色觉障碍
+- **导出分辨率需达标**：期刊投稿通常要求 300 DPI（线图）至 600 DPI（照片/热图）。使用 `ggsave()` 时明确设置 `dpi` 参数和物理尺寸（mm 或 inches）
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1：`aes(color = "blue")` 为什么不显示蓝色？**
+
+> `aes()` 内的参数会被解释为数据映射，`"blue"` 被当作一个字面量分类变量，ggplot2 会为其分配默认配色（通常是红色）。要设置固定颜色，应将 `color = "blue"` 放在 `aes()` 外部，例如 `geom_point(color = "blue")`。
+
+**Q2：如何在一张图中展示多个子图并添加 A/B/C 标签？**
+
+> 使用 `patchwork` 包：用 `+` 水平排列，用 `/` 垂直排列，用 `plot_annotation(tag_levels = "A")` 添加面板标签。例如 `(p1 + p2) / p3 + plot_annotation(tag_levels = "A")`。也可使用 `facet_wrap()` 或 `facet_grid()` 进行按变量分面。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. **图形语法是基础**：ggplot2 的六层结构（data + aes + geom + scale + labs + theme）提供了系统化的图形构建框架，理解分层逻辑是高效绑图的前提
+2. **选择正确的图表类型**：根据数据类型和研究问题选择合适的几何对象，散点图看关系、箱线图看分布比较、直方图看分布形态——图表选择错误会误导读者
+3. **出版级细节决定质量**：自定义主题、色盲友好配色、正确的导出分辨率和物理尺寸，这些细节区分了"探索用图"和"发表用图"
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+1. 使用 `palmerpenguins` 数据集，为每种企鹅绘制体重与翅长的散点图（分物种着色，添加线性趋势线）
+2. 创建一个自定义主题函数 `theme_my()`，设置你偏好的字体大小、轴线样式和图例位置
+3. 使用 `patchwork` 将散点图、箱线图、密度图组合为三面板图，添加 A/B/C 标签
+4. 用 `ggsave()` 将最终图形导出为 PDF（300 DPI）和 TIFF（600 DPI），宽度 180mm
+5. 阅读 viridis 配色文档，尝试使用不同的 `option` 参数（"A" 到 "H"）比较视觉效果
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- Wickham, H. (2016). *ggplot2: Elegant Graphics for Data Analysis*. Springer. [https://ggplot2-book.org/](https://ggplot2-book.org/)
+- Wilke, C. O. (2019). *Fundamentals of Data Visualization*. O'Reilly. [https://clauswilke.com/dataviz/](https://clauswilke.com/dataviz/)
+- `patchwork` 官方文档：[https://patchwork.data-imaginist.com/](https://patchwork.data-imaginist.com/)
+- viridis 配色方案说明：[https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html](https://cran.r-project.org/web/packages/viridis/vignettes/intro-to-viridis.html)
+- R Graph Gallery（图表类型速查）：[https://r-graph-gallery.com/](https://r-graph-gallery.com/)

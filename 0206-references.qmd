@@ -4,6 +4,7 @@ title: "扩展阅读与参考资源"
 
 # 扩展阅读与参考资源 {.appendix}
 
+本章节为第二单元（数据采集方法）提供扩展阅读材料和在线资源，按章节主题分类整理。
 
 ## 免费视频教程
 
@@ -12,29 +13,158 @@ title: "扩展阅读与参考资源"
 This video outlines three methods of ecological data collection, including observation, experimentation, and modeling.
 {{< video https://www.youtube.com/watch?v=ySqLxk1q1So >}}
 
-
 ### 数据采集入门
 **4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube**
 {{< video https://www.youtube.com/watch?v=4ub10unSjro&list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I&index=19 >}}
 
-## 推荐阅读材料
+### R 语言数据处理
+**Data Wrangling with R and the Tidyverse | Youtube**
+{{< video https://www.youtube.com/watch?v=jOd65mR1zfw >}}
 
-### 公共数据平台
+## 按章节分类的参考资源
 
+### 0201 数据采集方法概述
+
+**核心文献**：
+- Sutherland, W. J. (Ed.). (2006). *Ecological Census Techniques: A Handbook* (2nd ed.). Cambridge University Press.
+- Krebs, C. J. (1999). *Ecological Methodology* (2nd ed.). Benjamin Cummings.
+- Elzinga, C. L., Salzer, D. W., & Willoughby, J. W. (1998). *Measuring and Monitoring Plant Populations*. Bureau of Land Management Technical Reference 1730-1.
+
+**在线资源**：
+- **Ecological Society of America - Methods**: https://www.esa.org/publications/methods/
+- **British Ecological Society - Methods in Ecology and Evolution**: https://besjournals.onlinelibrary.wiley.com/journal/2041210x
+
+### 0202 观测数据
+
+**核心文献**：
+- Magurran, A. E. (2004). *Measuring Biological Diversity*. Blackwell Publishing.
+- Buckland, S. T., et al. (2001). *Introduction to Distance Sampling*. Oxford University Press.
+- MacKenzie, D. I., et al. (2017). *Occupancy Estimation and Modeling: Inferring Patterns and Dynamics of Species Occurrence* (2nd ed.). Academic Press.
+
+**R 包与教程**：
+- **vegan**: 群落生态学分析 - https://cran.r-project.org/package=vegan
+- **Distance**: 距离抽样分析 - https://cran.r-project.org/package=Distance
+- **unmarked**: 占域模型 - https://cran.r-project.org/package=unmarked
+
+### 0203 实验数据
+
+**核心文献**：
+- Quinn, G. P., & Keough, M. J. (2002). *Experimental Design and Data Analysis for Biologists*. Cambridge University Press.
+- Underwood, A. J. (1997). *Experiments in Ecology: Their Logical Design and Interpretation Using Analysis of Variance*. Cambridge University Press.
+- Hurlbert, S. H. (1984). Pseudoreplication and the design of ecological field experiments. *Ecological Monographs*, 54(2), 187–211. DOI: 10.2307/1942661
+
+**实验设计案例**：
+- Naeem, S., et al. (1994). Declining biodiversity can alter the performance of ecosystems. *Nature*, 368, 734–737. DOI: 10.1038/368734a0
+- Tilman, D., et al. (1996). Productivity and sustainability influenced by biodiversity in grassland ecosystems. *Nature*, 379, 718–720. DOI: 10.1038/379718a0
+- Huston, M. A. (1997). Hidden treatments in ecological experiments: re-evaluating the ecosystem function of biodiversity. *Oecologia*, 110, 449–460. DOI: 10.1007/s004420050180
+
+### 0204 模型数据
+
+**核心文献**：
+- Elith, J., & Leathwick, J. R. (2009). Species distribution models: ecological explanation and prediction across space and time. *Annual Review of Ecology, Evolution, and Systematics*, 40, 677–697. DOI: 10.1146/annurev.ecolsys.110308.120159
+- Guisan, A., & Zimmermann, N. E. (2000). Predictive habitat distribution models in ecology. *Ecological Modelling*, 135(2-3), 147–186. DOI: 10.1016/S0304-3800(00)00354-9
+- Araújo, M. B., & Guisan, A. (2006). Five (or so) challenges for species distribution modelling. *Journal of Biogeography*, 33(10), 1677–1688. DOI: 10.1111/j.1365-2699.2006.01584.x
+
+**R 包与教程**：
+- **dismo**: 物种分布模型 - https://cran.r-project.org/package=dismo
+- **biomod2**: 集成物种分布模型 - https://cran.r-project.org/package=biomod2
+- **ENMeval**: 生态位模型评估 - https://cran.r-project.org/package=ENMeval
+
+### 0205 公共数据
+
+**全球数据平台**：
 - **[GBIF](https://www.gbif.org/)**：全球生物多样性信息网络，提供数十亿条物种分布记录
 - **[WorldClim](https://www.worldclim.org/)**：全球高分辨率气候数据，常用于物种分布建模
+- **[CHELSA](https://chelsa-climate.org/)**：高分辨率气候数据（1km 分辨率）
 - **[NCBI GenBank](https://www.ncbi.nlm.nih.gov/genbank/)**：全球最大的 DNA 序列数据库
 - **[eBird](https://ebird.org/)**：康奈尔鸟类学实验室运营的公民科学鸟类观测平台
+- **[TRY Plant Trait Database](https://www.try-db.org/)**：全球植物功能性状数据库
+- **[FLUXNET](https://fluxnet.org/)**：全球通量观测网络，提供碳水通量数据
 
-### R 语言生态数据分析
-
-- **[R for Data Science (2e)](https://r4ds.hadley.nz/)**：Hadley Wickham 等著，tidyverse 数据科学入门经典
-- **[Statistical Methods in Ecology (CRAN Task View)](https://cran.r-project.org/web/views/Environmetrics.html)**：R 生态学与环境统计相关包的汇总
-
-### 中文生态学资源
-
+**中国数据平台**：
 - **[中国生态系统研究网络（CERN）](http://www.cern.ac.cn/)**：中国科学院运营的长期生态监测网络，提供全国生态站观测数据
 - **[国家地球系统科学数据中心](http://www.geodata.cn/)**：涵盖大气、水文、土壤、生态等多领域的共享数据平台
 - **[中国科学院资源环境科学与数据中心](https://www.resdc.cn/)**：提供土地利用、气候、植被等空间数据集
-- **[生态学报](http://www.ecologica.cn/)**：国内生态学领域核心期刊，可免费获取部分论文全文
+- **[国家青藏高原科学数据中心](https://data.tpdc.ac.cn/)**：青藏高原及周边地区的科学数据
+- **[中国森林生物多样性监测网络（CForBio）](http://www.cfbiodiv.org/)**：森林动态样地数据
+
+**R 包与教程**：
+- **rgbif**: 访问 GBIF 数据 - https://cran.r-project.org/package=rgbif
+- **raster**: 栅格数据处理 - https://cran.r-project.org/package=raster
+- **terra**: 新一代栅格数据处理 - https://cran.r-project.org/package=terra
+- **geodata**: 下载地理空间数据 - https://cran.r-project.org/package=geodata
+
+### 0207 荟萃分析
+
+**核心文献**：
+- Koricheva, J., Gurevitch, J., & Mengersen, K. (Eds.). (2013). *Handbook of Meta-analysis in Ecology and Evolution*. Princeton University Press.
+- Borenstein, M., et al. (2009). *Introduction to Meta-Analysis*. Wiley.
+- Gurevitch, J., & Hedges, L. V. (1999). Statistical issues in ecological meta-analyses. *Ecology*, 80(4), 1142–1149. DOI: 10.1890/0012-9658(1999)080[1142:SIIEMA]2.0.CO;2
+
+**R 包与教程**：
+- **metafor**: 荟萃分析核心包 - https://cran.r-project.org/package=metafor
+- **meta**: 荟萃分析 - https://cran.r-project.org/package=meta
+- **orchaRd**: 荟萃分析可视化 - https://cran.r-project.org/package=orchaRd
+
+### 0208 Python 数据采集
+
+**核心教材**：
+- McKinney, W. (2022). *Python for Data Analysis* (3rd ed.). O'Reilly Media.
+- VanderPlas, J. (2016). *Python Data Science Handbook*. O'Reilly Media. https://jakevdp.github.io/PythonDataScienceHandbook/
+
+**Python 库文档**：
+- **pandas**: https://pandas.pydata.org/
+- **NumPy**: https://numpy.org/
+- **requests**: https://requests.readthedocs.io/
+- **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/
+- **Scrapy**: https://scrapy.org/
+
+## R 语言生态数据分析
+
+### 综合教程
+- **[R for Data Science (2e)](https://r4ds.hadley.nz/)**：Hadley Wickham 等著，tidyverse 数据科学入门经典
+- **[Statistical Methods in Ecology (CRAN Task View)](https://cran.r-project.org/web/views/Environmetrics.html)**：R 生态学与环境统计相关包的汇总
+- **[Numerical Ecology with R](https://www.springer.com/gp/book/9783319714035)**：Borcard, D., Gillet, F., & Legendre, P. (2018). Springer.
+
+### 中文 R 语言资源
 - **[R 语言教程（李东风）](https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/index.html)**：北京大学李东风教授编写的中文 R 语言教程，适合入门学习
+- **[现代统计图形（谢益辉等）](https://bookdown.org/xiangyun/msg/)**：R 语言数据可视化中文教程
+- **[R 数据科学（中文版）](https://r4ds.hadley.nz/)**：R for Data Science 的中文翻译版本
+
+## 中文生态学期刊与资源
+
+### 核心期刊
+- **[生态学报](http://www.ecologica.cn/)**：国内生态学领域核心期刊，可免费获取部分论文全文
+- **[应用生态学报](http://www.cjae.net/)**：中国生态学学会主办，侧重应用研究
+- **[植物生态学报](http://www.plant-ecology.com/)**：中国植物学会主办
+- **[生物多样性](http://www.biodiversity-science.net/)**：中国科学院主办
+
+### 学术社区
+- **统计之都**: https://cosx.org/ - 中文统计学社区
+- **R 语言中文社区**: https://www.r-project.org/
+- **生态学者**: https://www.ixueshu.com/ - 学术资源搜索平台
+
+## 数据管理与可重复性
+
+### 核心文献
+- Wilkinson, M. D., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data*, 3, 160018. DOI: 10.1038/sdata.2016.18
+- Sandve, G. K., et al. (2013). Ten simple rules for reproducible computational research. *PLOS Computational Biology*, 9(10), e1003285. DOI: 10.1371/journal.pcbi.1003285
+- Wilson, G., et al. (2017). Good enough practices in scientific computing. *PLOS Computational Biology*, 13(6), e1005510. DOI: 10.1371/journal.pcbi.1005510
+
+### 工具与平台
+- **Open Science Framework (OSF)**: https://osf.io/ - 研究项目管理与数据共享
+- **Zenodo**: https://zenodo.org/ - 研究数据与代码存档
+- **Dryad**: https://datadryad.org/ - 生态学与进化生物学数据仓库
+- **figshare**: https://figshare.com/ - 研究输出共享平台
+
+## 版本控制与协作
+
+### Git 与 GitHub
+- **[Pro Git（中文版）](https://git-scm.com/book/zh/v2)**：Git 官方教程中文版
+- **[GitHub Guides](https://guides.github.com/)**：GitHub 官方入门指南
+- **[Happy Git and GitHub for the useR](https://happygitwithr.com/)**：面向 R 用户的 Git 教程
+
+### 协作工具
+- **GitHub**: https://github.com/ - 代码托管与协作
+- **GitLab**: https://gitlab.com/ - 开源代码托管平台
+- **Bitbucket**: https://bitbucket.org/ - Atlassian 旗下代码托管服务

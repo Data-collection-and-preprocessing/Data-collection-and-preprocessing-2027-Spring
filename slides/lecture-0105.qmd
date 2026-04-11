@@ -1,0 +1,133 @@
+---
+title: "R 语言基础"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+## 第五讲：R 语言基础 {.center}
+
+[第五章 在线版本](https://data-collection-and-preprocessing.github.io/Data-collection-and-preprocessing-2027-Spring/lectures/lecture-0105.html)
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- **理解** R 的基本数据类型与数据结构的区别
+- **掌握**向量操作、因子创建与数据框的基本操作
+- **了解** RStudio 四面板界面与常用快捷键
+- **能够应用** R 进行基础统计计算与数据可视化
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. RStudio 界面与基本操作
+2. 数据类型与向量操作
+3. 因子与数据框
+4. 数据读取、基础统计与绘图
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: {.incremental}
+- **向量化操作（Vectorization）**：R 中运算自动作用于向量每个元素，无需显式循环
+- **因子 vs 字符（Factor vs Character）**：因子用于分类变量，有固定水平（levels），字符仅为文本
+- **数据框（data.frame）**：R 中最常用的表格数据结构，每列可为不同类型
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 函数 | 用途 | 示例 |
+|------|------|------|
+| `c()` | 创建向量 | `c(1, 2, 3)` |
+| `factor()` | 创建因子 | `factor(c("A", "B"))` |
+| `data.frame()` | 创建数据框 | `data.frame(x = 1:3)` |
+| `read.csv()` | 读取 CSV | `read.csv("data.csv")` |
+| `str()` | 查看结构 | `str(iris)` |
+| `summary()` | 描述性统计 | `summary(iris)` |
+
+------------------------------------------------------------------------
+
+## 代码示例：向量与数据框操作
+
+```{r}
+#| eval: false
+
+# 向量创建与运算
+height <- c(170, 165, 180, 175, 168)
+weight <- c(65, 55, 80, 70, 60)
+bmi <- weight / (height / 100)^2
+
+# 创建数据框
+df <- data.frame(
+  height = height,
+  weight = weight,
+  bmi = round(bmi, 1)
+)
+
+# 基础统计与绘图
+summary(df$bmi)
+hist(df$bmi, main = "BMI Distribution", col = "steelblue")
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- 使用 `<-` 赋值（快捷键 `Alt + -`），避免用 `=` 以区分赋值与参数传递
+- 向量索引从 **1** 开始（不同于 Python 的 0），负数索引表示排除
+- 读取中文 CSV 文件时注意编码：`read.csv("data.csv", fileEncoding = "UTF-8")`
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1：`factor` 和 `character` 什么时候该用哪个？**
+
+A：当变量表示有限分类（如性别、处理组）时用 `factor`，它支持排序和统计建模。纯文本描述（如备注）用 `character`。
+
+. . .
+
+**Q2：为什么 `mean(c(1, 2, NA))` 返回 `NA`？**
+
+A：R 中 `NA` 具有传染性，任何包含 `NA` 的运算默认返回 `NA`。需要添加参数：`mean(c(1, 2, NA), na.rm = TRUE)`。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. R 的核心优势在于向量化操作——理解向量是掌握 R 的关键
+2. 数据框是数据分析的基本载体，熟练使用 `$`、`[]`、`str()`、`summary()` 至关重要
+3. 基础绘图函数（`hist()`、`boxplot()`、`plot()`）可快速探索数据分布与关系
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+1. **必做**：用 `iris` 数据集完成以下操作——筛选 `Sepal.Length > 5` 的行，计算各物种的 `Petal.Width` 均值
+2. **必做**：读取一个 CSV 文件，用 `str()` 和 `summary()` 查看结构并生成一张直方图
+3. **选做**：尝试用 `boxplot()` 对比 `iris` 中三个物种的花瓣长度分布
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- [R for Data Science (2e) - Data Visualization](https://r4ds.hadley.nz/data-visualize)
+- [R 语言教程 - 菜鸟教程](https://www.runoob.com/r/r-tutorial.html)
+- Wickham, H. (2019). *Advanced R* (2nd ed.). CRC Press.

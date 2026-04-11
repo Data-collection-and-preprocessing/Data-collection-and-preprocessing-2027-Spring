@@ -1,0 +1,389 @@
+---
+title: "Python 数据采集"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+# 0208 Python 数据采集
+
+[教材章节：0208]()
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- 理解 Python 在数据采集中的优势及核心库生态
+- 掌握 HTTP 请求、网页解析与 API 数据获取的基本方法
+- 学会 使用 requests + BeautifulSoup + pandas 完成数据采集流程
+- 了解 数据采集的伦理规范与反爬虫应对策略
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. **第一节**：Python 数据采集基础
+2. **第二节**：网页解析与 API 调用
+3. **第三节**：实战案例（GBIF 与 Open-Meteo）
+4. **第四节**：采集伦理与数据保存
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+- **概念一**：HTTP 请求（Request）：客户端向服务器发送数据获取请求，服务器返回响应（Response）
+- **概念二**：API（Application Programming Interface）：网站提供的结构化数据接口，返回 JSON 等格式数据
+- **概念三**：网页解析（Web Scraping）：从 HTML 页面中提取目标数据的技术
+
+::: callout-note
+这些核心概念是理解本章内容的基础，请确保掌握。
+:::
+
+------------------------------------------------------------------------
+
+## 为什么用 Python 做数据采集
+
+| 优势 | 说明 |
+|:---|:---|
+| 丰富的库生态 | requests、BeautifulSoup、pandas、selenium |
+| 语法简洁 | 几行代码即可完成 HTTP 请求和数据解析 |
+| 数据处理一体化 | 采集、清洗、分析、可视化一站完成 |
+| 社区资源 | 大量教程、示例和开源爬虫项目 |
+
+------------------------------------------------------------------------
+
+## conda 环境管理
+
+```python
+#| eval: false
+# 创建专用环境
+conda create -n datacollect python=3.11
+
+# 激活环境
+conda activate datacollect
+
+# 安装核心库
+pip install requests beautifulsoup4 pandas lxml
+
+# 导出环境（可重复性）
+conda env export > environment.yml
+```
+
+::: callout-tip
+始终为每个项目创建独立的 conda 环境，避免包版本冲突。
+:::
+
+------------------------------------------------------------------------
+
+## HTTP 请求基础
+
+```python
+#| eval: false
+import requests
+
+response = requests.get("https://example.com/data")
+print(response.status_code)  # 200 = 成功
+print(response.text)         # 响应内容（文本）
+print(response.json())       # 响应内容（JSON）
+```
+
+------------------------------------------------------------------------
+
+## HTTP 状态码速查
+
+| 状态码 | 含义 | 应对方式 |
+|:---|:---|:---|
+| 200 | 请求成功 | 正常解析数据 |
+| 403 | 禁止访问 | 检查 User-Agent，确认是否被封 |
+| 404 | 页面不存在 | 检查 URL 是否正确 |
+| 429 | 请求过于频繁 | 降低请求频率，添加 time.sleep() |
+| 500 | 服务器内部错误 | 稍后重试 |
+
+------------------------------------------------------------------------
+
+## BeautifulSoup 网页解析
+
+```python
+#| eval: false
+from bs4 import BeautifulSoup
+
+html = requests.get("https://example.com").text
+soup = BeautifulSoup(html, "lxml")
+
+# 查找单个元素
+title = soup.find("h1").text
+
+# 查找所有元素
+links = soup.find_all("a")
+for link in links:
+    print(link.get("href"), link.text)
+
+# CSS 选择器
+items = soup.select("div.content > p")
+```
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 类别 | 工具/方法 | 用途 |
+|:---|:---|:---|
+| HTTP 请求 | requests.get() / .post() | 发送网络请求 |
+| 网页解析 | BeautifulSoup | 解析 HTML 提取数据 |
+| JSON 处理 | json / response.json() | 解析 API 返回数据 |
+| 数据整理 | pandas.DataFrame | 结构化存储与清洗 |
+| 频率控制 | time.sleep() | 控制请求间隔 |
+| 浏览器模拟 | selenium | 处理动态加载页面 |
+
+------------------------------------------------------------------------
+
+## API 数据采集：GBIF 示例
+
+```python
+#| eval: false
+import requests
+import pandas as pd
+
+# 1. 物种名称匹配，获取 taxonKey
+match_url = "https://api.gbif.org/v1/species/match"
+resp = requests.get(match_url, params={"name": "Bindahara phocides"})
+taxon_key = resp.json()["usageKey"]
+
+# 2. 查询物种分布记录
+occ_url = "https://api.gbif.org/v1/occurrence/search"
+params = {
+    "taxonKey": taxon_key,
+    "hasCoordinate": True,
+    "limit": 300
+}
+occ = requests.get(occ_url, params=params).json()
+
+# 3. 提取关键字段
+records = [{
+    "species": r.get("species"),
+    "lat": r.get("decimalLatitude"),
+    "lon": r.get("decimalLongitude"),
+    "year": r.get("year"),
+    "country": r.get("country")
+} for r in occ["results"]]
+
+df = pd.DataFrame(records)
+print(f"获取 {len(df)} 条记录")
+```
+
+------------------------------------------------------------------------
+
+## API 数据采集：Open-Meteo 气候数据
+
+```python
+#| eval: false
+import requests
+import pandas as pd
+
+# 获取某地点的历史气象数据
+url = "https://archive-api.open-meteo.com/v1/archive"
+params = {
+    "latitude": 30.27,
+    "longitude": 120.15,
+    "start_date": "2024-01-01",
+    "end_date": "2024-12-31",
+    "daily": "temperature_2m_mean,precipitation_sum",
+    "timezone": "Asia/Shanghai"
+}
+
+resp = requests.get(url, params=params)
+data = resp.json()["daily"]
+
+df = pd.DataFrame({
+    "date": data["time"],
+    "temp_mean": data["temperature_2m_mean"],
+    "precip_sum": data["precipitation_sum"]
+})
+print(df.head())
+```
+
+------------------------------------------------------------------------
+
+## 分页处理大数据集
+
+```python
+#| eval: false
+import time
+
+all_records = []
+offset = 0
+limit = 300
+
+while True:
+    params = {
+        "taxonKey": taxon_key,
+        "hasCoordinate": True,
+        "limit": limit,
+        "offset": offset
+    }
+    resp = requests.get(occ_url, params=params)
+    data = resp.json()
+
+    results = data.get("results", [])
+    if not results:
+        break
+
+    all_records.extend(results)
+    offset += limit
+    print(f"已获取 {len(all_records)} 条记录...")
+
+    if data.get("endOfRecords", True):
+        break
+
+    time.sleep(1)  # 礼貌性延迟
+
+df = pd.DataFrame(all_records)
+```
+
+------------------------------------------------------------------------
+
+## 数据保存：CSV vs JSON
+
+```python
+#| eval: false
+import json
+
+# 保存为 CSV（适合表格数据）
+df.to_csv("gbif_records.csv", index=False, encoding="utf-8-sig")
+
+# 保存为 JSON（适合嵌套结构）
+with open("gbif_records.json", "w", encoding="utf-8") as f:
+    json.dump(all_records, f, ensure_ascii=False, indent=2)
+```
+
+| 格式 | 优点 | 缺点 |
+|:---|:---|:---|
+| CSV | 通用、Excel 可打开、体积小 | 不支持嵌套结构 |
+| JSON | 支持嵌套、保留数据类型 | 体积较大、不便直接浏览 |
+
+------------------------------------------------------------------------
+
+## 采集伦理与规范
+
+- **robots.txt**：访问前检查网站的 robots.txt 文件，遵守爬取规则
+- **请求频率**：添加 `time.sleep(1)` 控制请求间隔，避免对服务器造成压力
+- **User-Agent**：设置合理的 User-Agent 标识，表明请求来源
+
+```python
+#| eval: false
+headers = {
+    "User-Agent": "Mozilla/5.0 (research-project; contact@example.com)"
+}
+response = requests.get(url, headers=headers)
+```
+
+::: callout-note
+尊重数据提供方的使用条款，优先使用官方 API 而非直接爬取网页。
+:::
+
+------------------------------------------------------------------------
+
+## 代码示例
+
+```python
+#| eval: false
+import requests
+import pandas as pd
+import time
+
+# 多物种 GBIF 数据批量采集
+species_list = ["Bindahara phocides", "Bindahara sugriva", "Bindahara mora"]
+all_data = []
+
+for species in species_list:
+    # 匹配物种
+    match = requests.get(
+        "https://api.gbif.org/v1/species/match",
+        params={"name": species}
+    ).json()
+
+    if "usageKey" not in match:
+        print(f"未找到: {species}")
+        continue
+
+    # 获取记录
+    occ = requests.get(
+        "https://api.gbif.org/v1/occurrence/search",
+        params={"taxonKey": match["usageKey"], "hasCoordinate": True, "limit": 100}
+    ).json()
+
+    for r in occ["results"]:
+        all_data.append({
+            "species": r.get("species"),
+            "lat": r.get("decimalLatitude"),
+            "lon": r.get("decimalLongitude"),
+            "year": r.get("year")
+        })
+
+    time.sleep(1)
+
+df = pd.DataFrame(all_data)
+df.to_csv("multi_species_gbif.csv", index=False)
+print(f"共采集 {len(df)} 条记录，涵盖 {df['species'].nunique()} 个物种")
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- **要点一**：优先使用官方 API 获取数据，API 返回结构化 JSON 比解析 HTML 更稳定可靠
+- **要点二**：始终添加请求间隔（time.sleep），大批量采集时使用分页机制逐步获取
+- **要点三**：采集完成后立即保存原始数据，后续清洗在副本上进行
+
+::: callout-tip
+动手实践是学习本课程的关键，请在电脑前跟随课程一起操作。
+:::
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1**：requests 和 selenium 有什么区别，什么时候用 selenium？
+
+**A1**：requests 只能获取静态 HTML，对于 JavaScript 动态加载的页面内容无法获取。当页面内容需要浏览器渲染后才能显示时（如滚动加载、点击展开），需要使用 selenium 模拟浏览器操作。
+
+**Q2**：被网站封 IP 了怎么办？
+
+**A2**：首先反思是否请求过于频繁或违反了 robots.txt 规则。降低请求频率、设置合理的 User-Agent 是基本礼仪。优先使用官方 API 可以避免大多数封禁问题。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. Python 的 requests + BeautifulSoup + pandas 构成了数据采集的核心工具链，适合从网页和 API 获取数据
+2. API 数据采集（如 GBIF、Open-Meteo）比网页爬取更稳定、更规范，生态学研究应优先使用
+3. 数据采集必须遵守伦理规范：检查 robots.txt、控制请求频率、设置 User-Agent、尊重使用条款
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+- 使用 GBIF API 采集一个你感兴趣的物种的分布数据，保存为 CSV 文件
+- 使用 Open-Meteo API 获取你所在城市过去一年的气温和降水数据
+- **选做**：编写一个函数，接受物种名称列表作为输入，自动批量采集 GBIF 数据并合并为一个 DataFrame
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- requests 官方文档：[https://docs.python-requests.org/](https://docs.python-requests.org/)
+- BeautifulSoup 官方文档：[https://www.crummy.com/software/BeautifulSoup/bs4/doc/](https://www.crummy.com/software/BeautifulSoup/bs4/doc/)
+- GBIF API 文档：[https://www.gbif.org/developer/summary](https://www.gbif.org/developer/summary)
+- Open-Meteo API 文档：[https://open-meteo.com/en/docs](https://open-meteo.com/en/docs)

@@ -1,0 +1,128 @@
+---
+title: "研究环境搭建"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+## 第四讲：研究环境搭建 {.center}
+
+[第四章 在线版本](https://data-collection-and-preprocessing.github.io/Data-collection-and-preprocessing-2027-Spring/lectures/lecture-0104.html)
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- **理解**研究环境中各工具的作用与相互关系
+- **掌握** R、RStudio、Python、Git、Quarto 的安装与配置
+- **了解** CRAN 镜像配置与 GitHub 账号注册流程
+- **能够应用**环境检查清单验证安装是否成功
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. 核心工具安装（R、RStudio、Python、Git、Quarto）
+2. R/Python 包管理与安装
+3. GitHub 账号与 CRAN 镜像配置
+4. 环境验证检查清单
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: {.incremental}
+- **IDE（集成开发环境）**：RStudio 提供代码编辑、运行、调试、可视化的一体化界面
+- **包管理器（Package Manager）**：conda 管理 Python 环境与依赖，避免版本冲突
+- **版本控制（Version Control）**：Git 记录文件变更历史，支持多人协作
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 工具 | 用途 | 安装来源 |
+|------|------|----------|
+| R | 统计分析与可视化 | [r-project.org](https://www.r-project.org/) |
+| RStudio | R 的集成开发环境 | [posit.co](https://posit.co/downloads/) |
+| Miniconda | Python 环境管理 | [conda.io](https://docs.conda.io/) |
+| Git | 版本控制 | [git-scm.com](https://git-scm.com/) |
+| Quarto | 文档发布系统 | [quarto.org](https://quarto.org/) |
+
+------------------------------------------------------------------------
+
+## 代码示例：验证安装
+
+```{r}
+#| eval: false
+
+# 验证 R 包安装
+pkgs <- c("tidyverse", "readxl", "haven",
+          "corrplot", "patchwork", "metafor")
+install.packages(pkgs)
+
+# 检查是否全部加载成功
+sapply(pkgs, require, character.only = TRUE)
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- 安装顺序很重要：先装 R，再装 RStudio，最后装 Quarto
+- CRAN 镜像推荐使用清华源（`https://mirrors.tuna.tsinghua.edu.cn/CRAN`）加速下载
+- Python 推荐使用 Miniconda 而非 Anaconda，避免安装大量不需要的包
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1：RStudio 打开后提示找不到 R？**
+
+A：确保 R 已安装且 PATH 环境变量正确设置。Windows 用户可在 RStudio > Tools > Global Options > General 中手动指定 R 路径。
+
+. . .
+
+**Q2：`install.packages()` 下载速度很慢怎么办？**
+
+A：在 `.Rprofile` 中设置 CRAN 镜像：
+
+```r
+options(repos = c(CRAN = "https://mirrors.tuna.tsinghua.edu.cn/CRAN"))
+```
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. 研究环境由 R + RStudio + Python + Git + Quarto 五大工具组成，各司其职
+2. 包管理是日常工作的基础——R 用 `install.packages()`，Python 用 `conda install`
+3. 环境搭建完成后务必用检查清单逐项验证，确保后续课程顺利进行
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+1. **必做**：按照教程完成所有工具安装，运行环境检查脚本并截图提交
+2. **必做**：注册 GitHub 账号，创建一个测试仓库（test-repo）
+3. **选做**：尝试在终端中运行 `quarto render` 生成一个 HTML 文档
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- [R for Data Science (2e) - Prerequisites](https://r4ds.hadley.nz/intro)
+- [Happy Git and GitHub for the useR](https://happygitwithr.com/)
+- [Quarto 官方文档](https://quarto.org/docs/get-started/)

@@ -24,6 +24,7 @@ book:
       chapters:
         - 0101-what-is-data-collection.qmd
         - 0102-what-is-data-preprocessing.qmd
+        - 0103-data-management-workflow.qmd
         - 0104-environment-setup.qmd
     - part: "第二单元：R 语言编程基础"
       chapters:

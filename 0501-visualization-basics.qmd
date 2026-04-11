@@ -18,6 +18,11 @@ execute:
 ```{r}
 library(tidyverse)
 library(patchwork)
+library(ggridges)
+library(ggraph)
+library(igraph)
+library(plotly)
+library(viridis)
 ```
 
 ## ggplot2 语法体系
@@ -68,24 +73,37 @@ ggplot(data, aes(x, y))
 set.seed(2027)
 n <- 100
 
-# 基于Li et al. (2017)的实际参数范围生成
 ecology <- tibble(
-  # 土地利用类型
   land_use = sample(c("耕地", "草地", "灌丛", "次生林"), n, replace = TRUE,
                     prob = c(0.25, 0.30, 0.25, 0.20)),
-
-  # 岩性类型
   lithology = sample(c("白云岩", "石灰岩"), n, replace = TRUE),
-
-  # 土壤理化性质（基于实测范围）
-  species_richness = rpois(n, lambda = 15 + rnorm(n, 0, 5)),  # 物种丰富度
-  soil_ph = rnorm(n, 6.0, 0.6),                                # pH 5-7
-  organic_carbon = rlnorm(n, log(20), 0.5),                   # SOC 右偏分布
-  elevation = round(runif(n, 200, 1200)),                      # 海拔
-
-  # 季节
-  season = sample(c("春", "夏", "秋", "冬"), n, replace = TRUE)
+  species_richness = rpois(n, lambda = 15 + rnorm(n, 0, 5)),
+  soil_ph = rnorm(n, 6.0, 0.6),
+  organic_carbon = rlnorm(n, log(20), 0.5),
+  elevation = round(runif(n, 200, 1200)),
+  season = sample(c("春", "夏", "秋", "冬"), n, replace = TRUE),
+  x_coord = runif(n, 0, 100),
+  y_coord = runif(n, 0, 100),
+  biomass = rlnorm(n, log(500), 0.6)
 )
+
+set.seed(2028)
+species <- c("马尾松", "枫香", "荷木", "石楠", "芒萁", "铁芒萁", "野牡丹", "草本层")
+interaction_matrix <- matrix(
+  sample(c(-1, 0, 1), length(species)^2, replace = TRUE, prob = c(0.1, 0.7, 0.2)),
+  nrow = length(species), ncol = length(species)
+)
+diag(interaction_matrix) <- 0
+
+edges <- which(interaction_matrix != 0, arr.ind = TRUE) |>
+  as.data.frame() |>
+  setNames(c("from", "to")) |>
+  mutate(
+    from = species[from],
+    to = species[to],
+    weight = interaction_matrix[cbind(from, to)]
+  ) |>
+  filter(from != to)
 
 head(ecology, 10)
 ```
@@ -162,12 +180,10 @@ ecology |>
 ### 热力图（相关性矩阵）
 
 ```{r}
-# 计算相关系数
 cor_matrix <- ecology |>
   select(species_richness, soil_ph, organic_carbon, elevation) |>
   cor()
 
-# 转为长格式绘图
 cor_matrix |>
   as.data.frame() |>
   rownames_to_column("var1") |>
@@ -181,6 +197,618 @@ cor_matrix |>
   theme_minimal() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 ```
+
+## 进阶图表类型
+
+### 小提琴图与箱线图组合
+
+小提琴图（Violin Plot）是箱线图的"升级版"，它结合了箱线图和密度图的特点，能够同时展示数据的分布形态和统计特征。对于生态学数据而言，小提琴图特别适合展示物种丰富度、功能多样性等指标在不同处理或环境梯度间的分布差异。
+
+```{r}
+ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
+  geom_violin(alpha = 0.6, trim = FALSE) +
+  geom_boxplot(width = 0.15, fill = "white", outlier.shape = 21, alpha = 0.8) +
+  labs(x = "", y = "物种丰富度", title = "小提琴图 + 箱线图组合") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+::: {.callout-tip}
+### 小提琴图参数说明
+
+- `trim = TRUE`：将小提琴尾部裁剪到数据范围内；`trim = FALSE` 保留完整尾部
+- 小提琴的宽度表示该值附近的观测密度，宽度越宽表示数据越集中
+- 叠加箱线图时用 `width` 控制宽度
+- 若只想显示均值点，可添加 `stat_summary(fun = "mean", geom = "point", color = "red")`
+:::
+
+### 分组小提琴图
+
+```{r}
+ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = lithology)) +
+  geom_violin(alpha = 0.7, trim = FALSE, position = position_dodge(width = 0.9)) +
+  geom_boxplot(width = 0.15, position = position_dodge(width = 0.9), alpha = 0.8) +
+  labs(x = "", y = "有机碳 (g/kg)", fill = "岩性", title = "分组小提琴图") +
+  scale_fill_brewer(palette = "Set3") +
+  theme_minimal()
+```
+
+### 山脊图（ggridges）
+
+山脊图（Ridgeline Plot）是一种展示多组数据分布变化的可视化方式，特别适合展示时间序列数据的分布变化（如季节动态）或环境梯度上的物种分布变化。ggridges 包提供了便捷的山脊图绘制功能。
+
+```{r}
+ggplot(ecology, aes(x = species_richness, y = season, fill = season)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01) +
+  scale_fill_viridis_d(option = "D") +
+  labs(x = "物种丰富度", y = "", title = "不同季节物种丰富度分布（山脊图）") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+::: {.callout-tip}
+### ggridges 进阶用法
+
+- `rel_min_height`：控制尾部裁剪，0.01 表示裁剪掉密度低于最大值 1% 的尾部
+- 排序：山脊图默认按 y 轴顺序排列，可通过 `factor(season, levels = c("春","夏","秋","冬"))` 控制顺序
+- 分面：`facet_wrap(~land_use)` 可进一步按土地利用类型分面
+- 叠加点：`geom_jitter()` 可添加原始数据点
+:::
+
+### 分组山脊图
+
+```{r}
+ggplot(ecology, aes(x = organic_carbon, y = land_use, fill = land_use)) +
+  geom_density_ridges(alpha = 0.6, rel_min_height = 0.01) +
+  facet_wrap(~season, ncol = 2) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(x = "有机碳 (g/kg)", y = "", title = "不同土地利用类型有机碳分布（按季节分面）") +
+  theme_minimal() +
+  theme(legend.position = "none", strip.background = element_rect(fill = "grey95"))
+```
+
+### 等高线图（geom_contour）
+
+等高线图用于展示三维空间数据（两个连续变量 + 一个响应变量）的分布模式。在生态学中，等高线图常用于展示物种丰富度、生物量或土壤性质在空间或环境梯度上的分布。
+
+```{r}
+set.seed(2029)
+grid_data <- expand.grid(
+  elevation = seq(200, 1200, length.out = 50),
+  soil_ph = seq(4.5, 7.5, length.out = 50)
+) |>
+  as.data.frame() |>
+  mutate(
+    richness = 15 + 0.01 * elevation - 2 * (soil_ph - 6)^2 + rnorm(nrow(.), 0, 1),
+    richness = round(richness)
+  )
+
+ggplot(grid_data, aes(x = elevation, y = soil_ph, z = richness)) +
+  geom_contour_filled(alpha = 0.8) +
+  geom_point(data = ecology, aes(x = elevation, y = soil_ph),
+             alpha = 0.3, size = 0.5, color = "white") +
+  labs(x = "海拔 (m)", y = "土壤 pH",
+       title = "物种丰富度空间分布（等高线填充图）",
+       fill = "物种丰富度") +
+  scale_fill_viridis_d(option = "E") +
+  theme_minimal()
+```
+
+::: {.callout-note}
+### 等高线图类型对比
+
+| 函数 | 用途 | 适用场景 |
+|:---|:---|:---|
+| `geom_contour()` | 线状等高线 | 等值线分析 |
+| `geom_contour_filled()` | 填充等高线 | 空间分布热力图 |
+| `geom_density_2d()` | 二维密度等高线 | 点密度分布 |
+
+当没有现成的 z 值时，可用 `stat_density_2d()` 从 x-y 坐标自动计算密度。
+:::
+
+### 等高线叠加散点图
+
+```{r}
+ggplot(ecology, aes(x = elevation, y = soil_ph)) +
+  stat_density_2d(geom = "polygon", aes(fill = after_stat(level)), alpha = 0.4) +
+  geom_point(aes(color = species_richness), alpha = 0.6) +
+  scale_color_viridis_c(option = "C") +
+  scale_fill_viridis_c(option = "C", alpha = 0.1) +
+  labs(x = "海拔 (m)", y = "土壤 pH",
+       color = "物种丰富度", fill = "密度",
+       title = "海拔-pH 空间中的物种丰富度分布") +
+  theme_minimal()
+```
+
+### 网络图（ggraph）
+
+生态网络（Ecological Network）展示物种之间的相互作用关系（如竞争、互利、捕食等），是分析群落结构的重要工具。ggraph 包基于 ggplot2 语法，可以便捷地绘制各种网络图。
+
+```{r}
+net <- graph_from_data_frame(edges, directed = FALSE)
+
+ggraph(net, layout = "fr") +
+  geom_edge_link(aes(width = abs(weight), color = factor(weight))) +
+  geom_node_point(size = 8, color = "steelblue", alpha = 0.8) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 4) +
+  scale_edge_color_manual(values = c("coral" = "coral", "-1" = "steelblue"),
+                         labels = c("竞争", "互利"), name = "关系类型") +
+  labs(title = "物种互作网络图") +
+  theme_void()
+```
+
+::: {.callout-tip}
+### 网络布局选择
+
+| 布局 | 特点 | 适用场景 |
+|:---|:---|:---|
+| `"fr"` | 节点间距均匀 | 一般网络 |
+| `"circle"` | 节点沿圆周排列 | 展示节点关系 |
+| `"kk"` | 保持节点距离 | 层次结构 |
+| `"tree"` | 树状布局 | 有层次的数据 |
+
+边的属性（`width`、`color`）可以映射到互作强度或互作类型上。
+:::
+
+### 生态网络图（带功能群分组）
+
+```{r}
+node_groups <- c("马尾松" = "乔木", "枫香" = "乔木", "荷木" = "乔木",
+                 "石楠" = "灌木", "芒萁" = "蕨类", "铁芒萁" = "蕨类",
+                 "野牡丹" = "灌木", "草本层" = "草本")
+
+ggraph(net, layout = "fr") +
+  geom_edge_link(aes(width = abs(weight), color = factor(weight, levels = c(-1, 1)),
+                 alpha = 0.6)) +
+  geom_node_point(aes(size = 10, color = node_groups[name]), alpha = 0.9) +
+  geom_node_text(aes(label = name), repel = TRUE, size = 4) +
+  scale_edge_color_manual(values = c("-1" = "coral", "1" = "forestgreen"),
+                          labels = c("竞争", "互利"), name = "关系") +
+  scale_color_viridis_d(option = "D", name = "功能群") +
+  labs(title = "喀斯特森林物种互作网络") +
+  theme_void()
+```
+
+## 配色方案详解
+
+### ColorBrewer 色板
+
+ColorBrewer 是专门为地图和分级统计图设计的配色方案，提供三大类配色：
+
+- ** Sequential（顺序型）**：从浅到深的单一色相，适合展示从低到高的连续变量
+- ** Diverging（分类型/离异型）**：两端为不同色相，中间为中性色，适合展示相对于参考值的高低
+- ** Qualitative（离散型）**：多种色相，适合展示分类变量
+
+```{r}
+par(mfrow = c(3, 1), mar = c(2, 4, 2, 2))
+display.brewer.all(type = "seq")
+display.brewer.all(type = "div")
+display.brewer.all(type = "qual")
+```
+
+::: {.callout-tip}
+### ColorBrewer 常用色板
+
+**离散型（Qualitative）**：
+- `"Set1"` / `"Set2"` / `"Set3"`：适合分类数据
+- `"Dark2"`：暗色调，适合有背景的图
+- `"Paired"`：成对色板，适合有内在顺序的分类
+
+**顺序型（Sequential）**：
+- `"Blues"` / `"Greens"` / `"Oranges"` / `"Reds"`：单一色相渐变
+- `"viridis"`：色盲友好首选
+
+在 ggplot2 中使用：`scale_fill_brewer(palette = "Set2")` 或 `scale_color_brewer(palette = "Set2")`
+:::
+
+### 分面展示不同配色方案
+
+```{r}
+palettes <- c("Set2", "Dark2", "Paired", "Accent")
+names(palettes) <- palettes
+
+map(palettes, function(p) {
+  ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
+    geom_boxplot(alpha = 0.7) +
+    scale_fill_brewer(palette = p) +
+    labs(title = paste("palette =", p)) +
+    theme_minimal() +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+}) |>
+  wrap_plots(ncol = 2) &
+  plot_annotation(title = "ColorBrewer 离散色板对比")
+```
+
+### viridis 变体对比
+
+viridis 色板是一套对色盲友好、在灰度打印时仍可区分的配色方案，包含 5 种变体：
+
+| 变体 | 色相 | 特点 | 推荐场景 |
+|:---|:---|:---|:---|
+| `"A"`（magma） | 白→红→紫→黑 | 亮度递增 | 夜间模式背景 |
+| `"B"`（inferno） | 黄→橙→红→紫→黑 | 亮度递增 | 高对比度 |
+| `"C"`（plasma） | 白→黄→橙→粉→紫 | 无绿色 | 绿-红色盲友好 |
+| `"D"`（viridis） | 黄→绿→蓝→紫 | 默认均衡 | **通用推荐** |
+| `"E"`（cividis） | 深蓝→青→黄 | 完全色盲友好 | 无障碍设计 |
+
+```{r}
+viridis_options <- c("A" = "magma", "B" = "inferno", "C" = "plasma",
+                      "D" = "viridis", "E" = "cividis")
+names(viridis_options) <- paste0("option ", names(viridis_options))
+
+map(viridis_options, function(opt) {
+  ggplot(ecology, aes(x = elevation, y = soil_ph, color = organic_carbon)) +
+    geom_point(size = 2, alpha = 0.7) +
+    scale_color_viridis_c(option = opt) +
+    labs(title = opt, x = "", y = "") +
+    theme_minimal() +
+    theme(legend.position = "none", plot.title = element_text(hjust = 0.5))
+}) |>
+  wrap_plots(ncol = 2) &
+  plot_annotation(title = "viridis 色板变体对比")
+```
+
+::: {.callout-tip}
+### viridis 连续 vs 离散
+
+- 连续变量：`scale_color_viridis_c(option = "D")` / `scale_fill_viridis_c()`
+- 离散变量（≤ 8 类）：`scale_color_viridis_d(option = "D")` / `scale_fill_viridis_d()`
+- 离散变量（> 8 类）：viridis 不推荐超过 8 个类别，可考虑 ColorBrewer 的离散色板
+
+### 色盲友好设计原则
+
+1. 避免红-绿对比（最常见的色盲类型）
+2. 避免单独的色相区分，添加亮度/纹理辅助
+3. 在论文提交前，用色盲模拟器（如 Coblis、Color Oracle）检查
+4. viridis 和 cividis 专为色盲友好设计，可优先选用
+:::
+
+### 自定义配色方案
+
+当 ColorBrewer 或 viridis 无法满足需求时，可以手动定义配色：
+
+```{r}
+my_colors <- c("耕地" = "#8DD3C7", "草地" = "#FFFFB3",
+               "灌丛" = "#BEBADA", "次生林" = "#FB8072")
+
+ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
+  geom_boxplot(alpha = 0.7) +
+  scale_fill_manual(values = my_colors) +
+  labs(x = "", y = "物种丰富度", title = "自定义配色方案") +
+  theme_minimal() +
+  theme(legend.position = "none")
+```
+
+### 渐变色方案
+
+```{r}
+ggplot(ecology, aes(x = elevation, y = soil_ph, color = organic_carbon)) +
+  geom_point(size = 3, alpha = 0.7) +
+  scale_color_gradient(low = "#FEE8C8", high = "#7F0000", name = "有机碳") +
+  labs(x = "海拔 (m)", y = "土壤 pH", title = "两色渐变") +
+  theme_minimal()
+```
+
+### 三色渐变（双极配色）
+
+当数据有正负或相对于某个参考值时，使用双极配色：
+
+```{r}
+ggplot(ecology, aes(x = elevation, y = soil_ph, color = biomass - mean(ecology$biomass))) +
+  geom_point(size = 3, alpha = 0.7) +
+  scale_color_gradient2(low = "steelblue", mid = "white", high = "coral",
+                       midpoint = 0, name = "生物量偏差") +
+  labs(x = "海拔 (m)", y = "土壤 pH", title = "双极渐变配色（偏离均值）") +
+  theme_minimal()
+```
+
+## 交互式可视化（plotly）
+
+plotly 是 R 语言中功能强大的交互式可视化库，支持直接转换 ggplot2 图表为交互式版本。
+
+### ggplotly 转换
+
+将 ggplot2 图表直接转换为 plotly 交互式图表，只需用 `ggplotly()` 包装即可：
+
+```{r}
+p_static <- ggplot(ecology, aes(x = elevation, y = species_richness,
+                                  color = land_use, shape = lithology)) +
+  geom_point(size = 2, alpha = 0.7) +
+  geom_smooth(method = "lm", se = FALSE) +
+  scale_color_brewer(palette = "Set2") +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用", shape = "岩性",
+       title = "静态版本（ggplot2）") +
+  theme_minimal()
+
+ggplotly(p_static, tooltip = c("x", "y", "color", "shape"))
+```
+
+::: {.callout-tip}
+### ggplotly 交互功能
+
+- **悬停提示**：鼠标移到数据点上自动显示原始数据值
+- **缩放**：可框选放大特定区域
+- **平移**：拖动图表移动查看范围
+- **导出**：可导出为 PNG/SVG/PDF
+
+### 性能提示
+
+- `ggplotly()` 对大型数据集（> 10,000 行）可能较慢
+- 可先 `dplyr::sample_n(data, 5000)` 采样再转换
+- 或使用 `plot_ly()` 直接创建（见下文）
+:::
+
+### 交互式散点图（plot_ly）
+
+使用 `plot_ly()` 直接创建交互式图表，更精细地控制交互功能：
+
+```{r}
+plot_ly(ecology, x = ~soil_ph, y = ~species_richness,
+        color = ~land_use, size = ~elevation,
+        colors = "Set2",
+        text = ~paste("土地利用:", land_use, "<br>",
+                      "岩性:", lithology, "<br>",
+                      "海拔:", elevation, "m"),
+        hoverinfo = "text") |>
+  add_markers() |>
+  layout(
+    title = "交互式散点图",
+    xaxis = list(title = "土壤 pH"),
+    yaxis = list(title = "物种丰富度")
+  )
+```
+
+### 交互式热力图
+
+```{r}
+ecology_num <- ecology |>
+  select(species_richness, soil_ph, organic_carbon, elevation, biomass)
+
+cor_matrix_plot <- cor(ecology_num)
+colnames(cor_matrix_plot) <- c("丰富度", "pH", "有机碳", "海拔", "生物量")
+rownames(cor_matrix_plot) <- colnames(cor_matrix_plot)
+
+plot_ly(x = colnames(cor_matrix_plot), y = rownames(cor_matrix_plot),
+        z = cor_matrix_plot, type = "heatmap",
+        colors = colorRamp(c("steelblue", "white", "coral")),
+        zmid = 0,
+        text = round(cor_matrix_plot, 2),
+        hoverinfo = "text") |>
+  layout(title = "变量相关性热力图（交互式）")
+```
+
+### 交互式时间序列图
+
+生态学数据常包含时间维度（如季节动态、月度监测等）。plotly 支持丰富的交互功能：
+
+```{r}
+set.seed(2030)
+time_series <- tibble(
+  month = rep(1:12, each = 10),
+  year = rep(c(2022, 2023), each = 60),
+  biomass = rlnorm(120, log(500) + 0.1 * sin(month/12 * 2 * pi), 0.3)
+) |>
+  group_by(month, year) |>
+  summarise(mean_biomass = mean(biomass), sd_biomass = sd(biomass), .groups = "drop") |>
+  mutate(month_label = month.name[month])
+
+plot_ly(time_series, x = ~month, y = ~mean_biomass,
+        color = ~factor(year), colors = c("#404040", "#737373"),
+        error_y = ~list(array = sd_biomass, color = "#000000"),
+        type = "scatter", mode = "lines+markers",
+        text = ~paste(month_label, year, "<br>生物量:", round(mean_biomass, 1), "g/m²"),
+        hoverinfo = "text") |>
+  layout(
+    title = "生物量月度动态（交互式）",
+    xaxis = list(title = "月份", dtick = 1),
+    yaxis = list(title = "生物量 (g/m²)"),
+    legend = list(title = list(text = "年份"))
+  )
+```
+
+::: {.callout-tip}
+### plotly 导出与嵌入
+
+```r
+# 保存为 HTML（交互式，可嵌入网页）
+htmlwidgets::saveWidget(p, "interactive_plot.html")
+
+# 保存为静态图片（需安装 orca）
+plotly_IMAGE(p, format = "png", out_file = "plot.png")
+```
+
+plotly 图表的 HTML 文件可上传至 Figshare/Zenodo，与论文数据一起归档，方便审稿人和读者在线交互查看原始数据。
+:::
+
+## 常见错误案例与解决方案
+
+### 过度绘图（Overplotting）
+
+当大量数据点重叠时，散点图会出现"墨水重叠"问题，导致数据点难以区分。这是生态学野外调查数据的常见问题（调查样点集中、数据密度高）。
+
+**问题代码示例**：
+
+```{r}
+#| fig-width: 8
+set.seed(2031)
+n_dense <- 2000
+dense_data <- tibble(
+  x = rnorm(n_dense, mean = 5, sd = 1),
+  y = x + rnorm(n_dense, 0, 0.8)
+)
+
+p_bad <- ggplot(dense_data, aes(x = x, y = y)) +
+  geom_point(size = 3) +
+  labs(title = "错误做法：2000个重叠点") +
+  theme_minimal()
+```
+
+**解决方案一：透明度和抖动**
+
+```{r}
+p1 <- ggplot(dense_data, aes(x = x, y = y)) +
+  geom_point(alpha = 0.1, size = 1) +
+  labs(title = "方案1：透明度 (alpha = 0.1)") +
+  theme_minimal()
+
+p2 <- ggplot(dense_data, aes(x = x + rnorm(n_dense, 0, 0.05),
+                              y = y + rnorm(n_dense, 0, 0.05))) +
+  geom_point(alpha = 0.3, size = 1.5) +
+  labs(title = "方案2：随机抖动") +
+  theme_minimal()
+
+p_bad + p1 + p2
+```
+
+**解决方案二：2D 密度估计**
+
+```{r}
+ggplot(dense_data, aes(x = x, y = y)) +
+  stat_density_2d(geom = "raster", aes(fill = after_stat(density)), alpha = 0.8) +
+  scale_fill_viridis_c(option = "D") +
+  labs(title = "方案3：2D 密度热力图") +
+  theme_minimal()
+```
+
+**解决方案三：分箱统计**
+
+```{r}
+ggplot(dense_data, aes(x = x, y = y)) +
+  geom_bin2d(bins = 30, alpha = 0.8) +
+  scale_fill_viridis_c(option = "C") +
+  labs(title = "方案4：矩形分箱 (geom_bin2d)") +
+  theme_minimal()
+```
+
+::: {.callout-warning}
+### 过度绘图检查清单
+
+当数据点 > 500 时，务必检查：
+
+- [ ] 是否添加了 `alpha` 透明度参数（推荐 0.3–0.5）
+- [ ] 是否使用了抖动（`geom_jitter()`）
+- [ ] 是否可以用 2D 密度图替代
+- [ ] 是否可以用分箱统计（`geom_bin2d` / `geom_hex`）替代
+- [ ] 是否需要采样展示（如只展示 10% 数据点）
+:::
+
+### 坐标轴截断误导
+
+坐标轴截断是导致数据误导展示的常见问题。通过调整坐标轴范围，可以"人为夸大"或"人为缩小"数据差异。
+
+**问题示例**：两幅图展示相同数据，但纵轴范围不同，造成视觉上的巨大差异
+
+```{r}
+set.seed(2032)
+p_data <- tibble(
+  group = c(rep("处理组", 50), rep("对照组", 50)),
+  value = c(rnorm(50, mean = 10.5, sd = 0.5), rnorm(50, mean = 10, sd = 0.5))
+)
+
+p_narrow <- ggplot(p_data, aes(x = group, y = value, fill = group)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(8, 12)) +
+  labs(title = "纵轴范围 8-12：差异看起来很大") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_full <- ggplot(p_data, aes(x = group, y = value, fill = group)) +
+  geom_boxplot() +
+  scale_y_continuous(limits = c(0, 15)) +
+  labs(title = "纵轴范围 0-15：差异看起来很小") +
+  scale_fill_brewer(palette = "Set2") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_narrow + p_full
+```
+
+::: {.callout-warning}
+### 坐标轴截断检查清单
+
+发表图表前，务必检查：
+
+- [ ] 坐标轴起点是否为 0（尤其是柱状图）？若非 0，务必在图注或方法部分说明
+- [ ] 纵轴范围是否足够显示所有数据点（包括离群值）？
+- [ ] 若使用截断坐标轴，是否在图注中明确标注（如添加断裂标记）？
+- [ ] 是否有多幅图共用坐标轴但范围不同的情况？
+
+**统计建议**：对于组间比较，无论坐标轴如何显示，务必在正文/附表中报告效应量（effect size）和置信区间，而不仅依赖视觉比较。
+:::
+
+### 3D 图表的问题
+
+3D 图表看似酷炫，但在科研论文中存在严重问题：
+
+1. **透视失真**：靠近观察者的对象显得更大
+2. **遮挡问题**：前面的数据遮挡后面的数据
+3. **角度依赖**：不同观看角度给出不同印象
+4. **难以精确读数**：无法准确读取数值
+
+**替代方案**：使用分面、颜色编码或等高线图替代 3D 散点图
+
+::: {.callout-warning}
+### 3D 图表替代方案
+
+| 3D 问题 | 替代方案 |
+|:---|:---|
+| 三维散点图 | 二维散点图 + 颜色/大小编码第三变量 |
+| 3D 曲面图 | 等高线填充图 |
+| 3D 柱状图 | 分组柱状图或热力图 |
+| 3D 折线图 | 多面板折线图 |
+
+对于必须使用 3D 的场景（如蛋白质结构），建议使用专业的可视化软件（如 PyMOL、Chimera），而非 ggplot2/plotly。
+:::
+
+### 饼图的替代方案
+
+饼图在科研论文中常常不是最佳选择，原因如下：
+
+1. **人眼对角度的感知不如长度精确**
+2. **当类别接近时难以区分大小**
+3. **不适合展示负值或零值**
+4. **多类别时难以阅读**
+
+**替代方案**：水平柱状图更适合展示分类数据的比较
+
+```{r}
+# 饼图 vs 柱状图对比
+p_pie <- ecology |>
+  count(land_use) |>
+  ggplot(aes(x = "", y = n, fill = land_use)) +
+  geom_bar(width = 1, stat = "identity") +
+  coord_polar(theta = "y") +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "饼图（不推荐）", fill = "土地利用") +
+  theme_minimal() +
+  theme(axis.title = element_blank(), axis.text = element_blank())
+
+p_bar <- ecology |>
+  count(land_use) |>
+  ggplot(aes(x = reorder(land_use, -n), y = n, fill = land_use)) +
+  geom_col(alpha = 0.8) +
+  geom_text(aes(label = n), vjust = -0.5) +
+  scale_fill_brewer(palette = "Set2") +
+  labs(title = "水平柱状图（推荐）", fill = "土地利用", x = "", y = "计数") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+p_pie + p_bar
+```
+
+::: {.callout-tip}
+### 饼图替代选择
+
+如果必须使用饼图，建议：
+1. 类别不超过 5 个
+2. 使用水平柱状图替代
+3. 添加数据标签
+4. 避免 3D 饼图（扭曲角度）
+
+在生态学论文中，饼图适合展示各类群相对多度等简单比例数据。
+:::
 
 ## 科研论文级图表
 
@@ -220,7 +848,6 @@ p_box <- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use))
   theme_paper() +
   theme(legend.position = "none")
 
-# 组合并添加标签
 p_scatter + p_box +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") +
   plot_layout(widths = c(1.5, 1))
@@ -231,11 +858,9 @@ p_scatter + p_box +
 ```{r}
 #| eval: false
 
-# 将图表保存到变量中
 p_final <- p_scatter + p_box +
   plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
 
-# 确保输出目录存在
 dir.create("output/figures", recursive = TRUE, showWarnings = FALSE)
 
 # 保存为 PDF（矢量图，论文首选）
@@ -259,34 +884,6 @@ ggsave("output/figures/fig1_diversity.tiff", plot = p_final, width = 10, height 
 - 图注：在图下方，不在图内
 :::
 
-## 色盲友好配色：viridis
-
-viridis 色板在亮度上均匀变化，对色盲用户友好，打印为灰度图时也能区分。ggplot2 内置了 viridis 系列函数：
-
-```{r}
-# 离散变量：scale_color_viridis_d()
-p1 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +
-  geom_point(alpha = 0.7, size = 2) +
-  scale_color_viridis_d(option = "D") +
-  labs(x = "土壤 pH", y = "物种丰富度", color = "土地利用", title = "viridis 离散配色") +
-  theme_minimal()
-
-# 连续变量：scale_color_viridis_c()
-p2 <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = elevation)) +
-  geom_point(alpha = 0.7, size = 2) +
-  scale_color_viridis_c(option = "C") +
-  labs(x = "土壤 pH", y = "物种丰富度", color = "海拔 (m)", title = "viridis 连续配色") +
-  theme_minimal()
-
-p1 + p2
-```
-
-::: {.callout-tip}
-## viridis 色板选项
-
-`option` 参数可选 `"A"`（magma）、`"B"`（inferno）、`"C"`（plasma）、`"D"`（viridis，默认）、`"E"`（cividis）。科研论文推荐使用 `"D"` 或 `"E"`。
-:::
-
 ## 图表类型选择指南
 
 在开始绑图之前，先根据数据类型和分析目的选择合适的图表：
@@ -299,14 +896,31 @@ p1 + p2
 | 多变量相关 | 热力图（相关矩阵） | `geom_tile()` |
 | 分类计数 | 柱状图 | `geom_bar()` / `geom_col()` |
 | 时间序列 | 折线图 | `geom_line()` |
+| 多组分布比较 | 山脊图 | `geom_density_ridges()` |
+| 空间分布 | 等高线图 | `geom_contour_filled()` |
+| 物种互作网络 | 网络图 | `ggraph()` |
 
 ## 课后练习
 
-1. 用 `iris` 数据集绘制花瓣长度 vs 花瓣宽度的散点图，按物种着色
-2. 绘制三个物种花萼长度的箱线图，添加抖动点
-3. 创建一个 2×2 的组合图（散点图 + 箱线图 + 直方图 + 密度图）
-4. 应用自定义主题，导出为 PDF
-5. 尝试使用 `scale_color_viridis_d()` 替换默认配色
+1. **小提琴图练习**：绘制不同土地利用类型的物种丰富度小提琴图，叠加箱线图，并添加均值点
+
+2. **山脊图练习**：使用 `ggridges` 包绘制不同季节生物量的山脊图，比较分布变化
+
+3. **等高线图练习**：基于 `ecology` 数据集，绘制海拔与 pH 交互作用下有机碳的等高线填充图
+
+4. **网络图练习**：使用 `ggraph` 包创建一个简单的物种互作网络，调整布局和节点颜色
+
+5. **配色方案练习**：
+   - 比较 `scale_fill_brewer(palette = "Set2")` 和 `scale_fill_viridis_d()` 的效果
+   - 创建一个自定义配色方案应用于箱线图
+
+6. **交互式可视化练习**：将一个 ggplot2 散点图转换为 plotly 交互式图表，添加自定义悬停提示
+
+7. **过度绘图修复练习**：
+   - 生成 2000 个随机数据点
+   - 分别使用透明度、2D 密度图、分箱统计三种方法修复过度绘图问题
+
+8. **综合练习**：创建一个 2×3 的组合图，包含：散点图、箱线图、小提琴图、山脊图、热力图、柱状图
 
 ## 参考文献
 

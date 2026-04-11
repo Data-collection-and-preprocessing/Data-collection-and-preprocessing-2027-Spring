@@ -1,0 +1,131 @@
+---
+title: "R 数据处理进阶"
+author: "Huaqing Liu"
+format:
+  revealjs:
+    theme: white
+    slide-number: true
+    chalkboard:
+      buttons: false
+    preview-links: auto
+    css: slide.css
+    footer: '[课程仓库](https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring)'
+  pptx:
+    reference-doc: ../template.pptx
+bibliography:
+    - ../references.bib
+    - ../packages.bib
+---
+
+## 第六讲：R 数据处理进阶 {.center}
+
+[第六章 在线版本](https://data-collection-and-preprocessing.github.io/Data-collection-and-preprocessing-2027-Spring/lectures/lecture-0106.html)
+
+------------------------------------------------------------------------
+
+## 本章学习目标
+
+- **理解** tidy data 的三原则与管道操作符的设计思想
+- **掌握** dplyr 五大动词与 tidyr 数据重塑操作
+- **了解** tidyverse 生态系统的核心包及其分工
+- **能够应用**管道操作符串联多步数据处理流程
+
+------------------------------------------------------------------------
+
+## 内容概览
+
+1. tidyverse 生态系统与管道操作符
+2. dplyr 五大动词：filter、select、mutate、arrange、summarise
+3. tidyr 数据重塑：pivot_longer 与 pivot_wider
+4. 数据连接（join）与综合实践
+
+------------------------------------------------------------------------
+
+## 核心概念
+
+::: {.incremental}
+- **Tidy Data（整洁数据）**：每个变量占一列，每个观测占一行，每个值占一个单元格
+- **管道操作符 `|>`**：将左侧结果传递为右侧函数的第一个参数，读作"然后"
+- **长格式 vs 宽格式**：长格式便于分析与绘图，宽格式便于展示与阅读
+:::
+
+------------------------------------------------------------------------
+
+## 常用工具与方法
+
+| 函数 | 用途 | 示例 |
+|------|------|------|
+| `filter()` | 筛选行 | `filter(df, age > 18)` |
+| `select()` | 选择列 | `select(df, name, score)` |
+| `mutate()` | 新增/修改列 | `mutate(df, bmi = w/h^2)` |
+| `arrange()` | 排序 | `arrange(df, desc(score))` |
+| `summarise()` | 汇总统计 | `summarise(df, m = mean(x))` |
+| `pivot_longer()` | 宽转长 | 多列合并为 key-value |
+| `pivot_wider()` | 长转宽 | key-value 展开为多列 |
+| `left_join()` | 左连接 | 按共同列合并两表 |
+
+------------------------------------------------------------------------
+
+## 代码示例：管道式数据处理
+
+```{r}
+#| eval: false
+
+library(tidyverse)
+
+iris |>
+  filter(Sepal.Length > 5.0) |>
+  group_by(Species) |>
+  summarise(
+    mean_petal_l = mean(Petal.Length),
+    sd_petal_l   = sd(Petal.Length),
+    n            = n()
+  ) |>
+  arrange(desc(mean_petal_l))
+```
+
+------------------------------------------------------------------------
+
+## 实践要点
+
+- 管道操作符 `|>` 让代码从左到右、从上到下阅读，避免嵌套函数的"由内向外"阅读困难
+- `group_by() + summarise()` 是分组统计的标准模式，记得先分组再汇总
+- 数据连接（join）前务必检查主键是否唯一，避免行数意外膨胀
+
+------------------------------------------------------------------------
+
+## 常见问题与解答
+
+**Q1：`|>` 和 `%>%` 有什么区别？**
+
+A：`|>` 是 R 4.1+ 内置的管道操作符，`%>%` 来自 magrittr 包。功能基本相同，推荐使用 `|>` 因为无需额外加载包。
+
+. . .
+
+**Q2：`pivot_longer()` 的 `cols` 参数怎么指定多列？**
+
+A：可用多种方式：`cols = c(col1, col2)`、`cols = starts_with("score")`、`cols = -id`（排除 id 列以外的所有列）。
+
+------------------------------------------------------------------------
+
+## 本章小结
+
+1. tidyverse 提供了一套一致的数据处理语法，管道操作符 `|>` 是串联各步骤的核心
+2. dplyr 的五大动词覆盖了绝大多数数据操作需求——筛选、选择、变换、排序、汇总
+3. 数据重塑（长宽转换）与数据连接（join）是处理真实多表数据的必备技能
+
+------------------------------------------------------------------------
+
+## 课后任务
+
+1. **必做**：使用管道操作符对一个数据集完成"筛选 → 分组 → 汇总 → 排序"的完整流程
+2. **必做**：练习 `pivot_longer()` 和 `pivot_wider()`，将一个宽格式成绩表转为长格式
+3. **选做**：使用 `left_join()` 合并两个数据表，并处理合并后的缺失值
+
+------------------------------------------------------------------------
+
+## 延伸阅读
+
+- [R for Data Science (2e) - Data Transform](https://r4ds.hadley.nz/data-transform)
+- [tidyr pivoting vignette](https://tidyr.tidyverse.org/articles/pivot.html)
+- Wickham, H. (2014). Tidy Data. *Journal of Statistical Software*, 59(10).

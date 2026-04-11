@@ -12,13 +12,23 @@ title: "什么是数据预处理"
 
 原始数据几乎不可能直接用于分析，原因包括：
 
-- **缺失值**：传感器故障、记录遗漏、问卷未填写
-- **异常值**：输入错误、仪器故障、极端事件
-- **格式不一致**：日期格式混乱、单位不统一、编码不同
-- **重复记录**：同一样本被录入多次
+- **缺失值**：传感器故障、记录遗漏、问卷未填写、样本损坏
+- **异常值**：输入错误、仪器故障、极端事件、测量越限
+- **格式不一致**：日期格式混乱、单位不统一、编码不同、物种名写法差异
+- **重复记录**：同一样本被录入多次、传感器重复记录
 - **数据类型错误**：数值被存为文本，分类变量编码不规范
+- **不一致的分类**：同一类别有多种表达方式，如"阔叶树"和"落叶乔木"混用
 
 如果不处理这些问题就直接建模，结果将不可靠——这就是"垃圾进，垃圾出"（Garbage In, Garbage Out）。
+
+::: {.callout-warning}
+### 数据预处理在生态学研究中的特殊重要性
+
+生态学数据有其独特性：
+- 野外采集成本高，样本量通常较小，每一条数据都弥足珍贵
+- 生态过程受多尺度因素影响，数据类型多元（空间、时间、物种、功能性状）
+- 生态数据的"异常"有时是真实的生态信号（如新物种记录），需要审慎判断
+:::
 
 ## 数据预处理的完整流程
 
@@ -57,6 +67,7 @@ title: "什么是数据预处理"
 - 每个变量是什么类型（数值、分类、日期）？
 - 有多少缺失值？分布在哪里？
 - 数值变量的范围是否合理？
+- 分类变量的类别是否一致？
 
 在 R 中，常用的检查函数：
 
@@ -66,7 +77,11 @@ title: "什么是数据预处理"
 | `str()` / `glimpse()` | 查看数据结构 |
 | `summary()` | 数值摘要（均值、中位数、极值） |
 | `is.na()` | 检测缺失值 |
+| `colSums(is.na())` | 统计每列缺失值数量 |
+| `miss_var_summary()` | naniar包的缺失值摘要 |
 | `head()` / `tail()` | 查看前/后几行 |
+| `View()` | 在 RStudio 中交互式查看 |
+| `table()` | 查看分类变量的类别分布 |
 
 **最小 R 代码示例**：快速诊断一份数据的健康状况：
 
@@ -76,11 +91,13 @@ title: "什么是数据预处理"
 df <- read.csv("soil_survey.csv")
 
 # 基本结构
-dim(df)
-str(df)
+dim(df)           # 行列数
+str(df)           # 数据类型
+glimpse(df)       # tidyverse风格的结构查看
 
 # 缺失值概览
 colSums(is.na(df))
+miss_var_summary(df)  # naniar包：缺失值详细报告
 
 # 数值摘要
 summary(df)
@@ -92,13 +109,20 @@ summary(df)
 
 | 方法 | 公式 | 结果范围 | 适用场景 |
 |:---|:---|:---|:---|
-| Z-score 标准化 | (x - μ) / σ | 无固定范围 | 大多数统计分析 |
-| Min-Max 归一化 | (x - min) / (max - min) | [0, 1] | 神经网络、距离计算 |
+| Z-score 标准化 | (x - μ) / σ | 无固定范围 | 大多数统计分析、主成分分析 |
+| Min-Max 归一化 | (x - min) / (max - min) | [0, 1] | 神经网络、距离计算、聚类分析 |
+| 中心化 | x - μ | 无固定范围 | 需要均值居中的分析 |
+| 鲁棒标准化 | (x - median) / MAD | 无固定范围 | 存在异常值的数据 |
 
 ::: {.callout-note}
 ### 对数变换
 
 对数变换 log(x) 严格来说不属于标准化/归一化，而是一种**分布变换**，用于将右偏分布拉向对称。它常在特征工程阶段使用，详见 0302。
+
+对数变换需要注意：
+- 只能对正值使用（0 值可替换为 log(1) 或添加小的常数）
+- 变换后解释需要回溯到原始尺度
+- 生态学中常用于：个体数量、生物量、距离数据
 :::
 
 ## 常见问题类型示例
@@ -107,30 +131,740 @@ summary(df)
 
 | 问题类型 | 原始数据示例 | 处理思路 |
 |:---|:---|:---|
-| 缺失值 | pH = NA | 用该深度层的中位数填充 |
-| 异常值 | pH = -1.5 | 标记为 NA 后填充 |
-| 格式不一致 | 日期 = "15/3/2027" | 转为 "2027-03-15" |
-| 重复记录 | 同一样点出现两次 | 保留第一条，删除重复 |
-| 单位不一致 | 有机碳：有的 g/kg，有的 % | 统一为 g/kg |
+| 缺失值 | pH = NA | 用该深度层的中位数填充，或用多重插补 |
+| 异常值 | pH = -1.5 | 核实来源后标记为 NA，或用 Winsorization |
+| 格式不一致 | 日期 = "15/3/2027" | 统一转为 "2027-03-15" |
+| 重复记录 | 同一样点出现两次 | 保留唯一记录，删除重复 |
+| 单位不一致 | 有机碳：g/kg vs. % | 统一为 g/kg（1% = 10 g/kg）|
+| 分类不一致 | 植被类型 = "常绿" vs. " Evergreen" | 统一命名规范 |
+| 数据类型错误 | 数值存为文本 | 转为数值类型，处理非数值字符 |
 
-## 数据预处理与可重复性
+## 生态学数据预处理案例
+
+### 案例一：土壤调查数据预处理
+
+土壤调查是生态学研究中最常见的数据类型之一。以下是一份典型的土壤调查数据及其预处理流程。
+
+**原始数据结构示例**：
+
+```{r}
+#| eval: false
+# 假设原始数据包含以下字段：
+# 样点ID、采集日期、经度、纬度、海拔、土壤深度、pH值、有机碳、全氮、含水量
+# 以下为模拟的原始数据
+soil_raw <- tibble(
+  plot_id   = c("P001", "P001", "P002", "P002", "P003", "P003", "P004", "P004"),
+  layer     = c("0-10cm", "10-20cm", "0-10cm", "10-20cm", "0-10cm", "10-20cm", "0-10cm", "10-20cm"),
+  date      = c("2027-03-15", "2027-03-15", "2027/03/16", "2027/03/16", NA, "2027-03-17", "2027-03-17", "2027-03-17"),
+  ph        = c(5.2, 5.5, 4.8, 5.1, -1.0, 5.3, 8.5, 8.2),  # -1.0和8.5可能是异常值
+  soc       = c(12.3, 8.7, NA, 6.2, 15.1, 9.8, 2.1, 1.5),  # 缺失值和异常低值
+  tn        = c(1.2, 0.8, 1.1, 0.7, 1.4, 0.9, 0.3, 0.2),
+  moisture  = c(35.2, 32.1, 28.5, NA, 38.7, 35.2, 15.2, 14.8)
+)
+```
+
+**步骤1：数据导入与结构检查**
+
+```{r}
+#| eval: false
+library(tidyverse)
+library(janitor)
+
+# 导入数据（实际使用 read.csv() 或 readxl::read_excel()）
+soil_raw <- read_csv("soil_survey_2027.csv")
+
+# 基本检查
+dim(soil_raw)                    # 行列数
+str(soil_raw)                    # 数据类型
+summary(soil_raw)                # 数值摘要
+
+# 使用 janitor 清理列名（统一为小写+下划线）
+soil_raw <- clean_names(soil_raw)
+```
+
+**步骤2：日期格式统一**
+
+```{r}
+#| eval: false
+library(lubridate)
+
+# 日期格式混乱示例
+# "2027-03-15", "2027/03/16", "15/03/2027" 等
+
+# 使用 lubridate 的解析函数自动识别格式
+soil_raw <- soil_raw %>%
+  mutate(
+    date = parse_date_time(date, orders = c("ymd", "dmy", "mdy"))
+  )
+
+# 验证转换结果
+class(soil_raw$date)  # 应该是 "Date"
+range(soil_raw$date)  # 查看日期范围是否合理
+```
+
+**步骤3：pH异常值检测与处理**
+
+pH 值的合理范围是 0-14，超出这个范围的值肯定是错误的。生态学土壤 pH 通常在 3.5-9.5 之间。
+
+```{r}
+#| eval: false
+library(ggplot2)
+
+# 可视化检测异常值
+ggplot(soil_raw, aes(x = ph)) +
+  geom_histogram(binwidth = 0.5, fill = "steelblue") +
+  geom_vline(xintercept = c(3.5, 9.5), color = "red", linetype = "dashed") +
+  labs(title = "pH值分布（红色虚线为合理范围边界）", x = "pH", y = "频数")
+
+# 箱线图检测
+ggplot(soil_raw, aes(y = ph)) +
+  geom_boxplot(fill = "lightgreen") +
+  labs(title = "pH值箱线图", y = "pH")
+
+# Z-score 方法检测异常值
+soil_raw <- soil_raw %>%
+  mutate(
+    ph_zscore = (ph - mean(ph, na.rm = TRUE)) / sd(ph, na.rm = TRUE),
+    ph_outlier_zscore = abs(ph_zscore) > 3  # |Z| > 3 视为异常
+  )
+
+# IQR 方法检测异常值
+ph_quartiles <- quantile(soil_raw$ph, probs = c(0.25, 0.75), na.rm = TRUE)
+ph_iqr <- ph_quartiles[2] - ph_quartiles[1]
+ph_lower <- ph_quartiles[1] - 1.5 * ph_iqr
+ph_upper <- ph_quartiles[2] + 1.5 * ph_iqr
+
+soil_raw <- soil_raw %>%
+  mutate(
+    ph_outlier_iqr = ph < ph_lower | ph > ph_upper
+  )
+
+# 汇总异常值
+cat("Z-score方法检测到的pH异常值：", sum(soil_raw$ph_outlier_zscore, na.rm = TRUE), "\n")
+cat("IQR方法检测到的pH异常值：", sum(soil_raw$ph_outlier_iqr, na.rm = TRUE), "\n")
+cat("pH合理范围：", ph_lower, "到", ph_upper, "\n")
+```
+
+**步骤4：缺失值处理策略**
+
+生态学数据中，处理缺失值需要根据缺失原因和数据特点选择合适的方法：
+
+```{r}
+#| eval: false
+library(naniar)
+
+# 缺失值可视化（使用 naniar 包）
+gg_miss_var(soil_raw) +
+  labs(title = "各变量缺失值分布")
+
+# 缺失值模式分析
+gg_miss_upset(soil_raw)
+
+# 策略1：删除缺失值严重的行/列
+# 删除含缺失值超过20%的列
+soil_clean <- soil_raw %>%
+  select(where(~ sum(is.na(.)) / nrow(soil_raw) < 0.2))
+
+# 策略2：用统计量填充（仅适用于随机缺失 MCAR 或 MAR）
+# 用各土层的中位数填充 pH
+soil_clean <- soil_raw %>%
+  group_by(layer) %>%
+  mutate(
+    ph = if_else(is.na(ph), median(ph, na.rm = TRUE), ph)
+  ) %>%
+  ungroup()
+
+# 策略3：多重插补（推荐用于MAR数据）
+library(mice)
+# 这里的示例代码，实际使用时需要根据数据调整
+# soil_imp <- mice(soil_raw, m = 5, method = "pmm")
+# soil_complete <- complete(soil_imp)
+```
+
+**步骤5：有机碳数据验证与清洗**
+
+有机碳含量（Soil Organic Carbon, SOC）的合理范围通常是 0.5-150 g/kg，低于此范围可能是录入错误或特殊土壤类型。
+
+```{r}
+#| eval: false
+# 有机碳合理性检查
+soil_raw <- soil_raw %>%
+  mutate(
+    soc_flag = case_when(
+      soc < 0        ~ "负值错误",
+      soc > 150      ~ "异常高值需核实",
+      soc >= 0.5 & soc <= 150 ~ "合理范围",
+      TRUE          ~ "缺失"
+    )
+  )
+
+# 查看异常标记结果
+table(soil_raw$soc_flag, useNA = "ifany")
+
+# 对于异常低值（可能录入错误），可按以下原则处理：
+# 1. 如果同一样点其他深度层有数据，可参考
+# 2. 如果是录入错误（少打了小数点），可修正
+# 3. 无法核实时，标记为 NA
+```
+
+---
+
+### 案例二：物种多样性数据预处理
+
+物种多样性调查产生的数据有其独特性：物种名录、丰度/多度数据、存在-缺失矩阵等。这些数据的预处理包括物种名标准化、丰度数据转换等。
+
+**物种名标准化**是多样性数据预处理中最重要也最耗时的步骤之一。不同文献、不同时期的调查可能使用不同的物种命名规范。
+
+```{r}
+#| eval: false
+# 原始物种记录示例（来自多份调查的汇总）
+species_raw <- tibble(
+  survey_id = c("S001", "S002", "S003", "S004", "S005", "S006"),
+  species   = c("Pinus massoniana", "Pinus massoniana Lamb.", 
+                "Masson Pine", "Quercus fabric",
+                "Quercus fabric Hance", "Castanopsis hystrix"),
+  abundance = c(15, 12, 8, NA, 6, 22)
+)
+
+# 物种名标准化流程
+
+# 1. 去除多余空格
+species_raw$species <- trimws(species_raw$species)
+
+# 2. 移除中文名称（如果有）
+# species_raw$species <- gsub("[一-龥]", "", species_raw$species)
+
+# 3. 提取学名的属名和种加词
+species_raw <- species_raw %>%
+  mutate(
+    genus     = word(species, 1),           # 第一词为属名
+    epithet   = word(species, 2, -1),       # 其余为种加词
+    full_name = paste0(genus, " ", epithet) # 标准化格式
+  )
+
+# 4. 物种名匹配与规范化（需要参考数据库）
+# 常用植物名称数据库：
+# - The Plant List (已停止更新)
+# - Tropicos (密苏里植物园)
+# - World Flora Online (WFO)
+# - Chinese Plant Name Index (IPNI中国节点)
+
+# 示例：使用近似匹配识别同义名
+name_map <- c(
+  "Pinus massoniana Lamb." = "Pinus massoniana",
+  "Masson Pine" = "Pinus massoniana",
+  "Quercus fabric Hance" = "Quercus fabric"
+)
+
+species_raw <- species_raw %>%
+  mutate(
+    species_standardized = recode(species, !!!name_map)
+  )
+
+# 5. 检查仍有问题的名称
+remaining_issues <- species_raw %>%
+  filter(!species_standardized %in% c("Pinus massoniana", "Quercus fabric", "Castanopsis hystrix"))
+
+cat("需要人工核查的物种名：\n")
+print(remaining_issues %>% select(species, species_standardized))
+```
+
+**丰度数据转换**：物种多度数据通常需要转换后才能用于多样性指数计算和统计分析。
+
+```{r}
+#| eval: false
+# 常见的数据转换类型
+
+# 原始丰度数据
+abundance_data <- tibble(
+  species = c("Pinus massoniana", "Quercus fabric", "Castanopsis hystrix", 
+              "Lithocarpus harlandii", "Schima superba"),
+  count   = c(15, 6, 22, 8, 3)
+)
+
+# 1. 存在-缺失转换（0/1）
+abundance_data <- abundance_data %>%
+  mutate(
+    presence = if_else(count > 0, 1, 0)
+  )
+
+# 2. 百分占比转换
+abundance_data <- abundance_data %>%
+  mutate(
+    pct = count / sum(count, na.rm = TRUE) * 100
+  )
+
+# 3. 对数转换（常用于减少右偏效应）
+abundance_data <- abundance_data %>%
+  mutate(
+    log_count = log(count + 1)  # +1 避免 log(0)
+  )
+
+# 4. 平方根转换（较温和的稳定方差方法）
+abundance_data <- abundance_data %>%
+  mutate(
+    sqrt_count = sqrt(count)
+  )
+
+# 5. 分散度调整（用于多样性指数）
+abundance_data <- abundance_data %>%
+  mutate(
+    prop = count / sum(count, na.rm = TRUE),  # 相对多度
+    rel_abund = prop * 100                     # 相对多度百分比
+  )
+
+# 查看转换结果
+print(abundance_data)
+```
+
+**物种-样点矩阵构建**：将长格式数据转换为宽格式的物种-样点矩阵（行为样点，列为物种）
+
+```{r}
+#| eval: false
+library(tidyr)
+
+# 假设我们有多份调查的物种数据
+survey_data <- tibble(
+  plot_id = c(rep("P001", 3), rep("P002", 2), rep("P003", 4)),
+  species = c("Pinus massoniana", "Quercus fabric", "Castanopsis hystrix",
+              "Pinus massoniana", "Quercus fabric",
+              "Pinus massoniana", "Quercus fabric", "Castanopsis hystrix", "Schima superba"),
+  count   = c(15, 6, 22, 8, 12, 15, 6, 22, 3)
+)
+
+# 转换为宽格式（物种-样点矩阵）
+species_matrix <- survey_data %>%
+  pivot_wider(
+    names_from = species,
+    values_from = count,
+    values_fill = 0  # 缺失值填充为0（表示该样点未记录到此物种）
+  )
+
+print(species_matrix)
+
+# 验证：检查行（样点）和列（物种）的汇总是否正确
+cat("\n各样点总个体数：\n")
+print(rowSums(species_matrix[,-1]))
+```
+
+---
+
+### 案例三：时间序列气象数据预处理
+
+生态学研究中经常需要处理时间序列数据，如气象站观测数据、遥感数据、涡度相关通量数据等。这类数据的预处理包括时间格式处理、缺失值插补、异常值检测等。
+
+**气象数据示例**：
+
+```{r}
+#| eval: false
+library(lubridate)
+library(dplyr)
+
+# 模拟气象站数据
+weather_raw <- tibble(
+  date_time = c("2027-01-01 00:00", "2027-01-01 01:00", "2027-01-01 02:00",
+                "2027-01-01 03:00", "2027-01-01 04:00", "2027-01-01 05:00",
+                "2027-01-01 06:00", "2027-01-01 07:00", "2027-01-01 08:00"),
+  temp     = c(12.3, 11.8, 11.2, 10.5, 10.1, 9.8, NA, 11.5, 13.2),  # 06:00缺失
+  humidity = c(78, 80, 82, 85, 87, 88, 92, 84, 75),
+  wind_ms  = c(2.1, 2.5, 1.8, 1.2, 0.8, 0.5, 0.2, 1.5, 3.2),
+  rainfall = c(0, 0, 0, 0, 0, 0, 0.2, 0, 0)
+)
+
+# 步骤1：时间格式解析与序列完整性检查
+weather_raw <- weather_raw %>%
+  mutate(
+    date_time = ymd_hm(date_time)
+  )
+
+# 检查时间序列是否有间隔（是否连续）
+time_gaps <- diff(weather_raw$date_time)
+cat("时间间隔（小时）：", as.numeric(time_gaps, units = "hours"), "\n")
+
+# 创建完整时间序列（填充缺失的时间点）
+full_seq <- tibble(
+  date_time = seq(from = min(weather_raw$date_time),
+                   to = max(weather_raw$date_time),
+                   by = "hour")
+)
+
+weather_complete <- full_seq %>%
+  left_join(weather_raw, by = "date_time")
+
+cat("原始记录数：", nrow(weather_raw), "\n")
+cat("完整序列长度：", nrow(weather_complete), "\n")
+cat("缺失时间点数：", sum(!complete.cases(weather_complete)), "\n")
+```
+
+**步骤2：时间序列数据缺失值插补**
+
+气象数据的缺失值插补有多种方法，从简单到复杂：
+
+```{r}
+#| eval: false
+library(zoo)  # 时间序列处理
+
+# 查看缺失情况
+cat("温度缺失记录：", sum(is.na(weather_complete$temp)), "\n")
+cat("缺失位置：", which(is.na(weather_complete$temp)), "\n")
+
+# 方法1：线性插值（适用于短期缺失）
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_linear = na.approx(temp, na.rm = FALSE)  # zoo包的线性插值
+  )
+
+# 方法2：样条插值（更平滑，适用于气象数据）
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_spline = na.spline(temp, na.rm = FALSE)  # 样条插值
+  )
+
+# 方法3：用前后均值填充（最简单，适用于偶然缺失）
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_mean = temp
+  ) %>%
+  fill(temp_mean, direction = "both")  # 用最近非缺失值填充
+
+# 可视化比较不同插补方法
+library(ggplot2)
+weather_long <- weather_complete %>%
+  pivot_longer(cols = c(temp, temp_linear, temp_spline, temp_mean),
+               names_to = "method", values_to = "value") %>%
+  filter(!is.na(value))
+
+ggplot(weather_long, aes(x = date_time, y = value, color = method)) +
+  geom_line() +
+  geom_point() +
+  labs(title = "不同插补方法对比", x = "时间", y = "温度(°C)") +
+  theme(legend.position = "bottom")
+```
+
+**步骤3：时间序列异常值检测**
+
+气象数据的异常值可能是传感器故障、极端天气事件或数据传输错误。常用的检测方法包括：
+
+```{r}
+#| eval: false
+# 方法1：物理范围检验
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_range_ok = temp >= -40 & temp <= 50  # 中国地区温度合理范围
+  )
+
+# 方法2：Z-score检验（适用于正态分布数据）
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_z = (temp - mean(temp, na.rm = TRUE)) / sd(temp, na.rm = TRUE),
+    temp_z_outlier = abs(temp_z) > 3
+  )
+
+# 方法3：基于日变化幅度的检验
+# 正常情况下，气温每小时变化通常不超过3°C（极端情况除外）
+weather_complete <- weather_complete %>%
+  mutate(
+    temp_diff = c(NA, diff(temp)),
+    temp_diff_ok = abs(temp_diff) <= 3
+  )
+
+# 标记异常值
+outlier_summary <- weather_complete %>%
+  filter(!temp_range_ok | temp_z_outlier | !temp_diff_ok)
+
+cat("\n检测到的潜在异常值：\n")
+print(outlier_summary %>% select(date_time, temp, temp_z, temp_diff))
+```
+
+**步骤4：气象数据的日/月尺度聚合**
+
+在完成清洗后，通常需要将小时数据聚合为日均值、月均值等：
+
+```{r}
+#| eval: false
+# 日尺度聚合
+daily_weather <- weather_complete %>%
+  mutate(date = date(date_time)) %>%
+  group_by(date) %>%
+  summarize(
+    temp_mean  = mean(temp, na.rm = TRUE),
+    temp_max   = max(temp, na.rm = TRUE),
+    temp_min   = min(temp, na.rm = TRUE),
+    humidity   = mean(humidity, na.rm = TRUE),
+    rainfall   = sum(rainfall, na.rm = TRUE),
+    wind_mean  = mean(wind_ms, na.rm = TRUE),
+    n_obs      = sum(!is.na(temp))  # 记录有效观测数
+  ) %>%
+  ungroup()
+
+# 标记日数据中有效观测不足的日期
+daily_weather <- daily_weather %>%
+  mutate(
+    data_quality = case_when(
+      n_obs >= 20 ~ "完整",
+      n_obs >= 16 ~ "良好",
+      n_obs >= 12 ~ "一般",
+      TRUE        ~ "数据不足"
+    )
+  )
+
+print(daily_weather)
+```
+
+---
+
+## 预处理工作流示例
+
+以下是一个完整的土壤有机碳研究数据预处理工作流，涵盖从原始数据到分析就绪数据的全过程：
+
+```{r}
+#| eval: false
+# ============================================================================
+# 土壤有机碳研究数据预处理工作流
+# 作者：研究团队
+# 日期：2027-04
+# 输入：raw_data/soil_survey_2027.csv
+# 输出：processed_data/soil_soc_clean.csv
+# ============================================================================
+
+# 0. 加载所需包
+library(tidyverse)
+library(janitor)
+library(lubridate)
+library(naniar)
+library(mice)
+
+# 1. 读取原始数据 --------------------------------------------------------
+raw_data <- read_csv("raw_data/soil_survey_2027.csv")
+
+cat("原始数据维度：", dim(raw_data)[1], "行 ×", dim(raw_data)[2], "列\n")
+
+# 2. 数据结构探索 --------------------------------------------------------
+# 2.1 清理列名
+df <- clean_names(raw_data)
+
+# 2.2 查看基本信息
+cat("\n=== 数据结构 ===\n")
+str(df)
+cat("\n=== 缺失值概览 ===\n")
+miss_var_summary(df)
+cat("\n=== 数值摘要 ===\n")
+summary(df)
+
+# 3. 日期处理 -----------------------------------------------------------
+df <- df %>%
+  mutate(
+    collection_date = parse_date_time(collection_date, orders = c("ymd", "dmy", "mdy")),
+    year  = year(collection_date),
+    month = month(collection_date)
+  )
+
+# 4. 识别并处理异常值 ----------------------------------------------------
+# 4.1 pH值：合理范围 3.5-9.5
+df <- df %>%
+  mutate(
+    ph_original = ph,  # 保存原始值用于记录
+    ph_clean = case_when(
+      ph < 3.5 | ph > 9.5 ~ NA_real_,
+      TRUE ~ ph
+    ),
+    ph_flag = if_else(is.na(ph_clean) & !is.na(ph), "outlier", NA_character_)
+  )
+
+# 4.2 有机碳：合理范围 0.5-150 g/kg
+df <- df %>%
+  mutate(
+    soc_original = soc,
+    soc_clean = case_when(
+      soc < 0.5 | soc > 150 ~ NA_real_,
+      TRUE ~ soc
+    ),
+    soc_flag = if_else(is.na(soc_clean) & !is.na(soc), "outlier", NA_character_)
+  )
+
+# 4.3 海拔：根据研究区域设定合理范围（假设0-2500m）
+df <- df %>%
+  mutate(
+    elevation_clean = case_when(
+      elevation < 0 | elevation > 2500 ~ NA_real_,
+      TRUE ~ elevation
+    )
+  )
+
+cat("\n=== 异常值标记统计 ===\n")
+cat("pH异常：", sum(df$ph_flag == "outlier", na.rm = TRUE), "个\n")
+cat("SOC异常：", sum(df$soc_flag == "outlier", na.rm = TRUE), "个\n")
+
+# 5. 缺失值处理 ---------------------------------------------------------
+# 5.1 删除缺失比例过高的列
+col_na_ratio <- colSums(is.na(df)) / nrow(df)
+cols_to_drop <- names(col_na_ratio[col_na_ratio > 0.3])
+cat("\n删除缺失>30%的列：", paste(cols_to_drop, collapse = ", "), "\n")
+df <- df %>% select(-all_of(cols_to_drop))
+
+# 5.2 多重插补缺失值（以SOC为例）
+# 注：实际使用时需根据数据特点选择插补变量和方法
+# 下面使用 predictive mean matching (pmm)，适合非正态数据
+# df_imp <- df %>% select(soc_clean, ph_clean, elevation_clean, depth_layer) %>% mice(m = 5, method = "pmm")
+# df <- bind_cols(df, complete(df_imp))
+
+# 5.3 简单填充（演示用，实际推荐用多重插补）
+df <- df %>%
+  group_by(depth_layer) %>%
+  mutate(
+    ph_clean    = if_else(is.na(ph_clean), median(ph_clean,    na.rm = TRUE), ph_clean),
+    soc_clean   = if_else(is.na(soc_clean), median(soc_clean,   na.rm = TRUE), soc_clean),
+    elevation_clean = if_else(is.na(elevation_clean), median(elevation_clean, na.rm = TRUE), elevation_clean)
+  ) %>%
+  ungroup()
+
+# 6. 派生新变量 ---------------------------------------------------------
+df <- df %>%
+  mutate(
+    # pH分类
+    ph_class = case_when(
+      ph_clean < 5.0 ~ "强酸性",
+      ph_clean < 6.0 ~ "弱酸性",
+      ph_clean < 7.0 ~ "中性",
+      TRUE           ~ "碱性"
+    ),
+    
+    # 土层归类
+    depth_class = if_else(str_detect(depth_layer, "0-10"), "表层", "亚层")
+  )
+
+# 7. 数据类型转换 --------------------------------------------------------
+df <- df %>%
+  mutate(
+    plot_id     = as.character(plot_id),
+    depth_layer = as.factor(depth_layer),
+    ph_class    = as.factor(ph_class),
+    depth_class = as.factor(depth_class)
+  )
+
+# 8. 数据验证 -----------------------------------------------------------
+cat("\n=== 处理后数据验证 ===\n")
+cat("数据维度：", dim(df)[1], "行 ×", dim(df)[2], "列\n")
+cat("缺失值数量：", sum(is.na(df)), "\n")
+cat("\n处理后数值摘要：\n")
+summary(df)
+
+# 9. 导出清洗后数据 ------------------------------------------------------
+write_csv(df, "processed_data/soil_soc_clean.csv")
+cat("\n数据已保存至：processed_data/soil_soc_clean.csv\n")
+```
+
+---
+
+## 如何选择预处理方法
+
+### 缺失值处理方法选择
+
+| 缺失类型 | 特征 | 推荐方法 | 注意事项 |
+|:--------|:-----|:--------|:---------|
+| **MCAR**（完全随机缺失） | 缺失与任何变量无关 | 列表删除、均值填充均可 | 删除可能损失统计功效 |
+| **MAR**（随机缺失） | 缺失与其他变量相关 | 多重插补、回归填充 | 需要假设缺失机制模型 |
+| **MNAR**（非随机缺失） | 缺失与缺失值本身相关 | 敏感分析、模式混合模型 | 最难处理，需谨慎 |
+| **结构缺失** | 有明确规律（如设备故障时段） | 基于规则的插值 | 可用物理/生态规律辅助 |
+
+::: {.callout-tip}
+### 缺失值处理决策树
+
+1. **缺失比例 < 5%**：可用简单填充（均值/中位数/插值）
+2. **缺失比例 5-30%**：建议多重插补
+3. **缺失比例 > 30%**：考虑删除该变量，或用代理变量
+4. **缺失与研究变量相关**：多重插补+敏感性分析
+5. **无法判断缺失机制**：报告并讨论对结果的影响
+:::
+
+### 异常值处理方法选择
+
+| 方法 | 原理 | 优点 | 缺点 | 适用场景 |
+|:-----|:-----|:-----|:-----|:---------|
+| **删除法** | 直接移除异常值 | 简单 | 可能丢失信息 | 确认是错误时 |
+| **Winsorization** | 用百分位数替代极端值 | 保留样本量 | 改变分布 | 稳健分析 |
+| **变换法** | 对数/Box-Cox变换 | 压缩极端值 | 改变解释 | 右偏数据 |
+| **分箱法** | 将连续变量分组 | 减少异常影响 | 损失连续信息 | 机器学习 |
+| **模型法** | 用稳健模型（分位数回归） | 不改变数据 | 解释复杂 | 预测建模 |
+
+### 标准化方法选择
+
+| 场景 | 推荐方法 | 原因 |
+|:-----|:--------|:-----|
+| 后续做 PCA、聚类 | Z-score 标准化 | 消除量纲影响，各变量可比 |
+| 神经网络、距离计算 | Min-Max 归一化 | 梯度计算稳定，0-1范围方便 |
+| 数据有明显异常值 | 鲁棒标准化（用中位数/MAD） | 不受极端值影响 |
+| 比较不同尺度的生态指标 | 相对标准化（如除以最大值） | 保留相对大小关系 |
+
+---
+
+## 预处理中的常见陷阱
+
+### 陷阱1：盲目删除缺失值
+
+**问题**：直接 `na.omit()` 或 `drop_na()` 可能损失大量数据，尤其是生态学调查中常有多个变量同时缺失。
+
+**正确做法**：
+- 先分析缺失模式（使用 `naniar::gg_miss_upset()`）
+- 评估缺失比例和分布
+- 选择合适的处理策略
+
+### 陷阱2：将异常值等同于错误值
+
+**问题**：生态学数据中的"异常"有时是真实的生态信号。例如：
+- pH 值极端低可能是废弃矿山附近的酸性矿毒土
+- 某物种在非分布区出现可能是气候变化的新记录
+- 异常高的树木个体可能是个别优良个体
+
+**正确做法**：
+- 先核实异常值的数据来源和记录日期
+- 查阅文献确认该区域的历史记录
+- 将疑似异常值单独标记，不轻易删除
+- 在报告中说明异常值的处理方式
+
+### 陷阱3：过度处理数据
+
+**问题**：对数据进行过多变换或删除，可能导致：
+- 丢失真实的生态变异
+- 人为制造"虚假"的统计结果
+- 降低结果的可重复性
+
+**正确做法**：
+- 记录所有处理步骤
+- 进行敏感性分析，比较不同处理方式的结果差异
+- 保留原始数据和清洗后数据两个版本
+
+### 陷阱4：忽视数据类型转换
+
+**问题**：在 R 中，数值被存为文本（character）会导致所有统计计算失效。
+
+**正确做法**：使用 `readr::parse_number()` 或先验证再转换。
+
+---
+
+## 预处理的可重复性
 
 数据预处理是可重复性研究中最容易出问题的环节。为什么？
 
 - 预处理步骤如果缺乏代码记录，事后难以追溯
 - 不同研究者对"异常值"的判断标准不同
 - 缺失值的处理方式会显著影响最终结果
+- 手动操作（如 Excel 中修改数据）几乎无法复现
 
-因此，**所有预处理步骤都应该用代码实现，而不是在 Excel 中手动操作**。代码是可追溯、可重复的；手动操作则难以复现和审查。
+因此，**所有预处理步骤都应该用代码实现，而不是在 Excel 中手动操作**。
 
 ::: {.callout-tip}
-## 最佳实践
+### 最佳实践
 
-1. 保留原始数据的完整副本，永远不要直接修改原始文件
-2. 用 R/Python 脚本记录每一步预处理操作
-3. 在脚本中添加注释，说明每步处理的理由
-4. 使用版本控制（Git）追踪预处理脚本的变更
+1. **保留原始数据**：保留原始数据的完整副本，永远不要直接修改原始文件
+2. **代码化所有步骤**：用 R/Python 脚本记录每一步预处理操作
+3. **添加注释**：在脚本中说明每步处理的理由和依据
+4. **版本控制**：使用 Git 追踪预处理脚本的变更
+5. **记录种子数**：如果使用随机过程（如多重插补），记录随机种子
+6. **导出处理日志**：记录异常值标记、删除行数、填充值等关键信息
 :::
+
+---
 
 ## 本课程的预处理章节预览
 
@@ -145,3 +879,40 @@ summary(df)
 1. 找一份你正在使用（或曾经使用）的数据集，用上面的 R 代码运行一次数据检查，记录：共有多少缺失值？哪些列的缺失最严重？数值范围是否有明显异常？
 2. 如果删除所有含缺失值的行，你的数据会损失多少比例？这种损失可以接受吗？
 3. 你的预处理步骤是用代码实现的，还是在 Excel 中手动完成的？如果是手动完成的，尝试用 R 代码重写其中一步。
+4. 使用 Z-score 和 IQR 两种方法分别检测同一组数据的异常值，比较两种方法的结果差异，并讨论哪种方法更适合你的数据特点。
+5. 找一个包含日期列的数据集，尝试用 lubridate 包的不同函数解析不同格式的日期字符串，总结哪些格式可以被正确解析。
+6. 尝试用 naniar 包对一份有缺失值的数据进行可视化，分析缺失模式，思考：哪些变量的缺失可能不是随机的？
+7. 设计一个完整的数据预处理流程，针对你研究方向中最常见的数据类型（如森林样地数据、鸟类调查数据、水体监测数据等），包括：异常值检测规则、缺失值处理策略、数据转换方法。
+8. 编写一个可重复的数据预处理脚本，要求：①读取原始数据 ②完成所有清洗步骤 ③导出清洗后数据 ④记录处理日志。使用 Git 管理脚本版本。
+
+## 延伸阅读
+
+### 经典文献
+
+- Little, R.J.A. & Rubin, D.B. (2019). *Statistical Analysis with Missing Data* (3rd ed.). Wiley. — 缺失值处理的权威教材
+- Wickham, H. (2014). Tidy Data. *Journal of Statistical Software*, 59(10). — 数据整理的经典论文
+- Van Buuren, S. (2018). *Flexible Imputation of Missing Data* (2nd ed.). Chapman & Hall/CRC. — 多重插补的实践指南
+
+### R 包推荐
+
+| 包名 | 用途 | 关键函数 |
+|:-----|:-----|:---------|
+| **tidyverse** | 数据操作统一框架 | dplyr, tidyr, purrr |
+| **janitor** | 数据清洗辅助 | clean_names(), get_dupes() |
+| **naniar** | 缺失值可视化与分析 | gg_miss_var(), gg_miss_upset(), miss_var_summary() |
+| **lubridate** | 日期时间处理 | ymd(), mdy(), parse_date_time() |
+| **mice** | 多重插补 | mice(), complete() |
+| **zoo** | 时间序列处理 | na.approx(), na.spline() |
+| **outliers** | 异常值检测 | outliers(), grubbs.test() |
+| **readr** | 数据导入 | read_csv(), parse_number() |
+
+### 预处理最佳实践指南
+
+- [R for Data Science - Data transformation](https://r4ds.had.co.nz/transform.html) — tidyverse 数据转换完整指南
+- [Data Cleaning in R](https://swcarpentry.github.io/r-novice-gapminder/) — Software Carpentry 数据清洗课程
+- [Tidy Messy Data](https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html) — tidyr 官方教程
+- [Handling Missing Values in R](https://naniar.njtierney.com/) — naniar 包完整文档
+
+---
+
+*本章小结*：数据预处理是将原始数据转化为分析可用数据的关键环节。生态学数据的特殊性要求我们在预处理过程中审慎判断异常值的生态意义。所有预处理步骤都应代码化，确保研究可重复。

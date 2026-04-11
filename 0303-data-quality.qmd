@@ -1,108 +1,50 @@
----
-title: "数据质量控制"
-execute:
-  warning: false
-  message: false
----
 
-# 数据质量控制
 
-数据清洗和特征工程解决了"数据怎么处理"的问题，数据质量控制解决的是"怎么确保数据可靠、可追溯、可复用"。这是可重复性研究的核心环节。
+### 一致性检验（Consistency Check）
 
-> **数据来源背景**：Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016jg003683)
->
-> 本章示例数据基于该研究的参数范围模拟，重点演示数据质量控制的技术和方法。
+验证跨数据源或跨时间的一致性：
 
 ```{r}
-library(tidyverse)
-library(lubridate)
-```
+# 一致性检验示例：同一样点不同测量的一致性
+cat("=== 一致性检验 ===\n")
 
-## 数据验证
-
-### 范围检查
-
-确保数值在合理范围内：
-
-```{r}
-validate_soil <- function(data) {
-  issues <- list()
-
-  # pH 范围检查（0-14）
-  bad_ph <- data |> filter(ph < 0 | ph > 14)
-  if (nrow(bad_ph) > 0) issues$ph <- paste(nrow(bad_ph), "条 pH 超出范围")
-
-  # 有机碳不能为负
-  bad_oc <- data |> filter(organic_carbon < 0)
-  if (nrow(bad_oc) > 0) issues$oc <- paste(nrow(bad_oc), "条有机碳为负值")
-
-  # 百分比之和检查
-  if ("clay_pct" %in% names(data) && "sand_pct" %in% names(data)) {
-    bad_pct <- data |> filter(clay_pct + sand_pct > 100)
-    if (nrow(bad_pct) > 0) issues$pct <- paste(nrow(bad_pct), "条粒径百分比之和超过100%")
-  }
-
-  if (length(issues) == 0) {
-    cat("✅ 所有验证通过\n")
-  } else {
-    cat("⚠️ 发现以下问题：\n")
-    for (name in names(issues)) {
-      cat("  -", issues[[name]], "\n")
-    }
-  }
-
-  invisible(issues)
-}
-
-# 示例
-set.seed(2027)
-soil <- tibble(
-  site_id = paste0("S", 1:10),
-  ph = c(6.2, 5.8, 7.1, -0.5, 6.5, 15.2, 6.8, 5.9, 6.3, 7.0),
-  organic_carbon = c(25, 30, 22, 28, -5, 35, 20, 27, 31, 24),
-  clay_pct = c(30, 45, 20, 55, 40, 35, 25, 50, 38, 42),
-  sand_pct = c(40, 30, 50, 60, 35, 45, 55, 30, 40, 35)
+# 模拟两次测量的数据
+first_measure <- tibble(
+  sample_id = paste0("MP", sprintf("%04d", 1:10)),
+  ph_first = c(6.2, 5.8, 7.1, 6.5, 6.8, 5.9, 6.3, 7.0, 5.5, 6.1),
+  oc_first = c(25, 30, 22, 28, 35, 20, 27, 31, 24, 29)
 )
 
-validate_soil(soil)
-```
+second_measure <- tibble(
+  sample_id = paste0("MP", sprintf("%04d", 1:10)),
+  ph_second = c(6.3, 5.9, 7.0, 6.4, 6.7, 6.0, 6.2, 7.1, 5.6, 6.2),
+  oc_second = c(26, 29, 23, 27, 34, 21, 28, 30, 25, 28)
+)
 
-### 一致性检查
-
-```{r}
-# 检查同一样点不同深度的数据是否一致
-# 例如：表层有机碳应该高于深层
-check_depth_consistency <- function(data) {
-  if (!("depth" %in% names(data))) return(invisible(NULL))
-
-  inconsistent <- data |>
-    group_by(site_id) |>
-    arrange(depth) |>
-    mutate(oc_decreasing = organic_carbon < lag(organic_carbon)) |>
-    filter(!is.na(oc_decreasing) & !oc_decreasing) |>
-    ungroup()
-
-  if (nrow(inconsistent) > 0) {
-    cat("⚠️", nrow(inconsistent), "条记录的有机碳未随深度递减（可能需要核实）\n")
-  } else {
-    cat("✅ 有机碳随深度递减，符合预期\n")
-  }
-
-  invisible(inconsistent)
-}
-
-# 示例：不同深度的土壤数据
-soil_depth <- tibble(
-  site_id = rep(c("S1", "S2", "S3"), each = 3),
-  depth = rep(c(10, 20, 30), 3),
-  organic_carbon = c(
-    35, 22, 15,   # S1: 正常递减
-    28, 32, 18,   # S2: 20cm 处异常升高
-    40, 30, 25    # S3: 正常递减
+# 合并并计算差异
+consistency_check <- first_measure |>
+  inner_join(second_measure, by = "sample_id") |>
+  mutate(
+    ph_diff = abs(ph_first - ph_second),
+    oc_diff = abs(oc_first - oc_second)
   )
-)
 
-check_depth_consistency(soil_depth)
+# 设置一致性阈值
+ph_threshold <- 0.5  # pH 差异不应超过 0.5
+oc_threshold <- 5     # 有机碳差异不应超过 5 g/kg
+
+inconsistent <- consistency_check |>
+  filter(ph_diff > ph_threshold | oc_diff > oc_threshold)
+
+cat("  pH 一致性阈值：±", ph_threshold, "\n")
+cat("  有机碳一致性阈值：±", oc_threshold, " g/kg\n\n")
+
+if (nrow(inconsistent) > 0) {
+  cat("  ⚠️ 发现", nrow(inconsistent), "条不一致记录：\n")
+  print(inconsistent)
+} else {
+  cat("  ✅ 所有记录两次测量一致\n")
+}
 ```
 
 ## 元数据（Metadata）
@@ -140,21 +82,27 @@ check_depth_consistency(soil_depth)
 
 | 变量名 | 类型 | 单位 | 说明 |
 |:---|:---|:---|:---|
-| site_id | 字符 | - | 样点编号（S01-S20） |
-| depth | 因子 | cm | 采样深度（0-10, 10-20, 20-30） |
+| sample_id | 字符 | - | 样品编号（MP0001-MP0020） |
+| plot_id | 字符 | - | 样地编号（P01-P20） |
+| depth_cm | 数值 | cm | 采样深度（5, 15, 25） |
 | ph | 数值 | - | 土壤pH（水土比1:2.5） |
-| organic_carbon | 数值 | g/kg | 土壤有机碳含量 |
-| nitrogen | 数值 | g/kg | 全氮含量 |
-| clay_pct | 数值 | % | 黏粒含量 |
-| sand_pct | 数值 | % | 砂粒含量 |
+| organic_carbon_gkg | 数值 | g/kg | 土壤有机碳含量 |
+| nitrogen_gkg | 数值 | g/kg | 土壤全氮含量 |
+| clay_pct | 数值 | % | 黏粒含量（<0.002mm） |
+| sand_pct | 数值 | % | 砂粒含量（0.05-2mm） |
 
 ### 数据处理记录
 
-1. 去除重复记录（3条）
-2. pH异常值（<0或>14）标记为NA
-3. 有机碳异常值（<0或>100）标记为NA
-4. 缺失值用各变量中位数填充
-5. 字符串统一为小写并去除空格
+1. 原始数据保存于 `data/raw/` 目录，从未修改
+2. 范围异常（pH<0 或 >14，有机碳<0 或 >100）标记为 NA
+3. 缺失值未填充，保留为 NA
+4. 所有清洗步骤记录于 `scripts/01-data-cleaning.R`
+
+### 数据质量控制
+
+- 列表删除后有效记录：XX 条
+- 关键变量（pH、有机碳）缺失率：<5%
+- 数据清洗脚本可从原始数据完全重现清洗后数据
 ```
 
 ## 数据存储格式
@@ -208,156 +156,190 @@ generate_codebook <- function(data) {
   )
 }
 
-generate_codebook(soil)
+# 为 qc_corrected 数据生成 codebook
+cat("=== 数据字典 ===\n")
+codebook <- generate_codebook(qc_corrected)
+print(codebook)
 ```
 
-## 数据质量检查清单
+## 数据质量报告编写
 
-在提交数据或开始分析之前，逐项检查：
+一份完整的数据质量报告应该包括以下内容：
 
-- [ ] 没有重复记录
-- [ ] 缺失值已识别并合理处理
-- [ ] 数值变量在合理范围内
-- [ ] 分类变量的水平一致（无拼写错误、大小写不一致）
-- [ ] 日期格式统一
-- [ ] 数据类型正确（数值/因子/日期）
-- [ ] 有完整的元数据文件（README.md）
-- [ ] 有变量说明（codebook）
-- [ ] 原始数据已备份且未被修改
-- [ ] 清洗脚本可以从原始数据重新生成处理后的数据
+### 报告结构
 
-## 实战案例：从"脏数据"到"干净数据"
+1. **摘要**：数据概况、质量评估结论
+2. **数据来源**：采集时间、地点、方法
+3. **数据清洗流程**：检测、诊断、修正、验证各阶段的方法和结果
+4. **异常值处理**：检测方法、判定标准、处理方式
+5. **缺失值分析**：缺失模式、处理方法
+6. **数据可用性**：清洗后的有效记录数、变量完整性统计
+7. **质量控制图**：可视化展示数据分布和异常情况
+8. **附录**：原始数据问题清单、代码脚本
 
-下面通过一个完整的案例，演示数据质量控制的全流程。假设我们收到了一份来自野外调查的土壤数据，需要在分析前进行质量控制。
-
-### 原始数据
+### 自动化报告生成
 
 ```{r}
-# 模拟一份典型的"脏数据"
-set.seed(2027)
-n <- 30
+# 数据质量报告生成函数
+generate_quality_report <- function(data, data_corrected, output_file = NULL) {
+  
+  report <- list()
+  
+  # 1. 基本统计
+  report$n_total <- nrow(data)
+  report$n_variables <- ncol(data)
+  
+  # 2. 缺失值统计
+  report$missing_stats <- data |>
+    summarise(across(everything(), ~sum(is.na(.)))) |>
+    pivot_longer(everything(), names_to = "变量", values_to = "缺失数") |>
+    filter(缺失数 > 0)
+  
+  # 3. 异常值统计
+  report$outlier_stats <- data_corrected |>
+    mutate(
+      ph_out = (ph < 0 | ph > 14) & !is.na(ph),
+      oc_out = (organic_carbon_gkg < 0 | organic_carbon_gkg > 100) & !is.na(organic_carbon_gkg)
+    ) |>
+    summarise(
+      pH异常 = sum(ph_out, na.rm = TRUE),
+      有机碳异常 = sum(oc_out, na.rm = TRUE)
+    )
+  
+  # 4. 可用记录数
+  report$n_complete <- data_corrected |>
+    filter(!is.na(ph), !is.na(organic_carbon_gkg)) |>
+    nrow()
+  
+  # 生成报告文本
+  cat("===========================================\n")
+  cat("         数据质量报告\n")
+  cat("===========================================\n\n")
+  
+  cat("【1. 数据概况】\n")
+  cat("  总记录数：", report$n_total, "\n")
+  cat("  变量数：", report$n_variables, "\n")
+  cat("  完全有效记录：", report$n_complete, 
+      " (", round(report$n_complete/report$n_total*100, 1), "%)\n\n")
+  
+  cat("【2. 缺失值统计】\n")
+  if (nrow(report$missing_stats) > 0) {
+    print(report$missing_stats)
+  } else {
+    cat("  无缺失值\n")
+  }
+  cat("\n")
+  
+  cat("【3. 异常值处理后统计】\n")
+  print(report$outlier_stats)
+  cat("\n")
+  
+  cat("【4. 质量结论】\n")
+  completeness <- round(report$n_complete / report$n_total * 100, 1)
+  if (completeness >= 90) {
+    cat("  ✅ 数据质量优良（完整率：", completeness, "%）\n")
+  } else if (completeness >= 80) {
+    cat("  ⚠️ 数据质量良好（完整率：", completeness, "%）\n")
+  } else {
+    cat("  🔶 数据质量一般（完整率：", completeness, "%），建议补充采样\n")
+  }
+  
+  invisible(report)
+}
 
-raw_soil <- tibble(
-  sample_id = paste0("GX", sprintf("%03d", 1:n)),
-  site = rep(c("林地", "林地 ", "Linland", "草地", "草地", "农田"), each = 5),
-  date = c(rep("2027-03-15", 10), rep("2027/03/16", 10), rep("15/3/2027", 10)),
-  ph = c(6.2, 5.8, 7.1, 6.5, 6.8, 5.9, 6.3, 7.0, 5.5, 6.1,
-         -0.5, 6.4, 15.2, 5.7, 6.6, 6.0, 6.9, 5.3, 6.7, 6.2,
-         NA, 6.5, 5.8, 7.2, 6.1, 6.8, 5.6, 6.3, 6.0, 6.4),
-  organic_carbon = c(25, 30, 22, 28, 35, 20, 27, 31, 24, 29,
-                     33, -5, 26, 999, 21, 28, 32, 19, 27, 30,
-                     24, 26, 31, 23, 28, 25, 29, 22, 27, 26),
-  nitrogen = c(2.1, 2.5, 1.8, 2.3, 2.9, 1.7, 2.2, 2.6, 2.0, 2.4,
-               2.8, 2.1, 2.2, 2.5, 1.9, 2.3, 2.7, 1.6, 2.2, 2.5,
-               2.0, 2.1, 2.6, 1.9, 2.3, 2.1, 2.4, 1.8, 2.2, 2.1)
-)
-
-cat("原始数据概览：\n")
-glimpse(raw_soil)
+# 生成报告
+quality_report <- generate_quality_report(qc_data, qc_corrected)
 ```
 
-这份数据至少有以下问题：
+## 生态学数据质量控制案例：马尾松林调查
 
-1. `site` 列有拼写不一致（"林地" vs "林地 " vs "Linland"）
-2. `date` 列有三种不同的日期格式
-3. `ph` 列有超出范围的值（-0.5, 15.2）和缺失值
-4. `organic_carbon` 列有负值（-5）和明显的录入错误（999）
+下面通过一个完整的案例，演示马尾松林土壤调查数据质量控制的全流程。
 
-### 逐步清洗
+### 案例背景
+
+某研究团队在广西南宁某马尾松林开展土壤调查，于2027年3月分10个样地、3个深度采集了100个土壤样品。原始数据存在多种质量问题，需要进行系统性的数据清洗和质量控制。
+
+### 原始数据问题汇总
+
+| 问题类型 | 具体表现 | 影响变量 |
+|:---|:---|:---|
+| 缺失值 | 设备故障导致部分样品未测 | pH、有机碳、全氮 |
+| 录入错误 | 人为录入时小数点错位 | 有机碳（999） |
+| 范围异常 | 测试人员笔误 | pH（-0.5, 15.2） |
+| 格式不一致 | 不同录入员使用不同日期格式 | 采样日期 |
+| 逻辑问题 | 粒径百分比之和超过100% | 黏粒、砂粒 |
+
+### 清洗流程执行
 
 ```{r}
-clean_soil <- raw_soil |>
-  # 1. 统一站点名称
-  mutate(
-    site = str_trim(site),
-    site = case_match(site,
-      "Linland" ~ "林地",
-      .default = site
-    )
-  ) |>
-  # 2. 统一日期格式
-  mutate(
-    date = case_when(
-      str_detect(date, "^\\d{4}-") ~ ymd(date),
-      str_detect(date, "^\\d{4}/") ~ ymd(date),
-      str_detect(date, "^\\d{2}/") ~ dmy(date),
-      TRUE ~ NA_Date_
-    )
-  ) |>
-  # 3. 标记并处理异常值
-  mutate(
-    ph_flag = case_when(
-      is.na(ph) ~ "缺失",
-      ph < 0 | ph > 14 ~ "超出范围",
-      TRUE ~ "正常"
-    ),
-    oc_flag = case_when(
-      organic_carbon < 0 ~ "负值",
-      organic_carbon > 200 ~ "录入错误",
-      TRUE ~ "正常"
-    )
-  ) |>
-  # 4. 将异常值替换为 NA
-  mutate(
-    ph = if_else(ph < 0 | ph > 14, NA_real_, ph),
-    organic_carbon = if_else(organic_carbon < 0 | organic_carbon > 200, NA_real_, organic_carbon)
-  )
+# 马尾松林调查数据完整清洗流程
+cat("===========================================\n")
+cat("   马尾松林调查数据质量控制案例\n")
+cat("===========================================\n\n")
 
-# 查看清洗结果
-cat("--- 站点名称统一 ---\n")
-count(clean_soil, site)
+# 步骤1：加载数据
+cat("【步骤1】数据加载\n")
+cat("  加载样本数：", nrow(qc_data), "\n")
+cat("  加载变量数：", ncol(qc_data), "\n\n")
 
-cat("\n--- 异常值标记 ---\n")
-count(clean_soil, ph_flag)
-count(clean_soil, oc_flag)
+# 步骤2：数据检测
+cat("【步骤2】数据检测\n")
+issues_detected <- detect_data_issues(qc_data)
+cat("  检测到", sum(issues_detected$range$异常记录数), "条范围异常\n")
+cat("  检测到", sum(issues_detected$missing$缺失数), "条缺失值\n\n")
+
+# 步骤3：问题诊断
+cat("【步骤3】问题诊断\n")
+diagnose_issues(qc_data, issues_detected)
+cat("\n")
+
+# 步骤4：数据修正
+cat("【步骤4】数据修正\n")
+qc_clean <- correct_soil_data(qc_data)
+cat("  修正后有效记录：", 
+    qc_clean |> filter(!is.na(ph), !is.na(organic_carbon_gkg)) |> nrow(), "\n\n")
+
+# 步骤5：验证
+cat("【步骤5】验证\n")
+verify_cleaning(qc_data, qc_clean)
+
+# 步骤6：生成报告
+cat("\n【步骤6】生成质量报告\n")
+final_report <- generate_quality_report(qc_data, qc_clean)
 ```
 
-### 生成质量报告
+### 清洗结果总结
 
-```{r}
-# 汇总数据质量
-quality_report <- clean_soil |>
-  summarise(
-    total_records = n(),
-    ph_missing = sum(is.na(ph)),
-    ph_flagged = sum(ph_flag != "正常"),
-    oc_missing = sum(is.na(organic_carbon)),
-    oc_flagged = sum(oc_flag != "正常"),
-    date_parsed_ok = sum(!is.na(date)),
-    site_categories = n_distinct(site)
-  )
+| 指标 | 清洗前 | 清洗后 |
+|:---|:---:|:---:|
+| 总记录数 | 100 | 100 |
+| pH 有效记录 | 95 | 93 |
+| 有机碳有效记录 | 90 | 87 |
+| 有效记录比例 | 90% | 87% |
 
-quality_report |>
-  pivot_longer(everything(), names_to = "检查项", values_to = "结果") |>
-  mutate(检查项 = case_match(检查项,
-    "total_records" ~ "总记录数",
-    "ph_missing" ~ "pH 缺失数",
-    "ph_flagged" ~ "pH 异常标记数",
-    "oc_missing" ~ "有机碳缺失数",
-    "oc_flagged" ~ "有机碳异常标记数",
-    "date_parsed_ok" ~ "日期成功解析数",
-    "site_categories" ~ "站点类别数"
-  ))
-```
+### 关键发现
 
-::: {.callout-important}
-### 关键原则：标记优先于删除
-
-在上面的案例中，我们先用 `_flag` 列标记异常值，再决定如何处理。这样做的好处是：
-
-1. 保留了原始信息，方便回溯
-2. 可以统计异常值的数量和分布
-3. 不同的分析可能对异常值有不同的处理策略
-:::
+1. **数据完整性**：原始数据缺失率在可接受范围内（<15%）
+2. **主要问题**：录入错误（999）和范围异常是主要数据质量问题
+3. **处理效果**：通过标记-修正策略，有效保留了数据追溯能力
+4. **后续建议**：建议对导致缺失的设备故障进行检修，提高后续采样质量
 
 ## 课后练习
 
-1. 为你的课程项目数据编写一份完整的元数据文件（README.md）
-2. 编写一个数据验证函数，检查你的数据是否满足预期的范围和一致性
-3. 用 `generate_codebook()` 函数为你的数据生成 codebook
-4. 将原始数据保存为 CSV，处理后的数据保存为 RDS
-5. 确保你的数据处理流程完全可重复：删除 `data/processed/` 中的文件，重新运行脚本能得到相同结果
+1. **元数据编写**：为你的课程项目数据编写一份完整的元数据文件（README.md），包含数据集名称、采集时间、变量说明、数据处理记录等内容。
+
+2. **数据验证函数**：编写一个数据验证函数，检查你的数据是否满足以下条件：
+   - 数值变量在合理范围内（如 pH 0-14，有机碳 0-100 g/kg）
+   - 分类变量水平一致（无拼写错误、大小写不一致）
+   - 日期格式统一
+   - 粒径百分比之和不超过100%
+
+3. **异常值检测**：使用 Z 分数法和 IQR 法分别检测你数据中的异常值，比较两种方法的结果差异，并结合领域知识判断异常值的合理性。
+
+4. **缺失值处理比较**：对你的数据分别使用列表删除法、均值填充法和 KNN 填充法，比较处理后的数据分布差异，评估不同方法对你分析结果的影响。
+
+5. **完整清洗流程**：选择一个包含多种数据质量问题的数据集，完整执行检测→诊断→修正→验证的清洗流程，并编写数据质量报告。
 
 ## 参考文献
 
-Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016JG003683)
+Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., ... & Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. *Journal of Geophysical Research: Biogeosciences*, 122(11), 2849-2864. DOI: [10.1002/2016JG003683](https://doi.org/10.1002/2016jg003683)
