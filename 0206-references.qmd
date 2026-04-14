@@ -1,170 +1,826 @@
 ---
-title: "扩展阅读与参考资源"
+title: "参考文献管理与学术资源"
 ---
 
-# 扩展阅读与参考资源 {.appendix}
+# 参考文献管理与学术资源
 
-本章节为第二单元（数据采集方法）提供扩展阅读材料和在线资源，按章节主题分类整理。
+你知道吗，大多数研究生在写第一篇论文时，最头疼的问题不是"怎么写"，而是"参考文献怎么管理"。每次改格式都要手动调半天，引用编号对不上，投稿时发现引用格式完全错误……这些都是因为没有建立系统的文献管理能力。
 
-## 免费视频教程
+这一章的目标很简单：**让你从第一天开始就把文献管理做好**，从安装工具到写第一篇综述，手把手带你走一遍。
 
-### 学术讲座
-**Gathering Ecological Data | Youtube**
-This video outlines three methods of ecological data collection, including observation, experimentation, and modeling.
-{{< video https://www.youtube.com/watch?v=ySqLxk1q1So >}}
+## 为什么要专门学文献管理？
 
-### 数据采集入门
-**4.1. Where to Collect Data For Machine Learning? | Data Collection | Youtube**
-{{< video https://www.youtube.com/watch?v=4ub10unSjro&list=PLfFghEzKVmjsNtIRwErklMAN8nJmebB0I&index=19 >}}
+### 文献管理不是选修课
 
-### R 语言数据处理
-**Data Wrangling with R and the Tidyverse | Youtube**
-{{< video https://www.youtube.com/watch?v=jOd65mR1zfw >}}
+很多同学觉得"写完论文再整理参考文献"就行了。但现实是：
 
-## 按章节分类的参考资源
+- 硕士论文通常需要 50-150 篇参考文献
+- 博士论文通常需要 200-500 篇参考文献
+- 每篇论文从写作到发表，平均要修改 5-8 轮，每轮都可能调整引用顺序
 
-### 0201 数据采集方法概述
+如果你在写作过程中没有系统管理文献，每次调整引用顺序就意味着手动改几十处。这种低效的工作方式会消耗大量时间和精力。
 
-**核心文献**：
-- Sutherland, W. J. (Ed.). (2006). *Ecological Census Techniques: A Handbook* (2nd ed.). Cambridge University Press.
-- Krebs, C. J. (1999). *Ecological Methodology* (2nd ed.). Benjamin Cummings.
-- Elzinga, C. L., Salzer, D. W., & Willoughby, J. W. (1998). *Measuring and Monitoring Plant Populations*. Bureau of Land Management Technical Reference 1730-1.
+### 文献管理能力直接决定写作效率
 
-**在线资源**：
-- **Ecological Society of America - Methods**: https://www.esa.org/publications/methods/
-- **British Ecological Society - Methods in Ecology and Evolution**: https://besjournals.onlinelibrary.wiley.com/journal/2041210x
+一个好的文献管理系统能让你：
 
-### 0202 观测数据
+- **5 秒内找到任何一篇读过的文献**——不管是一年前还是上周的
+- **一键生成正确格式的参考文献**——不用手动调格式
+- **在写作时自动插入引用**——不用翻找参考文献列表
+- **追踪你读过的文献**——三个月后还记得某句话在哪篇文献里
 
-**核心文献**：
-- Magurran, A. E. (2004). *Measuring Biological Diversity*. Blackwell Publishing.
-- Buckland, S. T., et al. (2001). *Introduction to Distance Sampling*. Oxford University Press.
-- MacKenzie, D. I., et al. (2017). *Occupancy Estimation and Modeling: Inferring Patterns and Dynamics of Species Occurrence* (2nd ed.). Academic Press.
+反之，一个糟糕的文献管理方式会让你：
 
-**R 包与教程**：
-- **vegan**: 群落生态学分析 - https://cran.r-project.org/package=vegan
-- **Distance**: 距离抽样分析 - https://cran.r-project.org/package=Distance
-- **unmarked**: 占域模型 - https://cran.r-project.org/package=unmarked
+- 复制粘贴PDF路径到文档里，时间长了根本不知道哪篇是哪篇
+- 用 `文献1`、`文献2` 这种方式标注，写完自己都看不懂
+- 写完论文后发现引用格式和期刊要求不一致，要花两天重新调整
 
-### 0203 实验数据
+### 文献管理也是科研诚信的一部分
 
-**核心文献**：
-- Quinn, G. P., & Keough, M. J. (2002). *Experimental Design and Data Analysis for Biologists*. Cambridge University Press.
-- Underwood, A. J. (1997). *Experiments in Ecology: Their Logical Design and Interpretation Using Analysis of Variance*. Cambridge University Press.
-- Hurlbert, S. H. (1984). Pseudoreplication and the design of ecological field experiments. *Ecological Monographs*, 54(2), 187–211. DOI: 10.2307/1942661
+规范的文献引用是科研诚信的基本要求。引用不当可能导致：
 
-**实验设计案例**：
-- Naeem, S., et al. (1994). Declining biodiversity can alter the performance of ecosystems. *Nature*, 368, 734–737. DOI: 10.1038/368734a0
-- Tilman, D., et al. (1996). Productivity and sustainability influenced by biodiversity in grassland ecosystems. *Nature*, 379, 718–720. DOI: 10.1038/379718a0
-- Huston, M. A. (1997). Hidden treatments in ecological experiments: re-evaluating the ecosystem function of biodiversity. *Oecologia*, 110, 449–460. DOI: 10.1007/s004420050180
+- **抄袭嫌疑**：没有正确引用他人观点，即使不是故意复制
+- **学术声誉受损**：引用错误或遗漏会影响论文质量评价
+- **撤稿风险**：有些期刊会因为引用问题要求撤稿
 
-### 0204 模型数据
+好消息是，建立文献管理能力不需要很长时间。一个周末就能完成基础配置，之后受益三年。
 
-**核心文献**：
-- Elith, J., & Leathwick, J. R. (2009). Species distribution models: ecological explanation and prediction across space and time. *Annual Review of Ecology, Evolution, and Systematics*, 40, 677–697. DOI: 10.1146/annurev.ecolsys.110308.120159
-- Guisan, A., & Zimmermann, N. E. (2000). Predictive habitat distribution models in ecology. *Ecological Modelling*, 135(2-3), 147–186. DOI: 10.1016/S0304-3800(00)00354-9
-- Araújo, M. B., & Guisan, A. (2006). Five (or so) challenges for species distribution modelling. *Journal of Biogeography*, 33(10), 1677–1688. DOI: 10.1111/j.1365-2699.2006.01584.x
+## 学术文献的分类与来源
 
-**R 包与教程**：
-- **dismo**: 物种分布模型 - https://cran.r-project.org/package=dismo
-- **biomod2**: 集成物种分布模型 - https://cran.r-project.org/package=biomod2
-- **ENMeval**: 生态位模型评估 - https://cran.r-project.org/package=ENMeval
+### 你需要管理哪些类型的文献？
 
-### 0205 公共数据
+作为生态学研究生，你的文献库通常包含以下几类：
 
-**全球数据平台**：
-- **[GBIF](https://www.gbif.org/)**：全球生物多样性信息网络，提供数十亿条物种分布记录
-- **[WorldClim](https://www.worldclim.org/)**：全球高分辨率气候数据，常用于物种分布建模
-- **[CHELSA](https://chelsa-climate.org/)**：高分辨率气候数据（1km 分辨率）
-- **[NCBI GenBank](https://www.ncbi.nlm.nih.gov/genbank/)**：全球最大的 DNA 序列数据库
-- **[eBird](https://ebird.org/)**：康奈尔鸟类学实验室运营的公民科学鸟类观测平台
-- **[TRY Plant Trait Database](https://www.try-db.org/)**：全球植物功能性状数据库
-- **[FLUXNET](https://fluxnet.org/)**：全球通量观测网络，提供碳水通量数据
+**期刊论文（Journal Articles）**
+最核心的文献类型。包括原创研究论文（research article）、综述（review）、方法论文（method paper）等。在生态学领域，主要发表在 *Ecology*、*Journal of Ecology*、*Ecology Letters*、*Ecology Applications*、*Functional Ecology* 等期刊上。
 
-**中国数据平台**：
-- **[中国生态系统研究网络（CERN）](http://www.cern.ac.cn/)**：中国科学院运营的长期生态监测网络，提供全国生态站观测数据
-- **[国家地球系统科学数据中心](http://www.geodata.cn/)**：涵盖大气、水文、土壤、生态等多领域的共享数据平台
-- **[中国科学院资源环境科学与数据中心](https://www.resdc.cn/)**：提供土地利用、气候、植被等空间数据集
-- **[国家青藏高原科学数据中心](https://data.tpdc.ac.cn/)**：青藏高原及周边地区的科学数据
-- **[中国森林生物多样性监测网络（CForBio）](http://www.cfbiodiv.org/)**：森林动态样地数据
+**专著（Books）**
+教科书和专著适合建立系统性知识框架。生态学经典专著包括 *Ecology*（Begon, Townsend, Harper）、*Fundamentals of Ecology*（Odum）、*Statistical Ecology*（Ludwig, Reynolds）等。
 
-**R 包与教程**：
-- **rgbif**: 访问 GBIF 数据 - https://cran.r-project.org/package=rgbif
-- **raster**: 栅格数据处理 - https://cran.r-project.org/package=raster
-- **terra**: 新一代栅格数据处理 - https://cran.r-project.org/package=terra
-- **geodata**: 下载地理空间数据 - https://cran.r-project.org/package=geodata
+**专著章节（Book Chapters）**
+编辑书籍中的章节通常聚焦某个具体主题，适合深入了解特定方法或理论。
 
-### 0207 荟萃分析
+**学位论文（Theses and Dissertations）**
+硕博士学位论文是重要的信息来源，尤其是方法细节和工作量描述往往比期刊论文更详细。国内学位论文可在知网和万方获取。
 
-**核心文献**：
-- Koricheva, J., Gurevitch, J., & Mengersen, K. (Eds.). (2013). *Handbook of Meta-analysis in Ecology and Evolution*. Princeton University Press.
-- Borenstein, M., et al. (2009). *Introduction to Meta-Analysis*. Wiley.
-- Gurevitch, J., & Hedges, L. V. (1999). Statistical issues in ecological meta-analyses. *Ecology*, 80(4), 1142–1149. DOI: 10.1890/0012-9658(1999)080[1142:SIIEMA]2.0.CO;2
+**预印本（Preprints）**
+预印本是尚未经过同行评审的工作。在生态学领域，Biorxiv 是最常用的预印本平台。预印本的优势是可以快速获取最新研究进展，但需要注意其结论尚未经过评审验证。
 
-**R 包与教程**：
-- **metafor**: 荟萃分析核心包 - https://cran.r-project.org/package=metafor
-- **meta**: 荟萃分析 - https://cran.r-project.org/package=meta
-- **orchaRd**: 荟萃分析可视化 - https://cran.r-project.org/package=orchaRd
+**灰色文献（Grey Literature）**
+政府报告、技术文档、机构报告等。这类文献在生态系统评估、环境政策研究中很重要，但引用格式往往不标准。
 
-### 0208 Python 数据采集
+### 生态学研究常用的数据库
 
-**核心教材**：
-- McKinney, W. (2022). *Python for Data Analysis* (3rd ed.). O'Reilly Media.
-- VanderPlas, J. (2016). *Python Data Science Handbook*. O'Reilly Media. https://jakevdp.github.io/PythonDataScienceHandbook/
+| 数据库 | 覆盖范围 | 适用场景 |
+|:---|:---|:---|
+| **Web of Science** | 核心期刊引文索引 | 检索高影响力期刊 |
+| **Scopus** | 综合性学术引文数据库 | 跨学科检索 |
+| **Google Scholar** | 最全面的学术搜索 | 日常检索、追踪引用 |
+| **CNKI（知网）** | 中文期刊、学位论文 | 中文学术资源 |
+| **Wanfang（万方）** | 中文科技期刊、学位论文 | 中文学术资源 |
+| **ScienceDirect** | Elsevier期刊全文 | 获取全文PDF |
+| **SpringerLink** | Springer期刊全文 | 获取全文PDF |
+| **Wiley Online Library** | Wiley期刊全文 | 获取全文PDF |
 
-**Python 库文档**：
-- **pandas**: https://pandas.pydata.org/
-- **NumPy**: https://numpy.org/
-- **requests**: https://requests.readthedocs.io/
-- **BeautifulSoup**: https://www.crummy.com/software/BeautifulSoup/
-- **Scrapy**: https://scrapy.org/
+## Zotero：你的第一选择
 
-## R 语言生态数据分析
+### 为什么选 Zotero？
 
-### 综合教程
-- **[R for Data Science (2e)](https://r4ds.hadley.nz/)**：Hadley Wickham 等著，tidyverse 数据科学入门经典
-- **[Statistical Methods in Ecology (CRAN Task View)](https://cran.r-project.org/web/views/Environmetrics.html)**：R 生态学与环境统计相关包的汇总
-- **[Numerical Ecology with R](https://www.springer.com/gp/book/9783319714035)**：Borcard, D., Gillet, F., & Legendre, P. (2018). Springer.
+在文献管理工具中，Zotero 是生态学和地球科学领域最广泛使用的免费开源工具。相比 EndNote 和 Mendeley，Zotero 有几个显著优势：
 
-### 中文 R 语言资源
-- **[R 语言教程（李东风）](https://www.math.pku.edu.cn/teachers/lidf/docs/Rbook/html/_Rbook/index.html)**：北京大学李东风教授编写的中文 R 语言教程，适合入门学习
-- **[现代统计图形（谢益辉等）](https://bookdown.org/xiangyun/msg/)**：R 语言数据可视化中文教程
-- **[R 数据科学（中文版）](https://r4ds.hadley.nz/)**：R for Data Science 的中文翻译版本
+- **完全免费**——没有付费墙，没有功能限制
+- **开源**——数据完全属于你自己，不会因为服务停止而丢失
+- **浏览器插件强大**——在 Google Scholar、ScienceDirect、Springer 等网站一键抓取文献信息
+- **Word/LibreOffice 集成好**——插件可以在 Word 中直接插入引用
+- **支持 R Markdown/Quarto**——通过 Better BibTeX 插件生成 BibTeX 文件
 
-## 中文生态学期刊与资源
+### 安装 Zotero
 
-### 核心期刊
-- **[生态学报](http://www.ecologica.cn/)**：国内生态学领域核心期刊，可免费获取部分论文全文
-- **[应用生态学报](http://www.cjae.net/)**：中国生态学学会主办，侧重应用研究
-- **[植物生态学报](http://www.plant-ecology.com/)**：中国植物学会主办
-- **[生物多样性](http://www.biodiversity-science.net/)**：中国科学院主办
+**第一步：下载安装 Zotero**
 
-### 学术社区
-- **统计之都**: https://cosx.org/ - 中文统计学社区
-- **R 语言中文社区**: https://www.r-project.org/
-- **生态学者**: https://www.ixueshu.com/ - 学术资源搜索平台
+访问 https://www.zotero.org/download ，下载对应操作系统的安装包（Windows/macOS/Linux）。
 
-## 数据管理与可重复性
+安装完成后，你会看到 Zotero 的主界面，主要包括左侧的文献库列表和右侧的文献条目列表。
 
-### 核心文献
-- Wilkinson, M. D., et al. (2016). The FAIR Guiding Principles for scientific data management and stewardship. *Scientific Data*, 3, 160018. DOI: 10.1038/sdata.2016.18
-- Sandve, G. K., et al. (2013). Ten simple rules for reproducible computational research. *PLOS Computational Biology*, 9(10), e1003285. DOI: 10.1371/journal.pcbi.1003285
-- Wilson, G., et al. (2017). Good enough practices in scientific computing. *PLOS Computational Biology*, 13(6), e1005510. DOI: 10.1371/journal.pcbi.1005510
+**第二步：安装浏览器连接器（Connector）**
 
-### 工具与平台
-- **Open Science Framework (OSF)**: https://osf.io/ - 研究项目管理与数据共享
-- **Zenodo**: https://zenodo.org/ - 研究数据与代码存档
-- **Dryad**: https://datadryad.org/ - 生态学与进化生物学数据仓库
-- **figshare**: https://figshare.com/ - 研究输出共享平台
+在同一个下载页面，找到浏览器连接器部分，安装对应浏览器的 Zotero Connector（支持 Chrome、Firefox、Edge、Safari）。安装完成后，你在学术网站看到文献信息时，浏览器地址栏会出现 Zotero 的图标，点击即可一键保存。
 
-## 版本控制与协作
+**第三步：安装 Word 插件**
 
-### Git 与 GitHub
-- **[Pro Git（中文版）](https://git-scm.com/book/zh/v2)**：Git 官方教程中文版
-- **[GitHub Guides](https://guides.github.com/)**：GitHub 官方入门指南
-- **[Happy Git and GitHub for the useR](https://happygitwithr.com/)**：面向 R 用户的 Git 教程
+对于 Microsoft Word 用户，在 Zotero 主界面选择「编辑」→「首选项」→「引用」，点击"安装 Word 插件"。安装后 Word 功能区会出现 Zotero 选项卡，可以在 Word 中直接插入引用和管理参考文献。
 
-### 协作工具
-- **GitHub**: https://github.com/ - 代码托管与协作
-- **GitLab**: https://gitlab.com/ - 开源代码托管平台
-- **Bitbucket**: https://bitbucket.org/ - Atlassian 旗下代码托管服务
+**第四步：创建账号并同步**
+
+注册 Zotero 账号（免费），在 Zotero 主界面登录。同步功能可以将你的文献库备份到云端，同时支持多设备同步。建议开启坚果云或其他 WebDAV 服务作为第三方同步备份。
+
+### Zotero 快速上手
+
+**添加文献的三种方式**
+
+第一种：**从网站一键导入**
+
+当你用 Chrome 打开 Google Scholar 搜索结果页面时，点击地址栏右侧的 Zotero 图标，Zotero 会自动识别当前页面所有文献并询问你要保存哪些。这种方式适合批量导入搜索结果。
+
+第二种：**从 PDF 直接抓取**
+
+将 PDF 文件拖入 Zotero 主界面，Zotero 会尝试自动提取 PDF 中的元数据（标题、作者、期刊、年份等）。对于有 DOI 的期刊论文，成功率很高。对于中文 PDF 或没有 DOI 的文献，可能需要手动补充信息。
+
+第三种：**手动输入**
+
+对于无法自动识别的文献（古籍、网页资源、灰色文献等），点击 Zotero 主界面的绿色加号按钮，选择正确的文献类型（期刊文章、图书、网页等），手动填写表单。
+
+**组织你的文献库**
+
+建议使用 Zotero 的文件夹（Collections）和标签（Tags）功能组织文献：
+
+```
+我的文献库/
+├── 马尾松混交林/
+│   ├── 土壤微生物
+│   ├── 生物多样性
+│   └── 碳储量
+├── 方法论文献/
+│   ├── 土壤采样方法
+│   ├── 统计分析
+│   └── 元分析方法
+└── 重要综述/
+    ├── Biodiversity-Ecosystem Function
+    └── Soil Carbon Sequestration
+```
+
+**标签的使用技巧**
+
+除了文件夹，还可以给文献打标签（Tags）。标签比文件夹更灵活——一篇文献可以有多个标签，适合从不同维度组织。例如，一篇关于马尾松林土壤碳储量的文献，可以打上 `马尾松` `土壤碳` `混交林` `广西` 等多个标签，之后无论在哪个文件夹都能通过标签快速找到。
+
+**给文献做笔记**
+
+选中一篇文献，在右侧面板切换到「备注」或「笔记」标签页，可以写阅读笔记。建议用结构化的方式记录：
+
+```markdown
+## 文献笔记：XXX (2023)
+
+### 基本信息
+- 期刊：Journal of Ecology
+- DOI：10.xxxx/xxxxx
+- 第一作者邮箱：xxx@gxu.edu.cn
+
+### 研究问题
+这篇文章研究的是什么？作者想回答什么问题？
+
+### 主要发现
+1. 第一个主要发现...
+2. 第二个主要发现...
+3. ...
+
+### 方法亮点
+用了什么方法？有什么创新？
+
+### 对我的启发
+这篇文献对我的研究有什么帮助？
+可以引用哪个结论？
+存在什么问题或局限？
+```
+
+### Zotero 的进阶功能
+
+**Better BibTeX 插件**
+
+如果你使用 R Markdown 或 Quarto 写论文，需要生成 BibTeX（.bib）格式的文献库文件。安装 Better BibTeX 插件（https://retorque.re/zotero-better-bibtex/）后，Zotero 可以自动为每个文献库或文件夹生成 .bib 文件，并在文献信息更新时自动刷新。
+
+安装后，在 Zotero 主界面右键点击文献库或文件夹，选择「导出库」，格式选择"Better BibTeX"，勾选「更新时自动刷新」即可。
+
+**Zotero Group Libraries（组库）**
+
+Zotero 支持创建组库，允许多个用户共同管理文献库。这对于导师-学生协作或课题组共享文献非常有用。
+
+创建组库：访问 https://www.zotero.org/groups，点击「创建新组」，填写组名称（建议用课题组名称）和描述，选择隐私设置（公开/私有）。组库创建后，可以邀请成员，成员可以从组库中拖取文献到自己的文献库。
+
+**同步与备份**
+
+Zotero 免费账号提供 300MB 附件存储空间。对于大多数研究生来说，这个空间足够存放文献 PDF 和笔记。开启同步后，所有文献元数据会自动备份到 Zotero 服务器。如果需要备份 PDF，可以设置 Zotero 连接到坚果云或 WebDAV 服务，将附件同步到第三方云盘。
+
+## R 中的文献引用
+
+### citation() 函数：R 的内置引用
+
+R 本身和 R 包都有内置的引用信息。使用 `citation()` 函数可以获取 R 和 R 包的引用格式：
+
+```r
+# 获取 R 本身的引用
+citation()
+
+# 输出示例：
+# To cite R in publications use:
+
+#   R Core Team (2023). R: A language and environment for
+#   statistical computing. R Foundation for Statistical
+#   Computing, Vienna, Austria. URL
+#   https://www.R-project.org/.
+
+# A BibTeX entry for LaTeX users is
+
+#   @Manual{,
+#     title = {R: A Language and Environment for
+#       Statistical Computing},
+#     author = {{R Core Team}},
+#     organization = {R Foundation for Statistical
+#       Computing},
+#     address = {Vienna, Austria},
+#     year = {2023},
+#     url = {https://www.R-project.org/},
+#   }
+```
+
+```r
+# 获取特定 R 包的引用
+citation(package = "tidyverse")
+citation(package = "vegan")
+citation(package = "lme4")
+```
+
+**为什么这很重要？**
+
+学术规范要求在使用他人开发的工具时进行适当引用。使用 `citation()` 函数获取 R 和 R 包的引用，是确保科研诚信的基本操作。在论文的"数据可用性声明"或"软件 использован"部分，通常需要列出所有使用的 R 包及其版本。
+
+```r
+# 在论文中引用 tidyverse 的示例
+citation(package = "tidyverse")
+# 输出：
+# Wickham et al., (2019). Welcome to the tidyverse.
+# Journal of Open Source Software, 4(43), 1686.
+# https://doi.org/10.21105/joss.01686
+```
+
+### RefManageR 包：程序化文献管理
+
+RefManageR 包允许在 R 中直接读取和管理 BibTeX 文献库，适合需要动态生成参考文献列表的场景。
+
+```r
+# 安装 RefManageR
+install.packages("RefManageR")
+
+# 加载包
+library(RefManageR)
+
+# 读取 BibTeX 文件
+# 假设你的文献库导出到了 data/refs.bib
+refs <- ReadBib("data/refs.bib")
+
+# 查看文献库中有多少条文献
+length(refs)
+# 输出示例：[1] 47
+
+# 查看第一条文献的详细信息
+refs[[1]]
+
+# 获取特定字段
+refs[[1]]$title      # 标题
+refs[[1]]$author     # 作者
+refs[[1]]$year       # 年份
+refs[[1]]$journal    # 期刊名
+refs[[1]]$doi        # DOI
+```
+
+**在 R Markdown/Quarto 中插入引用**
+
+如果你使用 R Markdown 或 Quarto 撰写报告，可以直接引用 BibTeX 文献库中的文献：
+
+```r
+# 首先读取 BibTeX 文献库
+refs <- ReadBib("data/refs.bib")
+
+# 假设你想引用文献库中某篇关于土壤碳储量的文章
+# 先找到这篇文献的 citation key
+names(refs)
+# 输出示例：
+# [1] "Smith2020" "Jones2021" "Wang2022" ...
+
+# 在 Quarto 文档中，使用 @Smith2020 格式插入引用
+# 在文末会自动生成参考文献列表
+```
+
+**批量获取文献的 DOI 和引用信息**
+
+有时候你需要批量获取一组文献的 DOI 或生成标准引用格式。RefManageR 可以帮助批量处理：
+
+```r
+# 假设你有一个文献标题向量
+titles <- c(
+  "Effects of nitrogen deposition on soil carbon storage",
+  "Biodiversity and ecosystem functioning in subtropical forests",
+  "Soil pore structure and water movement in forest soils"
+)
+
+# 尝试通过 CrossRef API 获取 DOI
+library(httr)
+library(jsonlite)
+
+get_doi_from_title <- function(title) {
+  url <- URLencode(
+    paste0("https://api.crossref.org/works?query.title=", title, "&rows=1")
+  )
+  response <- GET(url)
+  if (status_code(response) == 200) {
+    data <- fromJSON(content(response, as = "text"))
+    if (data$message$`total-results` > 0) {
+      return(data$message$items[[1]]$DOI)
+    }
+  }
+  return(NA)
+}
+
+# 批量获取 DOI
+dois <- sapply(titles, get_doi_from_title)
+print(dois)
+```
+
+### citr 包：RStudio 中的引用插入
+
+citr 是一个 R 包，可以在 RStudio 中提供引用插入的图形界面，特别适合 R Markdown 文档的参考文献管理。
+
+```r
+# 安装 citr
+install.packages("citr")
+
+# 在 RStudio 中启用
+# Tools -> Addins -> Browse Addins -> 找到 "Insert citations"
+# 可以为这个功能设置快捷键，例如 Ctrl+Shift+M
+```
+
+启用后，在 R Markdown 文档中点击「Addins」→「Insert citation」，会弹出文献搜索窗口，可以搜索当前 BibTeX 文献库中的文献并一键插入引用。
+
+## 引用格式：GB/T 7714 与 APA
+
+### 生态学领域常用的引用格式
+
+不同学科和期刊使用不同的引用格式。生态学领域最常见的两种格式是：
+
+**GB/T 7714（国标格式）**
+
+中国国家标准，全称《信息与文献 参考文献著录规则》。国内期刊和学位论文通常要求使用 GB/T 7714 格式。其特点是顺序编码制（按引用顺序编号）和作者-年份制（哈佛格式）两种风格。
+
+**APA 格式（American Psychological Association）**
+
+美国心理学协会制定的引用格式，现已广泛应用于心理学、社会科学和生态学领域。APA 格式的特点是作者-年份制，文献列表按作者姓氏字母顺序排列。
+
+### GB/T 7714-2015 格式详解
+
+**期刊文章**
+
+格式：`[序号] 作者. 题名[J]. 刊名, 出版年份, 卷(期): 起始页码-终止页码.`
+
+示例：
+
+```
+[1] 张三, 李四. 氮沉降对土壤有机碳储量的影响[J]. 生态学报, 2023, 43(2): 256-268.
+[2] Wang X, Li Y, Chen J, et al. Effects of mixed forest on soil carbon sequestration in subtropical China[J]. Forest Ecology and Management, 2022, 508: 120-135.
+```
+
+注意：中文文献列出所有作者，外文文献通常列出前三位作者后加 "et al."。
+
+**专著**
+
+格式：`[序号] 作者. 书名[M]. 版本(第一版不标注). 出版地: 出版社, 出版年份.`
+
+示例：
+
+```
+[3] 李四, 王五. 生态学原理[M]. 北京: 科学出版社, 2021.
+[4] Schlesinger W H, Bernhardt E S. Biogeochemistry: An analysis of global change[M]. 3rd ed. Academic Press, 2013.
+```
+
+**学位论文**
+
+格式：`[序号] 作者. 题名[D]. 学位类型: [博士|硕士], 授予单位, 年份.`
+
+示例：
+
+```
+[5] 张华. 马尾松混交林土壤微生物群落特征研究[D]. 硕士: 广西大学, 2023.
+```
+
+**网络资源**
+
+格式：`[序号] 作者. 题名[EB/OL]. (更新日期/发布日期)[查阅日期]. URL.`
+
+示例：
+
+```
+[6] 国家统计局. 中国森林资源报告[EB/OL]. (2022-10-15)[2024-03-01]. http://www.forestry.gov.cn/.
+```
+
+### APA 格式详解（第七版）
+
+APA 第七版是目前最新的格式规范，相比第六版有一些重要变化：
+
+**格式变化要点：**
+
+- 作者数量：1-20个作者都要列出完整名单（第六版是7个以上才列完整）
+- 年份：期刊文章必须标注具体年份
+- DOI 格式：推荐使用短链接格式（https://doi.org/10.xxxx/xxxxx）
+
+**期刊文章**
+
+格式：`Author, A. A., & Author, B. B. (Year). Title of article. Title of Periodical, volume(issue), page–page. https://doi.org/xxxxx`
+
+示例：
+
+```
+Huston, M. A. (1997). Hidden treatments in ecological experiments: Re-evaluating the ecosystem function of biodiversity. Oecologia, 110(4), 449–460. https://doi.org/10.1007/s004420050180
+
+Tilman, D., Wedin, D., & Knops, J. (1996). Productivity and sustainability influenced by biodiversity in grassland ecosystems. Nature, 379(6567), 718–720. https://doi.org/10.1038/379718a0
+```
+
+**专著**
+
+格式：`Author, A. A. (Year). Title of work: Capital letter also for subtitle (Edition ed.). Publisher.`
+
+示例：
+
+```
+Schlesinger, W. H., & Bernhardt, E. S. (2013). Biogeochemistry: An analysis of global change (3rd ed.). Academic Press.
+```
+
+**学位论文**
+
+格式：`Author, A. A. (Year). Title of dissertation/Thesis [Doctoral dissertation/Master's thesis, University Name]. Database or Publisher. URL`
+
+示例：
+
+```
+Zhang, H. (2023). Soil microbial community structure in masson pine mixed forests [Master's thesis, Guangxi University]. CNKI. https://doi.org/xxxxx
+```
+
+### Zotero 中的引用格式转换
+
+Zotero 支持在多种引用格式之间快速转换。在 Zotero 主界面，选择「编辑」→「首选项」→「引用」，可以添加和切换引用样式。
+
+**添加 GB/T 7714 格式**
+
+Zotero 本身没有内置 GB/T 7714 格式，需要手动添加样式文件。访问 https://www.zotero.org/styles ，搜索 "Chinese" 或具体期刊名称，找到需要的样式。
+
+添加到 Zotero 的方法：下载 .csl 文件，然后在 Zotero 中选择「编辑」→「首选项」→「引用」→「样式」→ 点击加号按钮添加下载的 .csl 文件。
+
+**切换文献库的引用格式**
+
+在 Word 中使用 Zotero 插入引用时，可以随时切换引用格式：点击 Word 功能区的 Zotero 选项卡 → 点击「文档首选项」→「样式」→ 从下拉列表中选择目标格式 → 点击确定。切换后所有引用会自动重新格式化。
+
+## 如何高效检索学术文献
+
+### Google Scholar 的高级检索技巧
+
+Google Scholar 是学术文献检索的首选工具，但大多数同学只用最基本的关键词搜索。以下技巧可以大幅提升检索效率：
+
+**布尔运算符**
+
+使用 AND、OR、NOT 控制检索逻辑：
+
+```python
+# 检索同时包含"土壤碳"和"马尾松"的文献
+土壤碳 AND 马尾松
+
+# 检索包含"生物多样性"或"物种多样性"的文献
+生物多样性 OR 物种多样性
+
+# 排除"模型"相关的结果
+生物多样性 NOT 模型
+```
+
+**短语精确检索**
+
+用引号包裹短语，要求结果必须包含完整短语：
+
+```
+# 检索"土壤孔隙结构"的精确匹配
+"土壤孔隙结构"
+
+# 检索马尾松和土壤碳储量的共现
+"masson pine" AND "soil carbon"
+```
+
+**搜索特定时间范围**
+
+使用 `after:YYYY` 和 `before:YYYY` 限制时间范围：
+
+```
+# 检索 2020 年之后发表的生物多样性论文
+biodiversity AND ecosystem functioning after:2020
+
+# 检索 2015-2020 年之间的荟萃分析
+meta-analysis AND soil carbon sequestration 2015:2020
+```
+
+**搜索特定作者或期刊**
+
+使用 `author:` 搜索特定作者的文献：
+
+```
+# 搜索 Tilman 的生物多样性实验论文
+author:Tilman biodiversity experiment
+```
+
+**搜索 PDF 全文**
+
+使用 `filetype:pdf` 搜索可直接下载的 PDF：
+
+```
+"soil carbon" "masson pine" filetype:pdf
+```
+
+### 中文学术资源检索
+
+**知网（CNKI）的检索策略**
+
+知网（https://www.cnki.net/）是获取中文学术资源的最主要平台，包括期刊论文、学位论文，会议论文，专利等。
+
+高级检索技巧：
+
+- 使用「主题」字段比「全文」字段更精准
+- 博士论文的参考文献是了解领域的好资源
+- 「发表时间」筛选可以追踪最新研究进展
+- 「来源类别」可以选择核心期刊（如北大核心、CSCD）
+
+**万方的特点**
+
+万方（https://www.wanfangdata.com.cn/）和知网有一定重叠，但也有一些独特资源：
+
+- 学位论文覆盖时间可能比知网更长
+- 某些技术报告和标准文献只有万方有
+
+**检索词的选择与扩展**
+
+同义词和上位词/下位词扩展是提高检索召回率的关键：
+
+```
+核心检索词：马尾松
+扩展词：湿地松、火炬松、加勒比松（都是松属但不同种）
+      马尾松林（加入"林"字）
+      Pinus massoniana（拉丁名）
+
+核心检索词：土壤有机碳
+扩展词：土壤碳、土壤碳库、土壤碳储量
+      SOC（全称缩写）
+      soil organic carbon（全称英文）
+```
+
+### 文献筛选的"金字塔"原则
+
+面对大量检索结果，不要试图读完所有文献。按照以下顺序筛选：
+
+**第一轮：标题筛选**
+
+阅读所有检索结果的标题，排除明显不相关的文献。保留率通常在 30-50%。
+
+**第二轮：摘要筛选**
+
+阅读保留文献的摘要，判断是否与研究问题直接相关。保留率通常在 10-20%。
+
+**第三轮：全文筛选**
+
+对于通过摘要筛选的文献，下载并快速浏览全文。重点关注：引言部分的背景是否充分？方法是否合理？结论是否有数据支持？
+
+**第四轮：引用追踪**
+
+对于核心文献，使用 Google Scholar 的「被引用」功能，追踪后续引用这篇文献的新研究。
+
+## 如何有效阅读学术文献
+
+### 泛读 vs 精读：不同的文献不同的读法
+
+**泛读（Skimming）**
+
+适用场景：初步了解某个领域、筛选文献、追踪最新动态
+
+目标：了解文献的主要内容，判断是否值得精读
+
+时间：5-10 分钟
+
+方法：
+
+1. 先读标题和关键词——判断是否与你的研究相关
+2. 读摘要——了解研究问题和主要结论
+3. 扫一眼图表——通常能直观反映研究的主要发现
+4. 看结论部分——确认作者宣称的主要贡献
+
+**精读（In-depth Reading）**
+
+适用场景：核心文献、与研究直接相关的方法论文献、需要引用的文献
+
+目标：完全理解研究的设计、方法和结论
+
+时间：1-3 小时
+
+方法：
+
+1. 读引言——理解研究背景、问题提出和假设
+2. 读方法——理解实验设计、采样方法、分析方法
+3. 读结果——跟随作者的思路看数据和图表
+4. 读讨论——理解作者对结果的解读和局限
+5. 做笔记——用结构化方式记录关键信息
+
+### 生态学文献的阅读框架
+
+**引言（Introduction）**
+
+- 这篇文献要回答什么科学问题？
+- 为什么这个问题重要（研究意义）？
+- 之前的研究做了什么，有什么 gap？
+- 作者的假设是什么？
+
+**方法（Methods）**
+
+- 研究地点在哪里？有什么地理和生态特征？
+- 采样设计是什么？（样本量、采样时间、采样方法）
+- 用了什么分析技术？
+
+**结果（Results）**
+
+- 主要发现了什么？（列出关键数字）
+- 统计检验结果是什么？（p值、效应量）
+- 有哪些支撑的图表？
+
+**讨论（Discussion）**
+
+- 作者如何解释这些结果？
+- 与之前的研究对比，有什么异同？
+- 研究的局限性是什么？
+- 对未来研究有什么启示？
+
+### 文献笔记方法
+
+康纳维尔笔记法（改良版）——将笔记页面分成三部分，左边放关键词，下边放总结和问题：
+
+```markdown
+# 文献笔记模板：wanger2023effects
+# Zotero Citation Key: wang2023effects
+# DOI: 10.1016/j.foreco.2023.01.015
+# 精读日期：2024-03-15
+
+## 研究问题
+...（用一句话概括）
+
+## 核心发现
+1. ...
+2. ...
+
+## 方法亮点
+- ...
+
+## 对我研究的启发
+...
+```
+
+## 引用检查与学术诚信
+
+### 常见引用错误
+
+**错误一：引用了但没有对应参考文献列表条目**
+
+这通常是因为手动调整文档时不小心删除了参考文献列表中的条目。检查方法：在 Word 中使用 Zotero 的「重新生成参考文献列表」功能。
+
+**错误二：参考文献列表有条目但正文没有引用**
+
+这通常是因为在修改过程中删除了正文中的引用但保留了列表条目。检查方法：Word 搜索功能，检查所有参考文献列表中的序号在正文中是否都有出现。
+
+**错误三：引用格式不一致**
+
+同一篇论文中混用了不同的引用格式。解决方法：使用 Zotero 的「文档首选项」统一设置目标格式，然后用「刷新」功能一键格式化。
+
+**错误四：过度依赖二手引用**
+
+"二手引用"（secondary source）是指你引用的是某文献 A 中的观点，但这个观点最初来自另一篇文献 B。当你实际没有查阅文献 B 时，应该标注为"引自 A"，而不是直接引用 B。
+
+### 学术诚信的基本原则
+
+**直接引用必须加引号并标注来源**
+
+如果完全复制他人原文（即使只是一句话），必须：
+
+1. 用引号标注是直接引用
+2. 标注作者、年份和具体页码
+3. 引用格式符合目标期刊/学位论文要求
+
+**改写（Paraphrase）也要标注**
+
+即使用自己的话重新表述了某个观点，没有逐字复制，也必须标注来源。改写是"在理解了原意后用自己的语言重新表述"，仍然是基于他人思想的表达，需要引用。
+
+## 生态学重要期刊与学术资源
+
+### 高影响力生态学期刊
+
+**顶级综合性生态学期刊（第一梯队）**
+
+| 期刊 | IF (2023) | 特点 |
+|:---|:---|:---|
+| *Science* | ~63 | 涵盖所有科学领域 |
+| *Nature* | ~65 | 与 Science 类似 |
+| *Nature Ecology & Evolution* | ~17 | Nature 子刊 |
+| *Ecology Letters* | ~11 | 生态学 Letter 类 |
+| *Trends in Ecology & Evolution* | ~20 | 综述类，追踪前沿 |
+
+**生态学主流期刊（第二梯队）**
+
+| 期刊 | IF (2023) | 特点 |
+|:---|:---|:---|
+| *Ecology* | ~5.3 | ESA 主办，生态学经典 |
+| *Journal of Ecology* | ~5.5 | 英国生态学会，植物生态学强 |
+| *Functional Ecology* | ~5.0 | 功能生态学 |
+| *Journal of Applied Ecology* | ~6.5 | 应用生态学 |
+
+**方法学与数据期刊**
+
+| 期刊 | 特点 |
+|:---|:---|
+| *Methods in Ecology and Evolution* | 生态学方法创新 |
+| *Scientific Data* | 数据论文专用期刊 |
+| *Ecology and Evolution* | 开放数据/代码文章 |
+
+### 生态学重要数据库
+
+**全球生物多样性数据库**
+
+- **GBIF**：https://www.gbif.org/ ，整合全球物种分布数据
+- **iNaturalist**：公众科学平台，适合物种记录
+- **eBird**：鸟类观测数据库
+
+**气候与环境数据**
+
+- **WorldClim**：全球高分辨率气候数据
+- **CHELSA**：高分辨率气候层数据
+- **NEON**：美国生态观测网络
+- **CERN（中国生态系统研究网络）**：中国生态长期监测数据
+
+**数据预印本平台**
+
+- **Biorxiv**：生命科学预印本（https://www.biorxiv.org/）
+- **EarthArXiv**：地球科学预印本（https://eartharxiv.org/）
+
+## 课后练习
+
+### 基础题
+
+**练习 1：Zotero 安装与配置**
+
+完成以下任务：
+
+a) 在你的电脑上安装 Zotero
+b) 安装 Chrome/Firefox 浏览器的 Zotero Connector
+c) 安装 Zotero 的 Word/LibreOffice 插件
+d) 注册 Zotero 账号并登录
+e) 在 Zotero 中创建一个用于本课程的文献库文件夹
+
+**练习 2：文献导入与整理**
+
+a) 在 Google Scholar 中检索"soil carbon sequestration mixed forest"相关论文，找到 5 篇你感兴趣的论文
+b) 使用 Zotero Connector 将这 5 篇论文一键导入你的文献库
+c) 为每篇论文补充中文标签（如「土壤碳」「混交林」等）
+d) 为其中 1 篇论文写 200 字的阅读笔记
+
+**练习 3：引用格式识别**
+
+判断以下文献的类型（期刊文章/专著/学位论文/网络资源），并说明判断依据：
+
+```
+[1] 李明华. 森林土壤碳储量研究进展[J]. 生态学报, 2020, 40(15): 5123-5134.
+[2] 王强. 土壤生态学[M]. 北京: 高等教育出版社, 2019.
+[3] 张伟. 亚热带森林土壤碳周转特征研究[D]. 博士: 北京大学, 2021.
+[4] 国家林业和草原局. 中国森林资源报告[EB/OL]. (2022-10-15)[2023-03-20]. http://www.forestry.gov.cn/.
+[5] Chen J, Li Y, Wang X, et al. Effects of forest type on soil carbon storage in subtropical China[J]. Forest Ecology and Management, 2023, 528: 120-135.
+```
+
+### 应用题
+
+**练习 4：文献检索策略设计**
+
+为你的课程项目或研究课题设计一套文献检索策略：
+
+a) 列出你的研究课题关键词（中英文，包括同义词）
+b) 设计一套布尔检索式（至少 3 个检索式）
+c) 选择 2 个数据库进行检索（一个英文、一个中文）
+d) 使用"金字塔"筛选法，列出每轮保留和排除的文献数量
+e) 最终选出 5-8 篇核心文献，给出选择理由
+
+**练习 5：R 中生成文献引用**
+
+完成以下任务：
+
+a) 在 R 中运行 `citation()` 查看 R 的引用信息
+b) 安装 `tidyverse` 和 `vegan` 包，并获取它们的引用格式
+c) 将 R 的引用信息复制到一个 .bib 文件中
+d) 在 R 中使用 `RefManageR::ReadBib()` 读取该文件
+e) 查看文献库的 citation key
+
+### 思考题
+
+**练习 6：学术诚信反思**
+
+阅读以下场景，判断是否存在学术诚信问题，并说明理由：
+
+场景 A：你在写论文时，发现某篇文献的结论和你想写的内容高度相关，但你只读了摘要，没有读全文。你决定用自己的话复述摘要中的结论，但不引用这篇文献，因为你觉得"摘要不算正式发表"。
+
+场景 B：你在分析数据时，发现某篇文献的数据和自己的结果不一致。你决定不引用那篇文献，而是引用另一篇支持你结论的文献。
+
+场景 C：你在审稿时，发现某篇论文的参考文献列表中有 3 条 DOI 已经失效（链接打不开）。你在审稿意见中指出这个问题，建议作者修正。
+
+请分别分析这三个场景中的学术诚信问题，并给出正确的处理方式。
