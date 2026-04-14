@@ -1,0 +1,725 @@
+---
+title: "机器学习预处理"
+---
+
+# 机器学习预处理
+
+在前几章里，我们处理了数据清洗、特征工程、数据质量评估这些基础工作。现在，你要用这些数据建模了——无论是预测土壤有机质含量，还是分类物种分布区系，或者是检测环境异常值，在跑模型之前，还需要关键一步：**数据预处理**。
+
+很多人以为机器学习是"把数据扔进去，模型自己会学"。实际上，Garbage in, garbage out——如果输入数据没处理好，再厉害的算法也会翻车。这一章我们聚焦建模前的预处理工作：标准化、缺失值插补、不平衡数据处理、交叉验证设计、特征选择。这些技能在任何机器学习项目中都会反复用到。
+
+## 1 标准化与归一化
+
+### 1.1 尺度为什么重要
+
+打开一个数据集，有的地方是土壤pH（0-14），有的是有机质含量（0-50%），有的是孔隙度（0-100%），有的是微生物生物量（0-1000 mg/kg）。这些变量的数值范围差几个数量级。
+
+对于**距离敏感的算法**，这会是个大问题。KNN是根据样本间距离工作的，如果某个特征的数值范围特别大，它就会主导距离计算，其他特征的重要性被淹没。SVM、神经网络、线性回归（带正则化）都有这个问题。
+
+树模型（随机森林、XGBoost、决策树）则对尺度不敏感，因为它们判断的是"这个值比阈值大还是小"，不涉及距离计算。
+
+**实战建议**：拿到新数据集，先问自己：这个模型对尺度敏感吗？如果是KNN/SVM/神经网络/带正则化的线性模型，就必须标准化。如果是树模型，标准化不是必须的，但做了也没坏处。
+
+### 1.2 Min-Max归一化
+
+最简单的处理方法，把数值映射到[0,1]区间：
+
+$$x_{normalized} = \frac{x - x_{min}}{x_{max} - x_{min}}$$
+
+R实操：
+```r
+# 方法1：用base R的scale()
+# 先计算训练集的min和max
+train_min <- min(train_data$organic_matter)
+train_max <- max(train_data$organic_matter)
+train_norm <- (train_data$organic_matter - train_min) / (train_max - train_min)
+```
+
+### 1.3 Z-score标准化
+
+把数据变成均值0、标准差1的分布：
+
+$$x_{standardized} = \frac{x - \bar{x}}{s}$$
+
+适用于数据近似正态分布的场景。标准化后的数据不限制在特定范围内，但如果模型输出需要解释为原始尺度，标准化会更方便。
+
+```r
+# Z-score标准化
+train_z <- scale(train_data$organic_matter)
+# scale()默认就是Z-score：(x-mean)/sd
+```
+
+### 1.4 何时用哪个
+
+| 方法 | 适用场景 | 特点 |
+|------|---------|------|
+| Min-Max | 数据分布未知，或有明确上下界 | 映射到[0,1]，易解释 |
+| Z-score | 数据近似正态分布 | 不限范围，保持分布形状 |
+
+**经验法则**：不知道分布 → 先画直方图；近似正态 → Z-score；不确定 → Min-Max。
+
+### 1.5 训练集/测试集分别拟合的坑
+
+这是最常犯的错误，也是最难发现的bug。
+
+**错误做法**：
+```r
+# 错误：用全部数据计算min/max，再分开
+all_min <- min(c(train_data$x, test_data$x))
+all_max <- max(c(train_data$x, test_data$x))
+train_norm <- (train_data$x - all_min) / (all_max - all_min)
+test_norm <- (test_data$x - all_min) / (all_max - all_min)
+```
+
+这样做的问题：你用测试集的信息（它的min/max）来预处理训练集。这叫**数据泄露**——测试集"偷看"了训练集的数据。
+
+**正确做法**：
+```r
+library(caret)
+# 1. 用训练集fit归一化参数
+preProc <- preProcess(train_data[, features], method = c("center", "scale"))
+# 2. 分别transform训练集和测试集
+train_scaled <- predict(preProc, train_data[, features])
+test_scaled <- predict(preProc, test_data[, features])
+# 测试集用的一模一样的参数（来自训练集），没有泄露
+```
+
+**记住原则**：任何预处理参数（mean/sd/min/max/PCA成分等）都必须只在训练集上拟合，再用同一套参数 transform 测试集。
+
+## 2 缺失值插补
+
+### 2.1 简单方法的局限性
+
+处理缺失值最直觉的办法是用均值或中位数填充：
+```r
+# 均值填充
+train_data$soil_moisture[is.na(train_data$soil_moisture)] <- mean(train_data$soil_moisture, na.rm = TRUE)
+```
+
+但这样做有两个问题：
+1. **扭曲分布**：所有缺失值都填成同一个值，方差被低估
+2. **破坏相关**：填出来的值与其它变量的相关被削弱
+
+均值填充在**完全随机缺失（MCAR）且缺失比例<5%**时勉强可用，其他情况不推荐。
+
+### 2.2 K近邻插补（KNNImpute）
+
+思路很直觉：找相似的样本，用它们的值来填充缺失值。
+
+对于某个有缺失的样本，找到K个与它最相似的完整样本（用欧氏距离），然后对这K个样本的对应值取平均。
+
+caret包提供了现成实现：
+```r
+library(caret)
+# KNN插补：自动找K个最近邻
+preProc <- preProcess(train_data, method = "knnImpute", k = 5)
+train_imputed <- predict(preProc, train_data)
+# 注意：KNNImpute会同时标准化数据，输入数据需要是数值型
+```
+
+KNNImpute的优点：
+- 保持变量间的关系（相似样本的其他变量也相似）
+- 比均值填充更接近真实值
+- 自动处理数值和分类变量
+
+**k怎么选**：k太小容易过拟合（噪声影响大），k太大会平滑掉局部结构。通常k=5到k=10是常用值，可以用交叉验证选最优k。
+
+### 2.3 多重插补（MICE）
+
+有时候缺失比例较高（5-20%），或者缺失机制是MAR（ Missing at Random，缺失与观测值有关），这时候需要更复杂的方法。
+
+多重插补（Multiple Imputation by Chained Equations, MICE）的思路：
+1. 用其他变量预测缺失值，多次（通常5-10次）填充，产生多个"完整"数据集
+2. 在每个完整数据集上独立分析
+3. 合并结果（Pool），同时报告由于缺失带来的不确定性
+
+```r
+library(mice)
+# 3次插补
+imp <- mice(train_data, m = 3, method = 'pmm', seed = 123)
+# pmm = Predictive Mean Matching，适合连续变量
+# 'cart' = 分类回归树，适合混合类型数据
+train_complete <- complete(imp)
+# 每个完整数据集分别分析，再pool结果
+```
+
+生态学场景示例：野外观测中，某些样点的土壤含水量因传感器故障缺失。这类数据通常与海拔、植被盖度、降雨量有关，可以用MICE有效插补。
+
+### 2.4 何时删除，何时插补
+
+**优先删除**：
+- MCAR（完全随机缺失）且缺失>30%
+- 关键变量的缺失比例极高（如>50%）
+- 样本量足够大，删除后仍有充足数据
+
+**优先插补**：
+- MAR（缺失与观测值有关）
+- 样本量本来就不大
+- 缺失比例<20%
+
+**判断缺失类型**：先可视化缺失模式，分析缺失值与其它变量的关系，不要凭直觉判断。
+
+```r
+# 可视化缺失模式
+library(VIM)
+aggr(train_data, col = c('navy', 'red'),
+     numbers = TRUE, sortVars = TRUE,
+     labels = names(train_data), cex.axis = 0.7,
+     gap = 3, ylab = c('Missing pattern', 'Crosstab'))
+```
+
+## 3 不平衡数据处理
+
+### 3.1 什么是不平衡数据
+
+二分类问题中，正负样本比例失衡。比如：
+- 濒危物种检测：10000个样点，只有50个有目标物种（0.5%）
+- 疾病诊断：10000个样本，100个阳性（1%）
+- 环境异常检测：异常事件往往是少数
+
+不平衡程度用**IR（Imbalance Ratio）**衡量：
+
+$$IR = \frac{N_{majority}}{N_{minority}}$$
+
+IR > 10 就需要特殊处理，否则模型会"懒惰"——直接预测全部为多数类，准确率仍然>90%，但实际上对少数类完全无识别能力。
+
+### 3.2 准确率的陷阱
+
+假设正样本占1%，负样本占99%。如果模型把所有样本都预测为负类：
+- 准确率 = 99% — 看起来很高
+- Precision = 0/0 = undefined
+- Recall = 0/1 = 0 — 完全识别不出正样本
+
+这就是为什么在不平衡数据下，**永远不要单独看准确率**。
+
+永远同时报告：
+- **AUC-ROC**：ROC曲线下面积，综合衡量所有阈值下的表现
+- **Precision-Recall曲线**：更适合极端不平衡场景
+- **F1-score**：Precision和Recall的调和平均
+
+```r
+library(pROC)
+# 计算AUC-ROC
+roc_obj <- roc(test_labels, pred_probs)
+plot(roc_obj)
+auc(roc_obj)
+```
+
+### 3.3 下采样与上采样
+
+**下采样（Down-sampling）**：随机丢弃多数类样本，使两类数量接近。优点是简单，缺点是丢失大量信息。
+
+```r
+library(caret)
+set.seed(123)
+train_down <- downSample(x = train_features, y = as.factor(train_labels))
+# caret会自动把多数类下采样到与少数类持平
+```
+
+**SMOTE过采样**（Synthetic Minority Over-sampling Technique）：在少数类的特征空间中插值，生成合成的新样本。不是简单复制已有样本。
+
+```r
+library(DMwR2)
+set.seed(123)
+train_balanced <- SMOTE(class ~ ., data = train_data,
+                        k = 5,                # K近邻数
+                        perc.over = 100,     # 少数类翻倍（100%增加）
+                        perc.under = 200)    # 多数类保留2倍少数类
+```
+
+SMOTE的变种很多：
+- **ADASYN**：自适应生成，聚焦于更难学习的少数类样本
+- **BorderlineSMOTE**：只对边界附近的少数类样本过采样
+- **SMOTE-NC**：处理有分类变量的数据
+
+**实战经验**：SMOTE通常比下采样效果好，但不是万能的。如果多数类样本本身就很少（<500），下采样可能会严重丢失信息。两种方法都可以试，用交叉验证比较。
+
+### 3.4 代价敏感学习
+
+不去改变数据分布，而是告诉模型"少数类错误更贵"。
+
+```r
+# 随机森林中调整class weight
+library(randomForest)
+model <- randomForest(class ~ ., data = train_data,
+                      classwt = c(0.1, 0.9))  # 少数类权重更高
+# 少数类错误代价是多数类的9倍
+```
+
+或者用caret自动寻找最优权重：
+```r
+library(caret)
+ctrl <- trainControl(method = "cv", classProbs = TRUE, summaryFunction = twoClassSummary)
+model <- train(class ~ ., data = train_data,
+               method = "glm",
+               preProcess = c("knnImpute", "center", "scale"),
+               trControl = ctrl,
+               metric = "ROC")
+```
+
+### 3.5 生态学案例：濒危物种分布预测
+
+马尾松林中发现一种珍稀兰科植物，调查了200个样点，其中只有15个有该物种记录。这是一个IR≈12.3的不平衡数据集。
+
+处理步骤：
+1. 用SMOTE把少数类从15个增加到30个
+2. 同时下采样多数类到60个，得到90个样本的平衡训练集
+3. 用分层5折交叉验证评估（保证每折中正样本比例一致）
+4. 评估指标用AUC-ROC而不是准确率
+
+```r
+# 完整示例
+library(DMwR2)
+library(caret)
+library(pROC)
+
+# SMOTE过采样
+train_balanced <- SMOTE(presence ~ ., data = train,
+                        k = 3, perc.over = 200, perc.under = 150)
+
+# 分层5折交叉验证
+ctrl <- trainControl(method = "repeatedcv",
+                     number = 5,
+                     repeats = 3,
+                     classProbs = TRUE,
+                     summaryFunction = twoClassSummary,
+                     search = "random")
+
+# 随机森林模型
+rf_model <- train(presence ~ ., data = train_balanced,
+                  method = "rf",
+                  trControl = ctrl,
+                  metric = "ROC",
+                  tuneLength = 5)
+
+# 测试集评估
+pred_probs <- predict(rf_model, test, type = "prob")[,2]
+roc_result <- roc(test$presence, pred_probs)
+print(auc(roc_result))  # 真实泛化能力评估
+```
+
+## 4 交叉验证与数据分组
+
+### 4.1 为什么要交叉验证
+
+模型在训练集上表现好，在测试集上表现差——这叫**过拟合**（overfitting）。模型把训练数据的噪声也记住了，而不是学到了真正的规律。
+
+交叉验证帮你评估模型在**未见过的数据上的表现**，同时避免"用测试集调参"的数据泄露问题。
+
+### 4.2 K折交叉验证
+
+最常用的方法：
+1. 数据分成K份（通常5或10）
+2. 轮流用K-1份训练、1份验证
+3. 取K次验证结果的平均
+
+```r
+library(caret)
+ctrl <- trainControl(method = "cv", number = 5)  # 5折
+model <- train(SOC ~ ., data = train_data,
+               method = "lm",
+               trControl = ctrl)
+print(model)
+# 输出：各折的RMSE/R-squared，以及平均值
+```
+
+**5折 vs 10折**：
+- 10折更稳定（更多训练数据每次），但计算成本高
+- 5折在大数据集（n>1000）上足够好用
+- 小样本（n<100）建议用10折甚至留一法
+
+### 4.3 分层K折
+
+普通K折在分类问题中可能造成各类别在每折中分布不均。**分层K折**保证每折中各类别比例与整体一致。
+
+```r
+library(caret)
+set.seed(123)
+folds <- createFolds(y, k = 5, list = TRUE, returnTrain = FALSE)
+# createFolds默认是分层的（stratified）
+sapply(folds, function(i) table(train_data$class[i]))
+# 检查每折的类别分布是否一致
+```
+
+在不平衡数据中，**分层是强制要求**，否则某折可能完全没有少数类。
+
+### 4.4 留一法（LOOCV）
+
+每次只留1个样本做验证，其余全部用于训练。K=n，总共训练n次。
+
+```r
+library(caret)
+ctrl <- trainControl(method = "LOOCV")
+model <- train(SOC ~ ., data = train_data,
+               method = "lm",
+               trControl = ctrl)
+# 适合小样本场景（n < 30）
+```
+
+优点：每次几乎用了全部数据训练，结果最接近真实泛化能力。
+缺点：计算成本极高（n次训练），且结果方差大。
+
+### 4.5 时间序列交叉验证
+
+**普通K折不能用于时间序列！** 因为随机分组会让"未来"的数据泄露到训练中。
+
+时间序列要用**滚动窗口**（sliding window）：
+- 用前n个时间点训练，预测第n+1个
+- 窗口向前滚动，重复
+
+```r
+library(rsample)
+library(yardstick)
+
+# 滚动窗口交叉验证（时间序列）
+ts_cv <- sliding_window(
+  .data = timeseries_data,
+  .initial = 12,     # 训练集：前12个时间点
+  .assess = 3,       # 测试集：后3个时间点
+  .skip = 0,         # 步长：0=连续滚动
+  .lag = 0
+)
+
+# 计算每次的预测误差
+ts_cv %>%
+  mutate(
+    preds = map2(model, split_id, ~predict(.x, .y)),
+    actuals = map(split_id, ~timeseries_data$.actual[.x])
+  ) %>%
+  summarise(
+    rmse = sqrt(mean((unlist(preds) - unlist(actuals))^2))
+  )
+```
+
+**生态学警告**：如果你有多年生态监测数据（如2000-2020年的植被NDVI数据），预测2021年的值，必须用前20年数据训练，不能随机划分时间点。
+
+### 4.6 分层分组抽样
+
+有些生态学数据有多层次结构：多个样点嵌套在不同地块、坡向、区域内。如果随机分组，可能同一区域的样点同时出现在训练集和测试集，造成"信息泄露"（因为相邻样点的生态学特征很相似）。
+
+**分组交叉验证**（Group K-Fold）：同一个组的所有样本要么全在训练集，要么全在测试集。
+
+```r
+library(caret)
+# 按region分组：同一region的样点不会分开到训练/测试集
+ctrl <- trainControl(method = "cv", number = 5, 
+                     index = groupKFold(train_data$region, k = 5))
+model <- train(SOC ~ ., data = train_data,
+               method = "rf",
+               trControl = ctrl)
+```
+
+## 5 特征选择实战
+
+### 5.1 为什么要特征选择
+
+生态学数据的特点：样本量不大（几十到几百个样点），但变量很多（几十个环境因子加测量指标）。特征数接近甚至超过样本数时，模型容易过拟合，泛化能力极差。
+
+特征选择可以：
+- 降低过拟合风险
+- 减少训练和预测时间
+- 提高模型可解释性
+- 揭示哪些因素是最重要的
+
+### 5.2 过滤法
+
+基于统计量预先筛选特征，与具体模型无关，速度快但可能遗漏与模型组合效应相关的重要特征。
+
+**方差阈值**：删除方差接近0的特征（几乎所有样本取值相同的特征没有信息量）。
+
+```r
+library(caret)
+# 删除低方差特征
+lowvar_idx <- nearZeroVar(train_features, saveMetrics = TRUE)
+print(lowvar_idx)
+# nearZeroVar返回需要删除的列索引
+train_filtered <- train_features[, !lowvar_idx$nzv]
+```
+
+**相关性过滤**：计算每个特征与目标变量的相关性，删除相关性过低的特征。
+
+```r
+# 计算与目标变量的相关
+correlations <- cor(train_features, train_labels)
+# 删除相关性绝对值 < 0.1 的特征
+selected <- rownames(as.data.frame(correlations))[
+  abs(correlations[,1]) > 0.1
+]
+```
+
+过滤法简单快速，适合作为初步筛选，但要注意：**相关低不等于没作用**——在多元模型中与其他特征组合后可能很重要。
+
+### 5.3 递归特征消除（RFE）
+
+逐步删除最不重要的特征，每步评估一次模型性能，最后比较不同特征子集的表现。
+
+```r
+library(caret)
+library(randomForest)
+
+# 递归特征消除
+ctrl <- rfeControl(
+  functions = rfFuncs,    # 用随机森林评估特征重要性
+  method = "cv",
+  number = 5,
+  verbose = FALSE
+)
+
+set.seed(123)
+result <- rfe(
+  x = train_features, 
+  y = train_labels,
+  sizes = c(1:10, 15, 20),  # 测试不同数量的特征
+  rfeControl = ctrl
+)
+
+print(result)
+plot(result)  # 展示不同特征数量的模型性能
+print(result$optVariables)  # 最优特征列表
+```
+
+### 5.4 Lasso正则化
+
+正则化是在模型训练过程中自动做特征选择。Lasso（套索回归）使用L1惩罚，可以让部分系数压缩为0，自动剔除不重要特征。
+
+```r
+library(glmnet)
+
+# Lasso回归：alpha=1为Lasso，alpha=0为岭回归
+set.seed(123)
+lasso_model <- cv.glmnet(
+  x = as.matrix(train_features),
+  y = train_labels,
+  alpha = 1,
+  nfolds = 5
+)
+
+plot(lasso_model)
+# 下坐标轴：log(λ)，上坐标轴：非零系数数量
+# 两条垂直虚线：lambda.min（左）和lambda.1se（右，更保守）
+
+# 最优模型
+best_lambda <- lasso_model$lambda.min
+coef(lasso_model, s = best_lambda)
+# 系数为0的特征就是不重要的
+```
+
+Lasso特别适合**高维数据**（特征数>样本数），如基因组学、转录组、遥感数据。在生态学中，当你有几十个环境因子时，Lasso可以帮你筛选最重要的几个。
+
+**岭回归 vs Lasso**：
+- 岭回归（L2）：所有系数都缩小，但都不为0——适合所有特征都有用的情况
+- Lasso（L1）：部分系数直接压缩为0——同时做选择和估计，适合特征真正稀疏的情况
+- Elastic Net：两者的混合（L1+L2），当特征间有强相关时比纯Lasso更稳定
+
+### 5.5 生态学案例：马尾松林物种多样性预测
+
+调查了60个马尾松混交林样点，测量了30个环境因子（土壤pH、有机质、全氮、容重、孔隙度、含水量、碳氮比、磷酸盐、全磷...），想预测物种多样性（Shannon指数）。
+
+问题：60个样本 vs 30个特征，维度太高，容易过拟合。
+
+解决方案：用RFE筛选特征。
+
+```r
+library(caret)
+library(randomForest)
+
+# 30个环境因子
+features <- c("pH", "organic_matter", "total_N", "bulk_density", 
+              "porosity", "moisture", "C_N_ratio", ...)
+
+# 分层5折RFE
+ctrl <- rfeControl(
+  functions = rfFuncs,
+  method = "cv",
+  number = 5,
+  index = createFolds(train_labels, k = 5)
+)
+
+set.seed(123)
+rfe_result <- rfe(
+  x = train_data[, features],
+  y = train_data$shannon_index,
+  sizes = c(3:10),
+  rfeControl = ctrl
+)
+
+# 结果：最优是6个特征
+print(rfe_result$optVariables)
+# [1] "bulk_density" "porosity" "organic_matter" "total_N" "moisture" "C_N_ratio"
+```
+
+这6个特征与生态学直觉吻合：容重、孔隙度、有机质、氮素、水分、碳氮比都是土壤肥力和结构的核心指标。
+
+## 6 小结
+
+这一章覆盖了机器学习建模前最常见的几类预处理工作：
+
+| 任务 | 核心要点 | R工具 |
+|------|---------|-------|
+| 标准化 | 训练集fit参数，测试集transform | `caret::preProcess` |
+| 缺失值 | KNN插补比均值填充好 | `caret::preProcess(method="knnImpute")` |
+| 不平衡 | SMOTE上采样或代价敏感学习 | `DMwR2::SMOTE`, `classwt` |
+| 交叉验证 | 分层+分组，时间序列用滚动窗口 | `caret::createFolds`, `rsample` |
+| 特征选择 | 过滤/RFE/Lasso，按需选择 | `caret::rfe`, `glmnet` |
+
+**最重要的原则**：永远用训练集的信息来指导预处理步骤，而不是把测试集混进去。这个原则适用于本章的所有操作——归一化、插补、重采样、特征选择，每一步都要严格区分训练集和测试集。
+
+## 7 真实项目流程示例
+
+### 7.1 完整预处理流程
+
+用一个完整案例把所有步骤串起来——马尾松林土壤有机碳（SOC）预测。
+
+**背景**：60个样点，15个环境因子，目标预测SOC含量（g/kg）。数据有缺失，有异常值，部分特征尺度差异大。
+
+**Step 1：探索性分析**
+```r
+library(ggplot2)
+library(dplyr)
+
+# 缺失值概览
+colMeans(is.na(train_data)) * 100  # 各变量缺失比例
+
+# 目标变量分布
+ggplot(train_data, aes(x = SOC)) + 
+  geom_histogram(bins = 20) +
+  theme_minimal()
+```
+
+**Step 2：处理缺失值**
+```r
+library(caret)
+# KNN插补（自动处理数值和分类）
+preProc <- preProcess(train_data, method = 'knnImpute', k = 5)
+train_imputed <- predict(preProc, train_data)
+```
+
+**Step 3：标准化 + 特征选择**
+```r
+# Z-score标准化（数值型）
+num_idx <- sapply(train_imputed, is.numeric)
+preProc <- preProcess(train_imputed[, num_idx], method = c('center', 'scale'))
+train_scaled <- train_imputed
+train_scaled[, num_idx] <- predict(preProc, train_imputed[, num_idx])
+
+# 方差过滤
+nzv <- nearZeroVar(train_scaled, saveMetrics = TRUE)
+features_to_use <- rownames(nzv)[!nzv$nzv]
+```
+
+**Step 4：处理不平衡（假设某些SOC级别样本少）**
+```r
+library(DMwR2)
+train_balanced <- SMOTE(SOC_class ~ ., data = train_scaled, k = 5)
+```
+
+**Step 5：分层交叉验证建模**
+```r
+library(caret)
+ctrl <- trainControl(
+  method = 'repeatedcv', number = 5, repeats = 3,
+  classProbs = TRUE,
+  summaryFunction = defaultSummary
+)
+
+model <- train(SOC_class ~ ., data = train_balanced,
+               method = 'rf',
+               trControl = ctrl,
+               metric = 'Accuracy')
+
+# 最终在独立测试集上评估
+pred <- predict(model, test_scaled)
+confusionMatrix(pred, test_scaled$SOC_class)
+```
+
+### 7.2 常见预处理Pipeline组合
+
+| 场景 | Pipeline组合 |
+|------|------------|
+| 表格数据，数值为主 | KNN插补 - Z-score - 特征选择 - 随机森林 |
+| 高维数据（特征>>样本） | 均值填充 - PCA降维 - Lasso回归 |
+| 不平衡分类 | SMOTE - 分层CV - 随机森林（classwt） |
+| 时间序列 | 线性插值 - 滚动窗口CV - XGBoost |
+| 生态学物种分布 | KNN插补 - Min-Max - 分组CV - MaxEnt |
+
+### 7.3 你可能遇到的问题
+
+**Q：标准化后系数还能解释吗？**
+A：标准化后的系数代表"每增加1个标准差单位，响应变量增加多少"。直接比较系数大小来评判重要性是可以的，但原始系数的绝对值就失去了解释力。如果需要保留可解释性，用Min-Max归一化到[0,1]，系数代表"从最小到最大变化的影响"。
+
+**Q：SMOTE应该在标准化之前还是之后？**
+A：**之后**。SMOTE在标准化后的特征空间中插值，如果特征尺度不一致，插值会被大尺度特征主导。正确的顺序：插补 - 标准化 - SMOTE。
+
+**Q：测试集要不要做和训练集一样的预处理？**
+A：是的，但用**训练集拟合的参数**。preProcess在训练集上fit后，用predict()分别处理训练集和测试集。不要对测试集重新fit，否则又是数据泄露。
+
+**Q：预处理Pipeline能用caret自动吗？**
+A：可以。caret的preProcess函数可以一次做插补、标准化、PCA，只需要在训练集fit一次，再predict训练集和测试集。示例：
+
+```r
+# 一步到位：插补+标准化+PCA
+preProc <- preProcess(train_data, method = c('knnImpute', 'center', 'scale', 'pca'), thresh = 0.95)
+train_proc <- predict(preProc, train_data)
+test_proc <- predict(preProc, test_data)
+# thresh=0.95：保留解释95%方差的PCA主成分
+```
+
+### 7.4 预处理效果的评估
+
+做了这么多预处理，怎么判断是否有效？最重要的指标是：**模型在独立的测试集上的表现是否提升**。
+
+如果预处理后测试集AUC从0.72升到0.81，说明有效。如果测试集表现没变化甚至下降，说明预处理引入了偏差，或者发生了数据泄露。
+
+**警惕信号**：
+- 训练集表现极好（AUC>0.99），测试集差很多 → 过拟合或泄露
+- 插补后某些变量分布变化很大 → 插补方法可能不适合
+- 标准化后特征重要性排名完全改变 → 尺度变化改变了模型学习逻辑
+
+---
+
+## 8 扩展阅读
+
+### 推荐的书籍和教程
+
+- **Applied Predictive Modeling**（Kuhn & Johnson）：caret作者的著作，覆盖预处理到建模全流程，每章都有R代码
+- **The Elements of Statistical Learning**（Hastie et al.）：理论基础，需要一定数学背景，但值得反复研读
+- **R for Data Science**（Wickham）：数据操作和可视化的基础，是R语言编程的入门必读
+- **Feature Engineering and Selection**（Kuhn）：专门讲特征工程的教科书，生态学和环境科学领域的推荐读物
+
+### R包速查
+
+| 包 | 用途 | 核心函数 |
+|----|------|---------|
+| caret | 统一建模框架 | train, preProcess, createFolds |
+| DMwR2 | SMOTE过采样 | SMOTE, SMOTEenc |
+| glmnet | Lasso/岭回归 | cv.glmnet, glmnet |
+| pROC | ROC曲线分析 | roc, auc, plot.roc |
+| VIM | 缺失值可视化 | aggr, marginplot |
+| ranger | 快速随机森林 | ranger |
+| xgboost | 梯度提升 | xgb.train |
+| mice | 多重插补 | mice, complete, pool |
+| rsample | 时间序列交叉验证 | sliding_window, sliding_index |
+
+### 生态学中的机器学习应用
+
+机器学习在生态学中越来越常见，但也有独特挑战：
+
+- **样本量小**：生态学野外调查成本高，经常只有几十到几百个样点，远少于计算机视觉或NLP的数据量。优先选择不易过拟合的模型（随机森林优于深度学习）。
+- **空间自相关**：相邻样点的生态学特征相似，随机分组可能低估真实预测误差。尽量用空间分组交叉验证。
+- **可解释性要求高**：生态学研究不仅要预测，还要解释机制。LIME、SHAP等方法可以提供特征级别的解释，但需要谨慎解读。
+- **零膨胀问题**：物种出现数据通常有大量零（很多物种在大多数样点不存在）。标准机器学习方法对零的处理可能不够，需要用Hurdle模型或零膨胀模型结合机器学习方法。
+
+### 预处理检查清单
+
+每次建模前，按顺序过一遍：
+
+1. [ ] 原始数据有没有被修改（保留备份）？
+2. [ ] 缺失值模式分析了吗（MCAR/MAR/MNAR）？
+3. [ ] 异常值用领域知识判断了吗？
+4. [ ] 标准化参数只在训练集上fit了吗？
+5. [ ] 交叉验证是否用了正确的分组方式（分层/分组/滚动窗口）？
+6. [ ] 不平衡问题有没有特殊处理？
+7. [ ] 特征数量和样本量的比例是否合理？
+8. [ ] 测试集上有没有数据泄露（用训练集fit的参数transform测试集）？
+
+---

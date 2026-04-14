@@ -46,6 +46,8 @@ book:
         - 0301-data-cleaning.qmd
         - 0302-feature-engineering.qmd
         - 0303-data-quality.qmd
+        - 0304-ecology-special.qmd
+        - 0305-machine-learning-preprocessing.qmd
     - part: "第五单元：数据可视化与探索性分析"
       chapters:
         - 0501-visualization-basics.qmd

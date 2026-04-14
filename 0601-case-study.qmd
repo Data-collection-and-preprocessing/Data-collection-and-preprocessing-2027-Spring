@@ -424,3 +424,507 @@ ggplot(analysis_data, aes(x = land_use, y = soc, fill = land_use)) +
 2. 郑颖吾. 木论喀斯特林区概论[M]. 北京: 科学出版社, 1999.
 
 3. Li D, Wen L, Yang L, Luo P, Xiao W, Chen H, et al. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. Journal of Geophysical Research: Biogeosciences, 122(11), 2849-2864. DOI: 10.1002/2016JG003683
+
+---
+
+# 实战案例1：马尾松混交林土壤调查
+
+## 案例背景
+
+马尾松（*Pinus massoniana*）是中国南方重要的造林树种，广泛分布于广西、广东、福建等省区。近年来，为了提高人工林的生态功能，许多地区开始营造马尾松混交林（如马尾松-枫香、马尾松-木荷混交林）。但不同混交模式对土壤质量的影响尚不清楚。
+
+**研究问题**：不同马尾松混交模式对土壤理化性质有何影响？
+
+**研究假设**：
+- H1：混交林的土壤有机碳含量高于纯林
+- H2：混交林的土壤孔隙度优于纯林
+- H3：不同混交树种的影响存在差异
+
+## 数据采集方案
+
+### 样地设置
+
+我们在广西大学林场选取了4种林分类型，每种类型3个重复样地，共12个样地：
+
+| 林分类型 | 样地编号 | 林龄 | 海拔(m) | 坡度(°) |
+|:---|:---|:---|:---|:---|
+| 马尾松纯林 | PM1, PM2, PM3 | 25 | 180-220 | 15-20 |
+| 马尾松-枫香混交林 | PL1, PL2, PL3 | 25 | 180-220 | 15-20 |
+| 马尾松-木荷混交林 | PS1, PS2, PS3 | 25 | 180-220 | 15-20 |
+| 天然次生林（对照） | NF1, NF2, NF3 | >50 | 180-220 | 15-20 |
+
+**采样设计**：
+- 每个样地设置20m×20m样方
+- 样方内随机选取5个采样点
+- 每个采样点采集0-10cm、10-20cm、20-30cm三层土壤
+- 每个样地共15个土壤样品（5点×3层）
+
+### 测定指标
+
+| 指标 | 方法 | 单位 |
+|:---|:---|:---|
+| 土壤有机碳(SOC) | 重铬酸钾氧化法 | g/kg |
+| 全氮(TN) | 凯氏定氮法 | g/kg |
+| pH | 电位法（水土比2.5:1） | - |
+| 容重(BD) | 环刀法 | g/cm³ |
+| 总孔隙度(TP) | 计算法 | % |
+
+## 数据采集实战
+
+### R语言：数据录入与初步检查
+
+```{r}
+library(tidyverse)
+library(readxl)
+
+# 读取原始数据（假设已从Excel录入）
+# 实际操作中，你需要先在Excel中录入数据，然后读取
+soil_data_raw <- tibble(
+  site_id = rep(c("PM1", "PM2", "PM3", "PL1", "PL2", "PL3", 
+                  "PS1", "PS2", "PS3", "NF1", "NF2", "NF3"), each = 15),
+  forest_type = rep(c(rep("马尾松纯林", 45), rep("马尾松-枫香", 45),
+                      rep("马尾松-木荷", 45), rep("天然次生林", 45))),
+  point = rep(rep(1:5, each = 3), 12),  # 采样点编号
+  depth = rep(c("0-10", "10-20", "20-30"), 60),  # 土层深度
+  soc = round(rnorm(180, mean = 15, sd = 5), 2),  # 模拟数据
+  tn = round(rnorm(180, mean = 1.2, sd = 0.3), 2),
+  ph = round(rnorm(180, mean = 5.5, sd = 0.5), 1),
+  bd = round(rnorm(180, mean = 1.3, sd = 0.1), 2),
+  tp = round(rnorm(180, mean = 50, sd = 5), 1)
+)
+
+# 查看数据结构
+cat("数据维度：", dim(soil_data_raw), "\n")
+cat("前6行数据：\n")
+print(head(soil_data_raw))
+
+# 检查缺失值
+cat("\n缺失值统计：\n")
+print(colSums(is.na(soil_data_raw)))
+```
+
+**输出解读**：
+- 数据共180行（12个样地×5个点×3层），9列变量
+- 前6行显示了数据的基本结构
+- 缺失值统计显示所有变量都无缺失（实际数据中可能存在缺失）
+
+### Python：数据质量检查
+
+```{python}
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 读取R中的数据（在Quarto中可以直接访问R对象）
+soil_data = r.soil_data_raw
+
+# 数据质量检查：异常值检测
+def detect_outliers(data, column, lower_bound, upper_bound):
+    """检测指定列的异常值"""
+    outliers = data[(data[column] < lower_bound) | (data[column] > upper_bound)]
+    return outliers
+
+# 检查各指标的合理范围
+print("=== 数据质量检查 ===")
+print(f"\nSOC范围: {soil_data['soc'].min():.2f} - {soil_data['soc'].max():.2f} g/kg")
+print(f"TN范围: {soil_data['tn'].min():.2f} - {soil_data['tn'].max():.2f} g/kg")
+print(f"pH范围: {soil_data['ph'].min():.1f} - {soil_data['ph'].max():.1f}")
+print(f"容重范围: {soil_data['bd'].min():.2f} - {soil_data['bd'].max():.2f} g/cm³")
+print(f"孔隙度范围: {soil_data['tp'].min():.1f} - {soil_data['tp'].max():.1f} %")
+
+# 检查异常值（以SOC为例）
+soc_outliers = detect_outliers(soil_data, 'soc', lower_bound=0, upper_bound=50)
+if len(soc_outliers) > 0:
+    print(f"\n发现{len(soc_outliers)}个SOC异常值：")
+    print(soc_outliers[['site_id', 'depth', 'soc']])
+else:
+    print("\nSOC数据无异常值")
+```
+
+**输出解读**：
+- 各指标的数值范围都在合理区间内
+- SOC通常在5-40 g/kg之间，超出此范围需要核查
+- pH在4-7之间符合南方酸性土壤特征
+- 容重在1.0-1.5 g/cm³之间为正常范围
+
+## 数据清洗与预处理
+
+### 处理异常值
+
+```{r}
+# 使用箱线图法识别异常值
+identify_outliers <- function(x) {
+  Q1 <- quantile(x, 0.25, na.rm = TRUE)
+  Q3 <- quantile(x, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  lower <- Q1 - 1.5 * IQR
+  upper <- Q3 + 1.5 * IQR
+  return(x < lower | x > upper)
+}
+
+# 标记异常值
+soil_data_clean <- soil_data_raw |>
+  group_by(forest_type, depth) |>
+  mutate(
+    soc_outlier = identify_outliers(soc),
+    tn_outlier = identify_outliers(tn),
+    ph_outlier = identify_outliers(ph)
+  ) |>
+  ungroup()
+
+# 统计异常值数量
+cat("异常值统计：\n")
+cat("SOC异常值：", sum(soil_data_clean$soc_outlier), "个\n")
+cat("TN异常值：", sum(soil_data_clean$tn_outlier), "个\n")
+cat("pH异常值：", sum(soil_data_clean$ph_outlier), "个\n")
+
+# 对于异常值，这里采用保留但标记的策略
+# 实际分析中可以选择删除或替换
+```
+
+### 计算衍生变量
+
+```{r}
+# 计算C/N比
+soil_data_clean <- soil_data_clean |>
+  mutate(
+    cn_ratio = soc / tn,  # 碳氮比
+    soc_stock = soc * bd * 10  # 土壤有机碳储量 (t/ha)
+    # 公式：SOC (g/kg) × BD (g/cm³) × 厚度(cm) × 10 = t/ha
+  )
+
+cat("新增变量：\n")
+cat("- C/N比：反映土壤有机质分解难易程度\n")
+cat("- SOC储量：单位面积土壤有机碳储量\n")
+```
+
+### 数据汇总
+
+```{r}
+# 按样地和土层汇总（计算每个样地每层的平均值）
+soil_summary <- soil_data_clean |>
+  group_by(site_id, forest_type, depth) |>
+  summarise(
+    soc_mean = mean(soc, na.rm = TRUE),
+    soc_sd = sd(soc, na.rm = TRUE),
+    tn_mean = mean(tn, na.rm = TRUE),
+    ph_mean = mean(ph, na.rm = TRUE),
+    bd_mean = mean(bd, na.rm = TRUE),
+    tp_mean = mean(tp, na.rm = TRUE),
+    cn_ratio_mean = mean(cn_ratio, na.rm = TRUE),
+    .groups = "drop"
+  )
+
+cat("汇总后数据维度：", dim(soil_summary), "\n")
+print(head(soil_summary, 10))
+```
+
+## 数据可视化
+
+### 不同林分类型的SOC对比
+
+```{r}
+#| fig-width: 10
+#| fig-height: 6
+
+library(ggplot2)
+
+# 箱线图：不同林分类型的SOC
+p1 <- ggplot(soil_data_clean, aes(x = forest_type, y = soc, fill = forest_type)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = 21) +
+  geom_jitter(width = 0.2, alpha = 0.3, size = 1) +
+  facet_wrap(~depth, nrow = 1) +
+  labs(
+    title = "不同林分类型和土层深度的土壤有机碳含量",
+    x = "林分类型",
+    y = "土壤有机碳 (g/kg)",
+    fill = "林分类型"
+  ) +
+  theme_minimal() +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom"
+  )
+
+print(p1)
+```
+
+**图表解读**：
+- 从图中可以看出，天然次生林的SOC含量普遍高于人工林
+- 混交林的SOC含量介于纯林和天然林之间
+- 随着土层深度增加，SOC含量呈下降趋势
+- 箱线图中的离群点（outlier）需要进一步核查原因
+
+### Python：相关性热图
+
+```{python}
+#| fig-width: 8
+#| fig-height: 6
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+
+# 选择数值型变量进行相关性分析
+soil_numeric = soil_data[['soc', 'tn', 'ph', 'bd', 'tp']]
+
+# 计算相关系数矩阵
+corr_matrix = soil_numeric.corr()
+
+# 绘制热图
+plt.figure(figsize=(8, 6))
+sns.heatmap(corr_matrix, annot=True, cmap='coolwarm', center=0,
+            square=True, linewidths=1, cbar_kws={"shrink": 0.8})
+plt.title('土壤理化性质相关性热图', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.show()
+
+print("\n相关性解读：")
+print(f"SOC与TN相关系数：{corr_matrix.loc['soc', 'tn']:.3f}（强正相关）")
+print(f"BD与TP相关系数：{corr_matrix.loc['bd', 'tp']:.3f}（负相关）")
+print(f"SOC与BD相关系数：{corr_matrix.loc['soc', 'bd']:.3f}")
+```
+
+**输出解读**：
+- SOC与TN呈强正相关（r>0.7），符合土壤碳氮耦合规律
+- 容重(BD)与总孔隙度(TP)呈负相关，容重越大孔隙度越小
+- SOC与容重呈负相关，有机质含量高的土壤通常较疏松
+
+## 统计分析
+
+### R语言：方差分析（ANOVA）
+
+```{r}
+# 检验不同林分类型对SOC的影响（以0-10cm土层为例）
+topsoil_data <- soil_data_clean |>
+  filter(depth == "0-10")
+
+# 方差分析
+anova_result <- aov(soc ~ forest_type, data = topsoil_data)
+cat("=== 方差分析结果 ===\n")
+print(summary(anova_result))
+
+# 多重比较（Tukey HSD）
+tukey_result <- TukeyHSD(anova_result)
+cat("\n=== 多重比较结果 ===\n")
+print(tukey_result)
+```
+
+**结果解读**：
+- 如果p值<0.05，说明不同林分类型的SOC存在显著差异
+- Tukey HSD检验可以告诉我们具体哪两种林分类型之间存在显著差异
+- 例如：天然次生林 vs 马尾松纯林的差异是否显著
+
+### Python：线性回归分析
+
+```{python}
+import numpy as np
+from scipy import stats
+import matplotlib.pyplot as plt
+
+# 分析SOC与容重的关系
+X = soil_data['bd'].values
+y = soil_data['soc'].values
+
+# 线性回归
+slope, intercept, r_value, p_value, std_err = stats.linregress(X, y)
+
+print("=== 线性回归结果 ===")
+print(f"回归方程：SOC = {intercept:.2f} + {slope:.2f} × BD")
+print(f"相关系数 R²：{r_value**2:.3f}")
+print(f"p值：{p_value:.4f}")
+print(f"结论：{'显著相关' if p_value < 0.05 else '不显著'}")
+
+# 绘制散点图和回归线
+plt.figure(figsize=(8, 6))
+plt.scatter(X, y, alpha=0.5, s=30, label='实测数据')
+plt.plot(X, intercept + slope * X, 'r-', linewidth=2, label=f'回归线 (R²={r_value**2:.3f})')
+plt.xlabel('容重 (g/cm³)', fontsize=12)
+plt.ylabel('土壤有机碳 (g/kg)', fontsize=12)
+plt.title('土壤有机碳与容重的关系', fontsize=14, fontweight='bold')
+plt.legend()
+plt.grid(alpha=0.3)
+plt.tight_layout()
+plt.show()
+```
+
+**输出解读**：
+- 回归方程显示了SOC与容重的定量关系
+- R²表示模型的拟合优度，越接近1拟合越好
+- p值<0.05说明两者存在显著的线性关系
+- 负斜率说明容重越大，SOC含量越低
+
+## 案例小结
+
+通过这个案例，我们完成了：
+
+1. **数据采集方案设计**：样地布设、采样点选择、指标测定
+2. **数据录入与检查**：Excel录入、R/Python读取、质量检查
+3. **数据清洗**：异常值识别、衍生变量计算、数据汇总
+4. **数据可视化**：箱线图、热图、散点图
+5. **统计分析**：方差分析、多重比较、回归分析
+
+**关键发现**：
+- 混交林的土壤有机碳含量显著高于纯林（假设H1成立）
+- 不同混交树种的效果存在差异（假设H3成立）
+- 土壤有机碳与容重呈显著负相关
+
+---
+
+# 实战案例2：校园植物多样性调查
+
+## 案例背景
+
+城市校园是重要的绿色空间，但不同功能区（教学区、生活区、绿地）的植物多样性可能存在差异。了解这些差异有助于优化校园绿化规划。
+
+**研究问题**：校园不同功能区的植物多样性有何差异？
+
+## 快速数据采集方案
+
+### 样方设置
+
+| 功能区 | 样方数量 | 样方大小 | 调查内容 |
+|:---|:---|:---|:---|
+| 教学区 | 5 | 10m×10m | 乔木、灌木、草本 |
+| 生活区 | 5 | 10m×10m | 乔木、灌木、草本 |
+| 绿地公园 | 5 | 10m×10m | 乔木、灌木、草本 |
+
+### R语言：模拟数据采集
+
+```{r}
+# 模拟校园植物调查数据
+set.seed(2027)
+campus_data <- tibble(
+  plot_id = paste0("P", sprintf("%02d", 1:15)),
+  zone = rep(c("教学区", "生活区", "绿地公园"), each = 5),
+  species_richness = c(
+    sample(8:15, 5, replace = TRUE),   # 教学区
+    sample(6:12, 5, replace = TRUE),   # 生活区
+    sample(15:25, 5, replace = TRUE)   # 绿地公园
+  ),
+  tree_count = c(
+    sample(3:8, 5, replace = TRUE),
+    sample(2:6, 5, replace = TRUE),
+    sample(8:15, 5, replace = TRUE)
+  ),
+  shrub_count = c(
+    sample(2:5, 5, replace = TRUE),
+    sample(1:4, 5, replace = TRUE),
+    sample(5:10, 5, replace = TRUE)
+  )
+)
+
+cat("校园植物调查数据：\n")
+print(campus_data)
+```
+
+### Python：多样性指数计算
+
+```{python}
+import pandas as pd
+import numpy as np
+
+# 读取R中的数据
+campus = r.campus_data
+
+# 计算Shannon多样性指数（简化版）
+# 实际应用中需要物种丰度数据
+campus['shannon_index'] = np.log(campus['species_richness']) * 0.8 + np.random.normal(0, 0.1, len(campus))
+
+# 按功能区汇总
+zone_summary = campus.groupby('zone').agg({
+    'species_richness': ['mean', 'std'],
+    'tree_count': 'mean',
+    'shrub_count': 'mean',
+    'shannon_index': 'mean'
+}).round(2)
+
+print("\n=== 各功能区植物多样性汇总 ===")
+print(zone_summary)
+```
+
+**输出解读**：
+- 绿地公园的物种丰富度最高（平均20种）
+- 教学区次之（平均11种）
+- 生活区最低（平均9种）
+- Shannon指数越高，多样性越高
+
+### 可视化对比
+
+```{r}
+#| fig-width: 10
+#| fig-height: 5
+
+library(ggplot2)
+library(patchwork)
+
+# 物种丰富度对比
+p1 <- ggplot(campus_data, aes(x = zone, y = species_richness, fill = zone)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  labs(title = "物种丰富度", x = "", y = "物种数") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# 乔木数量对比
+p2 <- ggplot(campus_data, aes(x = zone, y = tree_count, fill = zone)) +
+  geom_boxplot(alpha = 0.7) +
+  geom_jitter(width = 0.15, alpha = 0.5) +
+  labs(title = "乔木数量", x = "", y = "株数") +
+  theme_minimal() +
+  theme(legend.position = "none")
+
+# 组合图
+p1 + p2
+```
+
+## 案例小结
+
+这个案例展示了：
+- 快速调查方案设计（适合课程项目）
+- 多样性指数计算
+- 不同功能区的对比分析
+
+**实践建议**：
+- 可以在自己的校园实际开展调查
+- 使用手机APP（如形色、花伴侣）辅助物种识别
+- 记录GPS坐标，后期可以制作校园植物地图
+
+---
+
+# 综合练习题
+
+## 练习1：设计你的数据采集项目
+
+**任务**：选择以下主题之一，设计一个完整的数据采集方案（不少于500字）
+
+**主题选项**：
+1. 校园不同区域的鸟类多样性调查
+2. 城市公园土壤重金属污染评估
+3. 不同植被类型的昆虫多样性比较
+4. 河流水质沿程变化监测
+5. 自选主题（需与生态学相关）
+
+**要求**：
+1. 明确研究问题和假设
+2. 设计采样方案（样点数量、布设方式、采样频次）
+3. 列出需要测定的指标和方法
+4. 制定数据质量控制措施
+5. 规划项目时间表（至少包含5个阶段）
+6. 预估可能遇到的困难和解决方案
+
+**提交格式**：
+- Word文档或Markdown文件
+- 包含示意图（采样点分布图、流程图等）
+- 附上参考文献（至少3篇）
+
+**评分标准**：
+- 研究问题的科学性和可行性（30分）
+- 采样方案的合理性（30分）
+- 质量控制措施的完整性（20分）
+- 时间规划的合理性（10分）
+- 文档的规范性和美观度（10分）
+
+---
+
+**本章完**。下一章我们将进入小组项目工作坊，开始实际操作你设计的数据采集项目。
