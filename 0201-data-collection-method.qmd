@@ -5,446 +5,550 @@ execute:
   message: false
 ---
 
-## 数据的来源与采集方法
+# 数据采集方法
 
-在生态学研究中，数据是检验假设、理解自然规律的基石。根据研究目的、尺度和伦理限制，研究者可以通过多种方式获取数据。本章将介绍四种主要的数据来源及其获取方法：**观测**、**实验**、**模型**和**公共数据**。
+数据是生态学研究的核心。但"有数据"和"有好数据"是两回事。很多研究结论站不住脚，不是因为分析方法错了，而是因为数据采集从一开始就存在系统性问题。
 
-```{r}
+这一章，我们系统学习生态学中获取数据的四大类方法：观测、实验、模型、公共数据。学完这一章，你应该能够：根据研究问题选择合适的数据采集方法、设计一个科学合理的采样方案、识别常见的数据采集错误并知道如何规避。
+
+## 数据来源四大类型
+
+生态学研究中的数据，按来源可以分为四大类：
+
+| 类型 | 是否干预 | 因果推断能力 | 数据成本 | 适用场景 |
+|:---|:---|:---|:---|:---|
+| **观测数据** | 否 | 弱（关联） | 中-高 | 探索性研究 |
+| **实验数据** | 是 | 强（因果） | 高 | 验证性研究 |
+| **模型数据** | 虚拟 | 理论性 | 低 | 预测性研究 |
+| **公共数据** | 否 | 弱（关联） | 低-免费 | 整合分析 |
+
+### 选择数据来源的自检问题
+
+问自己三个问题：
+
+1. **研究问题需要什么？** 想描述生态格局 → 观测或公共数据。想验证因果机制 → 实验数据。想预测未来 → 模型数据。
+2. **时空尺度多大？** 局地尺度 → 观测或实验。区域到全球尺度 → 模型或公共数据。
+3. **资源是否允许？** 时间和经费有限 → 公共数据或模型。有条件 → 自己做观测或实验。
+
+## 观测数据：自然的镜子
+
+### 什么是观测数据？
+
+观测数据是在自然状态下对研究对象进行系统性记录而获得的数据，研究者不施加任何干预。这是生态学研究最古老也最常用的数据来源。
+
+**优势**：反映真实自然状态；可覆盖大时空尺度；是提出科学假设的主要途径。
+
+**局限**：难以控制混杂变量；只能建立相关性；采样设计不当易产生系统性偏差。
+
+### 观测数据的四大类型
+
+**1. 调查数据（Survey Data）**：问卷、访谈、焦点小组等方式收集的社会生态数据。
+
+```r
 library(tidyverse)
-```
-
-1.  **观测数据（Observational Data）**：通过直接观察和记录自然现象而获得，研究者不进行干预，力求捕捉系统的真实状态。这是生态学研究的起点，常用于发现模式和提出假设。
-2.  **实验数据（Experimental Data）**：通过在受控条件下操纵一个或多个变量，并测量其对其他变量的影响而获得。这是检验因果关系假设最有力的方法。
-3.  **模型数据（Model-Generated Data）**：通过运行数学或计算机模型生成。当研究问题涉及的时空尺度过大或无法直接进行实验时，模型是理解和预测生态系统动态的重要工具。
-4.  **公共数据（Public Data）**：由政府、科研机构或公众预先收集并公开发布的数据集。这类数据为宏观尺度和整合分析研究提供了宝贵资源。
-
-这四种方法各有优劣，常常需要结合使用。下表对它们进行了简要对比：
-
-| 数据来源 | 干预程度 | 因果推断能力 | 主要优点 | 主要缺点 |
-| :--- | :--- | :--- | :--- | :--- |
-| **观测** | 无 | 弱（相关性） | 真实性高，适用范围广 | 难以控制混杂变量，无法确定因果 |
-| **实验** | 高 | 强（因果性） | 可控性强，可重复 | 可能脱离现实，存在伦理和操作限制 |
-| **模型** | 虚拟 | 理论性 | 可预测，能研究极端情景 | 依赖于假设和输入数据，需要验证 |
-| **公共数据** | 无 | 弱（相关性） | 成本低，时空覆盖广 | 数据质量不一，可能缺乏所需变量 |
-
-接下来，我们将详细探讨每一种数据采集方法的特点、适用情景和具体技术。
-
-### 快速示例：四种数据来源的 R 表示
-
-在 R 中，不同来源的数据最终都以数据框（data frame）的形式进入分析流程，但它们的获取方式和元数据记录有所不同：
-
-```{r}
-# 观测数据：野外调查记录
-obs_data <- tibble(
-  plot_id = c("A1", "A2", "A3"),
-  species_count = c(12, 8, 15),
-  canopy_cover = c(0.75, 0.60, 0.85),
-  method = "样方调查"
-)
-
-# 实验数据：控制实验结果
-exp_data <- tibble(
-  treatment = rep(c("对照", "施氮", "施磷"), each = 3),
-  replicate = rep(1:3, 3),
-  biomass_g = c(45, 42, 48, 62, 58, 65, 51, 55, 49),
-  method = "随机区组实验"
-)
-
-# 模型数据：模拟生成
-set.seed(2027)
-model_data <- tibble(
-  year = 2025:2050,
-  temp_anomaly = cumsum(rnorm(26, mean = 0.03, sd = 0.1)),
-  method = "气候模型输出"
-)
-
-# 公共数据：从数据库下载（此处模拟）
-public_data <- tibble(
-  species = c("Pinus massoniana", "Cunninghamia lanceolata", "Schima superba"),
-  gbif_records = c(15234, 8921, 4567),
-  source = "GBIF"
-)
-
-# 查看各数据结构
-cat("--- 观测数据 ---\n")
-glimpse(obs_data)
-cat("\n--- 实验数据 ---\n")
-glimpse(exp_data)
-cat("\n--- 模型数据 ---\n")
-glimpse(model_data)
-cat("\n--- 公共数据 ---\n")
-glimpse(public_data)
-```
-
-::: {.callout-tip title="数据来源的选择原则"}
-选择数据来源时，问自己三个问题：
-
-1. **研究问题需要什么**？描述性问题用观测，因果性问题用实验
-2. **时空尺度多大**？局地用观测/实验，区域到全球用模型/公共数据
-3. **资源是否允许**？时间、经费、伦理约束决定了可行的方法
-:::
-
-## 观测数据 {#sec-observation}
-
-观测数据是在自然状态下对研究对象进行系统性记录而获得的数据，研究者不施加任何干预。适用于初步探索、大尺度格局研究以及因伦理限制无法开展实验的情景。
-
-### 观测数据的类型
-
-生态学中的观测数据可以分为以下几类：
-
-1. **调查数据（Survey Data）**：通过问卷、访谈等方式收集的社会生态数据
-2. **野外观测数据（Field Observation Data）**：直接在野外记录的生物和环境数据
-3. **遥感数据（Remote Sensing Data）**：通过卫星、无人机等平台获取的影像数据
-4. **传感器数据（Sensor Data）**：通过自动化设备连续监测的环境数据
-
-### 调查法（Survey Method）
-
-调查法是通过问卷、访谈、焦点小组等方式收集数据的方法，常用于社会生态学研究、资源利用调查和传统知识记录。
-
-**适用场景**：
-- 农户土地利用方式调查
-- 社区对保护区态度评估
-- 传统生态知识记录
-
-**关键要素**：
-- 抽样设计（随机抽样、分层抽样、配额抽样）
-- 问卷设计（封闭式问题 vs 开放式问题）
-- 访谈技巧（建立信任、避免引导性问题）
-
-```{r}
-# 调查数据示例：农户土地利用调查
+set.seed(42)
 survey_data <- tibble(
-  household_id = 1:50,
-  village = sample(c("村A", "村B", "村C"), 50, replace = TRUE),
-  land_area_ha = runif(50, 0.5, 5),
-  crop_type = sample(c("水稻", "玉米", "甘蔗", "果树"), 50, replace = TRUE),
-  fertilizer_kg_ha = rnorm(50, 200, 50),
-  income_yuan = rnorm(50, 30000, 10000)
+  household_id = 1:60,
+  village = sample(c("村A", "村B", "村C", "村D"), 60, replace = TRUE),
+  elevation_zone = sample(c("高海拔", "中海拔", "低海拔"), 60, replace = TRUE),
+  land_area_ha = round(rnorm(60, 2.5, 0.8), 2),
+  forest_cover_pct = round(rnorm(60, 45, 15), 1),
+  fertilizer_kg_ha = round(rnorm(60, 180, 45), 0),
+  annual_income_yuan = round(rnorm(60, 35000, 8000), 0)
 )
-
-# 按村庄汇总
-survey_data |>
-  group_by(village) |>
-  summarise(
-    n_households = n(),
-    mean_land = mean(land_area_ha),
-    mean_fertilizer = mean(fertilizer_kg_ha),
-    .groups = "drop"
-  )
+)
+survey_summary <- survey_data |>
+  group_by(village, elevation_zone) |>
+  summarise(n_households = n(), mean_land = mean(land_area_ha),
+    mean_forest = mean(forest_cover_pct), .groups = "drop")
+print(survey_summary)
 ```
 
-### 野外观测法（Field Observation Method）
+**2. 野外观测数据（Field Observation Data）**：直接在野外记录的生物和环境数据，是生态学研究的核心。
 
-野外观测是生态学研究的核心方法，包括植物群落调查、动物观测、土壤采样等。
+```r
+set.seed(2027)
+field_data <- tibble(
+  plot_id = paste0("P", sprintf("%02d", 1:24)),
+  latitude = round(22.75 + rnorm(24, 0, 0.01), 6),
+  longitude = round(108.32 + rnorm(24, 0, 0.01), 6),
+  elevation = round(120 + rnorm(24, 0, 20), 0),
+  canopy_cover_pct = round(rnorm(24, 75, 10), 1),
+  species_richness = sample(8:25, 24, replace = TRUE),
+  soil_depth_cm = sample(c(30, 40, 50, 60), 24, replace = TRUE),
+  soil_moisture_pct = round(rnorm(24, 28, 5), 1),
+  soil_pH = round(rnorm(24, 4.8, 0.3), 2),
+  organic_carbon_g_kg = round(rnorm(24, 25, 6), 1),
+  fire_history = sample(c("无", "1-2次", "3次以上"), 24, replace = TRUE,
+    prob = c(0.5, 0.3, 0.2)),
+  grazing_intensity = sample(c("无", "轻度", "重度"), 24, replace = TRUE)
+)
+glimpse(field_data)
+```
 
-**观测的基本原则**：
-1. **标准化**：使用统一的方法和记录格式
-2. **可重复性**：详细记录观测条件和方法
-3. **客观性**：避免主观判断，使用量化指标
-4. **代表性**：确保样本能代表研究总体
+**3. 遥感数据（Remote Sensing Data）**：卫星、无人机等平台获取的地表影像数据。
 
-**常见观测技术**：
+| 平台 | 空间分辨率 | 重访周期 | 免费 | 适合应用 |
+|:---|:---|:---|:---|:---|
+| Landsat 8/9 | 30m | 16天 | 是 | 土地覆盖、植被指数 |
+| Sentinel-2 | 10m | 5天 | 是 | 植被健康、精细监测 |
+| MODIS | 250m-1km | 每日 | 是 | 全球植被动态 |
+| 无人机 | 厘米级 | 按需 | 自有 | 样地精细调查 |
 
-| 观测对象 | 常用方法 | 记录内容 |
-|---------|---------|----------|
-| 植物群落 | 样方法、样线法 | 物种、多度、盖度、高度 |
-| 动物 | 样线法、标记重捕、相机陷阱 | 物种、数量、行为 |
-| 土壤 | 剖面观察、采样分析 | 质地、结构、颜色、根系 |
-| 水体 | 定点采样、连续监测 | 温度、pH、溶氧、营养盐 |
-
-### 遥感法（Remote Sensing Method）
-
-遥感技术通过卫星、无人机等平台获取地表信息，适用于大尺度、长时间序列的生态监测。
-
-**常用遥感数据源**：
-- **Landsat**：30m分辨率，免费，适合区域尺度研究
-- **Sentinel-2**：10m分辨率，免费，适合植被监测
-- **MODIS**：250m-1km分辨率，每日覆盖，适合全球尺度
-- **无人机影像**：厘米级分辨率，适合样地尺度精细调查
-
-**遥感数据的典型应用**：
-```{r}
-# 模拟NDVI时间序列数据（归一化植被指数）
-ndvi_data <- tibble(
-  date = seq(as.Date("2024-01-01"), as.Date("2024-12-31"), by = "month"),
-  site_A = 0.3 + 0.4 * sin(2 * pi * (1:12) / 12) + rnorm(12, 0, 0.05),
-  site_B = 0.4 + 0.3 * sin(2 * pi * (1:12) / 12) + rnorm(12, 0, 0.05)
-) |>
-  pivot_longer(cols = starts_with("site"), names_to = "site", values_to = "ndvi")
-
-# 可视化植被季节动态
-ggplot(ndvi_data, aes(x = date, y = ndvi, color = site)) +
-  geom_line(linewidth = 1) +
-  geom_point(size = 2) +
-  labs(x = "日期", y = "NDVI", title = "两个样地的植被指数季节变化") +
+```r
+library(lubridate)
+set.seed(2027)
+ndvi_ts <- tibble(
+  date = seq(ymd("2020-01-01"), ymd("2023-12-31"), by = "month"),
+  ndvi = 0.45 + 0.25 * sin(2 * pi * (as.numeric(format(date, "%j")) - 60) / 365) +
+    rnorm(length(date), 0, 0.03)
+)
+ndvi_annual <- ndvi_ts |> mutate(year = year(date)) |>
+  group_by(year) |> summarise(mean_ndvi = mean(ndvi), .groups = "drop")
+print(ndvi_annual)
+ggplot(ndvi_ts, aes(x = date, y = ndvi)) +
+  geom_line(color = "darkgreen") + geom_point() +
+  labs(x = "日期", y = "NDVI", title = "NDVI 时间序列 (2020-2023)") +
   theme_minimal()
 ```
 
-### 传感器与自动监测
+**4. 传感器数据（Sensor Data）**：自动监测设备连续记录的环境数据。
 
-自动气象站、土壤传感器、水质监测仪等设备可以连续记录环境数据，适合长期监测和高频观测。
+常见类型：气象站（温度、湿度、降水）、土壤水分传感器（TDR）、水质监测仪、CO2通量塔、相机陷阱。
 
-**常见传感器类型**：
-- **气象传感器**：温度、湿度、降水、风速、辐射
-- **土壤传感器**：土壤水分、温度、电导率
-- **水质传感器**：pH、溶氧、浊度、叶绿素
-- **生物传感器**：树干液流、CO₂通量、声学记录仪
-
-```{r}
-# 模拟自动气象站数据（每小时记录）
+```r
 set.seed(2027)
-weather_data <- tibble(
-  datetime = seq(as.POSIXct("2024-06-01 00:00"), 
-                 as.POSIXct("2024-06-07 23:00"), 
-                 by = "hour"),
-  temp_c = 25 + 5 * sin(2 * pi * (0:167) / 24) + rnorm(168, 0, 1),
-  rh_percent = 70 + 15 * sin(2 * pi * (0:167 + 12) / 24) + rnorm(168, 0, 5),
-  rainfall_mm = rpois(168, lambda = 0.1)
+weather_station <- tibble(
+  datetime = seq(ymd_hms("2024-07-01 00:00:00"), ymd_hms("2024-07-07 23:00:00"), by = "hour"),
+  temp_c = 28 + 6 * sin(2 * pi * (hour(datetime) - 6) / 24) + rnorm(length(datetime), 0, 1.5),
+  rh_pct = pmin(100, pmax(0, 75 - 0.8 * (temp_c - 28) + rnorm(length(datetime), 0, 5))),
+  rainfall_mm = rpois(length(datetime), lambda = 0.1)
 )
-
-# 计算日均值
-weather_data |>
-  mutate(date = as.Date(datetime)) |>
-  group_by(date) |>
-  summarise(
-    mean_temp = mean(temp_c),
-    mean_rh = mean(rh_percent),
-    total_rain = sum(rainfall_mm),
-    .groups = "drop"
-  )
+daily_summary <- weather_station |> mutate(date = as.Date(datetime)) |>
+  group_by(date) |> summarise(mean_temp = mean(temp_c), total_rain = sum(rainfall_mm), .groups = "drop")
+print(daily_summary)
 ```
 
-## 实验数据 {#sec-experimentation}
+## 实验数据：因果推断的利器
 
-实验数据是通过主动操纵自变量、观察因变量响应而获得的数据，是检验因果关系假设最有力的方法。适用于需要严格假设检验和机制探究的研究。
+### 什么是实验数据？
 
-### 实验设计的基本原则
+实验数据是通过主动操纵一个或多个自变量（处理），观察因变量响应而获得的数据。实验是检验因果关系假设最有力的方法。
 
-一个良好的实验设计应遵循以下原则：
+观测研究和实验研究的根本区别：观测研究只能建立相关性；实验研究通过随机分配处理，可以建立因果关系。
 
-1. **随机化（Randomization）**：将实验单元随机分配到不同处理组，消除系统性偏差
-2. **重复（Replication）**：每个处理设置多个重复，提高统计检验力
-3. **对照（Control）**：设置对照组作为基线，明确处理效应
-4. **区组化（Blocking）**：将实验单元按某种特征分组，控制已知的变异来源
+### 实验设计的四大原则
 
-### 常见实验设计类型
+**1. 随机化（Randomization）**：将实验单元随机分配到不同处理组，消除所有已知和未知的系统性偏差。
 
-#### 完全随机设计（Completely Randomized Design, CRD）
+**2. 重复（Replication）**：每个处理设置多个重复，提高统计检验力，并允许估计随机变异。
 
-最简单的实验设计，将所有实验单元完全随机分配到各处理组。
+**3. 对照（Control）**：设置对照组作为基线参考。
 
-**适用场景**：实验条件高度均一，如温室盆栽实验、实验室培养实验
+**4. 区组化（Blocking）**：将实验单元按已知会影响响应的特征分组（分块），然后在每个块内随机分配处理。
 
-```{r}
-# 完全随机设计示例：氮肥对植物生长的影响
+### 五种常见的实验设计
+
+**设计一：完全随机设计（CRD）**
+
+所有实验单元完全随机分配到各处理组。适用场景：实验条件高度均一。
+
+```r
+library(tidyverse)
 set.seed(2027)
-crd_experiment <- tibble(
-  pot_id = 1:30,
-  treatment = sample(rep(c("对照", "低氮", "中氮", "高氮"), each = 7.5), 30),
-  nitrogen_kg_ha = case_when(
-    treatment == "对照" ~ 0,
-    treatment == "低氮" ~ 50,
-    treatment == "中氮" ~ 100,
-    treatment == "高氮" ~ 200
-  ),
-  # 模拟植物高度数据（cm）
-  height_cm = case_when(
-    treatment == "对照" ~ rnorm(n(), 45, 5),
-    treatment == "低氮" ~ rnorm(n(), 52, 5),
-    treatment == "中氮" ~ rnorm(n(), 58, 5),
-    treatment == "高氮" ~ rnorm(n(), 55, 5)
-  )
+crd_data <- tibble(
+  pot_id = 1:36,
+  treatment = sample(rep(c("对照", "低氮", "中氮", "高氮"), each = 9)),
+  nitrogen_rate = case_when(treatment == "对照" ~ 0, treatment == "低氮" ~ 50,
+    treatment == "中氮" ~ 100, treatment == "高氮" ~ 200),
+  biomass_g = case_when(treatment == "对照" ~ rnorm(9, mean = 85, sd = 12),
+    treatment == "低氮" ~ rnorm(9, mean = 105, sd = 12),
+    treatment == "中氮" ~ rnorm(9, mean = 120, sd = 12),
+    treatment == "高氮" ~ rnorm(9, mean = 115, sd = 12)),
+  leaf_n_pct = case_when(treatment == "对照" ~ rnorm(9, mean = 1.8, sd = 0.2),
+    treatment == "低氮" ~ rnorm(9, mean = 2.3, sd = 0.2),
+    treatment == "中氮" ~ rnorm(9, mean = 2.8, sd = 0.2),
+    treatment == "高氮" ~ rnorm(9, mean = 3.3, sd = 0.2))
 )
-
-# 可视化实验结果
-ggplot(crd_experiment, aes(x = treatment, y = height_cm, fill = treatment)) +
-  geom_boxplot(alpha = 0.7) +
-  geom_jitter(width = 0.2, alpha = 0.5) +
-  labs(x = "氮肥处理", y = "植物高度 (cm)", 
-       title = "完全随机设计：氮肥对植物生长的影响") +
-  theme_minimal() +
-  theme(legend.position = "none")
-
-# 方差分析
-aov_result <- aov(height_cm ~ treatment, data = crd_experiment)
+ggplot(crd_data, aes(x = treatment, y = biomass_g, fill = treatment)) +
+  geom_boxplot(alpha = 0.7, outlier.shape = NA) +
+  geom_jitter(width = 0.25, alpha = 0.6, size = 2) +
+  stat_summary(fun = mean, geom = "point", color = "red", size = 3, shape = 3) +
+  labs(x = "氮肥处理", y = "植物生物量 (g)", title = "完全随机设计：氮肥对植物生物量的影响") +
+  theme_minimal() + theme(legend.position = "none")
+aov_result <- aov(biomass_g ~ treatment, data = crd_data)
 summary(aov_result)
+TukeyHSD(aov_result)
 ```
 
-#### 随机区组设计（Randomized Complete Block Design, RCBD）
+**设计二：随机区组设计（RCBD）**
 
-将实验单元按某种特征（如空间位置、时间批次）分成若干区组，每个区组内包含所有处理的随机排列。
+将实验单元按某种特征分成若干区组，每个区组内包含所有处理的随机排列。适用场景：野外实验、温室实验（不同架子间有差异）。
 
-**适用场景**：野外实验、温室实验（不同架子/位置）、分批次实验
-
-```{r}
-# 随机区组设计示例：不同坡位的施肥实验
+```r
 set.seed(2027)
-rcbd_experiment <- expand_grid(
+rcbd_data <- expand_grid(
   block = c("上坡", "中坡", "下坡"),
   treatment = c("对照", "有机肥", "化肥", "有机+化肥")
 ) |>
   mutate(
     plot_id = paste0(block, "-", row_number()),
-    # 模拟土壤有机质含量（g/kg）
-    som_g_kg = case_when(
-      block == "上坡" ~ rnorm(n(), 15, 2),
-      block == "中坡" ~ rnorm(n(), 20, 2),
-      block == "下坡" ~ rnorm(n(), 25, 2)
-    ) + case_when(
-      treatment == "对照" ~ 0,
-      treatment == "有机肥" ~ 8,
-      treatment == "化肥" ~ 2,
-      treatment == "有机+化肥" ~ 10
-    ) + rnorm(n(), 0, 1.5)
+    block_effect = case_when(block == "上坡" ~ -5, block == "中坡" ~ 0, block == "下坡" ~ 7),
+    treatment_effect = case_when(treatment == "对照" ~ 0, treatment == "有机肥" ~ 9,
+      treatment == "化肥" ~ 3, treatment == "有机+化肥" ~ 12),
+    som_g_kg = 18 + block_effect + treatment_effect + rnorm(n(), 0, 2),
+    som_g_kg = pmax(10, som_g_kg)
   )
-
-# 可视化区组效应
-ggplot(rcbd_experiment, aes(x = treatment, y = som_g_kg, fill = block)) +
+ggplot(rcbd_data, aes(x = treatment, y = som_g_kg, fill = block)) +
   geom_boxplot(alpha = 0.7) +
   labs(x = "施肥处理", y = "土壤有机质 (g/kg)",
-       title = "随机区组设计：不同坡位的施肥效应",
-       fill = "区组（坡位）") +
-  theme_minimal() +
-  theme(axis.text.x = element_text(angle = 15, hjust = 1))
-
-# 双因素方差分析
-aov_rcbd <- aov(som_g_kg ~ block + treatment, data = rcbd_experiment)
+    title = "随机区组设计：坡位和施肥对土壤有机质的影响", fill = "区组（坡位）") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 15, hjust = 1))
+aov_rcbd <- aov(som_g_kg ~ block + treatment, data = rcbd_data)
 summary(aov_rcbd)
 ```
 
-#### 裂区设计（Split-Plot Design）
+**设计三：裂区设计（Split-Plot Design）**
 
-适用于两个因素的实验，其中一个因素（主区因素）难以随机化或需要较大实验单元，另一个因素（副区因素）可以在主区内随机分配。
+当实验包含两个层次的实验单元时使用。主区因素难以随机化（如灌溉），副区因素可以在主区内随机分配。适用场景：农业实验、森林间伐实验。
 
-**适用场景**：
-- 农业实验：灌溉方式（主区）× 品种（副区）
-- 森林实验：间伐强度（主区）× 施肥处理（副区）
-
-```{r}
-# 裂区设计示例：灌溉 × 品种实验
+```r
 set.seed(2027)
 split_plot <- expand_grid(
   block = 1:3,
-  irrigation = c("充分灌溉", "适度干旱", "严重干旱"),
-  variety = c("品种A", "品种B", "品种C")
+  irrigation = c("充分灌溉", "适度干旱"),
+  species = c("马尾松", "红锥", "红椎")
 ) |>
   mutate(
-    main_plot = paste0("B", block, "-", irrigation),
-    sub_plot = paste0(main_plot, "-", variety),
-    # 模拟产量数据（kg/ha）
-    yield_kg_ha = case_when(
-      irrigation == "充分灌溉" ~ rnorm(n(), 5000, 300),
-      irrigation == "适度干旱" ~ rnorm(n(), 4200, 300),
-      irrigation == "严重干旱" ~ rnorm(n(), 3000, 300)
-    ) + case_when(
-      variety == "品种A" ~ 0,
-      variety == "品种B" ~ 400,
-      variety == "品种C" ~ -200
-    ) + rnorm(n(), 0, 200)
+    irr_effect = case_when(irrigation == "充分灌溉" ~ 0, irrigation == "适度干旱" ~ -250),
+    species_effect = case_when(species == "马尾松" ~ 0, species == "红锥" ~ 350, species == "红椎" ~ 280),
+    interaction = if_else(irrigation == "适度干旱" & species == "红锥", 150,
+      if_else(irrigation == "适度干旱" & species == "红椎", 120, 0)),
+    height_cm = 180 + irr_effect + species_effect + interaction + rnorm(n(), 0, 50),
+    height_cm = pmax(50, height_cm)
   )
-
-# 可视化交互效应
-ggplot(split_plot, aes(x = irrigation, y = yield_kg_ha, 
-                       color = variety, group = variety)) +
-  stat_summary(fun = mean, geom = "line", linewidth = 1) +
+ggplot(split_plot, aes(x = irrigation, y = height_cm, color = species, group = species)) +
+  stat_summary(fun = mean, geom = "line", linewidth = 1.2) +
   stat_summary(fun = mean, geom = "point", size = 3) +
-  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.2) +
-  labs(x = "灌溉处理", y = "产量 (kg/ha)",
-       title = "裂区设计：灌溉与品种的交互效应",
-       color = "品种") +
+  stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.15) +
+  labs(x = "灌溉处理", y = "树高年增长量 (cm)", title = "裂区设计：灌溉与树种的交互效应", color = "树种") +
   theme_minimal()
 ```
 
-### 野外实验的特殊考虑
+**设计四：因子设计（Factorial Design）**
 
-野外实验面临更多不可控因素，需要特别注意：
+同时研究两个或多个因素的效应，以及交互效应。
 
-1. **空间异质性**：使用区组设计或协变量分析控制空间变异
-2. **时间效应**：记录实验开始和结束时间，考虑季节效应
-3. **边界效应**：在样方边缘设置缓冲带，避免相邻处理相互影响
-4. **动物干扰**：必要时设置围栏或防护措施
-5. **长期监测**：建立永久标记，便于重复测量
-
-```{r}
-# 野外实验样地布局示例
-field_layout <- expand_grid(
-  row = 1:4,
-  col = 1:6
+```r
+set.seed(2027)
+factorial_data <- expand_grid(
+  N_level = c("不施氮", "低氮", "高氮"),
+  P_level = c("不施磷", "施磷")
 ) |>
   mutate(
-    plot_id = paste0("R", row, "C", col),
-    block = case_when(
-      row <= 2 ~ "区组1",
-      TRUE ~ "区组2"
-    ),
-    treatment = sample(rep(c("对照", "处理A", "处理B", "处理C"), 6))
+    n_effect = case_when(N_level == "不施氮" ~ 0, N_level == "低氮" ~ 25, N_level == "高氮" ~ 45),
+    p_effect = if_else(P_level == "施磷", 18, 0),
+    np_interaction = if_else(N_level != "不施氮" & P_level == "施磷", 12, 0),
+    biomass_g = 90 + n_effect + p_effect + np_interaction + rnorm(n(), 0, 10),
+    biomass_g = pmax(50, biomass_g)
   )
-
-# 可视化样地布局
-ggplot(field_layout, aes(x = col, y = row, fill = treatment)) +
-  geom_tile(color = "white", linewidth = 1) +
-  geom_text(aes(label = plot_id), size = 3) +
-  scale_y_reverse() +
-  labs(x = "列", y = "行", title = "野外实验样地布局",
-       fill = "处理") +
-  theme_minimal() +
-  coord_equal()
+ggplot(factorial_data, aes(x = N_level, y = biomass_g, fill = P_level)) +
+  stat_summary(fun = mean, geom = "bar", position = "dodge", alpha = 0.7) +
+  stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(0.9), width = 0.3) +
+  labs(x = "氮添加水平", y = "植物生物量 (g)", title = "两因素因子设计：氮×磷交互效应", fill = "磷添加") +
+  theme_minimal() + theme(axis.text.x = element_text(angle = 15, hjust = 1))
 ```
 
-### 实验数据采集的质量控制
+**设计五：嵌套设计（Nested Design）**
 
-1. **标准化测量**：使用校准过的仪器，统一测量时间和方法
-2. **盲法测量**：测量人员不知道处理分组，避免主观偏差
-3. **重复测量**：对关键指标进行技术重复，评估测量误差
-4. **异常值检查**：及时发现和记录异常数据，追溯原因
-5. **数据备份**：野外记录当天录入电子表格并备份
+当抽样单元嵌套在更大的单元内部时使用。适用场景：多尺度生态过程研究。
 
-## 模型数据
+```r
+set.seed(2027)
+nested_data <- expand_grid(
+  reserve = c("保护区A", "保护区B", "保护区C"),
+  plot = 1:3,
+  quadrat = 1:5
+) |>
+  mutate(
+    quadrat_id = paste0(reserve, "-P", plot, "-Q", quadrat),
+    reserve_effect = case_when(reserve == "保护区A" ~ 0, reserve == "保护区B" ~ 3, reserve == "保护区C" ~ 8),
+    plot_effect = rnorm(45, 0, 1.5),
+    shannon_index = 2.5 + reserve_effect + plot_effect + rnorm(45, 0, 0.3),
+    shannon_index = pmax(1, shannon_index)
+  )
+nested_summary <- nested_data |> group_by(reserve) |>
+  summarise(mean_shannon = mean(shannon_index), se_shannon = sd(shannon_index) / sqrt(n()), .groups = "drop")
+ggplot(nested_summary, aes(x = reserve, y = mean_shannon)) +
+  geom_col(fill = "steelblue", alpha = 0.7) +
+  geom_errorbar(aes(ymin = mean_shannon - se_shannon, ymax = mean_shannon + se_shannon), width = 0.3) +
+  labs(x = "保护区", y = "平均Shannon指数", title = "嵌套设计：不同保护区的物种多样性") +
+  theme_minimal()
+```
 
-模型数据是通过运行数学或计算机模型而生成的虚拟数据，基于对系统的理论理解和已有数据。适用于时空尺度过大或无法直接实验的研究问题，如气候变化预测和情景分析。详见 @sec-modeling 。
+## 采样设计：科学抽样的核心
 
-## 公共数据
+### 核心概念
 
-公共数据是由政府、科研机构、国际组织或公众公开发布的数据资源，通常可免费获取且时空覆盖广。适用于整合分析、宏观生态学研究以及为自有数据提供背景支撑。详见 @sec-public-data 。
+- **总体（Population）**：你想研究的全部个体或单元的集合。
+- **样本（Sample）**：从总体中实际采集数据的单元子集。
+- **抽样框（Sampling Frame）**：列出所有抽样单元的名录或地图。
+- **抽样误差**：因样本无法完全代表总体而产生，可控制但不可避免。
+- **非抽样误差**：由测量错误、记录错误、缺失数据等引起，应尽量避免。
 
-## 数据采集的通用流程
+### 常用抽样方法
 
-无论使用哪种数据来源，数据采集都遵循类似的流程：
+| 方法 | 原理 | 优点 | 缺点 | 适用场景 |
+|:---|:---|:---|:---|:---|
+| 简单随机抽样 | 每个单元等概率被选 | 统计推断简单 | 效率低，可能聚集 | 总体均匀、样本量充足 |
+| 系统抽样 | 按固定间隔选取 | 简单易行、分布均匀 | 可能有隐藏周期 | 空间变异均匀 |
+| 分层抽样 | 先分层再各层随机抽 | 提高精度、控制组间差异 | 需要先验分层信息 | 组间差异明显 |
+| 整群抽样 | 随机选群，整群调查 | 节省成本 | 群内相似性高则精度低 | 地理分散总体 |
+| 嵌套抽样 | 多尺度嵌套调查 | 可同时分析多尺度效应 | 设计与分析复杂 | 多尺度生态过程 |
 
-```{r}
-#| echo: false
-#| fig-width: 8
-#| fig-asp: 0.25
+### 样本量估算
 
-steps <- tibble(
-  step = factor(1:5),
-  label = c("1. 明确\n研究问题", "2. 设计\n采集方案", "3. 采集\n原始数据",
-            "4. 质量\n初步检查", "5. 记录\n元数据"),
-  x = 1:5
+样本量不是拍脑袋定的，需要基于统计原理计算：
+
+```r
+library(pwr)
+pwr.t.test(d = 0.5, sig.level = 0.05, power = 0.80, type = "two.sample")
+# 每组需要 n = 64
+pwr.r.test(r = 0.3, sig.level = 0.05, power = 0.80)
+# 需要 n = 85
+pwr.anova.test(k = 4, f = 0.25, sig.level = 0.05, power = 0.80)
+# 每组需要 n = 52
+```
+
+### 空间自相关与采样设计
+
+空间自相关（Spatial Autocorrelation）：相邻样本点不独立，彼此相似。
+
+后果：违反统计假设；导致有效样本量远小于名义样本量；传统统计检验容易犯 Type I 错误（假阳性）。
+
+```r
+library(gstat)
+library(sp)
+set.seed(2027)
+spatial_data <- tibble(
+  x = runif(50, 0, 100), y = runif(50, 0, 100),
+  soc = 25 + 0.3 * x + 0.2 * y + rnorm(50, 0, 3),
+  soc = pmax(10, soc)
 )
-
-ggplot(steps, aes(x = x, y = 0)) +
-  geom_point(size = 14, color = "#2166ac", alpha = 0.8) +
-  geom_text(aes(label = label), size = 3, vjust = -2.2, lineheight = 0.9) +
-  geom_text(aes(label = step), color = "white", fontface = "bold", size = 5) +
-  geom_segment(aes(x = x + 0.3, xend = x + 0.7, y = 0, yend = 0),
-               arrow = arrow(length = grid::unit(0.15, "cm")),
-               data = steps |> filter(as.numeric(step) < 5),
-               color = "grey50") +
-  xlim(0.3, 5.7) + ylim(-1, 1.5) +
-  theme_void()
+coordinates(spatial_data) <- ~x + y
+variogram_model <- variogram(soc ~ 1, data = spatial_data, cutoff = 40)
+plot(variogram_model)
 ```
 
-每一步都应该有文档记录。一个好的习惯是在采集数据的同时就建立元数据文件，而不是事后补写。
+## 生态学专项采样方法
+
+### 植物群落调查：样方法
+
+样方法是最经典的植物群落调查方法。
+
+```r
+set.seed(2027)
+quadrat_data <- tibble(
+  quadrat_id = paste0("Q", sprintf("%03d", 1:20)),
+  distance_from_edge = round(runif(20, 2, 48), 1),
+  species_count = sample(5:15, 20, replace = TRUE),
+  total_cover_pct = round(pmin(100, rnorm(20, 85, 12)), 0),
+  dominant_species = sample(c("马尾松", "红锥", "荷木", "椎木", "芒萁"), 20, replace = TRUE),
+  slope_pct = round(rnorm(20, 20, 8), 1),
+  rock_cover_pct = pmax(0, round(rnorm(20, 15, 10), 0))
+)
+print(quadrat_data, width = Inf)
+```
+
+### 动物调查：标记重捕法
+
+标记重捕法是估计动物种群数量的经典方法。
+
+```r
+M <- 30  # 第一次捕获并标记的个体数
+C <- 25  # 第二次捕获的个体总数
+R <- 8   # 第二次捕获中带标记的个体数
+N_hat <- (M * C) / R
+cat("估计的种群大小：", round(N_hat), "只\n")
+var_N <- (M^2 * C * (C - R)) / (R^3)
+se_N <- sqrt(var_N)
+cat("标准误：", round(se_N), "只\n")
+cat("95% CI：", round(N_hat - 1.96 * se_N), "~", round(N_hat + 1.96 * se_N), "只\n")
+N_chapman <- ((M + 1) * (C + 1)) / (R + 1)
+cat("Chapman修正估计：", round(N_chapman), "只\n")
+```
+
+### 相机陷阱法
+
+相机陷阱是调查哺乳动物多样性的自动化工具。
+
+```r
+set.seed(2027)
+camera_data <- tibble(
+  camera_id = paste0("CAM", sprintf("%02d", 1:15)),
+  deployment_date = seq(ymd("2024-01-01"), by = "month", length.out = 15),
+  latitude = round(22.75 + rnorm(15, 0, 0.02), 6),
+  longitude = round(108.32 + rnorm(15, 0, 0.02), 6),
+  n_independent_events = sample(3:25, 15, replace = TRUE),
+  dominant_species = sample(c("野猪", "小麂", "赤麂", "果子狸", "豹猫"), 15, replace = TRUE),
+  camera_days = sample(30:90, 15, replace = TRUE)
+) |>
+  mutate(detection_rate = round(n_independent_events / camera_days, 3))
+print(camera_data)
+```
+
+## 数据采集的质量控制
+
+### 为什么要质量控制？
+
+"垃圾进，垃圾出"——如果采集的数据本身存在偏差、遗漏或错误，后续的清洗和分析都无法弥补。
+
+### 质量控制的核心措施
+
+**1. 标准化测量程序**
+
+在采样前制定详细的操作规程（Standard Operating Procedure, SOP），确保所有人使用相同的测量方法。关键要素：测量顺序、读数方法、异常值判定标准、记录格式。
+
+**2. 仪器校准**
+
+定期校准测量仪器，记录校准信息。
+
+```r
+calibration_log <- tibble(
+  instrument_id = "TDR-300-SM",
+  calibration_date = ymd(c("2024-03-01", "2024-04-01", "2024-05-01")),
+  standard_value = c(25.0, 25.0, 25.0),
+  measured_value = c(25.3, 24.8, 25.1),
+  correction_factor = standard_value / measured_value,
+  technician = c("张三", "李四", "王五")
+)
+print(calibration_log)
+```
+
+**3. 盲法测量**
+
+测量人员不知道处理分组，避免主观偏差。
+
+**4. 重复测量**
+
+对关键指标进行技术重复，评估测量误差。
+
+```r
+set.seed(2027)
+repeat_measurements <- tibble(
+  sample_id = rep(paste0("S", sprintf("%02d", 1:10)), each = 3),
+  observer = rep(c("张三", "李四", "王五"), 10),
+  measured_value = round(rnorm(30, 50, 5), 2),
+  true_value = rep(seq(45, 54, length.out = 10), each = 3)
+) |>
+  mutate(error = measured_value - true_value)
+measurement_bias <- repeat_measurements |>
+  group_by(observer) |>
+  summarise(mean_error = mean(error), sd_error = sd(error), max_error = max(abs(error)), .groups = "drop")
+print(measurement_bias)
+```
+
+**5. 现场数据检查**
+
+在采样现场进行初步的数据检查，及时发现和纠正问题。
+
+```r
+field_qc <- function(data) {
+  range_check <- data |>
+    mutate(ph_out_of_range = soil_pH < 3 | soil_pH > 10,
+      moisture_out_of_range = soil_moisture_pct < 0 | soil_moisture_pct > 100)
+  cat("pH超范围记录：", sum(range_check$ph_out_of_range), "条\n")
+  cat("含水量超范围记录：", sum(range_check$moisture_out_of_range), "条\n")
+}
+field_qc(field_data)
+```
+
+## 常见错误与规避
+
+### 错误一：选择性采样
+
+便利采样（只采容易获取的样本）、自愿响应偏差、存活者偏差。规避：严格按照预定采样设计执行，使用随机或系统抽样。
+
+### 错误二：测量尺度不一致
+
+不同时间或不同仪器使用不同精度，导致数据不可比。规避：制定统一的数据字典，明确每个变量的定义和测量方法。
+
+### 错误三：缺失数据非随机
+
+缺失与未观测值系统性相关（如干旱年份因土壤过硬无法采样）。规避：记录每个样本的采集状态，详细记录缺失原因。
+
+### 错误四：空间采样偏差
+
+忽视边缘效应，在样地边界的样本不代表整体。规避：设计采样时间表时考虑生态节律，使用空间分层抽样。
+
+### 错误五：变量定义模糊
+
+不同采集者对同一现象给出不同记录（如"灌木盖度"定义不清）。规避：采集前制定详尽的数据字典。
 
 ## 课后练习
 
-1. 针对以下研究问题，判断最适合的数据来源类型（观测/实验/模型/公共数据），并说明理由：
-   - 广西大学校园内鸟类物种组成
-   - 氮沉降对土壤微生物群落的影响
-   - 2050 年广西红树林面积变化预测
-   - 全球森林碳储量的空间分布格局
+### 基础题
 
-2. 选择一个公共数据平台（如 GBIF、NEON、中国气象数据网），浏览其数据目录，下载一个小型数据集，用 `read_csv()` 读入 R 并查看其结构
+**练习 1：判断数据类型**
 
-3. 为你计划采集的课程项目数据，写一份简要的采集方案（包括：研究问题、数据来源、采集方法、预期样本量、需要记录的变量）
+以下研究问题涉及哪些数据类型？属于观测、实验、模型还是公共数据？
+
+a) 使用 WorldClim 气候数据库提取研究地点的年均温数据
+b) 在马尾松林中设置海拔梯度，测量土壤有机碳含量
+c) 利用 LiDAR 点云数据估算森林生物量
+d) 每月一次在固定样线上统计鸟类种类和个体数
+
+**练习 2：判断抽样方法**
+
+某研究想比较不同演替阶段的土壤微生物多样性，每种演替阶段各设 5 个样方，每个样方内用五点取样法采集土壤样本。
+
+a) 该设计使用了哪几种抽样方法？
+b) 这种设计是否属于分层抽样？为什么？
+c) 五点取样法属于系统抽样吗？
+
+**练习 3：识别采样偏差**
+
+某团队在城市公园调查土壤蚯蚓多样性，选择了周六下午3点在游客较多的中心区域采样，用手捡法收集蚯蚓。
+
+分析：可能存在哪些选择性采样问题？如何改进？
+
+### 应用题
+
+**练习 4：设计采样方案**
+
+假设你的研究课题是"氮沉降对亚热带人工林土壤酸化进程的影响"：
+
+a) 列出你的研究需要采集哪些变量
+b) 设计一个合理的采样方案（重复数、采样尺度，时间频率）
+c) 创建一个数据记录表模板
+d) 列出需要记录的元数据信息
+
+**练习 5：样本量估算**
+
+假设你想研究马尾松和红锥混交林中两种树的胸径（DBH）差异，预期效应量为 5cm（处理组均值约25cm，对照组约20cm），估计标准差约为8cm。在 alpha = 0.05 下达到 80% 统计功效。使用 R 中的 pwr 包计算每组需要的最小样本量，并讨论实际操作中应该增加多少重复数以应对样本损耗。
+
+**练习 6：标记重捕数据分析**
+
+某研究者在封闭池塘中进行标记重捕实验。第一次捕获并标记了 30 只虾，一周后第二次捕获了 25 只，其中 8 只带有标记。
+
+请计算：a) Lincoln-Petersen 估计量；b) Chapman 修正估计量；c) 95% 置信区间。
+
+### 思考题
+
+**练习 7：实验设计选择**
+
+如果你想研究以下生态学问题，应该选择哪种实验设计？为什么？
+
+a) 不同氮肥类型对马尾松幼苗生长的影响，实验在温室进行，盆栽条件均一
+b) 不同坡位对土壤有机碳的影响，同时想比较有机肥和化肥的效应
+c) 灌溉频率和树种对人工林生产力的影响，其中灌溉需要整个地块为单位处理，而树种可以在地块内随机分配
+d) 从保护区到人类干扰区的物种多样性梯度变化，每个保护区-干扰区作为一个研究单元
+
+**练习 8：评估你自己的研究数据**
+
+思考你当前的研究或课程项目：
+
+a) 你的研究数据是通过什么方式采集的？属于观测、实验还是模型数据？
+b) 采样设计是否合理？存在哪些潜在的采样偏差？
+c) 数据采集过程中是否有质量控制措施？
+d) 如果有机会重新设计采样方案，你会做哪些改进？
