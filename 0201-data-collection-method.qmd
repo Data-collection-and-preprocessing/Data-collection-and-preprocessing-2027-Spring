@@ -9,7 +9,7 @@ execute:
 
 数据是生态学研究的核心。但"有数据"和"有好数据"是两回事。很多研究结论站不住脚，不是因为分析方法错了，而是因为数据采集从一开始就存在系统性问题。
 
-这一章，我们系统学习生态学中获取数据的四大类方法：观测、实验、模型、公共数据。学完这一章，你应该能够：根据研究问题选择合适的数据采集方法、设计一个科学合理的采样方案、识别常见的数据采集错误并知道如何规避。
+这一章，我们系统学习生态学中获取数据的四大类方法：观测、实验、模型、公共数据。
 
 ## 数据来源四大类型
 
@@ -17,24 +17,16 @@ execute:
 
 | 类型 | 是否干预 | 因果推断能力 | 数据成本 | 适用场景 |
 |:---|:---|:---|:---|:---|
-| **观测数据** | 否 | 弱（关联） | 中-高 | 探索性研究 |
-| **实验数据** | 是 | 强（因果） | 高 | 验证性研究 |
-| **模型数据** | 虚拟 | 理论性 | 低 | 预测性研究 |
-| **公共数据** | 否 | 弱（关联） | 低-免费 | 整合分析 |
-
-### 选择数据来源的自检问题
-
-问自己三个问题：
-
-1. **研究问题需要什么？** 想描述生态格局 → 观测或公共数据。想验证因果机制 → 实验数据。想预测未来 → 模型数据。
-2. **时空尺度多大？** 局地尺度 → 观测或实验。区域到全球尺度 → 模型或公共数据。
-3. **资源是否允许？** 时间和经费有限 → 公共数据或模型。有条件 → 自己做观测或实验。
+| 观测数据 | 否 | 弱（关联） | 中-高 | 探索性研究 |
+| 实验数据 | 是 | 强（因果） | 高 | 验证性研究 |
+| 模型数据 | 虚拟 | 理论性 | 低 | 预测性研究 |
+| 公共数据 | 否 | 弱（关联） | 低-免费 | 整合分析 |
 
 ## 观测数据：自然的镜子
 
 ### 什么是观测数据？
 
-观测数据是在自然状态下对研究对象进行系统性记录而获得的数据，研究者不施加任何干预。这是生态学研究最古老也最常用的数据来源。
+观测数据是在自然状态下对研究对象进行系统性记录而获得的数据，研究者不施加任何干预。
 
 **优势**：反映真实自然状态；可覆盖大时空尺度；是提出科学假设的主要途径。
 
@@ -56,11 +48,11 @@ survey_data <- tibble(
   fertilizer_kg_ha = round(rnorm(60, 180, 45), 0),
   annual_income_yuan = round(rnorm(60, 35000, 8000), 0)
 )
-)
+
 survey_summary <- survey_data |>
   group_by(village, elevation_zone) |>
   summarise(n_households = n(), mean_land = mean(land_area_ha),
-    mean_forest = mean(forest_cover_pct), .groups = "drop")
+            mean_forest = mean(forest_cover_pct), .groups = "drop")
 print(survey_summary)
 ```
 
@@ -80,7 +72,7 @@ field_data <- tibble(
   soil_pH = round(rnorm(24, 4.8, 0.3), 2),
   organic_carbon_g_kg = round(rnorm(24, 25, 6), 1),
   fire_history = sample(c("无", "1-2次", "3次以上"), 24, replace = TRUE,
-    prob = c(0.5, 0.3, 0.2)),
+                       prob = c(0.5, 0.3, 0.2)),
   grazing_intensity = sample(c("无", "轻度", "重度"), 24, replace = TRUE)
 )
 glimpse(field_data)
@@ -101,7 +93,7 @@ set.seed(2027)
 ndvi_ts <- tibble(
   date = seq(ymd("2020-01-01"), ymd("2023-12-31"), by = "month"),
   ndvi = 0.45 + 0.25 * sin(2 * pi * (as.numeric(format(date, "%j")) - 60) / 365) +
-    rnorm(length(date), 0, 0.03)
+         rnorm(length(date), 0, 0.03)
 )
 ndvi_annual <- ndvi_ts |> mutate(year = year(date)) |>
   group_by(year) |> summarise(mean_ndvi = mean(ndvi), .groups = "drop")
@@ -151,7 +143,7 @@ print(daily_summary)
 
 **设计一：完全随机设计（CRD）**
 
-所有实验单元完全随机分配到各处理组。适用场景：实验条件高度均一。
+最简单的设计，所有实验单元完全随机分配到各处理组。适用场景：实验条件高度均一。
 
 ```r
 library(tidyverse)
@@ -160,21 +152,22 @@ crd_data <- tibble(
   pot_id = 1:36,
   treatment = sample(rep(c("对照", "低氮", "中氮", "高氮"), each = 9)),
   nitrogen_rate = case_when(treatment == "对照" ~ 0, treatment == "低氮" ~ 50,
-    treatment == "中氮" ~ 100, treatment == "高氮" ~ 200),
+                           treatment == "中氮" ~ 100, treatment == "高氮" ~ 200),
   biomass_g = case_when(treatment == "对照" ~ rnorm(9, mean = 85, sd = 12),
-    treatment == "低氮" ~ rnorm(9, mean = 105, sd = 12),
-    treatment == "中氮" ~ rnorm(9, mean = 120, sd = 12),
-    treatment == "高氮" ~ rnorm(9, mean = 115, sd = 12)),
+                        treatment == "低氮" ~ rnorm(9, mean = 105, sd = 12),
+                        treatment == "中氮" ~ rnorm(9, mean = 120, sd = 12),
+                        treatment == "高氮" ~ rnorm(9, mean = 115, sd = 12)),
   leaf_n_pct = case_when(treatment == "对照" ~ rnorm(9, mean = 1.8, sd = 0.2),
-    treatment == "低氮" ~ rnorm(9, mean = 2.3, sd = 0.2),
-    treatment == "中氮" ~ rnorm(9, mean = 2.8, sd = 0.2),
-    treatment == "高氮" ~ rnorm(9, mean = 3.3, sd = 0.2))
+                         treatment == "低氮" ~ rnorm(9, mean = 2.3, sd = 0.2),
+                         treatment == "中氮" ~ rnorm(9, mean = 2.8, sd = 0.2),
+                         treatment == "高氮" ~ rnorm(9, mean = 3.3, sd = 0.2))
 )
 ggplot(crd_data, aes(x = treatment, y = biomass_g, fill = treatment)) +
   geom_boxplot(alpha = 0.7, outlier.shape = NA) +
   geom_jitter(width = 0.25, alpha = 0.6, size = 2) +
   stat_summary(fun = mean, geom = "point", color = "red", size = 3, shape = 3) +
-  labs(x = "氮肥处理", y = "植物生物量 (g)", title = "完全随机设计：氮肥对植物生物量的影响") +
+  labs(x = "氮肥处理", y = "植物生物量 (g)",
+       title = "完全随机设计：氮肥对植物生物量的影响") +
   theme_minimal() + theme(legend.position = "none")
 aov_result <- aov(biomass_g ~ treatment, data = crd_data)
 summary(aov_result)
@@ -195,14 +188,14 @@ rcbd_data <- expand_grid(
     plot_id = paste0(block, "-", row_number()),
     block_effect = case_when(block == "上坡" ~ -5, block == "中坡" ~ 0, block == "下坡" ~ 7),
     treatment_effect = case_when(treatment == "对照" ~ 0, treatment == "有机肥" ~ 9,
-      treatment == "化肥" ~ 3, treatment == "有机+化肥" ~ 12),
+                                treatment == "化肥" ~ 3, treatment == "有机+化肥" ~ 12),
     som_g_kg = 18 + block_effect + treatment_effect + rnorm(n(), 0, 2),
     som_g_kg = pmax(10, som_g_kg)
   )
 ggplot(rcbd_data, aes(x = treatment, y = som_g_kg, fill = block)) +
   geom_boxplot(alpha = 0.7) +
   labs(x = "施肥处理", y = "土壤有机质 (g/kg)",
-    title = "随机区组设计：坡位和施肥对土壤有机质的影响", fill = "区组（坡位）") +
+       title = "随机区组设计：坡位和施肥对土壤有机质的影响", fill = "区组（坡位）") +
   theme_minimal() + theme(axis.text.x = element_text(angle = 15, hjust = 1))
 aov_rcbd <- aov(som_g_kg ~ block + treatment, data = rcbd_data)
 summary(aov_rcbd)
@@ -223,7 +216,7 @@ split_plot <- expand_grid(
     irr_effect = case_when(irrigation == "充分灌溉" ~ 0, irrigation == "适度干旱" ~ -250),
     species_effect = case_when(species == "马尾松" ~ 0, species == "红锥" ~ 350, species == "红椎" ~ 280),
     interaction = if_else(irrigation == "适度干旱" & species == "红锥", 150,
-      if_else(irrigation == "适度干旱" & species == "红椎", 120, 0)),
+                          if_else(irrigation == "适度干旱" & species == "红椎", 120, 0)),
     height_cm = 180 + irr_effect + species_effect + interaction + rnorm(n(), 0, 50),
     height_cm = pmax(50, height_cm)
   )
@@ -231,7 +224,8 @@ ggplot(split_plot, aes(x = irrigation, y = height_cm, color = species, group = s
   stat_summary(fun = mean, geom = "line", linewidth = 1.2) +
   stat_summary(fun = mean, geom = "point", size = 3) +
   stat_summary(fun.data = mean_se, geom = "errorbar", width = 0.15) +
-  labs(x = "灌溉处理", y = "树高年增长量 (cm)", title = "裂区设计：灌溉与树种的交互效应", color = "树种") +
+  labs(x = "灌溉处理", y = "树高年增长量 (cm)",
+       title = "裂区设计：灌溉与树种的交互效应", color = "树种") +
   theme_minimal()
 ```
 
@@ -255,7 +249,8 @@ factorial_data <- expand_grid(
 ggplot(factorial_data, aes(x = N_level, y = biomass_g, fill = P_level)) +
   stat_summary(fun = mean, geom = "bar", position = "dodge", alpha = 0.7) +
   stat_summary(fun.data = mean_se, geom = "errorbar", position = position_dodge(0.9), width = 0.3) +
-  labs(x = "氮添加水平", y = "植物生物量 (g)", title = "两因素因子设计：氮×磷交互效应", fill = "磷添加") +
+  labs(x = "氮添加水平", y = "植物生物量 (g)",
+       title = "两因素因子设计：氮×磷交互效应", fill = "磷添加") +
   theme_minimal() + theme(axis.text.x = element_text(angle = 15, hjust = 1))
 ```
 
@@ -290,11 +285,11 @@ ggplot(nested_summary, aes(x = reserve, y = mean_shannon)) +
 
 ### 核心概念
 
-- **总体（Population）**：你想研究的全部个体或单元的集合。
-- **样本（Sample）**：从总体中实际采集数据的单元子集。
-- **抽样框（Sampling Frame）**：列出所有抽样单元的名录或地图。
-- **抽样误差**：因样本无法完全代表总体而产生，可控制但不可避免。
-- **非抽样误差**：由测量错误、记录错误、缺失数据等引起，应尽量避免。
+- 总体（Population）：你想研究的全部个体或单元的集合。
+- 样本（Sample）：从总体中实际采集数据的单元子集。
+- 抽样框（Sampling Frame）：列出所有抽样单元的名录或地图。
+- 抽样误差：因样本无法完全代表总体而产生，可控制但不可避免。
+- 非抽样误差：由测量错误、记录错误、缺失数据等引起，应尽量避免。
 
 ### 常用抽样方法
 
@@ -312,12 +307,18 @@ ggplot(nested_summary, aes(x = reserve, y = mean_shannon)) +
 
 ```r
 library(pwr)
+
+# 比较两组均值，检测中等效应量 d = 0.5
 pwr.t.test(d = 0.5, sig.level = 0.05, power = 0.80, type = "two.sample")
-# 每组需要 n = 64
+# 结果：每组需要 n = 64
+
+# 检测相关系数 r = 0.3
 pwr.r.test(r = 0.3, sig.level = 0.05, power = 0.80)
-# 需要 n = 85
+# 结果：需要 n = 85
+
+# 多组比较（ANOVA），k = 4 组，f = 0.25
 pwr.anova.test(k = 4, f = 0.25, sig.level = 0.05, power = 0.80)
-# 每组需要 n = 52
+# 结果：每组需要 n = 52
 ```
 
 ### 空间自相关与采样设计
@@ -329,6 +330,7 @@ pwr.anova.test(k = 4, f = 0.25, sig.level = 0.05, power = 0.80)
 ```r
 library(gstat)
 library(sp)
+
 set.seed(2027)
 spatial_data <- tibble(
   x = runif(50, 0, 100), y = runif(50, 0, 100),
@@ -338,13 +340,14 @@ spatial_data <- tibble(
 coordinates(spatial_data) <- ~x + y
 variogram_model <- variogram(soc ~ 1, data = spatial_data, cutoff = 40)
 plot(variogram_model)
+# 距离接近0时变异接近0 = 存在空间自相关
 ```
 
 ## 生态学专项采样方法
 
 ### 植物群落调查：样方法
 
-样方法是最经典的植物群落调查方法。
+样方法是最经典的植物群落调查方法，通过在样地中设置固定面积的样方来调查植物组成。
 
 ```r
 set.seed(2027)
@@ -368,12 +371,15 @@ print(quadrat_data, width = Inf)
 M <- 30  # 第一次捕获并标记的个体数
 C <- 25  # 第二次捕获的个体总数
 R <- 8   # 第二次捕获中带标记的个体数
+
 N_hat <- (M * C) / R
 cat("估计的种群大小：", round(N_hat), "只\n")
 var_N <- (M^2 * C * (C - R)) / (R^3)
 se_N <- sqrt(var_N)
 cat("标准误：", round(se_N), "只\n")
 cat("95% CI：", round(N_hat - 1.96 * se_N), "~", round(N_hat + 1.96 * se_N), "只\n")
+
+# Chapman 修正（对小样本更准确）
 N_chapman <- ((M + 1) * (C + 1)) / (R + 1)
 cat("Chapman修正估计：", round(N_chapman), "只\n")
 ```
@@ -398,10 +404,6 @@ print(camera_data)
 ```
 
 ## 数据采集的质量控制
-
-### 为什么要质量控制？
-
-"垃圾进，垃圾出"——如果采集的数据本身存在偏差、遗漏或错误，后续的清洗和分析都无法弥补。
 
 ### 质量控制的核心措施
 
@@ -442,6 +444,7 @@ repeat_measurements <- tibble(
   true_value = rep(seq(45, 54, length.out = 10), each = 3)
 ) |>
   mutate(error = measured_value - true_value)
+
 measurement_bias <- repeat_measurements |>
   group_by(observer) |>
   summarise(mean_error = mean(error), sd_error = sd(error), max_error = max(abs(error)), .groups = "drop")
@@ -456,7 +459,7 @@ print(measurement_bias)
 field_qc <- function(data) {
   range_check <- data |>
     mutate(ph_out_of_range = soil_pH < 3 | soil_pH > 10,
-      moisture_out_of_range = soil_moisture_pct < 0 | soil_moisture_pct > 100)
+           moisture_out_of_range = soil_moisture_pct < 0 | soil_moisture_pct > 100)
   cat("pH超范围记录：", sum(range_check$ph_out_of_range), "条\n")
   cat("含水量超范围记录：", sum(range_check$moisture_out_of_range), "条\n")
 }
@@ -519,13 +522,13 @@ c) 五点取样法属于系统抽样吗？
 假设你的研究课题是"氮沉降对亚热带人工林土壤酸化进程的影响"：
 
 a) 列出你的研究需要采集哪些变量
-b) 设计一个合理的采样方案（重复数、采样尺度，时间频率）
+b) 设计一个合理的采样方案（重复数、采样尺度、时间频率）
 c) 创建一个数据记录表模板
 d) 列出需要记录的元数据信息
 
 **练习 5：样本量估算**
 
-假设你想研究马尾松和红锥混交林中两种树的胸径（DBH）差异，预期效应量为 5cm（处理组均值约25cm，对照组约20cm），估计标准差约为8cm。在 alpha = 0.05 下达到 80% 统计功效。使用 R 中的 pwr 包计算每组需要的最小样本量，并讨论实际操作中应该增加多少重复数以应对样本损耗。
+假设你想研究马尾松和红锥混交林中两种树的胸径（DBH）差异，预期效应量为 5cm（处理组均值约25cm，对照组约20cm），估计标准差约为8cm。在 α = 0.05 下达到 80% 统计功效。使用 R 中的 pwr 包计算每组需要的最小样本量，并讨论实际操作中应该增加多少重复数以应对样本损耗。
 
 **练习 6：标记重捕数据分析**
 
@@ -539,8 +542,8 @@ d) 列出需要记录的元数据信息
 
 如果你想研究以下生态学问题，应该选择哪种实验设计？为什么？
 
-a) 不同氮肥类型对马尾松幼苗生长的影响，实验在温室进行，盆栽条件均一
-b) 不同坡位对土壤有机碳的影响，同时想比较有机肥和化肥的效应
+a) 不同氮肥类型（有机肥 vs 化肥 vs 对照）对马尾松幼苗生长的影响，实验在温室进行，盆栽条件均一
+b) 不同坡位（上坡、中坡、下坡）对土壤有机碳的影响，同时想比较有机肥和化肥的效应
 c) 灌溉频率和树种对人工林生产力的影响，其中灌溉需要整个地块为单位处理，而树种可以在地块内随机分配
 d) 从保护区到人类干扰区的物种多样性梯度变化，每个保护区-干扰区作为一个研究单元
 
