@@ -23,6 +23,8 @@ jobs:
       - name: Install R
         run: |
           brew install --cask r
+          # 安装 Quarto 需要的 R 包
+          /Library/Frameworks/R.framework/Resources/Rscript -e 'install.packages(c("knitr", "rmarkdown"), repos="https://cloud.r-project.org", quiet=TRUE)'
 
       # 设置 Conda 环境
       - name: Set up Conda
