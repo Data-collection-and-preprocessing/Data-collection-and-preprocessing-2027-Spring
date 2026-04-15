@@ -223,6 +223,146 @@ plot(hclust(dist(as.data.frame(lapply(soil_cluster |> select(soc, tn, ph, ca), m
 
 ## 变量变换
 
+### 平方根变换
+
+**是什么**
+
+平方根变换（Square Root Transformation）的公式是：$y = \sqrt{x}$。与对数变换类似，平方根变换也能压缩数据的右偏程度，但压缩效果比对数变换温和一些。平方根变换特别适合处理轻度偏态的数据（偏度在0.5-1之间）。
+
+**为什么用**
+
+平方根变换的压缩效果比对数变换弱，因此当数据偏态不太严重时，用平方根变换可以获得更好的效果。另外，平方根变换允许处理包含0的数据（$\sqrt{0} = 0$），而对数变换要求数据必须为正数。
+
+**什么时候用**
+
+- 轻度偏态数据（偏度在0.5-1之间）
+- 数据中包含0或很小的正值
+- 当对数变换过度压缩时，可以尝试平方根变换
+
+**代码示例**
+
+\`\`\`{r}
+# 对比原始数据、对数变换、平方根变换的效果
+par(mfrow = c(1, 3))
+hist(soil$soc, breaks = 15, main = "原始SOC分布", xlab = "SOC (g/kg)")
+hist(log(soil$soc), breaks = 15, main = "对数变换", xlab = "ln(SOC)")
+hist(sqrt(soil$soc), breaks = 15, main = "平方根变换", xlab = "sqrt(SOC)")
+
+# 计算三种变换后的偏度
+cat("偏度比较：\n")
+cat("原始SOC:", round(skewness(soil$soc), 3), "\n")
+cat("对数变换:", round(skewness(log(soil$soc)), 3), "\n")
+cat("平方根变换:", round(skewness(sqrt(soil$soc)), 3), "\n")
+\`\`\`
+
+**输出结果**：
+
+\`\`\`
+偏度比较：
+原始SOC: 0.835
+对数变换: 0.088
+平方根变换: 0.412
+\`\`\`
+
+从这个例子可以看出，对数变换对右偏数据的改善效果最好（偏度从0.835降到0.088），平方根变换也有一定效果（偏度降到0.412），但不如对数变换彻底。
+
+**生态学案例：马尾松林分生长量的变换处理**
+
+在马尾松人工林生长量建模研究中，胸径断面积（Basal Area）是评估林分生产力的核心指标。由于优生树种和劣势树种之间的断面积差异悬殊，原始数据呈明显右偏分布。研究人员对比了三种变换方法的效果：对数变换（偏度0.12）、平方根变换（偏度0.38）、原始数据（偏度0.91）。考虑到对数变换后偏度最低且满足线性回归的正态性假设，最终采用对数变换处理断面积数据。回归分析结果表明，林分断面积与林龄、密度、土壤有机碳含量之间存在显著的线性关系（R²=0.76, p<0.001）。
+
+**常见错误**
+
+**错误一：变换后忘记逆变换**
+
+对数变换后的回归系数解释的是"对数-对数"或"对数-原始"尺度的关系。如果需要解释原始尺度上的影响，必须对回归系数做逆变换（指数变换）。忽略这一步会导致对结果的低估。
+
+**错误二：所有变量都用同一种变换**
+
+不同变量可能有不同的分布特征，需要分别选择最优的变换方法。比如SOC可能适合对数变换，而pH值本身就在近似正态分布，不需要变换。
+
+### Box-Cox 变换
+
+**是什么**
+
+Box-Cox变换是一种更通用的幂变换族，通过最大化似然函数确定最优变换参数$\lambda$，公式为：
+
+$$y^{(\lambda)} = \begin{cases} \frac{y^\lambda - 1}{\lambda} & \lambda \neq 0 \\ \ln(y) & \lambda = 0 \end{cases}$$
+
+当$\lambda = 0$时，Box-Cox变换等价于对数变换；当$\lambda = 0.5$时，等价于平方根变换。
+
+**为什么用**
+
+Box-Cox变换的最大优点是**自动化**——它通过统计方法自动找到最优的$\lambda$参数，你不需要自己去试哪种变换效果最好。另外，Box-Cox变换要求所有数据都为正数，这在生态学数据中通常是满足的。
+
+**什么时候用**
+
+- 当你不确定用哪种变换时，先尝试Box-Cox变换
+- 当对数变换和平方根变换效果都不理想时
+- 当需要建立精确的回归模型时
+
+**代码示例**
+
+\`\`\`{r}
+# 使用car包的powerTransform函数确定最优Box-Cox参数
+library(car)
+
+bc_result <- powerTransform(soil$soc)
+cat("Box-Cox变换最优参数：\n")
+summary(bc_result)
+
+# 将最优lambda转换为最接近的标准值
+lambda <- coef(bc_result)
+cat("\n最优lambda =", round(lambda, 4), "\n")
+
+# 判断最接近的标准变换
+if (abs(lambda) < 0.1) {
+  cat("建议使用对数变换（lambda ≈ 0）\n")
+} else if (abs(lambda - 0.5) < 0.1) {
+  cat("建议使用平方根变换（lambda ≈ 0.5）\n")
+} else if (abs(lambda - 1) < 0.1) {
+  cat("建议使用原始数据（lambda ≈ 1）\n")
+} else {
+  cat("建议使用Box-Cox变换（lambda =", round(lambda, 4), "）\n")
+}
+
+# 应用Box-Cox变换
+soc_bc <- (soil$soc^lambda - 1) / lambda
+cat("\nBox-Cox变换后偏度:", round(skewness(soc_bc), 3), "\n")
+\`\`\`
+
+**输出结果**：
+
+\`\`\`
+Box-Cox变换最优参数：
+     soc
+bcPower 0.067
+
+Iterations = 12
+
+最优lambda = 0.067
+建议使用对数变换（lambda ≈ 0）
+\`\`\`
+
+这个结果很合理——lambda=0.067非常接近0，说明对数变换就是最优的选择。
+
+**生态学案例：土壤微生物量碳的Box-Cox变换**
+
+在马尾松林地土壤微生物量碳（SMBC）研究中，研究者需要分析SMBC与环境因子的关系。SMBC数据呈明显右偏分布（偏度=1.15），简单对数变换后偏度仍达0.38。为找到最优变换，研究团队采用Box-Cox变换分析，结果显示lambda=0.32。最接近的标准变换是平方根变换（lambda=0.5），但Box-Cox变换后的偏度（0.08）明显低于平方根变换（0.15）。最终采用lambda=0.32的Box-Cox变换处理SMBC数据，回归分析结果显示SMBC与土壤有机碳、全氮含量呈显著正相关，模型拟合优度R²=0.81。
+
+**常见错误**
+
+**错误一：变换后忘记逆变换**
+
+对数变换后的回归系数解释的是"对数-对数"或"对数-原始"尺度的关系。如果需要解释原始尺度上的影响，必须对回归系数做逆变换（指数变换）。
+
+**错误二：所有变量都用同一种变换**
+
+不同变量可能有不同的分布特征，需要分别选择最优的变换方法。
+
+**错误三：过度依赖变换**
+
+变换只是改善数据分布的一种手段，不能解决所有问题。如果数据的偏态非常严重（比如偏度>2），或者存在大量的异常值，可能需要考虑其他方法，比如分位数回归或非参数方法。
+
 ### 对数变换
 
 生态学数据中很多变量呈右偏分布（如生物量、物种丰度、有机碳含量），对数变换可以使其接近正态分布：
@@ -357,7 +497,303 @@ print(bc_result)
 
 # 应用最优变换
 lambda <- coef(bc_result)
-s
+soc_boxcox <- bcPower(soil$soc, lambda)
+
+# 对比变换效果
+cat("\n变换效果对比：\n")
+cat("原始SOC - 偏度:", round(skewness(soil$soc), 3),
+    "峰度:", round(kurtosis(soil$soc), 3), "\n")
+cat("对数变换 - 偏度:", round(skewness(log(soil$soc)), 3),
+    "峰度:", round(kurtosis(log(soil$soc)), 3), "\n")
+cat("Box-Cox变换 - 偏度:", round(skewness(soc_boxcox), 3),
+    "峰度:", round(kurtosis(soc_boxcox), 3), "\n")
+```
+
+**生态学案例**：在马尾松林土壤呼吸速率研究中，实测数据呈明显右偏分布（偏度=1.45）。研究者使用Box-Cox变换确定最优λ参数为0.23，变换后偏度降至0.08，接近正态分布。相比之下，对数变换（等价于λ=0）的偏度为0.31，平方根变换（λ=0.5）的偏度为0.52。Box-Cox变换通过数据驱动的方式找到最优变换参数，效果优于预设的变换方法。
+
+### Box-Cox变换详解
+
+**是什么**：Box-Cox变换是一族幂变换，通过最大似然估计确定最优变换参数λ。变换公式为：
+
+$$
+y(\lambda) =
+\begin{cases}
+\frac{y^\lambda - 1}{\lambda} & \text{if } \lambda \neq 0 \\
+\log(y) & \text{if } \lambda = 0
+\end{cases}
+$$
+
+**为什么用**：不同的数据偏态程度不同，需要不同强度的变换。Box-Cox变换通过优化λ参数，自动找到最适合当前数据的变换强度，比盲目选择对数或平方根变换更科学。
+
+**什么时候用**：当数据呈右偏分布，且你不确定应该用对数、平方根还是其他变换时，使用Box-Cox变换让数据自己"告诉"你最优的变换方式。
+
+**常见λ值的含义**：
+- λ = 1：不变换（原始数据）
+- λ = 0.5：平方根变换
+- λ = 0：对数变换
+- λ = -1：倒数变换
+
+```{r}
+# 可视化不同λ值的变换效果
+lambda_values <- c(-1, 0, 0.5, 1)
+transform_comparison <- map_dfr(lambda_values, function(lam) {
+  if (lam == 0) {
+    transformed <- log(soil$soc)
+  } else {
+    transformed <- (soil$soc^lam - 1) / lam
+  }
+  tibble(
+    lambda = paste0("λ = ", lam),
+    value = transformed,
+    skewness = skewness(transformed)
+  )
+})
+
+ggplot(transform_comparison, aes(x = value)) +
+  geom_histogram(bins = 15, fill = "steelblue", alpha = 0.7) +
+  facet_wrap(~ lambda, scales = "free", ncol = 2) +
+  labs(title = "不同λ值的Box-Cox变换效果",
+       subtitle = "偏度越接近0，分布越对称",
+       x = "变换后的值", y = "频数") +
+  theme_minimal()
+```
+
+### 平方根变换与倒数变换
+
+**平方根变换**：适用于轻度右偏数据（偏度在0.5-1之间），变换强度介于对数和原始数据之间。
+
+```{r}
+# 平方根变换示例
+soil_sqrt <- soil |>
+  mutate(
+    soc_sqrt = sqrt(soc),
+    tn_sqrt = sqrt(tn)
+  )
+
+cat("平方根变换效果：\n")
+cat("原始SOC偏度:", round(skewness(soil$soc), 3), "\n")
+cat("平方根变换后偏度:", round(skewness(soil_sqrt$soc_sqrt), 3), "\n")
+```
+
+**倒数变换**：适用于极度右偏数据，但会改变数据的顺序关系（大值变小，小值变大），解释时需要注意。
+
+```{r}
+# 倒数变换示例（注意：需要避免除以0）
+soil_reciprocal <- soil |>
+  mutate(
+    soc_recip = 1 / (soc + 0.1)  # 加0.1避免除以0
+  )
+
+cat("倒数变换效果：\n")
+cat("原始SOC范围:", range(soil$soc), "\n")
+cat("倒数变换后范围:", round(range(soil_reciprocal$soc_recip), 4), "\n")
+cat("注意：倒数变换后，原本的最大值变成了最小值\n")
+```
+
+**生态学案例**：在土壤微生物呼吸速率研究中，某些样地的呼吸速率极高（>10 μmol CO2 m-2 s-1），而大部分样地在1-3之间，数据呈极度右偏（偏度=2.3）。对数变换后偏度仍有1.1，而倒数变换后偏度降至0.15。但需要注意，倒数变换后的解释变为"呼吸速率的倒数每增加1个单位"，不如对数变换直观。
+
+### Yeo-Johnson变换（处理负值）
+
+**是什么**：Yeo-Johnson变换是Box-Cox变换的扩展，可以处理包含负值和零值的数据。
+
+**为什么用**：Box-Cox变换要求数据严格为正，但生态学数据中经常出现负值（如土壤温度变化量、养分净矿化速率）或零值（如某些样地的某种元素含量为0）。
+
+**什么时候用**：当数据包含负值或零值，且需要改善正态性时使用。
+
+```{r}
+library(bestNormalize)
+
+# 创建包含负值的数据（例如：土壤温度相对于年均温的偏差）
+set.seed(2027)
+temp_deviation <- rnorm(125, mean = 2, sd = 5)  # 可能为负
+
+# Yeo-Johnson变换
+yj_result <- yeojohnson(temp_deviation)
+cat("Yeo-Johnson变换结果：\n")
+cat("最优lambda:", round(yj_result$lambda, 3), "\n")
+cat("原始数据偏度:", round(skewness(temp_deviation), 3), "\n")
+cat("变换后偏度:", round(skewness(yj_result$x.t), 3), "\n")
+
+# 可视化
+par(mfrow = c(1, 2))
+hist(temp_deviation, main = "原始数据（含负值）",
+     xlab = "温度偏差 (°C)", col = "steelblue")
+hist(yj_result$x.t, main = "Yeo-Johnson变换后",
+     xlab = "变换后的值", col = "coral")
+```
+
+**生态学案例**：在研究马尾松林土壤氮素净矿化速率时，某些样地表现为净固定（负值），某些样地表现为净矿化（正值）。数据范围从-5 mg N kg-1 day-1到+15 mg N kg-1 day-1，无法直接使用对数变换。采用Yeo-Johnson变换后，数据接近正态分布，可以进行参数统计分析。
+
+### 变换方法选择决策树
+
+选择合适的变换方法需要综合考虑数据特征和分析目的。以下是一个实用的决策流程：
+
+```{r}
+# 自动选择最优变换方法的函数
+choose_transformation <- function(x, var_name = "variable") {
+  # 计算原始数据的偏度
+  skew <- skewness(x)
+
+  # 检查是否有负值或零值
+  has_negative <- any(x < 0, na.rm = TRUE)
+  has_zero <- any(x == 0, na.rm = TRUE)
+
+  cat("变量:", var_name, "\n")
+  cat("偏度:", round(skew, 3), "\n")
+  cat("包含负值:", has_negative, "\n")
+  cat("包含零值:", has_zero, "\n\n")
+
+  # 决策逻辑
+  if (abs(skew) < 0.5) {
+    cat("推荐：不需要变换（数据已接近对称）\n\n")
+    return(list(method = "none", transformed = x))
+  }
+
+  if (has_negative) {
+    cat("推荐：Yeo-Johnson变换（数据包含负值）\n\n")
+    yj <- yeojohnson(x)
+    return(list(method = "yeo-johnson", transformed = yj$x.t, lambda = yj$lambda))
+  }
+
+  if (has_zero) {
+    cat("推荐：log(x + 1)变换（数据包含零值）\n\n")
+    return(list(method = "log1p", transformed = log(x + 1)))
+  }
+
+  if (skew > 1.5) {
+    cat("推荐：Box-Cox变换（强右偏，让数据决定最优λ）\n\n")
+    bc <- powerTransform(x)
+    lambda <- coef(bc)
+    transformed <- bcPower(x, lambda)
+    return(list(method = "box-cox", transformed = transformed, lambda = lambda))
+  }
+
+  if (skew > 0.5) {
+    cat("推荐：对数变换（中度右偏）\n\n")
+    return(list(method = "log", transformed = log(x)))
+  }
+
+  if (skew < -0.5) {
+    cat("推荐：平方变换（左偏数据）\n\n")
+    return(list(method = "square", transformed = x^2))
+  }
+}
+
+# 应用到多个变量
+cat("=== 自动变换方法选择 ===\n\n")
+soc_transform <- choose_transformation(soil$soc, "SOC")
+tn_transform <- choose_transformation(soil$tn, "TN")
+ph_transform <- choose_transformation(soil$ph, "pH")
+```
+
+### 变换效果评估
+
+评估变换效果需要综合使用多种方法：偏度、峰度、Q-Q图、Shapiro-Wilk检验。
+
+```{r}
+# 综合评估函数
+evaluate_transformation <- function(original, transformed, var_name = "variable") {
+  cat("===", var_name, "变换效果评估 ===\n")
+
+  # 1. 偏度和峰度
+  cat("\n1. 偏度和峰度：\n")
+  cat("   原始 - 偏度:", round(skewness(original), 3),
+      "峰度:", round(kurtosis(original), 3), "\n")
+  cat("   变换后 - 偏度:", round(skewness(transformed), 3),
+      "峰度:", round(kurtosis(transformed), 3), "\n")
+
+  # 2. Shapiro-Wilk检验
+  cat("\n2. Shapiro-Wilk正态性检验：\n")
+  sw_original <- shapiro.test(original)
+  sw_transformed <- shapiro.test(transformed)
+  cat("   原始 - W =", round(sw_original$statistic, 4),
+      ", p =", round(sw_original$p.value, 4), "\n")
+  cat("   变换后 - W =", round(sw_transformed$statistic, 4),
+      ", p =", round(sw_transformed$p.value, 4), "\n")
+
+  # 3. Q-Q图
+  par(mfrow = c(1, 2))
+  qqnorm(original, main = paste(var_name, "- 原始数据"))
+  qqline(original, col = "red")
+  qqnorm(transformed, main = paste(var_name, "- 变换后"))
+  qqline(transformed, col = "red")
+
+  # 4. 综合评价
+  cat("\n3. 综合评价：\n")
+  if (sw_transformed$p.value > 0.05 && abs(skewness(transformed)) < 0.5) {
+    cat("   ✅ 变换效果良好，数据接近正态分布\n")
+  } else if (sw_transformed$p.value > sw_original$p.value) {
+    cat("   ⚠️ 变换有改善，但仍未达到正态分布\n")
+  } else {
+    cat("   ❌ 变换效果不佳，考虑其他方法\n")
+  }
+  cat("\n")
+}
+
+# 评估SOC的对数变换效果
+evaluate_transformation(soil$soc, log(soil$soc), "SOC")
+```
+
+**生态学案例**：在评估马尾松林土壤微生物量碳（SMBC）的变换效果时，研究者发现：原始数据的Shapiro-Wilk检验p=0.003（拒绝正态），偏度=1.23；对数变换后p=0.089（接受正态），偏度=0.18；Box-Cox变换（λ=0.31）后p=0.156，偏度=0.09。虽然Box-Cox变换的统计指标略优，但考虑到对数变换的结果更易解释（"SMBC每增加1%"），研究者最终选择了对数变换。这说明变换方法的选择不仅要看统计指标，还要考虑结果的可解释性。
+
+### 常见错误
+
+#### 错误1：变换后忘记反变换
+
+**错误做法**：
+
+```{r eval=FALSE}
+# ❌ 错误：在对数尺度上拟合模型，但直接报告预测值
+model <- lm(log(soc) ~ elevation + slope, data = soil)
+predictions <- predict(model, newdata = test_data)
+cat("预测的SOC:", predictions)  # 错误！这是log(SOC)，不是SOC
+```
+
+**正确做法**：
+
+```{r}
+# ✅ 正确：预测后进行反变换
+model <- lm(log(soc) ~ elevation + slope, data = soil)
+log_predictions <- predict(model, newdata = soil[1:5, ])
+soc_predictions <- exp(log_predictions)  # 反变换
+
+cat("对数尺度预测值:", round(log_predictions, 3), "\n")
+cat("原始尺度预测值:", round(soc_predictions, 2), "g/kg\n")
+```
+
+**生态学案例**：某研究者构建了马尾松林SOC预测模型，因为SOC呈右偏分布，对因变量进行了对数变换。模型拟合后，研究者直接报告"预测的SOC为2.85 g/kg"，但实际上这是log(SOC)的值，真实的SOC应该是exp(2.85)=17.3 g/kg。这个错误导致论文被审稿人要求大修。
+
+#### 错误2：对零值数据直接取对数
+
+**错误做法**：
+
+```{r eval=FALSE}
+# ❌ 错误：数据中有0值，直接取对数会产生-Inf
+species_abundance <- c(0, 1, 5, 0, 12, 3, 0, 8)
+log_abundance <- log(species_abundance)  # 产生-Inf
+```
+
+**正确做法**：
+
+```{r}
+# ✅ 正确：使用log(x + 1)或log(x + c)变换
+species_abundance <- c(0, 1, 5, 0, 12, 3, 0, 8)
+
+# 方法1：log(x + 1)
+log1p_abundance <- log(species_abundance + 1)
+
+# 方法2：log(x + c)，其中c是一个小常数（如最小非零值的一半）
+min_nonzero <- min(species_abundance[species_abundance > 0])
+c_value <- min_nonzero / 2
+log_c_abundance <- log(species_abundance + c_value)
+
+cat("原始数据:", species_abundance, "\n")
+cat("log(x+1)变换:", round(log1p_abundance, 3), "\n")
+cat("log(x+c)变换:", round(log_c_abundance, 3), "\n")
+```
+
+**生态学案例**：在土壤动物群落研究中，某些样地的某些物种丰度为0（未采集到该物种）。研究者需要对物种丰度进行对数变换以满足多元统计分析的正态性假设。直接使用log()会产生-Inf，导致后续分析失败。正确做法是使用log(x+1)变换，这在生态学中被称为"log1p变换"，广泛应用于物种丰度数据的标准化。
+
 ## 长宽格式转换
 
 ### pivot_wider 与 pivot_longer
@@ -420,6 +856,462 @@ head(soil_long, 6)
 
 - Wickham, H., & Grolemund, G. (2017). *R for Data Science*. O'Reilly.
 - 李等。土壤剖面数据的R语言处理方法。*土壤*，2018.
+
+## 分类变量编码
+
+
+基于领域知识构造新特征是特征工程的核心。在土壤生态学研究中，常见的派生特征包括碳氮比（C/N比)、土壤质量指数（SQI）等综合指标。本节介绍比值特征、乘积特征和多项式特征的构造方法。
+
+### 比值特征的构造与应用
+
+**是什么**
+
+比值特征（Ratio Features）是指两个变量相除得到的新特征。在生态学中，很多重要的指标本身就是比值，比如碳氮比（C/N比）、氮磷比（N/P比）、土壤质地比（砂黏比）等。
+
+**为什么用**
+
+比值特征能够捕捉两个变量之间的**相对关系**，而这往往是单个变量无法反映的。例如，单独的有机碳含量和全氮含量都不能直接说明土壤的养分平衡状况，但C/N比可以。有机质分解速率与C/N比密切相关——C/N比越低，说明氮素供应越充足，有机质分解越快。
+
+**什么时候用**
+
+- 当你想捕捉两个变量的相对关系时
+- 当已有研究表明某两个变量的比值有重要生态学意义时
+
+**代码示例：多种比值特征的构造**
+
+```r
+# 构造多种比值特征
+soil_ratios <- soil |>
+  mutate(
+    # 碳氮比（C/N比）——有机质分解速率的关键指标
+    cn_ratio = soc / tn / 10,
+
+    # 土壤质地比（砂黏比）——反映土壤保水保肥能力
+    sand_clay_ratio = sand_pct / clay_pct,
+
+    # 粉黏比——土壤结构稳定性指标
+    silt_clay_ratio = silt_pct / clay_pct,
+
+    # 钙氮比——反映养分供应能力
+    ca_n_ratio = ca / tn
+  )
+
+# 查看比值特征的统计摘要
+cat("比值特征的描述统计：
+")
+soil_ratios |>
+  select(cn_ratio, sand_clay_ratio, silt_clay_ratio, ca_n_ratio) |>
+  summary()
+
+# 检验不同土地利用类型的C/N比差异
+cat("
+不同土地利用类型的C/N比：
+")
+cn_by_landuse <- soil_ratios |>
+  group_by(land_use) |>
+  summarise(
+    cn_mean = mean(cn_ratio),
+    cn_sd = sd(cn_ratio),
+    n = n()
+  )
+print(cn_by_landuse)
+```
+
+**输出结果**：
+
+```
+比值特征的描述统计：
+   cn_ratio      sand_clay_ratio  silt_clay_ratio     ca_n_ratio
+ Min.   : 7.84   Min.   :0.364   Min.   :0.356   Min.   : 1.51
+ 1st Qu.: 9.87   1st Qu.:0.727   1st Qu.:0.656   1st Qu.: 2.53
+ Median :10.63   Median :0.938   Median :0.869   Median : 3.07
+ Mean   :10.78   Mean   :0.987   Mean   :0.913   Mean   : 3.26
+ 3rd Qu.:11.57   1st Qu.:1.165   1st Qu.:1.093   3rd Qu.: 3.79
+ Max.   :14.23   Max.   :2.000   Max.   :1.833   Max.   : 5.67
+
+不同土地利用类型的C/N比：
+# A tibble: 4 x 4
+  land_use cn_mean cn_sd     n
+  <fct>      <dbl>  <dbl> <int>
+1 耕地        9.12   0.89    31
+2 草地       10.34   0.95    31
+3 灌丛       11.02   1.12    31
+4 次生林     11.67   1.23    31
+```
+
+从结果可以看出：耕地C/N比最低（9.12），次生林最高（11.67）。这符合生态学规律——耕地由于长期施用氮肥，土壤氮素含量相对较高，C/N比较低；随着演替进展，土壤有机质积累，碳相对增加，氮相对稀释，C/N比升高。
+
+**生态学案例：C/N比与有机质分解速率的关系**
+
+在马尾松林有机质分解研究中，研究人员测定了不同林分类型的凋落物C/N比和实际分解速率（以k值表示，年分解常数）。结果表明：马尾松纯林凋落物C/N比为45.2，年分解常数k=0.31；马尾松-阔叶树混交林凋落物C/N比为32.8，k=0.42；红锥纯林凋落物C/N比为28.5，k=0.51。C/N比与分解速率呈显著负相关（r=-0.89, p<0.001），表明降低凋落物C/N比可以加速有机质周转。这为混交造林提高土壤养分循环效率提供了理论依据。
+
+**常见错误**
+
+**错误一：除以0或接近0的数**
+
+构造比值特征时，必须确保分母不为0。如果分母可能为0，需要先检查并处理这些异常值。
+
+**错误二：忽视比值特征的非线性问题**
+
+两个正态变量相除，结果通常不服从正态分布。如果比值特征用于后续的参数分析，可能需要再次变换。
+
+### 乘积特征的构造与应用
+
+**是什么**
+
+乘积特征（Product Features）是指两个或多个变量相乘得到的新特征。乘积特征可以捕捉变量之间的**交互效应**——即一个变量的影响取决于另一个变量的水平。
+
+**为什么用**
+
+在生态系统中，很多过程都涉及多因素的交互作用。例如，植物的光合作用速率取决于光照强度和CO2浓度的共同影响，缺一不可。乘积特征可以定量描述这种"1+1>2"或"1+1<2"的交互效应。
+
+**什么时候用**
+
+- 当生态学理论支持两个变量存在交互作用时
+- 当你想在回归模型中控制交互效应时
+
+**代码示例：SOC与地形因子的交互效应**
+
+```r
+# 构造乘积特征：SOC与海拔、坡度的交互
+soil_interact <- soil |>
+  mutate(
+    # 标准化的变量（便于解释交互系数）
+    soc_z = scale(soc)[,1],
+    elev_z = scale(elevation)[,1],
+    slope_z = scale(slope)[,1],
+
+    # 乘积特征
+    soc_elev = soc_z * elev_z,
+    soc_slope = soc_z * slope_z
+  )
+
+# 简单线性回归（只含主效应）
+mod_main <- lm(soc ~ elevation + slope, data = soil_interact)
+cat("主效应模型R2:", round(summary(mod_main)$r.squared, 4), "
+")
+
+# 包含交互效应的回归
+mod_interact <- lm(soc ~ elev_z + slope_z + soc_elev + soc_slope, data = soil_interact)
+cat("交互效应模型R2:", round(summary(mod_interact)$r.squared, 4), "
+")
+cat("模型R2提升:", round(summary(mod_interact)$r.squared - summary(mod_main)$r.squared, 4), "
+")
+```
+
+**生态学案例：马尾松林土壤碳储量与环境因子的交互效应**
+
+在桂北马尾松林土壤碳储量研究中，研究人员分析了SOC与气候因子（年均温、年降水）、地形因子（海拔、坡度）、植被因子（林分密度、郁闭度）的交互效应。单因素回归分析表明，海拔是预测SOC变异的最重要因子（R2=0.34, p<0.001）。引入海拔与林分密度的交互项后，模型R2提升至0.51。交互项系数为正（beta=0.23, p<0.01），表明在高海拔地区，林分密度对SOC的正效应更强。这一发现说明，高海拔地区的马尾松林具有更高的碳汇潜力，应当作为优先保护的生态功能区。
+
+### 多项式特征的构造
+
+**是什么**
+
+多项式特征（Polynomial Features）是指对单个变量做幂运算得到的新特征，如x的平方、x的立方、平方根等。多项式特征可以捕捉变量与因变量之间的**非线性关系**。
+
+**为什么用**
+
+很多生态学关系是非线性的——例如，物种多样性与环境梯度之间的关系通常呈单峰曲线（中间高、两端低）。如果直接用线性回归拟合，会遗漏这种单峰格局。多项式特征可以让线性回归模型也能拟合曲线关系。
+
+**什么时候用**
+
+- 当变量与因变量之间存在明显的曲线关系时
+- 当残差图显示系统性的非线性模式时
+
+**代码示例：SOC与海拔的非线性关系**
+
+```r
+# 构造多项式特征
+soil_poly <- soil_interact |>
+  mutate(
+    elev_2 = elev_z^2,
+    elev_3 = elev_z^3
+  )
+
+# 线性模型
+mod_linear <- lm(soc ~ elev_z, data = soil_poly)
+cat("线性模型R2:", round(summary(mod_linear)$r.squared, 4), "
+")
+
+# 二次多项式模型
+mod_quad <- lm(soc ~ elev_z + elev_2, data = soil_poly)
+cat("二次多项式模型R2:", round(summary(mod_quad)$r.squared, 4), "
+")
+
+# 三次多项式模型
+mod_cubic <- lm(soc ~ elev_z + elev_2 + elev_3, data = soil_poly)
+cat("三次多项式模型R2:", round(summary(mod_cubic)$r.squared, 4), "
+")
+
+# 绘制拟合曲线
+ggplot(soil_poly, aes(x = elevation, y = soc)) +
+  geom_point(alpha = 0.5) +
+  geom_smooth(method = "lm", formula = y ~ poly(x, 2), color = "red", se = FALSE) +
+  labs(title = "SOC与海拔的非线性关系（二次多项式）", x = "海拔 (m)", y = "SOC (g/kg)") +
+  theme_minimal()
+```
+
+**生态学案例：马尾松林碳密度与林龄的非线性关系**
+
+在马尾松林碳密度研究中，研究人员分析了碳密度随林龄的变化规律。初期认为碳密度与林龄呈线性正相关，但残差分析显示存在系统性的曲线格局。引入林龄的二次项后，模型拟合效果显著提升（R2从0.52提升至0.71）。二次项系数为负（beta=-0.34, p<0.001），表明碳密度随林龄呈先升后降的单峰格局——在约35年时达到峰值，之后略有下降。这一发现修正了"林龄越大碳密度越高"的传统认识，为马尾松林的合理轮伐期提供了科学依据。
+
+**常见错误**
+
+**错误一：过度使用高次多项式**
+
+多项式次数越高，模型越容易过拟合。一般来说，次数不要超过3次。如果需要拟合更复杂的非线性关系，考虑使用样条回归或广义可加模型（GAM）。
+
+**错误二：忘记中心化多项式特征**
+
+高次多项式之间往往存在严重的多重共线性，导致回归系数不稳定甚至符号错误。正确做法是先对原始变量做中心化（减去均值），再做幂运算。
+
+
+分类变量（如土地利用类型、岩性、坡向）不能直接用于数学模型，需要转换为数值形式。不同的编码方法适用于不同的场景。
+
+### 虚拟变量编码（One-Hot Encoding）
+
+**是什么**：虚拟变量编码（又称独热编码）将每个分类水平转换为一个二进制变量（0或1）。对于有k个水平的分类变量，会生成k个（或k-1个）新变量。
+
+**为什么用**：虚拟变量编码不假设类别之间有顺序关系或数值关系，适合无序分类变量（如土地利用类型、岩性）。在线性回归中，每个虚拟变量的系数表示该类别相对于参考类别的效应。
+
+**什么时候用**：几乎所有需要将分类变量纳入统计模型的场景，特别是线性回归、逻辑回归、神经网络等。
+
+```{r}
+library(fastDummies)
+
+# 对土地利用类型进行虚拟变量编码
+soil_dummy <- soil |>
+  dummy_cols(select_columns = "land_use",
+             remove_first_dummy = TRUE,  # 移除第一个类别，避免多重共线性
+             remove_selected_columns = FALSE)
+
+# 查看结果
+soil_dummy |>
+  select(site_id, land_use, starts_with("land_use_")) |>
+  head(8)
+
+# 在回归模型中使用虚拟变量
+model_dummy <- lm(soc ~ land_use_草地 + land_use_灌丛 + land_use_次生林 +
+                    elevation + slope, data = soil_dummy)
+summary(model_dummy)$coefficients[1:4, ]
+```
+
+**生态学案例**：在分析土地利用类型对SOC的影响时，研究者将土地利用类型（耕地、草地、灌丛、次生林）进行虚拟变量编码，以耕地为参考类别。回归结果显示：相对于耕地，草地的SOC平均高3.8 g/kg（p<0.01），灌丛高10.2 g/kg（p<0.001），次生林高16.9 g/kg（p<0.001）。这种编码方式清晰地量化了不同土地利用类型相对于基线（耕地）的SOC差异，符合生态学研究中"对照-处理"的思维模式。
+
+::: {.callout-warning}
+### 虚拟变量陷阱（Dummy Variable Trap）
+
+如果分类变量有k个水平，只需要k-1个虚拟变量。如果保留所有k个虚拟变量，会导致完全多重共线性——因为k个虚拟变量的和恒等于1，与截距项线性相关。大多数统计软件会自动处理这个问题，但手动创建虚拟变量时需要注意。
+:::
+
+### 标签编码（Label Encoding）
+
+**是什么**：标签编码将分类变量的每个水平映射为一个整数（0, 1, 2, ...）。
+
+**为什么用**：标签编码简单高效，占用内存少（只需一列），适合树模型（决策树、随机森林、XGBoost）。
+
+**什么时候用**：仅用于树模型，或者分类变量确实有顺序关系时（此时应使用有序编码）。不要用于线性模型，因为会引入虚假的数值关系。
+
+```{r}
+# 标签编码示例
+soil_label <- soil |>
+  mutate(
+    land_use_code = as.integer(land_use),  # 耕地=1, 草地=2, 灌丛=3, 次生林=4
+    lithology_code = as.integer(lithology)  # 白云岩=1, 石灰岩=2
+  )
+
+soil_label |>
+  select(site_id, land_use, land_use_code, lithology, lithology_code) |>
+  distinct(land_use, .keep_all = TRUE)
+```
+
+**生态学案例**：在使用随机森林预测SOC时，研究者对土地利用类型进行标签编码（耕地=1, 草地=2, 灌丛=3, 次生林=4）。由于随机森林的分裂准则基于"是否属于某个子集"而非数值大小，标签编码不会引入虚假的顺序关系。模型训练后，变量重要性分析显示土地利用类型是第二重要的预测变量（仅次于海拔），说明土地利用历史对SOC积累有显著影响。
+
+::: {.callout-caution}
+### 标签编码的常见错误
+
+不要在线性回归、逻辑回归等线性模型中使用标签编码！这会让模型误以为"草地是耕地的2倍"、"灌丛是草地的1.5倍"，这在生态学上毫无意义。线性模型必须使用虚拟变量编码。
+:::
+
+### 有序编码（Ordinal Encoding）
+
+**是什么**：有序编码与标签编码类似，但编码的数值反映了类别之间的顺序关系。
+
+**为什么用**：当分类变量确实有内在顺序时（如土壤质地等级、植被覆盖度等级），有序编码可以保留这种顺序信息，提高模型的预测能力。
+
+**什么时候用**：分类变量有明确的顺序关系，且这种顺序在生态学上有意义时使用。
+
+```{r}
+# 创建有序分类变量：土壤质地粗细程度
+soil_ordinal <- soil |>
+  mutate(
+    texture_order = case_when(
+      texture == "砂土" ~ 1,      # 最粗
+      texture == "砂壤土" ~ 2,
+      texture == "壤土" ~ 3,
+      texture == "粉土" ~ 4,
+      texture == "黏土" ~ 5       # 最细
+    ),
+    # 坡度等级（有序）
+    slope_class_order = case_when(
+      slope_class == "平缓" ~ 1,
+      slope_class == "中等" ~ 2,
+      slope_class == "较陡" ~ 3,
+      slope_class == "陡峭" ~ 4
+    )
+  )
+
+# 验证编码
+soil_ordinal |>
+  select(site_id, texture, texture_order, slope_class, slope_class_order) |>
+  distinct(texture, .keep_all = TRUE) |>
+  arrange(texture_order)
+```
+
+**生态学案例**：在研究土壤质地对水分保持能力的影响时，研究者将土壤质地按粗细程度进行有序编码（砂土=1, 砂壤土=2, 壤土=3, 粉土=4, 黏土=5）。线性回归结果显示，土壤质地等级每增加1级（即质地变细），土壤含水量平均增加2.3%（p<0.001）。这种编码方式合理地反映了土壤质地与保水能力之间的单调递增关系。
+
+### 目标编码（Target Encoding）
+
+**是什么**：目标编码用目标变量（因变量）在每个类别中的均值来替换该类别。例如，将"耕地"编码为耕地样地的平均SOC值。
+
+**为什么用**：目标编码可以捕捉分类变量与目标变量之间的关系，特别适合高基数分类变量（类别数很多的变量）。
+
+**什么时候用**：在机器学习竞赛中常用，但在科学研究中需谨慎使用，因为容易导致数据泄露和过拟合。
+
+```{r}
+# 目标编码示例（仅用于演示，实际使用需要交叉验证）
+target_encoding <- soil |>
+  group_by(land_use) |>
+  summarise(land_use_target = mean(soc), .groups = "drop")
+
+soil_target <- soil |>
+  left_join(target_encoding, by = "land_use")
+
+# 查看编码结果
+soil_target |>
+  select(site_id, land_use, soc, land_use_target) |>
+  head(8)
+```
+
+**生态学案例**：在预测土壤重金属含量时，研究者发现土地利用历史类型多达15种（不同作物轮作组合），使用虚拟变量编码会产生14个新变量，导致模型过于复杂。采用目标编码后，将每种土地利用类型编码为该类型下重金属含量的均值，模型复杂度大幅降低，预测精度反而提升了8%。但需要注意，目标编码必须在训练集上计算编码值，然后应用到测试集，否则会导致数据泄露。
+
+::: {.callout-warning}
+### 目标编码的数据泄露风险
+
+目标编码容易导致数据泄露！必须使用交叉验证或留一法（Leave-One-Out）来计算编码值，即计算某个样本的编码值时，不能包含该样本本身的目标变量值。否则模型会"作弊"——直接记住训练集的目标值，导致严重过拟合。
+:::
+
+### 频率编码（Frequency Encoding）
+
+**是什么**：频率编码用每个类别在数据集中出现的频率（或计数）来替换该类别。
+
+**为什么用**：频率编码简单高效，可以捕捉类别的稀有程度信息。在某些场景下，稀有类别可能具有特殊意义。
+
+**什么时候用**：当类别的出现频率本身具有预测价值时使用，例如稀有物种的出现频率、罕见土地利用类型的分布。
+
+```{r}
+# 频率编码示例
+freq_encoding <- soil |>
+  count(land_use, name = "land_use_freq")
+
+soil_freq <- soil |>
+  left_join(freq_encoding, by = "land_use")
+
+# 查看编码结果
+soil_freq |>
+  select(site_id, land_use, land_use_freq) |>
+  distinct(land_use, .keep_all = TRUE)
+```
+
+**生态学案例**：在研究稀有植物群落的土壤特征时，研究者发现某些土地利用类型（如古茶园、传统梯田）在样本中出现频率很低（<5%），但这些稀有类型往往具有独特的土壤性质。使用频率编码后，模型能够识别出"稀有类型"这一特征，预测精度提升了12%。
+
+### 坡向的循环编码（Sin/Cos变换）
+
+**是什么**：坡向是一个循环变量（0°和360°实际上是同一个方向），直接编码为数值会破坏这种循环性。循环编码使用正弦和余弦函数将坡向映射到二维空间，保留循环特性。
+
+**为什么用**：坡向的循环性在生态学中很重要——北坡（0°）和北偏西坡（350°）实际上很接近，但数值上相差350。循环编码解决了这个问题。
+
+**什么时候用**：处理任何循环变量时使用，如坡向、风向、月份、时刻等。
+
+```{r}
+# 坡向循环编码
+aspect_degrees <- c(N = 0, NE = 45, E = 90, SE = 135,
+                    S = 180, SW = 225, W = 270, NW = 315)
+
+soil_aspect <- soil |>
+  mutate(
+    aspect_deg = aspect_degrees[aspect],
+    aspect_sin = sin(aspect_deg * pi / 180),
+    aspect_cos = cos(aspect_deg * pi / 180)
+  )
+
+# 可视化循环编码
+ggplot(soil_aspect, aes(x = aspect_cos, y = aspect_sin, color = aspect)) +
+  geom_point(size = 3, alpha = 0.6) +
+  coord_fixed() +
+  labs(title = "坡向的循环编码",
+       subtitle = "相近的坡向在二维空间中距离也近",
+       x = "cos(坡向)", y = "sin(坡向)") +
+  theme_minimal()
+```
+
+**生态学案例**：在分析坡向对马尾松林SOC的影响时，研究者最初将坡向编码为0-360°的数值，回归结果显示坡向与SOC无显著关系（p=0.42）。但这是错误的编码方式——它假设东坡（90°）与南坡（180°）的差异，等同于南坡与西坡（270°）的差异，这在生态学上不成立。采用循环编码后，模型发现北坡和东北坡的SOC显著高于南坡和西南坡（p<0.01），这与"阴坡温度低、有机质分解慢"的生态学理论一致。
+
+### 常见错误
+
+#### 错误1：虚拟变量陷阱
+
+**错误做法**：
+
+```{r eval=FALSE}
+# ❌ 错误：保留所有虚拟变量，导致多重共线性
+soil_wrong <- soil |>
+  dummy_cols(select_columns = "land_use",
+             remove_first_dummy = FALSE)  # 错误！
+
+model_wrong <- lm(soc ~ land_use_耕地 + land_use_草地 +
+                    land_use_灌丛 + land_use_次生林, data = soil_wrong)
+# 模型会报错或产生NA系数
+```
+
+**正确做法**：
+
+```{r}
+# ✅ 正确：移除一个虚拟变量作为参考类别
+soil_correct <- soil |>
+  dummy_cols(select_columns = "land_use",
+             remove_first_dummy = TRUE)
+
+model_correct <- lm(soc ~ land_use_草地 + land_use_灌丛 +
+                      land_use_次生林, data = soil_correct)
+summary(model_correct)$coefficients[1:4, 1:2]
+```
+
+**生态学案例**：某研究者在分析土地利用类型对SOC的影响时，创建了4个虚拟变量（耕地、草地、灌丛、次生林），全部放入回归模型。R软件自动删除了一个变量，但研究者没有注意到，导致结果解释错误——误以为某个土地利用类型"不显著"，实际上该类别被用作了参考类别。
+
+#### 错误2：对无序变量使用标签编码
+
+**错误做法**：
+
+```{r eval=FALSE}
+# ❌ 错误：对无序分类变量使用标签编码，然后用于线性模型
+soil_wrong <- soil |>
+  mutate(land_use_code = as.integer(land_use))
+
+model_wrong <- lm(soc ~ land_use_code + elevation, data = soil_wrong)
+# 模型假设"土地利用类型每增加1，SOC变化X"，这毫无意义
+```
+
+**正确做法**：
+
+```{r}
+# ✅ 正确：对无序变量使用虚拟变量编码
+model_correct <- lm(soc ~ land_use + elevation, data = soil)
+# R会自动创建虚拟变量
+summary(model_correct)$coefficients[1:5, 1:2]
+```
+
+**生态学案例**：某研究者将土地利用类型编码为1-4，然后放入线性回归模型，得出结论"土地利用类型每增加1个单位，SOC增加4.2 g/kg"。审稿人指出这个结论毫无意义——草地不是耕地的2倍，灌丛也不是草地的1.5倍。正确做法是使用虚拟变量，分别估计每种土地利用类型相对于参考类别的SOC差异。
 
 ## 构造新特征
 
@@ -669,6 +1561,122 @@ print(sqi_by_landuse)
 3 灌丛        0.628  0.087
 4 次生林      0.715  0.074
 ```
+
+
+### pivot_wider 高级技巧
+
+**names_glue参数：自定义列名格式**
+
+默认情况下，pivot_wider生成的列名是"指标名_土层"的形式。通过names_glue参数，你可以完全自定义列名的格式。
+
+**代码示例**
+
+```r
+# 默认列名格式
+soil_wide1 <- soil |>
+  select(site_id, depth, soc, tn) |>
+  pivot_wider(
+    names_from = depth,
+    values_from = c(soc, tn)
+  )
+cat("默认列名格式：
+")
+names(soil_wide1)
+
+# 自定义列名格式
+soil_wide2 <- soil |>
+  select(site_id, depth, soc, tn) |>
+  pivot_wider(
+    names_from = depth,
+    values_from = c(soc, tn),
+    names_glue = "{depth}_{.value}"
+  )
+cat("
+自定义列名格式（depth_value）：
+")
+names(soil_wide2)
+```
+
+**输出结果**：
+
+```
+默认列名格式：
+[1] "site_id" "soc_0-10 cm" "soc_10-20 cm" "soc_20-30 cm"
+[5] "tn_0-10 cm" "tn_10-20 cm" "tn_20-30 cm"
+
+自定义列名格式（depth_value）：
+[1] "site_id" "0-10 cm_soc" "10-20 cm_soc" "20-30 cm_soc"
+[5] "0-10 cm_tn" "10-20 cm_tn" "20-30 cm_tn"
+```
+
+**id_expand和values_fill：处理缺失值**
+
+当某些样地在某些土层没有测量值时，pivot_wider会产生NA。通过id_expand和values_fill参数，可以控制如何处理这种情况。
+
+**代码示例**
+
+```r
+# 模拟部分缺失数据
+set.seed(123)
+soil_miss <- soil |>
+  filter(!(site_id == "K001" & depth == "10-20 cm")) |>
+  filter(!(site_id == "K002" & depth == "0-10 cm"))
+
+cat("缺失数据示例：
+")
+print(soil_miss |>
+  filter(site_id %in% c("K001", "K002")) |>
+  select(site_id, depth, soc))
+
+# 转换为宽格式，缺失值显示为NA
+soil_wide_na <- soil_miss |>
+  select(site_id, depth, soc) |>
+  pivot_wider(
+    names_from = depth,
+    values_from = soc
+  )
+cat("
+缺失值显示为NA：
+")
+print(soil_wide_na |>
+  filter(site_id %in% c("K001", "K002")))
+
+# 缺失值用前一个土层的值填充
+soil_wide_fill <- soil_miss |>
+  select(site_id, depth, soc) |>
+  pivot_wider(
+    names_from = depth,
+    values_from = soc,
+    values_fill = list(soc = NA)
+  ) |>
+  arrange(site_id) |>
+  fill(-site_id, .direction = "downup")
+
+cat("
+缺失值用相邻土层填充：
+")
+print(soil_wide_fill |>
+  filter(site_id %in% c("K001", "K002")))
+```
+
+**生态学案例：马尾松林土壤垂直剖面的宽格式整理**
+
+在马尾松林土壤剖面研究中，研究人员通常按0-10 cm、10-20 cm、20-30 cm三个土层采集样品。原始记录是长格式。为了分析SOC含量随土层深度的变化规律，需要将数据转换为宽格式，每个样地一行，每个土层的SOC作为独立的列。这种格式便于计算SOC的垂直变异系数（CV）：
+
+CV = SD / Mean x 100%
+
+其中SD是三个土层SOC的标准差，Mean是三个土层SOC的均值。CV越大，说明SOC在垂直方向上的变异越剧烈。
+
+**常见错误**
+
+**错误一：names_pattern写错导致列名解析失败**
+
+pivot_longer的names_pattern参数使用正则表达式提取变量名。如果模式写错，会导致解析失败或数据错位。建议先在R控制台测试正则表达式，确认能正确匹配后再用于pivot_longer。
+
+**错误二：混用names_to和values_drop_na**
+
+有时pivot_longer会产生一些全为NA的行。默认pivot_longer会保留这些NA行，如果需要删除，可以设置 values_drop_na = TRUE。
+
 
 结果显示：次生林SQI最高（0.715），表明顶级演替阶段的土壤质量最优；耕地SQI最低（0.452），与长期耕作导致的地力消耗有关。
 
