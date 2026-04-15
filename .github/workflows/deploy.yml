@@ -21,7 +21,7 @@ jobs:
 
       # 设置 Conda 环境
       - name: Set up Conda
-        uses: conda-incubator/setup-miniconda@v4
+        uses: conda-incubator/setup-miniconda@v3
         with:
           auto-update-conda: true
           auto-activate: true
