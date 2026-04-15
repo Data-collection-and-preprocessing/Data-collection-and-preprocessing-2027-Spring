@@ -19,6 +19,11 @@ jobs:
           fetch-depth: 0
           lfs: true
 
+      # 安装 R（Quarto 需要 R 在系统路径中）
+      - name: Install R
+        run: |
+          brew install --cask r
+
       # 设置 Conda 环境
       - name: Set up Conda
         uses: conda-incubator/setup-miniconda@v3
