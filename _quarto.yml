@@ -8,8 +8,9 @@ project:
 execute:
   eval: false
   freeze: auto
-  python: false
   echo: false
+  python:
+    reticulate: false
 
 bibliography: references.bib
 

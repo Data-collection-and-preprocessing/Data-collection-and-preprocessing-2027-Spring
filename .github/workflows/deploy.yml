@@ -20,11 +20,14 @@ jobs:
           lfs: true
 
       # 安装 R（Quarto 需要 R 在系统路径中）
-      - name: Install R
+      - name: Install R and packages
         run: |
           brew install --cask r
-          # 安装 Quarto 需要的 R 包
-          /Library/Frameworks/R.framework/Resources/Rscript -e 'install.packages(c("knitr", "rmarkdown"), repos="https://cloud.r-project.org", quiet=TRUE)'
+          # 安装 Quarto 需要的 R 包（关键：reticulate 解决 Python chunk 问题）
+          /Library/Frameworks/R.framework/Resources/Rscript -e '
+            pkgs <- c("knitr", "rmarkdown", "reticulate", "tidyverse", "ggplot2", "dplyr", "tidyr")
+            install.packages(pkgs, repos="https://cloud.r-project.org", quiet=TRUE)
+          '
 
       # 设置 Conda 环境
       - name: Set up Conda
