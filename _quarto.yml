@@ -9,6 +9,7 @@ execute:
   eval: false
   freeze: auto
   python: false
+  echo: false
 
 bibliography: references.bib
 
