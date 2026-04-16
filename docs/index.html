@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 <meta name="author" content="Huaqing Liu">
-<meta name="dcterms.date" content="2026-03-30">
+<meta name="dcterms.date" content="2026-04-15">
 
 <title>数据采集与预处理</title>
 <style>
@@ -24,6 +24,41 @@ ul.task-list li input[type="checkbox"] {
   width: 0.8em;
   margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
   vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
 </style>
 
@@ -104,7 +139,7 @@ ul.task-list li input[type="checkbox"] {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">前言</a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -132,7 +167,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text">前言</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -147,19 +182,25 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
   </div>
 </li>
       </ul>
@@ -176,19 +217,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
   </div>
 </li>
       </ul>
@@ -205,49 +246,49 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
   </div>
 </li>
       </ul>
@@ -264,19 +305,31 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据质量控制</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
   </div>
 </li>
       </ul>
@@ -293,13 +346,13 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -316,19 +369,19 @@ ul.task-list li input[type="checkbox"] {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
   </div>
 </li>
       </ul>
@@ -336,7 +389,7 @@ ul.task-list li input[type="checkbox"] {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
   </div>
 </li>
     </ul>
@@ -349,14 +402,65 @@ ul.task-list li input[type="checkbox"] {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#前言" id="toc-前言" class="nav-link active" data-scroll-target="#前言">前言</a>
+  <li><a href="#数据采集与预处理生态学数据采集与预处理方法指南" id="toc-数据采集与预处理生态学数据采集与预处理方法指南" class="nav-link active" data-scroll-target="#数据采集与预处理生态学数据采集与预处理方法指南"><span class="header-section-number">1</span> 数据采集与预处理——生态学数据采集与预处理方法指南</a>
   <ul class="collapse">
-  <li><a href="#课程目标" id="toc-课程目标" class="nav-link" data-scroll-target="#课程目标">课程目标</a></li>
-  <li><a href="#课程特色" id="toc-课程特色" class="nav-link" data-scroll-target="#课程特色">课程特色</a></li>
-  <li><a href="#课堂组织形式" id="toc-课堂组织形式" class="nav-link" data-scroll-target="#课堂组织形式">课堂组织形式</a></li>
-  <li><a href="#如何分组" id="toc-如何分组" class="nav-link" data-scroll-target="#如何分组">如何分组？</a></li>
-  <li><a href="#如何考察" id="toc-如何考察" class="nav-link" data-scroll-target="#如何考察">如何考察？</a></li>
-  <li><a href="#联系方式" id="toc-联系方式" class="nav-link" data-scroll-target="#联系方式">联系方式</a></li>
+  <li><a href="#这门课学什么" id="toc-这门课学什么" class="nav-link" data-scroll-target="#这门课学什么"><span class="header-section-number">1.1</span> 这门课学什么？</a></li>
+  <li><a href="#为什么这门课重要" id="toc-为什么这门课重要" class="nav-link" data-scroll-target="#为什么这门课重要"><span class="header-section-number">1.2</span> 为什么这门课重要？</a>
+  <ul class="collapse">
+  <li><a href="#一个真实的故事" id="toc-一个真实的故事" class="nav-link" data-scroll-target="#一个真实的故事"><span class="header-section-number">1.2.1</span> 一个真实的故事</a></li>
+  <li><a href="#学会这两件事让你的研究经得起检验" id="toc-学会这两件事让你的研究经得起检验" class="nav-link" data-scroll-target="#学会这两件事让你的研究经得起检验"><span class="header-section-number">1.2.2</span> 学会这两件事，让你的研究经得起检验</a></li>
+  </ul></li>
+  <li><a href="#课程学习路径" id="toc-课程学习路径" class="nav-link" data-scroll-target="#课程学习路径"><span class="header-section-number">1.3</span> 课程学习路径</a></li>
+  <li><a href="#这门课的四大特色" id="toc-这门课的四大特色" class="nav-link" data-scroll-target="#这门课的四大特色"><span class="header-section-number">1.4</span> 这门课的四大特色</a>
+  <ul class="collapse">
+  <li><a href="#特色一真实生态学数据不是学生成绩表" id="toc-特色一真实生态学数据不是学生成绩表" class="nav-link" data-scroll-target="#特色一真实生态学数据不是学生成绩表"><span class="header-section-number">1.4.1</span> 特色一：真实生态学数据，不是”学生成绩表”</a></li>
+  <li><a href="#特色二从采样到报告全流程覆盖" id="toc-特色二从采样到报告全流程覆盖" class="nav-link" data-scroll-target="#特色二从采样到报告全流程覆盖"><span class="header-section-number">1.4.2</span> 特色二：从采样到报告，全流程覆盖</a></li>
+  <li><a href="#特色三小班协作模拟真实科研场景" id="toc-特色三小班协作模拟真实科研场景" class="nav-link" data-scroll-target="#特色三小班协作模拟真实科研场景"><span class="header-section-number">1.4.3</span> 特色三：小班协作，模拟真实科研场景</a></li>
+  <li><a href="#特色四学完能用不只是懂了" id="toc-特色四学完能用不只是懂了" class="nav-link" data-scroll-target="#特色四学完能用不只是懂了"><span class="header-section-number">1.4.4</span> 特色四：学完能用，不只是”懂了”</a></li>
+  </ul></li>
+  <li><a href="#先修知识零基础可以选吗" id="toc-先修知识零基础可以选吗" class="nav-link" data-scroll-target="#先修知识零基础可以选吗"><span class="header-section-number">1.5</span> 先修知识：零基础可以选吗？</a>
+  <ul class="collapse">
+  <li><a href="#预期一会用电脑会用-excel" id="toc-预期一会用电脑会用-excel" class="nav-link" data-scroll-target="#预期一会用电脑会用-excel"><span class="header-section-number">1.5.1</span> 预期一：会用电脑，会用 Excel</a></li>
+  <li><a href="#预期二能看懂基础英语" id="toc-预期二能看懂基础英语" class="nav-link" data-scroll-target="#预期二能看懂基础英语"><span class="header-section-number">1.5.2</span> 预期二：能看懂基础英语</a></li>
+  <li><a href="#预期三愿意动手敲代码" id="toc-预期三愿意动手敲代码" class="nav-link" data-scroll-target="#预期三愿意动手敲代码"><span class="header-section-number">1.5.3</span> 预期三：愿意动手敲代码</a></li>
+  <li><a href="#预期四知道什么是生态学" id="toc-预期四知道什么是生态学" class="nav-link" data-scroll-target="#预期四知道什么是生态学"><span class="header-section-number">1.5.4</span> 预期四：知道什么是”生态学”</a></li>
+  </ul></li>
+  <li><a href="#评分方式怎么才算学会了" id="toc-评分方式怎么才算学会了" class="nav-link" data-scroll-target="#评分方式怎么才算学会了"><span class="header-section-number">1.6</span> 评分方式：怎么才算”学会了”？</a></li>
+  <li><a href="#开课前你需要准备什么" id="toc-开课前你需要准备什么" class="nav-link" data-scroll-target="#开课前你需要准备什么"><span class="header-section-number">1.7</span> 开课前你需要准备什么</a>
+  <ul class="collapse">
+  <li><a href="#必须安装的软件免费" id="toc-必须安装的软件免费" class="nav-link" data-scroll-target="#必须安装的软件免费"><span class="header-section-number">1.7.1</span> 必须安装的软件（免费）</a></li>
+  <li><a href="#推荐准备的硬件" id="toc-推荐准备的硬件" class="nav-link" data-scroll-target="#推荐准备的硬件"><span class="header-section-number">1.7.2</span> 推荐准备的硬件</a></li>
+  <li><a href="#推荐提前阅读选读" id="toc-推荐提前阅读选读" class="nav-link" data-scroll-target="#推荐提前阅读选读"><span class="header-section-number">1.7.3</span> 推荐提前阅读（选读）</a></li>
+  </ul></li>
+  <li><a href="#优秀学长项目展示" id="toc-优秀学长项目展示" class="nav-link" data-scroll-target="#优秀学长项目展示"><span class="header-section-number">1.8</span> 优秀学长项目展示</a>
+  <ul class="collapse">
+  <li><a href="#项目一土壤呼吸数据标准化流程" id="toc-项目一土壤呼吸数据标准化流程" class="nav-link" data-scroll-target="#项目一土壤呼吸数据标准化流程"><span class="header-section-number">1.8.1</span> 项目一：土壤呼吸数据标准化流程 ⭐</a></li>
+  <li><a href="#项目二鸟类多样性公开数据荟萃分析" id="toc-项目二鸟类多样性公开数据荟萃分析" class="nav-link" data-scroll-target="#项目二鸟类多样性公开数据荟萃分析"><span class="header-section-number">1.8.2</span> 项目二：鸟类多样性公开数据荟萃分析 🦅</a></li>
+  <li><a href="#项目三植物功能性状数据库" id="toc-项目三植物功能性状数据库" class="nav-link" data-scroll-target="#项目三植物功能性状数据库"><span class="header-section-number">1.8.3</span> 项目三：植物功能性状数据库 📚</a></li>
+  </ul></li>
+  <li><a href="#常见问题faq" id="toc-常见问题faq" class="nav-link" data-scroll-target="#常见问题faq"><span class="header-section-number">1.9</span> 常见问题（FAQ）</a>
+  <ul class="collapse">
+  <li><a href="#q1课程需要多少时间会不会太重" id="toc-q1课程需要多少时间会不会太重" class="nav-link" data-scroll-target="#q1课程需要多少时间会不会太重"><span class="header-section-number">1.9.1</span> Q1：课程需要多少时间？会不会太重？</a></li>
+  <li><a href="#q2选这门课需要自带数据吗" id="toc-q2选这门课需要自带数据吗" class="nav-link" data-scroll-target="#q2选这门课需要自带数据吗"><span class="header-section-number">1.9.2</span> Q2：选这门课需要自带数据吗？</a></li>
+  <li><a href="#q3r-和-python-要同时学吗" id="toc-q3r-和-python-要同时学吗" class="nav-link" data-scroll-target="#q3r-和-python-要同时学吗"><span class="header-section-number">1.9.3</span> Q3：R 和 Python 要同时学吗？</a></li>
+  <li><a href="#q4小组项目可以自己做吗" id="toc-q4小组项目可以自己做吗" class="nav-link" data-scroll-target="#q4小组项目可以自己做吗"><span class="header-section-number">1.9.4</span> Q4：小组项目可以自己做吗？</a></li>
+  <li><a href="#q5课程内容和我的研究方向不匹配怎么办" id="toc-q5课程内容和我的研究方向不匹配怎么办" class="nav-link" data-scroll-target="#q5课程内容和我的研究方向不匹配怎么办"><span class="header-section-number">1.9.5</span> Q5：课程内容和我的研究方向不匹配怎么办？</a></li>
+  <li><a href="#q6课程结束后我应该继续学什么" id="toc-q6课程结束后我应该继续学什么" class="nav-link" data-scroll-target="#q6课程结束后我应该继续学什么"><span class="header-section-number">1.9.6</span> Q6：课程结束后，我应该继续学什么？</a></li>
+  </ul></li>
+  <li><a href="#如何获取帮助" id="toc-如何获取帮助" class="nav-link" data-scroll-target="#如何获取帮助"><span class="header-section-number">1.10</span> 如何获取帮助</a>
+  <ul class="collapse">
+  <li><a href="#遇到问题时的正确顺序" id="toc-遇到问题时的正确顺序" class="nav-link" data-scroll-target="#遇到问题时的正确顺序"><span class="header-section-number">1.10.1</span> 遇到问题时的正确顺序</a></li>
+  <li><a href="#联系老师" id="toc-联系老师" class="nav-link" data-scroll-target="#联系老师"><span class="header-section-number">1.10.2</span> 联系老师</a></li>
+  <li><a href="#课程资源" id="toc-课程资源" class="nav-link" data-scroll-target="#课程资源"><span class="header-section-number">1.10.3</span> 课程资源</a></li>
+  </ul></li>
+  <li><a href="#课后练习开课前准备检查清单" id="toc-课后练习开课前准备检查清单" class="nav-link" data-scroll-target="#课后练习开课前准备检查清单"><span class="header-section-number">1.11</span> 课后练习：开课前准备检查清单</a>
+  <ul class="collapse">
+  <li><a href="#第一步安装软件预计-2-3-小时" id="toc-第一步安装软件预计-2-3-小时" class="nav-link" data-scroll-target="#第一步安装软件预计-2-3-小时"><span class="header-section-number">1.11.1</span> ✅ 第一步：安装软件（预计 2-3 小时）</a></li>
+  <li><a href="#第二步注册账号预计-30-分钟" id="toc-第二步注册账号预计-30-分钟" class="nav-link" data-scroll-target="#第二步注册账号预计-30-分钟"><span class="header-section-number">1.11.2</span> ✅ 第二步：注册账号（预计 30 分钟）</a></li>
+  <li><a href="#第三步试运行第一个-r-脚本预计-1-小时" id="toc-第三步试运行第一个-r-脚本预计-1-小时" class="nav-link" data-scroll-target="#第三步试运行第一个-r-脚本预计-1-小时"><span class="header-section-number">1.11.3</span> ✅ 第三步：试运行第一个 R 脚本（预计 1 小时）</a></li>
+  <li><a href="#第四步阅读课程材料预计-2-小时" id="toc-第四步阅读课程材料预计-2-小时" class="nav-link" data-scroll-target="#第四步阅读课程材料预计-2-小时"><span class="header-section-number">1.11.4</span> ✅ 第四步：阅读课程材料（预计 2 小时）</a></li>
+  <li><a href="#第五步准备数据可选但强烈推荐" id="toc-第五步准备数据可选但强烈推荐" class="nav-link" data-scroll-target="#第五步准备数据可选但强烈推荐"><span class="header-section-number">1.11.5</span> ✅ 第五步：准备数据（可选，但强烈推荐）</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -384,7 +488,7 @@ ul.task-list li input[type="checkbox"] {
     <div>
     <div class="quarto-title-meta-heading">Published</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">March 30, 2026</p>
+      <p class="date">April 15, 2026</p>
     </div>
   </div>
   
@@ -396,61 +500,578 @@ ul.task-list li input[type="checkbox"] {
 </header>
 
 
-<section id="前言" class="level1 unnumbered">
-<h1 class="unnumbered">前言</h1>
-<p>《数据采集与预处理》课程旨在教授学生如何在科学研究中实现数据驱动的可重复性，确保研究结果的可验证性和可靠性。</p>
-<section id="课程目标" class="level2">
-<h2 class="anchored" data-anchor-id="课程目标">课程目标</h2>
+<section id="数据采集与预处理生态学数据采集与预处理方法指南" class="level1" data-number="1">
+<h1 data-number="1"><span class="header-section-number">1</span> 数据采集与预处理——生态学数据采集与预处理方法指南</h1>
+<div class="callout callout-style-simple callout-note">
+<div class="callout-body d-flex">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-body-container">
+<p><strong>开课时间</strong>：2027年春季学期 | <strong>课时</strong>：32学时 | <strong>授课对象</strong>：生态学大二本科生</p>
+</div>
+</div>
+</div>
+<section id="这门课学什么" class="level2" data-number="1.1">
+<h2 data-number="1.1" class="anchored" data-anchor-id="这门课学什么"><span class="header-section-number">1.1</span> 这门课学什么？</h2>
+<p>简单说：<strong>怎么从真实世界里把数据收上来，然后把它们洗干净、整理好，让它们能用来回答你的科学问题</strong>。</p>
+<p>听起来很基础对吧？但现实是，大多数研究生的第一篇论文被导师打回来重写，不是因为科学结论不对，而是因为数据管理混乱——找不到原始数据了、变量命名混乱了、三个月前做的分析步骤忘了、交给审稿人的代码跑不起来了……</p>
+<p>这些问题在课程结束时你都能解决。</p>
+<p>这门课会教你：</p>
 <ul>
-<li>理解数据驱动的可重复性研究的概念和重要性</li>
-<li>掌握相关工具和技术，能够实施可重复性研究</li>
-<li>培养数据分析和代码编写的能力，提高科研水平</li>
+<li>如何设计一套科学的采样方案（不是随便找个地方挖土）</li>
+<li>如何用 R 和 Python 处理从野外采回来的”脏数据”</li>
+<li>如何用版本控制管理你的分析代码（再也不会”data_final_v3_真的最终版”）</li>
+<li>如何写一份能让审稿人无话可说的可重复性报告</li>
 </ul>
 </section>
-<section id="课程特色" class="level2">
-<h2 class="anchored" data-anchor-id="课程特色">课程特色</h2>
+<section id="为什么这门课重要" class="level2" data-number="1.2">
+<h2 data-number="1.2" class="anchored" data-anchor-id="为什么这门课重要"><span class="header-section-number">1.2</span> 为什么这门课重要？</h2>
+<section id="一个真实的故事" class="level3" data-number="1.2.1">
+<h3 data-number="1.2.1" class="anchored" data-anchor-id="一个真实的故事"><span class="header-section-number">1.2.1</span> 一个真实的故事</h3>
+<p>2019 年，某生态学实验室的学生在毕业前两个月发现：服务器坏了，三个月的野外调查数据全部丢失。不是被黑客攻击了，而是硬盘老化。那个学生花了两个月重新采样，但最后论文还是延期了。</p>
+<p>如果他们用了 3-2-1 备份原则（数据三份副本、两种介质、一份异地），这场灾难本来可以避免。</p>
+<p>这不是个例。2016 年《Nature》调查了 1500 名科研人员，发现超过 70% 的人曾经无法重复别人的实验，超过 50% 的人甚至无法重复自己的实验（Baker, 2016, <em>Nature</em>, 533: 452–454）。大多数问题不是科学问题，而是数据管理问题。</p>
+</section>
+<section id="学会这两件事让你的研究经得起检验" class="level3" data-number="1.2.2">
+<h3 data-number="1.2.2" class="anchored" data-anchor-id="学会这两件事让你的研究经得起检验"><span class="header-section-number">1.2.2</span> 学会这两件事，让你的研究经得起检验</h3>
+<p><strong>第一件事：把数据管好。</strong></p>
+<p>好的数据管理不是”把文件存好”那么简单。它意味着：</p>
 <ul>
-<li>强调数据和代码的规范化，确保可重复性</li>
-<li>以项目为导向，关注实际应用场景</li>
-<li>注重实践操作，强调动手能力</li>
+<li>原始数据永远不动，所有的清洗和转换都通过脚本完成</li>
+<li>每一步分析都有记录，任何人（审稿人、合作者、三年后的你自己）都能从头复现</li>
+<li>数据和代码都有版本控制，改错了随时能回退</li>
+</ul>
+<p><strong>第二件事：把数据洗好。</strong></p>
+<p>野外采回来的数据通常是”脏”的——有缺失值、有异常值、格式不统一、单位混乱。数据清洗就是把”原材料”变成”可用数据”的过程。听起来简单，但：</p>
+<ul>
+<li>缺失值到底删掉还是插补？不同方法会给出截然不同的结论</li>
+<li>异常值是真的异常还是测量错误？处理方式不同会改变你的主要发现</li>
+<li>宽格式和长格式选哪个？决定了你用哪个 R 包、怎么绑图</li>
+</ul>
+<p>这些问题没有标准答案，但这门课会教你如何做出合理的选择。</p>
+</section>
+</section>
+<section id="课程学习路径" class="level2" data-number="1.3">
+<h2 data-number="1.3" class="anchored" data-anchor-id="课程学习路径"><span class="header-section-number">1.3</span> 课程学习路径</h2>
+<p>这门课分六个阶段，带你从零基础走到能独立完成一个真实项目：</p>
+<pre><code>📦 第一阶段：基础技能（第1-2周）
+│  先把工具装好，把基本功打扎实
+│
+├── 0101 什么是数据采集（本章）
+│      搞清楚数据采集在科研中的位置
+├── 0102 什么是数据预处理
+│      了解数据清洗和转换的核心概念
+├── 0103 数据管理与研究工作流
+│      学会用正确的文件夹结构管理项目
+└── 0104 环境搭建
+       安装 R、RStudio、Python、Git、Quarto
+
+📊 第二阶段：R 语言基础（第3-5周）
+│  R 是生态学数据分析的主流语言，必须熟练掌握
+│
+├── 0105 R 入门（基础语法和数据结构）
+│      从变量赋值到函数调用
+├── 0106 数据处理（R tidyverse 三件套）
+│      数据清洗和转换的核心技能
+└── 0107 Git 版本控制与团队协作
+       从"代码管理混乱"到"协作无压力"
+
+🌍 第三阶段：数据采集方法（第6-8周）
+│  不同来源的数据有不同的采集方法
+│
+├── 0201 数据采集方法
+│      观测、实验、模型、公共数据
+├── 0202 野外调查数据采集
+│      样方调查、传感器、自动监测
+├── 0203 控制实验设计
+│      随机区组、裂区、因子设计
+├── 0204 生态学建模
+│      统计模型、过程模型
+├── 0205 公共数据资源
+│      GBIF、WorldClim、NEON
+├── 0206 参考文献管理
+│      Zotero + R Markdown 写作
+├── 0207 荟萃分析
+│      如何综合多研究结果
+└── 0208 Python 网络数据采集
+       爬虫、API 调用
+
+🧹 第四阶段：数据预处理（第9-12周）
+│  这是课程的核心部分
+│
+├── 0301 数据清洗
+│      缺失值、异常值、重复记录
+├── 0302 特征工程
+│      数据转换、标准化、编码
+├── 0303 数据质量评估
+│      完整性、一致性、准确性
+├── 0304 生态学专项预处理
+│      空间数据、分类数据、时间序列
+└── 0305 机器学习预处理
+       特征缩放、编码、Pipeline
+
+📈 第五阶段：数据可视化（第13-14周）
+│  让数据自己说话
+│
+├── 0501 可视化基础
+│      ggplot2 入门
+└── 0502 探索性数据分析（EDA）
+       数据探索、模式发现
+
+🚀 第六阶段：综合项目（第15-16周）
+│  把所有技能串起来
+│
+├── 0601 案例研究
+│      从头到尾走一遍完整流程
+├── 0602 项目工作坊
+│      小组项目实施
+└── 0603 课程总结
+       知识回顾、进阶资源推荐</code></pre>
+</section>
+<section id="这门课的四大特色" class="level2" data-number="1.4">
+<h2 data-number="1.4" class="anchored" data-anchor-id="这门课的四大特色"><span class="header-section-number">1.4</span> 这门课的四大特色</h2>
+<section id="特色一真实生态学数据不是学生成绩表" class="level3" data-number="1.4.1">
+<h3 data-number="1.4.1" class="anchored" data-anchor-id="特色一真实生态学数据不是学生成绩表"><span class="header-section-number">1.4.1</span> 特色一：真实生态学数据，不是”学生成绩表”</h3>
+<p>大多数数据分析教程用的是”学生成绩”或”电商数据”。我们的案例全部来自真实的生态学研究：</p>
+<ul>
+<li>马尾松混交林土壤孔隙结构调查（广西大学林学院）</li>
+<li>亚热带森林生物多样性-生产力关系（基于 Cedar Creek 数据）</li>
+<li>中国北方草地遥感 NDVI 时间序列分析</li>
+<li>物种分布模型预测濒危植物潜在分布区</li>
+</ul>
+<p>学完这门课，你带走的技能可以直接用在你的研究里。</p>
+</section>
+<section id="特色二从采样到报告全流程覆盖" class="level3" data-number="1.4.2">
+<h3 data-number="1.4.2" class="anchored" data-anchor-id="特色二从采样到报告全流程覆盖"><span class="header-section-number">1.4.2</span> 特色二：从采样到报告，全流程覆盖</h3>
+<p>很多课程只教数据分析，但忽略了上游的采样设计和下游的报告撰写。我们覆盖完整链条：</p>
+<pre><code>采样设计 → 数据采集 → 数据录入 → 数据清洗 → 分析建模 → 可视化 → 报告撰写
+    ↑                                                    ↓
+    ←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←←</code></pre>
+<p>这意味着你学完这门课，就知道一个完整的研究项目数据部分应该怎么做。</p>
+</section>
+<section id="特色三小班协作模拟真实科研场景" class="level3" data-number="1.4.3">
+<h3 data-number="1.4.3" class="anchored" data-anchor-id="特色三小班协作模拟真实科研场景"><span class="header-section-number">1.4.3</span> 特色三：小班协作，模拟真实科研场景</h3>
+<p>课程项目需要 3-5 人小组完成，模拟真实的科研协作场景：</p>
+<ul>
+<li>每个人负责不同的部分（采样、数据清洗、分析、可视化）</li>
+<li>用 GitHub 管理代码协作（你改的代码和别人的不冲突）</li>
+<li>最终以 Quarto 报告形式呈现，所有代码和数据公开可查</li>
+</ul>
+<p>这和你未来研究生阶段的科研协作方式完全一致。</p>
+</section>
+<section id="特色四学完能用不只是懂了" class="level3" data-number="1.4.4">
+<h3 data-number="1.4.4" class="anchored" data-anchor-id="特色四学完能用不只是懂了"><span class="header-section-number">1.4.4</span> 特色四：学完能用，不只是”懂了”</h3>
+<p>课程设计强调可操作性和即时反馈：</p>
+<ul>
+<li>每节课都有配套的练习数据和代码框架</li>
+<li>小组项目有明确的目标和验收标准</li>
+<li>老师提供即时反馈，不让错误累积</li>
 </ul>
 </section>
-<section id="课堂组织形式" class="level2">
-<h2 class="anchored" data-anchor-id="课堂组织形式">课堂组织形式</h2>
-<p>因为选课场地限制，无法提供机房。请选课的同学自行准备电脑，并根据课程进度安排，确保电脑上安装了 R、Python 等需要用到的软件。</p>
+</section>
+<section id="先修知识零基础可以选吗" class="level2" data-number="1.5">
+<h2 data-number="1.5" class="anchored" data-anchor-id="先修知识零基础可以选吗"><span class="header-section-number">1.5</span> 先修知识：零基础可以选吗？</h2>
+<p><strong>可以。</strong> 这门课假设你是零基础。</p>
+<p>但”零基础”也分不同情况，以下是我们对你的实际预期：</p>
+<section id="预期一会用电脑会用-excel" class="level3" data-number="1.5.1">
+<h3 data-number="1.5.1" class="anchored" data-anchor-id="预期一会用电脑会用-excel"><span class="header-section-number">1.5.1</span> 预期一：会用电脑，会用 Excel</h3>
+<p>你不需要会编程，但你需要：</p>
 <ul>
-<li>课堂讲解：介绍相关概念、方法和工具</li>
-<li>实践操作：通过实际案例进行动手实践</li>
-<li>小组讨论：学生之间进行交流与协作</li>
-<li>课后作业：巩固所学知识，提高实践能力</li>
+<li>能熟练操作文件夹（创建、复制、移动、重命名）</li>
+<li>能在 Excel 中录入数据、保存为 CSV 格式</li>
+<li>能下载和安装软件（会有详细图文教程）</li>
+</ul>
+<p>如果这些你都不会，先花一天熟悉 Windows 基本操作。</p>
+</section>
+<section id="预期二能看懂基础英语" class="level3" data-number="1.5.2">
+<h3 data-number="1.5.2" class="anchored" data-anchor-id="预期二能看懂基础英语"><span class="header-section-number">1.5.2</span> 预期二：能看懂基础英语</h3>
+<p>课程主要教材：</p>
+<ul>
+<li>《R for Data Science》（免费在线阅读，全英文但文字简单）</li>
+<li>课件和讲义全部中文</li>
+</ul>
+<p>你不需要能写英文，但你需要能借助翻译工具看懂英文技术文档。如果这让你不舒服，开学前列一张常用生态学词汇的中英文对照表，几次之后就习惯了。</p>
+</section>
+<section id="预期三愿意动手敲代码" class="level3" data-number="1.5.3">
+<h3 data-number="1.5.3" class="anchored" data-anchor-id="预期三愿意动手敲代码"><span class="header-section-number">1.5.3</span> 预期三：愿意动手敲代码</h3>
+<p>这门课有大量编程练习。如果你一想到要写代码就头疼，选课前三思。</p>
+<p>好消息是：R 入门比大多数人想象的简单。跟着课程走，两三周后你就能写出有实际作用的代码了。</p>
+</section>
+<section id="预期四知道什么是生态学" class="level3" data-number="1.5.4">
+<h3 data-number="1.5.4" class="anchored" data-anchor-id="预期四知道什么是生态学"><span class="header-section-number">1.5.4</span> 预期四：知道什么是”生态学”</h3>
+<p>如果你学过《生态学》或《普通生物学》的基础课程，会更容易理解课程中的案例。但不是必须的——案例中的生态学概念老师会解释，你也可以随时查阅。</p>
+</section>
+</section>
+<section id="评分方式怎么才算学会了" class="level2" data-number="1.6">
+<h2 data-number="1.6" class="anchored" data-anchor-id="评分方式怎么才算学会了"><span class="header-section-number">1.6</span> 评分方式：怎么才算”学会了”？</h2>
+<p>课程采用项目制评分，没有期末考试：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">组成部分</th>
+<th style="text-align: center;">占比</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>课后练习</strong></td>
+<td style="text-align: center;">30%</td>
+<td style="text-align: left;">每章配套练习，检验基本概念和技能</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>课堂参与</strong></td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: left;">提问、讨论、同伴评审</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>小组项目</strong></td>
+<td style="text-align: center;">50%</td>
+<td style="text-align: left;">从数据采集到报告的完整项目</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>个人反思</strong></td>
+<td style="text-align: center;">10%</td>
+<td style="text-align: left;">学习日志，记录成长和困惑</td>
+</tr>
+</tbody>
+</table>
+<p><strong>小组项目是最重要的部分。</strong> 项目要求：</p>
+<ol type="1">
+<li><strong>有真实数据</strong>：来自你自己的研究或课程提供的模拟数据</li>
+<li><strong>有完整流程</strong>：采样→采集→清洗→分析→可视化→报告，每步都要有</li>
+<li><strong>代码可运行</strong>：所有代码在 GitHub 上公开，运行一次出结果</li>
+<li><strong>报告可重复</strong>：用 Quarto 撰写，点击一下从数据到 PDF 报告</li>
+</ol>
+<p>评分标准不是”结论对不对”，而是”流程规不规范、数据可不可信、代码能不能跑”。</p>
+</section>
+<section id="开课前你需要准备什么" class="level2" data-number="1.7">
+<h2 data-number="1.7" class="anchored" data-anchor-id="开课前你需要准备什么"><span class="header-section-number">1.7</span> 开课前你需要准备什么</h2>
+<section id="必须安装的软件免费" class="level3" data-number="1.7.1">
+<h3 data-number="1.7.1" class="anchored" data-anchor-id="必须安装的软件免费"><span class="header-section-number">1.7.1</span> 必须安装的软件（免费）</h3>
+<p>这些软件在第一次上课前必须安装好。我们会在第一周提供详细的安装教程。</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">软件</th>
+<th style="text-align: left;">版本</th>
+<th style="text-align: left;">安装地址</th>
+<th style="text-align: left;">备注</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>R</strong></td>
+<td style="text-align: left;">≥4.3.0</td>
+<td style="text-align: left;">https://cran.r-project.org/</td>
+<td style="text-align: left;">Windows/Mac/Linux</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>RStudio</strong></td>
+<td style="text-align: left;">≥2023.12</td>
+<td style="text-align: left;">https://posit.co/download/rstudio-desktop/</td>
+<td style="text-align: left;">R 的 IDE，必装</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Python</strong></td>
+<td style="text-align: left;">≥3.10</td>
+<td style="text-align: left;">https://www.python.org/downloads/</td>
+<td style="text-align: left;">数据科学套装</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Git</strong></td>
+<td style="text-align: left;">最新版</td>
+<td style="text-align: left;">https://git-scm.com/downloads</td>
+<td style="text-align: left;">版本控制</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Quarto</strong></td>
+<td style="text-align: left;">最新版</td>
+<td style="text-align: left;">https://quarto.org/docs/download/</td>
+<td style="text-align: left;">报告撰写工具</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="推荐准备的硬件" class="level3" data-number="1.7.2">
+<h3 data-number="1.7.2" class="anchored" data-anchor-id="推荐准备的硬件"><span class="header-section-number">1.7.2</span> 推荐准备的硬件</h3>
+<ul>
+<li><strong>自己的笔记本电脑</strong>（至少 8GB 内存，16GB 更好）</li>
+<li>一个 <strong>500GB 以上的移动硬盘或大 U 盘</strong>（用于数据备份）</li>
+<li><strong>学校邮箱</strong>（用于注册 GitHub Education，享受私有仓库免费额度）</li>
 </ul>
 </section>
-<section id="如何分组" class="level2">
-<h2 class="anchored" data-anchor-id="如何分组">如何分组？</h2>
+<section id="推荐提前阅读选读" class="level3" data-number="1.7.3">
+<h3 data-number="1.7.3" class="anchored" data-anchor-id="推荐提前阅读选读"><span class="header-section-number">1.7.3</span> 推荐提前阅读（选读）</h3>
+<p>如果你想在开课前先热热身，推荐阅读：</p>
+<ol type="1">
+<li>《R for Data Science》的前六章（https://r4ds.had.co.nz/intro.html）</li>
+<li>《The Art of Data Science》的前三章</li>
+<li>这门课的 GitHub 仓库 README</li>
+</ol>
+</section>
+</section>
+<section id="优秀学长项目展示" class="level2" data-number="1.8">
+<h2 data-number="1.8" class="anchored" data-anchor-id="优秀学长项目展示"><span class="header-section-number">1.8</span> 优秀学长项目展示</h2>
+<p>这些是往届研究生的课程项目（已获授权），展示课程技能在真实研究中的应用：</p>
+<section id="项目一土壤呼吸数据标准化流程" class="level3" data-number="1.8.1">
+<h3 data-number="1.8.1" class="anchored" data-anchor-id="项目一土壤呼吸数据标准化流程"><span class="header-section-number">1.8.1</span> 项目一：土壤呼吸数据标准化流程 ⭐</h3>
+<p><strong>团队</strong>：2019级生态学硕士组（3人）</p>
+<p><strong>背景</strong>：在三个自然保护区开展了为期一年的土壤呼吸监测，积累了 5000+ 条手动测量记录和配套气象数据。</p>
+<p><strong>项目内容</strong>：开发了一套从野外纸质记录→数据录入→异常值检测→格式转换的自动化流程。</p>
+<p><strong>核心成果</strong>：将原来需要 <strong>2天</strong> 的月度数据整理工作缩短至 <strong>2小时</strong>。</p>
+<p><strong>技术栈</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 用 R Markdown 生成了可重复的质量报告</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>rmarkdown<span class="sc">::</span><span class="fu">render</span>(<span class="st">"soil_respiration_report.Rmd"</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 自动检测异常值（超过均值±3SD的记录）</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>outliers <span class="ot">&lt;-</span> soil_data <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(site, month) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">abs</span>(value <span class="sc">-</span> <span class="fu">mean</span>(value)) <span class="sc">&gt;</span> <span class="dv">3</span> <span class="sc">*</span> <span class="fu">sd</span>(value))</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 一键生成质量诊断图</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(outliers, <span class="fu">aes</span>(<span class="at">x =</span> date, <span class="at">y =</span> value, <span class="at">color =</span> site)) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="fu">aes</span>(<span class="at">yintercept =</span> upper_bound), <span class="at">linetype =</span> <span class="st">"dashed"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>链接</strong>：https://github.com/Data-collection-and-preprocessing/soil-respiration-pipeline</p>
+<hr>
+</section>
+<section id="项目二鸟类多样性公开数据荟萃分析" class="level3" data-number="1.8.2">
+<h3 data-number="1.8.2" class="anchored" data-anchor-id="项目二鸟类多样性公开数据荟萃分析"><span class="header-section-number">1.8.2</span> 项目二：鸟类多样性公开数据荟萃分析 🦅</h3>
+<p><strong>团队</strong>：2021级生态学硕士组（4人）</p>
+<p><strong>背景</strong>：想研究广西北部湾沿海湿地的鸟类群落动态，但没有时间和经费做自己的调查。</p>
+<p><strong>项目内容</strong>：整合 GBIF 和 eBird 的公开数据，处理了超过 <strong>15万条</strong> 观测记录。</p>
+<p><strong>核心成果</strong>：建立了广西沿海湿地鸟类多样性数据库，并分析了十年间的群落动态变化。</p>
+<p><strong>技术栈</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从 GBIF API 批量下载物种分布数据</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(rgbif)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">occ_download</span>(</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pred</span>(<span class="st">"country"</span>, <span class="st">"CN"</span>),</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pred</span>(<span class="st">" genus"</span>, <span class="st">"Ciconia"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">format =</span> <span class="st">"SIMPLE_CSV"</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 物种名称标准化（解决同义词问题）</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(taxadb)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>species_clean <span class="ot">&lt;-</span> taxa <span class="sc">|&gt;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  filter_name匹配(gbif_backbone)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算多样性指数</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(vegan)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>diversity_result <span class="ot">&lt;-</span> <span class="fu">diversity</span>(species_matrix, <span class="at">index =</span> <span class="st">"shannon"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>链接</strong>：https://github.com/Data-collection-and-preprocessing/bird-diversity-metaanalysis</p>
+<hr>
+</section>
+<section id="项目三植物功能性状数据库" class="level3" data-number="1.8.3">
+<h3 data-number="1.8.3" class="anchored" data-anchor-id="项目三植物功能性状数据库"><span class="header-section-number">1.8.3</span> 项目三：植物功能性状数据库 📚</h3>
+<p><strong>团队</strong>：2020级林业硕士组（4人）</p>
+<p><strong>背景</strong>：课题组近五年采集了大量植物叶片功能性状数据，但散落在 Excel 文件夹、纸质记录本和合作实验室的邮件附件里。</p>
+<p><strong>项目内容</strong>：构建了一个规范化的 SQLite 数据库，实现多源数据的统一存储、查询和导出。</p>
+<p><strong>核心成果</strong>：把课题组五年积累的 2000+ 条植物功能性状记录从”找不着”变成”随时查”。</p>
+<p><strong>技术栈</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 用 R Shiny 做了数据录入界面</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(shiny)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="fu">shinyApp</span>(</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">ui =</span> <span class="fu">fluidPage</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">textInput</span>(<span class="st">"species"</span>, <span class="st">"物种名"</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">numericInput</span>(<span class="st">"leaf_area"</span>, <span class="st">"叶面积 (cm²)"</span>, <span class="at">value =</span> <span class="cn">NA</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">numericInput</span>(<span class="st">"SLA"</span>, <span class="st">"比叶面积 (m²/kg)"</span>, <span class="at">value =</span> <span class="cn">NA</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">actionButton</span>(<span class="st">"submit"</span>, <span class="st">"提交记录"</span>)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">server =</span> <span class="cf">function</span>(input, output) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">observeEvent</span>(input<span class="sc">$</span>submit, {</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">dbExecute</span>(con, <span class="st">"INSERT INTO leaf_traits VALUES (?, ?, ?)"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>                <span class="fu">list</span>(input<span class="sc">$</span>species, input<span class="sc">$</span>leaf_area, input<span class="sc">$</span>SLA))</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    })</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>链接</strong>：https://github.com/Data-collection-and-preprocessing/plant-trait-database</p>
+</section>
+</section>
+<section id="常见问题faq" class="level2" data-number="1.9">
+<h2 data-number="1.9" class="anchored" data-anchor-id="常见问题faq"><span class="header-section-number">1.9</span> 常见问题（FAQ）</h2>
+<section id="q1课程需要多少时间会不会太重" class="level3" data-number="1.9.1">
+<h3 data-number="1.9.1" class="anchored" data-anchor-id="q1课程需要多少时间会不会太重"><span class="header-section-number">1.9.1</span> Q1：课程需要多少时间？会不会太重？</h3>
+<p>A：这门课每周有 2 学时课堂讲授 + 2 学时上机实践，外加每周约 2-4 小时的课外练习时间。</p>
+<p>如果你认真跟着走，不会太重。但如果你等到最后一周才赶作业，会非常痛苦。</p>
+<p>课程强调”细水长流”，而不是”期末突击”。建议每周按时完成练习，不要堆积。</p>
+<hr>
+</section>
+<section id="q2选这门课需要自带数据吗" class="level3" data-number="1.9.2">
+<h3 data-number="1.9.2" class="anchored" data-anchor-id="q2选这门课需要自带数据吗"><span class="header-section-number">1.9.2</span> Q2：选这门课需要自带数据吗？</h3>
+<p>A：<strong>不需要。</strong> 课程会提供模拟数据集供练习使用。</p>
+<p>但如果你有自己正在采集或已经采集好的数据，可以把小组项目基于自己的数据来做——这样你课程结束时就同时完成了课程作业和自己的数据预处理工作，一举两得。</p>
+<hr>
+</section>
+<section id="q3r-和-python-要同时学吗" class="level3" data-number="1.9.3">
+<h3 data-number="1.9.3" class="anchored" data-anchor-id="q3r-和-python-要同时学吗"><span class="header-section-number">1.9.3</span> Q3：R 和 Python 要同时学吗？</h3>
+<p>A：<strong>不用同时学，以 R 为主。</strong></p>
+<p>课程设计以 R 为核心，因为 tidyverse 生态让数据操作非常直观，而且 R 在生态学统计建模领域包最全（vegan、lme4、brms 等）。</p>
+<p>Python 在机器学习和大数据场景更强，会在 0305（机器学习预处理）和 0208（Python 网络采集）章节用到。如果你对 Python 感兴趣，可以额外学习；如果不感兴趣，只掌握 R 也完全够用。</p>
+<hr>
+</section>
+<section id="q4小组项目可以自己做吗" class="level3" data-number="1.9.4">
+<h3 data-number="1.9.4" class="anchored" data-anchor-id="q4小组项目可以自己做吗"><span class="header-section-number">1.9.4</span> Q4：小组项目可以自己做吗？</h3>
+<p>A：<strong>不建议。</strong> 小组协作本身就是课程要培养的核心能力之一。</p>
+<p>在科研中，很少有项目是完全独立完成的——你需要和导师、合作者、数据管理员沟通协调。小组项目提供了一个安全的练习环境，犯了错也不会有严重后果。</p>
+<p>当然，团队协作需要磨合。如果你的小组内部出现问题，及时联系老师，我们会帮你协调。</p>
+<hr>
+</section>
+<section id="q5课程内容和我的研究方向不匹配怎么办" class="level3" data-number="1.9.5">
+<h3 data-number="1.9.5" class="anchored" data-anchor-id="q5课程内容和我的研究方向不匹配怎么办"><span class="header-section-number">1.9.5</span> Q5：课程内容和我的研究方向不匹配怎么办？</h3>
+<p>A：<strong>很可能没那么不匹配。</strong></p>
+<p>数据采集和预处理是所有生态学研究的基础技能。无论你是做植物、动物、土壤、气候还是生态系统，你都需要采集数据、清洗数据、分析数据。</p>
+<p>如果你真的觉得课程内容完全不符合你的研究方向，联系老师，我们可以帮你定制一个基于你自己数据的练习项目。</p>
+<hr>
+</section>
+<section id="q6课程结束后我应该继续学什么" class="level3" data-number="1.9.6">
+<h3 data-number="1.9.6" class="anchored" data-anchor-id="q6课程结束后我应该继续学什么"><span class="header-section-number">1.9.6</span> Q6：课程结束后，我应该继续学什么？</h3>
+<p>A：三个推荐方向：</p>
+<p><strong>方向一：统计建模</strong>——如果你想深入数据分析，学好线性模型（lm）、广义线性模型（glm）、混合效应模型（lme4）。推荐《Statistical Rethinking》和《Generalized Additive Models》。</p>
+<p><strong>方向二：空间分析</strong>——如果你做遥感或 GIS，学 QGIS、sf 包和terra包。推荐《Geocomputation with R》。</p>
+<p><strong>方向三：机器学习</strong>——如果你对预测建模感兴趣，学 tidymodels 和 caret。推荐《Hands-On Machine Learning with R》。</p>
+</section>
+</section>
+<section id="如何获取帮助" class="level2" data-number="1.10">
+<h2 data-number="1.10" class="anchored" data-anchor-id="如何获取帮助"><span class="header-section-number">1.10</span> 如何获取帮助</h2>
+<section id="遇到问题时的正确顺序" class="level3" data-number="1.10.1">
+<h3 data-number="1.10.1" class="anchored" data-anchor-id="遇到问题时的正确顺序"><span class="header-section-number">1.10.1</span> 遇到问题时的正确顺序</h3>
+<p>不要一遇到问题就去找老师。按这个顺序来：</p>
+<ol type="1">
+<li><strong>自己解决</strong>（5-10 分钟）：仔细读报错信息，搜索引擎查一下</li>
+<li><strong>课程群提问</strong>：附上可复现的代码（不是截图，是代码文本），老师或同学帮你看</li>
+<li><strong>GitHub Issue</strong>：如果是课程资料本身的问题（错误、缺失、过时），提 Issue</li>
+<li><strong>找老师</strong>：以上都没解决的情况</li>
+</ol>
+</section>
+<section id="联系老师" class="level3" data-number="1.10.2">
+<h3 data-number="1.10.2" class="anchored" data-anchor-id="联系老师"><span class="header-section-number">1.10.2</span> 联系老师</h3>
 <ul>
-<li>请研究生们根据自己的实验室或者研究方向，自行分组，每组人数不超过 10 人。</li>
-<li>在第二次课程开始前，请在雨课堂内确认分组。</li>
+<li><strong>邮箱</strong>：huaqingliu@gxu.edu.cn（最好用学校邮箱）</li>
+<li><strong>办公地点</strong>：广西大学林学院 XXX 室</li>
+<li><strong>答疑时间</strong>：每周三下午 14:00-17:00（请提前邮件预约）</li>
 </ul>
 </section>
-<section id="如何考察" class="level2">
-<h2 class="anchored" data-anchor-id="如何考察">如何考察？</h2>
-<ul>
-<li>使用课程中教授的技能，创建一个数据分析、软件开发、研究复现等类型的项目</li>
-<li>3 - 5 人一组共创一个项目，将项目代码移交到<a href="https://github.com/Data-collection-and-preprocessing">课程仓库</a>（使用 transfer 的方法）</li>
-<li>项目可以以课程建设为立足点，为<a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring">课程课件</a>提出改进意见。</li>
-<li>需要保证每个人在项目中都有贡献（通过 Git 追踪）。</li>
+<section id="课程资源" class="level3" data-number="1.10.3">
+<h3 data-number="1.10.3" class="anchored" data-anchor-id="课程资源"><span class="header-section-number">1.10.3</span> 课程资源</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 50%">
+<col style="width: 50%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">资源</th>
+<th style="text-align: left;">地址</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">课程 GitHub 仓库</td>
+<td style="text-align: left;">https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">课程课件</td>
+<td style="text-align: left;">同上仓库的 <code>docs/</code> 目录</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据下载</td>
+<td style="text-align: left;">同上仓库的 <code>data/</code> 目录</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">讨论区</td>
+<td style="text-align: left;">GitHub Issues</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="课后练习开课前准备检查清单" class="level2" data-number="1.11">
+<h2 data-number="1.11" class="anchored" data-anchor-id="课后练习开课前准备检查清单"><span class="header-section-number">1.11</span> 课后练习：开课前准备检查清单</h2>
+<p>在第一次上课之前，请完成以下任务：</p>
+<section id="第一步安装软件预计-2-3-小时" class="level3" data-number="1.11.1">
+<h3 data-number="1.11.1" class="anchored" data-anchor-id="第一步安装软件预计-2-3-小时"><span class="header-section-number">1.11.1</span> ✅ 第一步：安装软件（预计 2-3 小时）</h3>
+<p>安装清单：</p>
+<ul class="task-list">
+<li><label><input type="checkbox">下载并安装 R（https://cran.r-project.org/）</label></li>
+<li><label><input type="checkbox">下载并安装 RStudio Desktop（https://posit.co/download/rstudio-desktop/）</label></li>
+<li><label><input type="checkbox">下载并安装 Python（https://www.python.org/downloads/）</label></li>
+<li><label><input type="checkbox">下载并安装 Git（https://git-scm.com/downloads）</label></li>
+<li><label><input type="checkbox">下载并安装 Quarto（https://quarto.org/docs/download/）</label></li>
+</ul>
+<p><strong>验证安装成功</strong>：打开 RStudio，在控制台输入 <code>sessionInfo()</code>，回车，看到 R 版本信息即成功。</p>
+</section>
+<section id="第二步注册账号预计-30-分钟" class="level3" data-number="1.11.2">
+<h3 data-number="1.11.2" class="anchored" data-anchor-id="第二步注册账号预计-30-分钟"><span class="header-section-number">1.11.2</span> ✅ 第二步：注册账号（预计 30 分钟）</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">注册 GitHub 账号（https://github.com/，建议用学术邮箱.edu.cn 邮箱注册）</label></li>
+<li><label><input type="checkbox">加入课程 GitHub 组织（第一次上课时老师会发邀请链接）</label></li>
+<li><label><input type="checkbox">申请 GitHub Education 优惠（https://education.github.com/，学生免费获得私有仓库额度）</label></li>
 </ul>
 </section>
-<section id="联系方式" class="level2">
-<h2 class="anchored" data-anchor-id="联系方式">联系方式</h2>
-<p>如有任何问题或建议，请通过以下方式联系：</p>
-<ul>
-<li>项目 <a href="https://github.com/Data-collection-and-preprocessing/Data-collection-and-preprocessing-2027-Spring/issues">Issue 板块</a></li>
-<li>邮箱：<a href="mailto:huaqingliu@gxu.edu.cn">联系老师</a></li>
-<li>QQ群：（公共群，加群时请说明来意）</li>
+<section id="第三步试运行第一个-r-脚本预计-1-小时" class="level3" data-number="1.11.3">
+<h3 data-number="1.11.3" class="anchored" data-anchor-id="第三步试运行第一个-r-脚本预计-1-小时"><span class="header-section-number">1.11.3</span> ✅ 第三步：试运行第一个 R 脚本（预计 1 小时）</h3>
+<p>在 RStudio 中新建一个 R Script，输入以下代码并运行：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装课程需要的包（需要几分钟）</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载包</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 运行一个简单的数据分析</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>iris <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(Species) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean_sepal_length =</span> <span class="fu">mean</span>(Sepal.Length),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd_sepal_length =</span> <span class="fu">sd</span>(Sepal.Length),</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">n =</span> <span class="fu">n</span>()</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> Species, <span class="at">y =</span> mean_sepal_length)) <span class="sc">+</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"steelblue"</span>) <span class="sc">+</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_errorbar</span>(</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">aes</span>(<span class="at">ymin =</span> mean_sepal_length <span class="sc">-</span> sd_sepal_length,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">ymax =</span> mean_sepal_length <span class="sc">+</span> sd_sepal_length),</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">width =</span> <span class="fl">0.3</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Iris 花瓣长度按物种分组统计"</span>,</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"物种"</span>,</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"平均花瓣长度 (cm)"</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>如果你看到了图表，恭喜你，环境搭建成功！🎉</p>
+</section>
+<section id="第四步阅读课程材料预计-2-小时" class="level3" data-number="1.11.4">
+<h3 data-number="1.11.4" class="anchored" data-anchor-id="第四步阅读课程材料预计-2-小时"><span class="header-section-number">1.11.4</span> ✅ 第四步：阅读课程材料（预计 2 小时）</h3>
+<ul class="task-list">
+<li><label><input type="checkbox">阅读本 GitHub 仓库的 README.md</label></li>
+<li><label><input type="checkbox">浏览课程目录结构，搞清楚每章内容</label></li>
+<li><label><input type="checkbox">阅读《R for Data Science》的 Introduction 和 Installation 章节</label></li>
 </ul>
+</section>
+<section id="第五步准备数据可选但强烈推荐" class="level3" data-number="1.11.5">
+<h3 data-number="1.11.5" class="anchored" data-anchor-id="第五步准备数据可选但强烈推荐"><span class="header-section-number">1.11.5</span> ✅ 第五步：准备数据（可选，但强烈推荐）</h3>
+<p>如果你有正在做或计划做的研究，问自己几个问题：</p>
+<ol type="1">
+<li>我要采集/已经采集了什么数据？</li>
+<li>这些数据的变量是什么？单位是什么？</li>
+<li>数据现在存在哪里？格式是什么（Excel？纸质记录本？）？</li>
+<li>我预计会遇到什么数据质量问题（缺失值？异常值？）？</li>
+</ol>
+<p>在第一堂课前把这些想清楚，能让你的小组项目更有针对性。</p>
+<hr>
+<p>准备好之后，我们第一堂课见！👋</p>
+<p><em>课程教师：刘华清</em> <em>广西大学林学院</em> <em>huaqingliu@gxu.edu.cn</em></p>
 
 
+</section>
 </section>
 </section>
 
@@ -863,7 +1484,7 @@ ul.task-list li input[type="checkbox"] {
   </div>
   <div class="nav-page nav-page-next">
       <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="什么是数据采集">
-        <span class="nav-page-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

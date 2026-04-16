@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>10&nbsp; 生态学建模与数据生成方法 – 数据采集与预处理</title>
+<title>12&nbsp; 生态学建模与数据生成方法 – 数据采集与预处理</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -125,6 +125,35 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -138,7 +167,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -166,7 +195,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -181,19 +210,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
   </div>
 </li>
       </ul>
@@ -210,19 +245,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
   </div>
 </li>
       </ul>
@@ -239,49 +274,49 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
   </div>
 </li>
       </ul>
@@ -298,19 +333,31 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据质量控制</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
   </div>
 </li>
       </ul>
@@ -327,13 +374,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -350,19 +397,19 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
   </div>
 </li>
       </ul>
@@ -370,7 +417,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
   </div>
 </li>
     </ul>
@@ -383,36 +430,70 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">10.1</span> 引言</a></li>
-  <li><a href="#模型作为数据生成器" id="toc-模型作为数据生成器" class="nav-link" data-scroll-target="#模型作为数据生成器"><span class="header-section-number">10.2</span> 模型作为”数据生成器”</a></li>
-  <li><a href="#主要的生态学模型类型" id="toc-主要的生态学模型类型" class="nav-link" data-scroll-target="#主要的生态学模型类型"><span class="header-section-number">10.3</span> 主要的生态学模型类型</a>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">12.1</span> 引言</a></li>
+  <li><a href="#模型作为数据生成器" id="toc-模型作为数据生成器" class="nav-link" data-scroll-target="#模型作为数据生成器"><span class="header-section-number">12.2</span> 模型作为”数据生成器”</a>
   <ul class="collapse">
-  <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">10.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
-  <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">10.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
-  <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">10.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
-  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">10.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
+  <li><a href="#为什么生态学家需要模型生成数据" id="toc-为什么生态学家需要模型生成数据" class="nav-link" data-scroll-target="#为什么生态学家需要模型生成数据"><span class="header-section-number">12.2.1</span> 为什么生态学家需要模型生成数据？</a></li>
   </ul></li>
-  <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">10.4</span> 模型数据的生成流程</a></li>
-  <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">10.5</span> 模型数据的验证与不确定性</a></li>
-  <li><a href="#r-代码示例简单统计模型" id="toc-r-代码示例简单统计模型" class="nav-link" data-scroll-target="#r-代码示例简单统计模型"><span class="header-section-number">10.6</span> R 代码示例：简单统计模型</a>
+  <li><a href="#主要的生态学模型类型" id="toc-主要的生态学模型类型" class="nav-link" data-scroll-target="#主要的生态学模型类型"><span class="header-section-number">12.3</span> 主要的生态学模型类型</a>
   <ul class="collapse">
-  <li><a href="#准备数据" id="toc-准备数据" class="nav-link" data-scroll-target="#准备数据"><span class="header-section-number">10.6.1</span> 准备数据</a></li>
-  <li><a href="#拟合线性回归模型" id="toc-拟合线性回归模型" class="nav-link" data-scroll-target="#拟合线性回归模型"><span class="header-section-number">10.6.2</span> 拟合线性回归模型</a></li>
-  <li><a href="#可视化回归结果" id="toc-可视化回归结果" class="nav-link" data-scroll-target="#可视化回归结果"><span class="header-section-number">10.6.3</span> 可视化回归结果</a></li>
-  <li><a href="#模型诊断" id="toc-模型诊断" class="nav-link" data-scroll-target="#模型诊断"><span class="header-section-number">10.6.4</span> 模型诊断</a></li>
-  <li><a href="#使用模型生成预测数据" id="toc-使用模型生成预测数据" class="nav-link" data-scroll-target="#使用模型生成预测数据"><span class="header-section-number">10.6.5</span> 使用模型生成预测数据</a></li>
+  <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">12.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
+  <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">12.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
+  <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">12.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
+  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
   </ul></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">10.7</span> 总结</a></li>
-  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">10.8</span> 课后练习</a></li>
+  <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">12.4</span> 模型数据的生成流程</a></li>
+  <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">12.5</span> 模型数据的验证与不确定性</a></li>
+  <li><a href="#种群动态模型逻辑斯蒂增长与ricker模型" id="toc-种群动态模型逻辑斯蒂增长与ricker模型" class="nav-link" data-scroll-target="#种群动态模型逻辑斯蒂增长与ricker模型"><span class="header-section-number">12.6</span> 种群动态模型：逻辑斯蒂增长与Ricker模型</a>
+  <ul class="collapse">
+  <li><a href="#逻辑斯蒂增长模型-logistic-growth-model" id="toc-逻辑斯蒂增长模型-logistic-growth-model" class="nav-link" data-scroll-target="#逻辑斯蒂增长模型-logistic-growth-model"><span class="header-section-number">12.6.1</span> 1. 逻辑斯蒂增长模型 (Logistic Growth Model)</a></li>
+  <li><a href="#ricker模型考虑过度补偿效应" id="toc-ricker模型考虑过度补偿效应" class="nav-link" data-scroll-target="#ricker模型考虑过度补偿效应"><span class="header-section-number">12.6.2</span> 2. Ricker模型：考虑过度补偿效应</a></li>
+  <li><a href="#矩阵模型-leslie矩阵" id="toc-矩阵模型-leslie矩阵" class="nav-link" data-scroll-target="#矩阵模型-leslie矩阵"><span class="header-section-number">12.6.3</span> 3. 矩阵模型 (Leslie矩阵)</a></li>
+  </ul></li>
+  <li><a href="#物种分布模型-species-distribution-models-sdm" id="toc-物种分布模型-species-distribution-models-sdm" class="nav-link" data-scroll-target="#物种分布模型-species-distribution-models-sdm"><span class="header-section-number">12.7</span> 物种分布模型 (Species Distribution Models, SDM)</a>
+  <ul class="collapse">
+  <li><a href="#基本原理" id="toc-基本原理" class="nav-link" data-scroll-target="#基本原理"><span class="header-section-number">12.7.1</span> 基本原理</a></li>
+  <li><a href="#数据准备模拟物种分布数据" id="toc-数据准备模拟物种分布数据" class="nav-link" data-scroll-target="#数据准备模拟物种分布数据"><span class="header-section-number">12.7.2</span> 数据准备：模拟物种分布数据</a></li>
+  <li><a href="#使用glm建模物种分布" id="toc-使用glm建模物种分布" class="nav-link" data-scroll-target="#使用glm建模物种分布"><span class="header-section-number">12.7.3</span> 使用GLM建模物种分布</a></li>
+  <li><a href="#可视化预测结果" id="toc-可视化预测结果" class="nav-link" data-scroll-target="#可视化预测结果"><span class="header-section-number">12.7.4</span> 可视化预测结果</a></li>
+  <li><a href="#使用maxent建模通过dismo包" id="toc-使用maxent建模通过dismo包" class="nav-link" data-scroll-target="#使用maxent建模通过dismo包"><span class="header-section-number">12.7.5</span> 使用MaxEnt建模（通过dismo包）</a></li>
+  </ul></li>
+  <li><a href="#实战技巧" id="toc-实战技巧" class="nav-link" data-scroll-target="#实战技巧"><span class="header-section-number">12.8</span> 实战技巧</a>
+  <ul class="collapse">
+  <li><a href="#模型选择指南" id="toc-模型选择指南" class="nav-link" data-scroll-target="#模型选择指南"><span class="header-section-number">12.8.1</span> 1. 模型选择指南</a></li>
+  <li><a href="#参数调优策略" id="toc-参数调优策略" class="nav-link" data-scroll-target="#参数调优策略"><span class="header-section-number">12.8.2</span> 2. 参数调优策略</a></li>
+  <li><a href="#结果解读规范" id="toc-结果解读规范" class="nav-link" data-scroll-target="#结果解读规范"><span class="header-section-number">12.8.3</span> 3. 结果解读规范</a></li>
+  </ul></li>
+  <li><a href="#r代码示例简单统计模型" id="toc-r代码示例简单统计模型" class="nav-link" data-scroll-target="#r代码示例简单统计模型"><span class="header-section-number">12.9</span> R代码示例：简单统计模型</a>
+  <ul class="collapse">
+  <li><a href="#准备数据" id="toc-准备数据" class="nav-link" data-scroll-target="#准备数据"><span class="header-section-number">12.9.1</span> 准备数据</a></li>
+  <li><a href="#拟合线性回归模型" id="toc-拟合线性回归模型" class="nav-link" data-scroll-target="#拟合线性回归模型"><span class="header-section-number">12.9.2</span> 拟合线性回归模型</a></li>
+  <li><a href="#可视化回归结果" id="toc-可视化回归结果" class="nav-link" data-scroll-target="#可视化回归结果"><span class="header-section-number">12.9.3</span> 可视化回归结果</a></li>
+  <li><a href="#模型诊断" id="toc-模型诊断" class="nav-link" data-scroll-target="#模型诊断"><span class="header-section-number">12.9.4</span> 模型诊断</a></li>
+  <li><a href="#使用模型生成预测数据" id="toc-使用模型生成预测数据" class="nav-link" data-scroll-target="#使用模型生成预测数据"><span class="header-section-number">12.9.5</span> 使用模型生成预测数据</a></li>
+  </ul></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">12.10</span> 总结</a></li>
+  <li><a href="#延伸阅读" id="toc-延伸阅读" class="nav-link" data-scroll-target="#延伸阅读"><span class="header-section-number">12.11</span> 延伸阅读</a>
+  <ul class="collapse">
+  <li><a href="#经典文献" id="toc-经典文献" class="nav-link" data-scroll-target="#经典文献"><span class="header-section-number">12.11.1</span> 经典文献</a></li>
+  <li><a href="#在线资源" id="toc-在线资源" class="nav-link" data-scroll-target="#在线资源"><span class="header-section-number">12.11.2</span> 在线资源</a></li>
+  </ul></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">12.12</span> 课后练习</a>
+  <ul class="collapse">
+  <li><a href="#练习一逻辑斯蒂模型的参数敏感性分析" id="toc-练习一逻辑斯蒂模型的参数敏感性分析" class="nav-link" data-scroll-target="#练习一逻辑斯蒂模型的参数敏感性分析"><span class="header-section-number">12.12.1</span> 练习一：逻辑斯蒂模型的参数敏感性分析</a></li>
+  <li><a href="#练习二物种分布模型评估" id="toc-练习二物种分布模型评估" class="nav-link" data-scroll-target="#练习二物种分布模型评估"><span class="header-section-number">12.12.2</span> 练习二：物种分布模型评估</a></li>
+  <li><a href="#练习三模型选择与aic比较" id="toc-练习三模型选择与aic比较" class="nav-link" data-scroll-target="#练习三模型选择与aic比较"><span class="header-section-number">12.12.3</span> 练习三：模型选择与AIC比较</a></li>
+  <li><a href="#练习四思考外推风险" id="toc-练习四思考外推风险" class="nav-link" data-scroll-target="#练习四思考外推风险"><span class="header-section-number">12.12.4</span> 练习四：思考外推风险</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0204-modeling.html"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></h1>
+<h1 class="title"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></h1>
 </div>
 
 
@@ -429,79 +510,670 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </header>
 
 
-<section id="引言" class="level2" data-number="10.1">
-<h2 data-number="10.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">10.1</span> 引言</h2>
-<p>在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来 100 年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，<strong>生态学模型（Ecological Modeling）</strong>成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的”数据生成器”，它能够产生跨越时空限制的虚拟数据，帮助我们探索”如果……会怎样”的情景。</p>
+<section id="引言" class="level2" data-number="12.1">
+<h2 data-number="12.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">12.1</span> 引言</h2>
+<p>在生态学研究中，有些问题是无法通过直接观测或实验来回答的。例如，未来100年气候变化对全球森林碳汇的影响，或者某种入侵物种在整个大陆尺度的扩散路径。在这种情况下，<strong>生态学模型（Ecological Modeling）</strong>成为了不可或缺的工具。模型不仅是理解系统的手段，更是一种重要的”数据生成器”，它能够产生跨越时空限制的虚拟数据，帮助我们探索”如果……会怎样”的情景。</p>
+<p>生态学建模的本质是用数学语言描述生态系统的结构与过程。从逻辑斯蒂增长模型（Logistic Growth Model）到最大熵生态位模型（MaxEnt），从单物种种群动态到多营养级食物网模型，建模技术的发展始终与生态学理论演进紧密交织（Case, 2000, <em>An Illustrated Guide to Theoretical Ecology</em>, Oxford University Press）。在本章中，我们将系统介绍生态学建模的基本框架、数据生成流程，并重点演示两类与生态学研究生科研实践密切相关的模型：<strong>种群动态模型</strong>和<strong>物种分布模型（SDM）</strong>。</p>
 </section>
-<section id="模型作为数据生成器" class="level2" data-number="10.2">
-<h2 data-number="10.2" class="anchored" data-anchor-id="模型作为数据生成器"><span class="header-section-number">10.2</span> 模型作为”数据生成器”</h2>
-<p>模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。 * <strong>输入数据</strong>：模型需要真实的观测或实验数据作为初始条件和参数。 * <strong>输出数据</strong>：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。</p>
-</section>
-<section id="主要的生态学模型类型" class="level2" data-number="10.3">
-<h2 data-number="10.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">10.3</span> 主要的生态学模型类型</h2>
-<section id="统计模型-statistical-models" class="level3" data-number="10.3.1">
-<h3 data-number="10.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">10.3.1</span> 1. 统计模型 (Statistical Models)</h3>
-<p>利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。 * <strong>特点</strong>：侧重于相关性，对历史数据依赖性强。 * <strong>应用</strong>：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。</p>
-</section>
-<section id="机理模型-process-based-models" class="level3" data-number="10.3.2">
-<h3 data-number="10.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">10.3.2</span> 2. 机理模型 (Process-based Models)</h3>
-<p>基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。 * <strong>特点</strong>：具有较强的生物学解释力，能够预测超出历史经验范围的情景。 * <strong>应用</strong>：植被动态模型（DGVMs），模拟全球植被对大气 CO2 浓度升高的响应。</p>
-</section>
-<section id="个体为本模型-agent-based-models-abm" class="level3" data-number="10.3.3">
-<h3 data-number="10.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">10.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
-<p>模拟大量具有独立决策能力的个体（如动物、植物或人类）及其相互作用。 * <strong>特点</strong>：能够观察到从微观行为中”涌现”出的宏观群体模式。 * <strong>应用</strong>：动物迁徙路径模拟、流行病在野生动物种群中的传播。</p>
-</section>
-<section id="地球系统模型-earth-system-models" class="level3" data-number="10.3.4">
-<h3 data-number="10.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">10.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
-<p>集成大气、海洋、陆地生态系统的超大规模数值模拟系统。 * <strong>特点</strong>：处理全球尺度的复杂反馈关系。 * <strong>应用</strong>：IPCC 气候变化评估报告中的生态系统响应预测。</p>
+<section id="模型作为数据生成器" class="level2" data-number="12.2">
+<h2 data-number="12.2" class="anchored" data-anchor-id="模型作为数据生成器"><span class="header-section-number">12.2</span> 模型作为”数据生成器”</h2>
+<p>模型生成的数据（Model-Generated Data）是指通过数学方程或计算机算法模拟生态过程而产生的结果。</p>
+<ul>
+<li><strong>输入数据</strong>：模型需要真实的观测或实验数据作为初始条件和参数。</li>
+<li><strong>输出数据</strong>：模型运行产生的预测值、模拟序列或空间分布图。这些输出在经过验证后，可以作为科学研究和政策制定的重要依据。</li>
+</ul>
+<section id="为什么生态学家需要模型生成数据" class="level3" data-number="12.2.1">
+<h3 data-number="12.2.1" class="anchored" data-anchor-id="为什么生态学家需要模型生成数据"><span class="header-section-number">12.2.1</span> 为什么生态学家需要模型生成数据？</h3>
+<ol type="1">
+<li><strong>时空尺度的跨越</strong>：野外实验往往受限于有限的时空范围。例如，气候变化对森林演替的影响需要数十年甚至数百年的观测，而模型可以在数分钟内模拟这一过程。</li>
+<li><strong>不可逆实验的替代</strong>：某些生态学实验（如外来物种引入）一旦实施就无法撤回，模型可以在实验前评估潜在风险。</li>
+<li><strong>数据稀缺场景的推断</strong>：对于濒危物种或未调查区域，模型可以利用已有数据和环境变量关系进行空间推断。</li>
+</ol>
 </section>
 </section>
-<section id="模型数据的生成流程" class="level2" data-number="10.4">
-<h2 data-number="10.4" class="anchored" data-anchor-id="模型数据的生成流程"><span class="header-section-number">10.4</span> 模型数据的生成流程</h2>
+<section id="主要的生态学模型类型" class="level2" data-number="12.3">
+<h2 data-number="12.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">12.3</span> 主要的生态学模型类型</h2>
+<section id="统计模型-statistical-models" class="level3" data-number="12.3.1">
+<h3 data-number="12.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">12.3.1</span> 1. 统计模型 (Statistical Models)</h3>
+<p>利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。</p>
+<ul>
+<li><strong>特点</strong>：侧重于相关性，对历史数据依赖性强。</li>
+<li><strong>应用</strong>：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。</li>
+</ul>
+</section>
+<section id="机理模型-process-based-models" class="level3" data-number="12.3.2">
+<h3 data-number="12.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">12.3.2</span> 2. 机理模型 (Process-based Models)</h3>
+<p>基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。</p>
+<ul>
+<li><strong>特点</strong>：具有较强的生物学解释力，能够预测超出历史经验范围的情景。</li>
+<li><strong>应用</strong>：植被动态模型（DGVMs），模拟全球植被对大气CO₂浓度升高的响应。</li>
+</ul>
+</section>
+<section id="个体为本模型-agent-based-models-abm" class="level3" data-number="12.3.3">
+<h3 data-number="12.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">12.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
+<p>个体为本模型（ABM）是一种”自下而上”的建模方法，通过模拟大量具有独立决策能力的个体（agent）及其相互作用，来观察宏观层面的群体模式如何从微观行为中”涌现”（emerge）出来。这种方法特别适合研究复杂系统中个体异质性和空间结构的影响。</p>
+<p><strong>核心特征</strong>：</p>
+<ol type="1">
+<li><strong>个体异质性</strong>：每个个体可以有不同的属性（如年龄、性别、能量储备）和行为规则</li>
+<li><strong>局部交互</strong>：个体只与邻近的其他个体或环境交互，而非全局平均</li>
+<li><strong>涌现现象</strong>：宏观模式（如种群聚集、迁徙路径）从微观规则中自发产生，而非预先设定</li>
+<li><strong>空间显式</strong>：个体在空间中有明确位置，空间结构影响交互模式</li>
+</ol>
+<p><strong>与传统模型的对比</strong>：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">特性</th>
+<th style="text-align: left;">传统统计模型</th>
+<th style="text-align: left;">个体为本模型</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">建模视角</td>
+<td style="text-align: left;">自上而下（群体平均）</td>
+<td style="text-align: left;">自下而上（个体行为）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">个体差异</td>
+<td style="text-align: left;">忽略或平均化</td>
+<td style="text-align: left;">显式建模</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">空间结构</td>
+<td style="text-align: left;">通常忽略</td>
+<td style="text-align: left;">空间显式</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">预测能力</td>
+<td style="text-align: left;">依赖历史数据</td>
+<td style="text-align: left;">可预测新情景</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">计算复杂度</td>
+<td style="text-align: left;">较低</td>
+<td style="text-align: left;">较高（需模拟大量个体）</td>
+</tr>
+</tbody>
+</table>
+<p><strong>生态学应用场景</strong>：</p>
+<ol type="1">
+<li><strong>动物迁徙路径模拟</strong>：模拟候鸟在迁徙过程中的觅食、休息和导航决策，预测气候变化对迁徙路线的影响</li>
+<li><strong>流行病传播</strong>：模拟野生动物种群中疾病的空间传播过程，评估不同防控策略的效果</li>
+<li><strong>森林演替</strong>：模拟单株树木的生长、竞争和死亡，预测森林群落的长期动态</li>
+<li><strong>捕食者-猎物互作</strong>：模拟捕食者和猎物的空间追逐过程，研究空间避难所对种群稳定性的影响</li>
+</ol>
+<p><strong>经典案例——Schelling 隔离模型在生态学中的启示</strong>：</p>
+<p>Schelling 模型最初用于研究城市种族隔离，但其原理可应用于生态学。假设两种物种（如两种鸟类）对邻居的偏好略有不同，即使个体只有轻微的”喜欢同类”倾向，也会在空间上形成显著的聚集模式。这揭示了生态位分化和物种共存的微观机制。</p>
+<p><strong>ABM 的优势与局限</strong>：</p>
+<p><strong>优势</strong>： - 可以模拟复杂的个体行为和决策过程 - 能够研究空间异质性和局部交互的影响 - 适合探索”如果…会怎样”的情景问题</p>
+<p><strong>局限</strong>： - 参数众多，校准困难（每个个体可能有多个参数） - 计算成本高（模拟数千个个体需要大量计算资源） - 结果对初始条件和随机性敏感，需要多次重复模拟</p>
+<p><strong>常用 ABM 工具</strong>：</p>
+<ul>
+<li><strong>NetLogo</strong>：图形化界面，适合教学和快速原型开发</li>
+<li><strong>Mesa (Python)</strong>：Python 库，适合与数据分析流程集成</li>
+<li><strong>Repast (Java)</strong>：适合大规模并行计算</li>
+</ul>
+<p><strong>生态学案例</strong>：某研究团队用 ABM 模拟了马尾松林中松材线虫病的传播过程。模型中每棵树是一个个体，具有健康状态、树龄和空间位置属性。媒介昆虫（松墨天牛）在树木间移动并传播病原体。模拟结果显示，即使只有 5% 的树木被感染，疾病也会在 10 年内扩散到整个林分，但如果及时清除病树并设置隔离带,可以有效控制传播。这一结果为森林病虫害防控提供了科学依据。</p>
+<p><strong>扩展记录</strong>: 2026-04-11 | 扩展者：Clawd | 目标字数：800+</p>
+</section>
+<section id="地球系统模型-earth-system-models" class="level3" data-number="12.3.4">
+<h3 data-number="12.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
+<p>集成大气、海洋、陆地生态系统的超大规模数值模拟系统。</p>
+<ul>
+<li><strong>特点</strong>：处理全球尺度的复杂反馈关系。</li>
+<li><strong>应用</strong>：IPCC气候变化评估报告中的生态系统响应预测。</li>
+</ul>
+</section>
+</section>
+<section id="模型数据的生成流程" class="level2" data-number="12.4">
+<h2 data-number="12.4" class="anchored" data-anchor-id="模型数据的生成流程"><span class="header-section-number">12.4</span> 模型数据的生成流程</h2>
 <ol type="1">
 <li><strong>参数化 (Parameterization)</strong>：利用实测数据确定模型中的关键参数（如生长速率、死亡率）。</li>
 <li><strong>模拟运行 (Simulation)</strong>：设定初始状态和驱动因子（如气象数据），运行模型生成模拟数据。</li>
 <li><strong>情景分析 (Scenario Analysis)</strong>：通过改变输入条件（如不同的减排情景），生成多组对比数据，评估不同政策或环境变化的影响。</li>
 </ol>
 </section>
-<section id="模型数据的验证与不确定性" class="level2" data-number="10.5">
-<h2 data-number="10.5" class="anchored" data-anchor-id="模型数据的验证与不确定性"><span class="header-section-number">10.5</span> 模型数据的验证与不确定性</h2>
-<p>模型生成的数据并非”真实”数据，其可靠性取决于： * <strong>模型校准 (Calibration)</strong>：调整参数使模型输出尽可能接近已知的观测值。 * <strong>模型验证 (Validation)</strong>：使用未参与建模的独立数据集来检验模型的预测准确性。 * <strong>不确定性分析</strong>：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。</p>
+<section id="模型数据的验证与不确定性" class="level2" data-number="12.5">
+<h2 data-number="12.5" class="anchored" data-anchor-id="模型数据的验证与不确定性"><span class="header-section-number">12.5</span> 模型数据的验证与不确定性</h2>
+<p>模型生成的数据并非”真实”数据，其可靠性取决于：</p>
+<ul>
+<li><strong>模型校准 (Calibration)</strong>：调整参数使模型输出尽可能接近已知的观测值。</li>
+<li><strong>模型验证 (Validation)</strong>：使用未参与建模的独立数据集来检验模型的预测准确性。</li>
+<li><strong>不确定性分析</strong>：识别由于参数误差、模型结构缺陷或输入数据质量导致的结果波动。</li>
+</ul>
 </section>
-<section id="r-代码示例简单统计模型" class="level2" data-number="10.6">
-<h2 data-number="10.6" class="anchored" data-anchor-id="r-代码示例简单统计模型"><span class="header-section-number">10.6</span> R 代码示例：简单统计模型</h2>
-<p>下面以一个经典的生态学问题——<strong>树高与胸径的关系</strong>——为例，演示如何在 R 中构建线性回归模型、进行模型诊断和结果解读。</p>
-<section id="准备数据" class="level3" data-number="10.6.1">
-<h3 data-number="10.6.1" class="anchored" data-anchor-id="准备数据"><span class="header-section-number">10.6.1</span> 准备数据</h3>
-<p>我们模拟一组亚热带常绿阔叶林的树木测量数据。在生态学中，树高（height）与胸径（DBH, diameter at breast height）之间通常存在正相关关系。</p>
+<section id="种群动态模型逻辑斯蒂增长与ricker模型" class="level2" data-number="12.6">
+<h2 data-number="12.6" class="anchored" data-anchor-id="种群动态模型逻辑斯蒂增长与ricker模型"><span class="header-section-number">12.6</span> 种群动态模型：逻辑斯蒂增长与Ricker模型</h2>
+<p>种群动态是生态学最基础的研究主题之一。理解种群如何随时间变化，对于野生动植物管理、生物多样性保护、入侵物种防控等领域具有直接的应用价值。</p>
+<section id="逻辑斯蒂增长模型-logistic-growth-model" class="level3" data-number="12.6.1">
+<h3 data-number="12.6.1" class="anchored" data-anchor-id="逻辑斯蒂增长模型-logistic-growth-model"><span class="header-section-number">12.6.1</span> 1. 逻辑斯蒂增长模型 (Logistic Growth Model)</h3>
+<p>逻辑斯蒂模型假设资源有限，种群增长呈S型曲线，密度制约效应使增长率随种群规模增加而下降。其微分形式为：</p>
+<p><span class="math display">\[\frac{dN}{dt} = rN\left(1 - \frac{N}{K}\right)\]</span></p>
+<p>其中：<span class="math inline">\(N\)</span> 为种群大小，<span class="math inline">\(r\)</span> 为内禀增长率，<span class="math inline">\(K\)</span> 为环境容纳量。</p>
+<p><strong>R代码实现</strong>：</p>
 <div class="cell">
 <div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟 50 棵树的胸径和树高数据</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_id  =</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">species  =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm   =</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">5</span>, <span class="at">max =</span> <span class="dv">40</span>),                          <span class="co"># 胸径 5-40 cm</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fl">2.5</span> <span class="sc">+</span> <span class="fl">0.35</span> <span class="sc">*</span> dbh_cm <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">1.5</span>)   <span class="co"># 树高 = 截距 + 斜率*胸径 + 噪声</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看前几行</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tree_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义逻辑斯蒂增长函数</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>logistic_growth <span class="ot">&lt;-</span> <span class="cf">function</span>(N0, r, K, t) {</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># N(t) = K / (1 + ((K - N0) / N0) * exp(-r * t))</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  K <span class="sc">/</span> (<span class="dv">1</span> <span class="sc">+</span> ((K <span class="sc">-</span> N0) <span class="sc">/</span> N0) <span class="sc">*</span> <span class="fu">exp</span>(<span class="sc">-</span>r <span class="sc">*</span> t))</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 参数设置</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>N0 <span class="ot">&lt;-</span> <span class="dv">10</span>       <span class="co"># 初始种群大小</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>r <span class="ot">&lt;-</span> <span class="fl">0.3</span>       <span class="co"># 内禀增长率</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>K <span class="ot">&lt;-</span> <span class="dv">500</span>       <span class="co"># 环境容纳量</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>t_max <span class="ot">&lt;-</span> <span class="dv">50</span>    <span class="co"># 模拟时间步</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成时间序列</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>time_steps <span class="ot">&lt;-</span> <span class="dv">0</span><span class="sc">:</span>t_max</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>N_sim <span class="ot">&lt;-</span> <span class="fu">logistic_growth</span>(N0, r, K, time_steps)</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建数据框</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>logistic_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> time_steps,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> N_sim</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(logistic_df, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> population)) <span class="sc">+</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> K, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">color =</span> <span class="st">"gray40"</span>) <span class="sc">+</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> t_max <span class="sc">*</span> <span class="fl">0.7</span>, <span class="at">y =</span> K <span class="sc">+</span> <span class="dv">20</span>, <span class="at">label =</span> <span class="st">"K (环境容纳量)"</span>) <span class="sc">+</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"时间 (年)"</span>,</span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"种群大小 N(t)"</span>,</span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"逻辑斯蒂增长曲线"</span>,</span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">subtitle =</span> <span class="fu">paste0</span>(<span class="st">"N0 = "</span>, N0, <span class="st">", r = "</span>, r, <span class="st">", K = "</span>, K)</span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="逻辑斯蒂模型的两个关键阈值">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>逻辑斯蒂模型的两个关键阈值
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>拐点</strong> (<span class="math inline">\(N = K/2\)</span>)：种群增长速率达到最大，之后开始下降</li>
+<li><strong>环境容纳量</strong> (<span class="math inline">\(K\)</span>)：种群长期平均规模的上限</li>
+</ul>
+</div>
 </div>
 </section>
-<section id="拟合线性回归模型" class="level3" data-number="10.6.2">
-<h3 data-number="10.6.2" class="anchored" data-anchor-id="拟合线性回归模型"><span class="header-section-number">10.6.2</span> 拟合线性回归模型</h3>
+<section id="ricker模型考虑过度补偿效应" class="level3" data-number="12.6.2">
+<h3 data-number="12.6.2" class="anchored" data-anchor-id="ricker模型考虑过度补偿效应"><span class="header-section-number">12.6.2</span> 2. Ricker模型：考虑过度补偿效应</h3>
+<p>Ricker模型在逻辑斯蒂基础上增加了过度补偿（overcompensation）效应，即种群在低密度时可能超调K值，导致振荡：</p>
+<p><span class="math display">\[N_{t+1} = N_t \cdot e^{r\left(1 - \frac{N_t}{K}\right)}\]</span></p>
+<p><strong>R代码实现</strong>：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ricker差分方程模型</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>ricker_model <span class="ot">&lt;-</span> <span class="cf">function</span>(N0, r, K, t_max) {</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> <span class="fu">numeric</span>(t_max <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  N[<span class="dv">1</span>] <span class="ot">&lt;-</span> N0</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>t_max) {</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    N[t <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> N[t] <span class="sc">*</span> <span class="fu">exp</span>(r <span class="sc">*</span> (<span class="dv">1</span> <span class="sc">-</span> N[t] <span class="sc">/</span> K))</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(N)</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 参数设置：不同的r值展示不同动态</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>params <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"低增长率 (r=0.5)"</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="at">r =</span> <span class="fl">0.5</span>, <span class="at">K =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>),</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"中增长率 (r=1.5)"</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="at">r =</span> <span class="fl">1.5</span>, <span class="at">K =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">"forestgreen"</span>),</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"高增长率 (r=2.5)"</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="at">r =</span> <span class="fl">2.5</span>, <span class="at">K =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">"darkorange"</span>),</span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"混沌动态 (r=3.5)"</span> <span class="ot">=</span> <span class="fu">list</span>(<span class="at">r =</span> <span class="fl">3.5</span>, <span class="at">K =</span> <span class="dv">500</span>, <span class="at">color =</span> <span class="st">"firebrick"</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟不同r值的种群动态</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>ricker_df <span class="ot">&lt;-</span> <span class="fu">lapply</span>(<span class="fu">names</span>(params), <span class="cf">function</span>(name) {</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>  p <span class="ot">&lt;-</span> params[[name]]</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  N <span class="ot">&lt;-</span> <span class="fu">ricker_model</span>(<span class="at">N0 =</span> <span class="dv">50</span>, <span class="at">r =</span> p<span class="sc">$</span>r, <span class="at">K =</span> p<span class="sc">$</span>K, <span class="at">t_max =</span> <span class="dv">100</span>)</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">tibble</span>(</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">time =</span> <span class="dv">0</span><span class="sc">:</span><span class="dv">100</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">population =</span> N,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">scenario =</span> name,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> p<span class="sc">$</span>color</span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>}) <span class="sc">|&gt;</span> <span class="fu">bind_rows</span>()</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化种群动态</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(ricker_df, <span class="fu">aes</span>(<span class="at">x =</span> time, <span class="at">y =</span> population, <span class="at">color =</span> scenario)) <span class="sc">+</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="fl">0.8</span>) <span class="sc">+</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> <span class="dv">500</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>, <span class="at">alpha =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_manual</span>(<span class="at">values =</span> <span class="fu">setNames</span>(<span class="fu">sapply</span>(params, <span class="st">`</span><span class="at">[[</span><span class="st">`</span>, <span class="st">"color"</span>), <span class="fu">names</span>(params))) <span class="sc">+</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"时间 (年)"</span>,</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"种群大小 N(t)"</span>,</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"Ricker模型的种群动态"</span>,</span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"情景"</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="Ricker模型的生态学意义">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>Ricker模型的生态学意义
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>当 <span class="math inline">\(r &gt; 2.692\)</span> 时，Ricker模型进入混沌动态——这意味着长期种群预测变得不可能，但短期内仍可管理。这一发现对渔业管理（如MSY最大可持续产量）有重要启示。</p>
+</div>
+</div>
+</section>
+<section id="矩阵模型-leslie矩阵" class="level3" data-number="12.6.3">
+<h3 data-number="12.6.3" class="anchored" data-anchor-id="矩阵模型-leslie矩阵"><span class="header-section-number">12.6.3</span> 3. 矩阵模型 (Leslie矩阵)</h3>
+<p>对于具有年龄或阶段结构的种群，需要使用矩阵模型来描述不同阶段之间的转移概率：</p>
+<p><span class="math display">\[\mathbf{N}_{t+1} = \mathbf{A} \cdot \mathbf{N}_t\]</span></p>
+<p><strong>R代码实现</strong>：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(expm)  <span class="co"># 矩阵指数运算</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义Leslie矩阵（假设三阶段：幼体、亚成体、成体）</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 行：下一个阶段</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 列：从当前阶段转移</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>leslie_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="fu">c</span>(</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,    <span class="dv">0</span>,    <span class="fl">0.8</span>,   <span class="co"># 幼体：来自成体的繁殖</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fl">0.5</span>,  <span class="dv">0</span>,    <span class="dv">0</span>,     <span class="co"># 亚成体：来自幼体的存活</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="dv">0</span>,    <span class="fl">0.7</span>,  <span class="fl">0.9</span>    <span class="co"># 成体：来自亚成体和成体的存活</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>), <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> <span class="dv">3</span>, <span class="at">byrow =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始种群向量：100幼体、50亚成体、30成体</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>N0_vec <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="dv">100</span>, <span class="dv">50</span>, <span class="dv">30</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟30年的种群动态</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>n_years <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>pop_matrix <span class="ot">&lt;-</span> <span class="fu">matrix</span>(<span class="cn">NA</span>, <span class="at">nrow =</span> <span class="dv">3</span>, <span class="at">ncol =</span> n_years <span class="sc">+</span> <span class="dv">1</span>)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>pop_matrix[, <span class="dv">1</span>] <span class="ot">&lt;-</span> N0_vec</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (t <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span>n_years) {</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  pop_matrix[, t <span class="sc">+</span> <span class="dv">1</span>] <span class="ot">&lt;-</span> leslie_matrix <span class="sc">%*%</span> pop_matrix[, t]</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 转换为长格式数据</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>stage_names <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"幼体"</span>, <span class="st">"亚成体"</span>, <span class="st">"成体"</span>)</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>pop_df <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>  <span class="at">year =</span> <span class="fu">rep</span>(<span class="dv">0</span><span class="sc">:</span>n_years, <span class="at">each =</span> <span class="dv">3</span>),</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="at">stage =</span> <span class="fu">rep</span>(stage_names, <span class="at">times =</span> n_years <span class="sc">+</span> <span class="dv">1</span>),</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">population =</span> <span class="fu">as.vector</span>(pop_matrix)</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化</span></span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(pop_df, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> population, <span class="at">color =</span> stage)) <span class="sc">+</span></span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"时间 (年)"</span>,</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"种群大小"</span>,</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"三阶段种群的年龄结构动态 (Leslie矩阵模型)"</span>,</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"生命阶段"</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算种群增长率和稳定阶段分布</span></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a>eigen_result <span class="ot">&lt;-</span> <span class="fu">eigen</span>(leslie_matrix)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a>lambda <span class="ot">&lt;-</span> <span class="fu">max</span>(<span class="fu">Re</span>(eigen_result<span class="sc">$</span>values))  <span class="co"># 主导特征值 = 种群增长率</span></span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a>stable_stage <span class="ot">&lt;-</span> <span class="fu">Re</span>(eigen_result<span class="sc">$</span>vectors[, <span class="fu">which.max</span>(<span class="fu">Re</span>(eigen_result<span class="sc">$</span>values))])</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a>stable_stage <span class="ot">&lt;-</span> stable_stage <span class="sc">/</span> <span class="fu">sum</span>(stable_stage)  <span class="co"># 归一化</span></span>
+<span id="cb3-49"><a href="#cb3-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-50"><a href="#cb3-50" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"种群增长率 (λ) ="</span>, <span class="fu">round</span>(lambda, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-51"><a href="#cb3-51" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"稳定阶段分布:"</span>, <span class="fu">round</span>(stable_stage <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="矩阵模型的实际应用">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>矩阵模型的实际应用
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>矩阵模型（如Lefkovitch矩阵、Leslie矩阵）广泛应用于濒危物种的生命周期分析。例如，树木的芽库-幼苗-成体转移矩阵、昆虫的卵-幼虫-蛹-成虫矩阵等。<code>popbio</code> 包提供了专门的分析函数。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="物种分布模型-species-distribution-models-sdm" class="level2" data-number="12.7">
+<h2 data-number="12.7" class="anchored" data-anchor-id="物种分布模型-species-distribution-models-sdm"><span class="header-section-number">12.7</span> 物种分布模型 (Species Distribution Models, SDM)</h2>
+<p>物种分布模型是生态学研究中应用最广泛的统计建模技术之一。其核心思想是：根据已知物种分布点（presence）和环境变量（如气候、土壤、地形），建立物种”在哪里可能存在”的预测模型。</p>
+<section id="基本原理" class="level3" data-number="12.7.1">
+<h3 data-number="12.7.1" class="anchored" data-anchor-id="基本原理"><span class="header-section-number">12.7.1</span> 基本原理</h3>
+<p>SDM假设物种的当前分布是其生态位（niche）的映射。通过分析已知分布点的环境特征，模型可以推断物种的生态位边界，进而预测在其他地点的存在概率。</p>
+<p>SDM类型繁多，本章重点介绍两类：</p>
+<ol type="1">
+<li><strong>MaxEnt（最大熵模型）</strong>：基于Presence-only数据，适合调查不充分的物种</li>
+<li><strong>GLM/GAM（广义线性/可加模型）</strong>：基于Presence-Absence数据，适合调查设计完善的数据</li>
+</ol>
+</section>
+<section id="数据准备模拟物种分布数据" class="level3" data-number="12.7.2">
+<h3 data-number="12.7.2" class="anchored" data-anchor-id="数据准备模拟物种分布数据"><span class="header-section-number">12.7.2</span> 数据准备：模拟物种分布数据</h3>
+<p>在实际研究中，物种分布数据可能来自： - 样方调查（presence/absence） - 公民科学数据库（GBIF, eBird） - 遥感影像（植被指数、地表温度）</p>
+<p>这里我们使用模拟数据演示完整流程：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟研究区域：100m × 100m 栅格</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>grid_size <span class="ot">&lt;-</span> <span class="dv">100</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>n_cells <span class="ot">&lt;-</span> grid_size<span class="sc">^</span><span class="dv">2</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 环境变量：温度（随纬度/经度梯度变化）和降水（空间自相关）</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>env_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">cell_id =</span> <span class="dv">1</span><span class="sc">:</span>n_cells,</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>grid_size, <span class="at">each =</span> grid_size),</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">rep</span>(<span class="dv">1</span><span class="sc">:</span>grid_size, <span class="at">times =</span> grid_size),</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">temperature =</span> <span class="dv">15</span> <span class="sc">+</span> <span class="fl">0.1</span> <span class="sc">*</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(n_cells, <span class="dv">0</span>, <span class="dv">1</span>),  <span class="co"># 温度随纬度增加</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">precipitation =</span> <span class="dv">800</span> <span class="sc">+</span> <span class="fl">0.05</span> <span class="sc">*</span> x <span class="sc">+</span> <span class="fl">0.08</span> <span class="sc">*</span> y <span class="sc">+</span> <span class="fu">rnorm</span>(n_cells, <span class="dv">0</span>, <span class="dv">30</span>)  <span class="co"># 降水梯度</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 物种生态位参数（假设该物种偏好温暖湿润环境）</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>beta0 <span class="ot">&lt;-</span> <span class="sc">-</span><span class="dv">5</span>  <span class="co"># 基础出现率</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>beta_temp <span class="ot">&lt;-</span> <span class="fl">0.15</span>  <span class="co"># 温度效应</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>beta_precip <span class="ot">&lt;-</span> <span class="fl">0.005</span>  <span class="co"># 降水效应</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>prob_presence <span class="ot">&lt;-</span> <span class="fu">plogis</span>(beta0 <span class="sc">+</span> beta_temp <span class="sc">*</span> env_data<span class="sc">$</span>temperature <span class="sc">+</span> </span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>                         beta_precip <span class="sc">*</span> env_data<span class="sc">$</span>precipitation)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 生成物种分布（Presence-Absence）</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>env_data <span class="ot">&lt;-</span> env_data <span class="sc">|&gt;</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">presence =</span> <span class="fu">rbinom</span>(n_cells, <span class="dv">1</span>, prob_presence),</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="at">probability =</span> prob_presence</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化真实分布</span></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(env_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> presence)) <span class="sc">+</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"Presence"</span>, <span class="at">na.value =</span> <span class="st">"white"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"X坐标"</span>,</span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"Y坐标"</span>,</span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"模拟物种的真实分布"</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="使用glm建模物种分布" class="level3" data-number="12.7.3">
+<h3 data-number="12.7.3" class="anchored" data-anchor-id="使用glm建模物种分布"><span class="header-section-number">12.7.3</span> 使用GLM建模物种分布</h3>
+<p><strong>R代码实现</strong>：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合广义线性模型（Binomial家族）</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>sdm_glm <span class="ot">&lt;-</span> <span class="fu">glm</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  presence <span class="sc">~</span> temperature <span class="sc">+</span> precipitation,</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> env_data,</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">binomial</span>(<span class="at">link =</span> <span class="st">"logit"</span>)</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(sdm_glm)</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测：计算每个栅格的存在概率</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>env_data <span class="ot">&lt;-</span> env_data <span class="sc">|&gt;</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred_prob =</span> <span class="fu">predict</span>(sdm_glm, <span class="at">type =</span> <span class="st">"response"</span>),</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">pred_binary =</span> <span class="fu">ifelse</span>(pred_prob <span class="sc">&gt;</span> <span class="fl">0.5</span>, <span class="dv">1</span>, <span class="dv">0</span>)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 模型评估：计算AUC（Area Under the ROC Curve）</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pROC)</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>roc_result <span class="ot">&lt;-</span> <span class="fu">roc</span>(env_data<span class="sc">$</span>presence, env_data<span class="sc">$</span>pred_prob)</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>auc_value <span class="ot">&lt;-</span> <span class="fu">auc</span>(roc_result)</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"模型AUC ="</span>, <span class="fu">round</span>(auc_value, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化ROC曲线</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a><span class="fu">ggroc</span>(roc_result, <span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">annotate</span>(<span class="st">"text"</span>, <span class="at">x =</span> <span class="fl">0.7</span>, <span class="at">y =</span> <span class="fl">0.2</span>, <span class="at">label =</span> <span class="fu">paste</span>(<span class="st">"AUC ="</span>, <span class="fu">round</span>(auc_value, <span class="dv">3</span>))) <span class="sc">+</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"物种分布模型的ROC曲线"</span>,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"假阳性率 (1 - 特异性)"</span>,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"真阳性率 (敏感性)"</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-tip callout-titled" title="AUC值的解读">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>AUC值的解读
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>AUC &gt; 0.9：优秀模型</li>
+<li>AUC 0.8-0.9：良好模型</li>
+<li>AUC 0.7-0.8：可接受模型</li>
+<li>AUC &lt; 0.7：模型预测能力差</li>
+<li>AUC = 0.5：随机预测（无预测能力）</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="可视化预测结果" class="level3" data-number="12.7.4">
+<h3 data-number="12.7.4" class="anchored" data-anchor-id="可视化预测结果"><span class="header-section-number">12.7.4</span> 可视化预测结果</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 预测概率空间分布</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(env_data, <span class="fu">aes</span>(<span class="at">x =</span> x, <span class="at">y =</span> y, <span class="at">fill =</span> pred_prob)) <span class="sc">+</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_raster</span>() <span class="sc">+</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_viridis_c</span>(<span class="at">name =</span> <span class="st">"存在概率"</span>, <span class="at">direction =</span> <span class="sc">-</span><span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"SDM预测的存在概率分布"</span>) <span class="sc">+</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 预测 vs 真实分布对比</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(env_data, <span class="fu">aes</span>(<span class="at">x =</span> probability, <span class="at">y =</span> pred_prob)) <span class="sc">+</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.3</span>, <span class="at">size =</span> <span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_abline</span>(<span class="at">slope =</span> <span class="dv">1</span>, <span class="at">intercept =</span> <span class="dv">0</span>, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">linetype =</span> <span class="st">"dashed"</span>) <span class="sc">+</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"真实存在概率"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"模型预测概率"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"预测精度检验"</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p1)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(p2)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="cell quarto-layout-panel" data-layout-ncol="2">
+
+</div>
+</section>
+<section id="使用maxent建模通过dismo包" class="level3" data-number="12.7.5">
+<h3 data-number="12.7.5" class="anchored" data-anchor-id="使用maxent建模通过dismo包"><span class="header-section-number">12.7.5</span> 使用MaxEnt建模（通过dismo包）</h3>
+<p>MaxEnt是物种分布建模中最流行的Presence-only方法之一。它通过最大化物种分布信息的熵来估计物种的生态位边界。</p>
+<p><strong>R代码实现</strong>：</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dismo)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查MaxEnt程序是否可用</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="fu">file.exists</span>(<span class="fu">system.file</span>(<span class="st">"java/maxent.jar"</span>, <span class="at">package =</span> <span class="st">"dismo"</span>))) {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"MaxEnt JAR文件已安装</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"请下载MaxEnt并将maxent.jar放置在正确位置</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 注意：在实际使用中，需要提供环境变量的栅格文件（.asc或.tiff格式）</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 以下为伪代码演示分析流程：</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 读取环境变量栅格</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a><span class="co"># env_layers &lt;- stack(c("temperature.asc", "precipitation.asc"))</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 提取存在点的环境值</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># presence_points &lt;- extract(env_layers, known_sites)</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 运行MaxEnt（需要maxent.jar）</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a><span class="co"># maxent_model &lt;- maxent(env_layers, presence_points)</span></span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 预测物种分布</span></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a><span class="co"># prediction &lt;- predict(maxent_model, env_layers)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled" title="MaxEnt的实际使用注意事项">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>MaxEnt的实际使用注意事项
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>MaxEnt模型需要从 https://biodiversityinformatics.amnh.org/open_source/maxent/ 下载独立的Java程序（maxent.jar），并放置在R库目录的正确位置。详细的安装说明和操作流程请参考Phillips等人的原始论文（Phillips et al., 2006, <em>Ecological Modelling</em>, 190: 231-259, DOI: 10.1016/j.ecolmodel.2005.03.026）。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="实战技巧" class="level2" data-number="12.8">
+<h2 data-number="12.8" class="anchored" data-anchor-id="实战技巧"><span class="header-section-number">12.8</span> 实战技巧</h2>
+<section id="模型选择指南" class="level3" data-number="12.8.1">
+<h3 data-number="12.8.1" class="anchored" data-anchor-id="模型选择指南"><span class="header-section-number">12.8.1</span> 1. 模型选择指南</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>研究问题</th>
+<th>推荐模型</th>
+<th>理由</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>物种分布预测</td>
+<td>MaxEnt, GLM, GAM</td>
+<td>成熟方法，生态学解释清晰</td>
+</tr>
+<tr class="even">
+<td>种群动态预测</td>
+<td>逻辑斯蒂, Ricker, 矩阵模型</td>
+<td>理论基础扎实，参数可估计</td>
+</tr>
+<tr class="odd">
+<td>群落结构分析</td>
+<td>RDA, CCA, NMDS</td>
+<td>多元统计，整合多物种信息</td>
+</tr>
+<tr class="even">
+<td>空间格局分析</td>
+<td>Moran’s I, Variogram, kriging</td>
+<td>考虑空间自相关</td>
+</tr>
+<tr class="odd">
+<td>时间序列预测</td>
+<td>ARIMA, STL, Prophet</td>
+<td>捕捉趋势和周期性</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="参数调优策略" class="level3" data-number="12.8.2">
+<h3 data-number="12.8.2" class="anchored" data-anchor-id="参数调优策略"><span class="header-section-number">12.8.2</span> 2. 参数调优策略</h3>
+<p><strong>交叉验证（Cross-Validation）</strong>：</p>
+<ul>
+<li>将数据分为k个子集，轮流使用k-1个子集训练，1个验证</li>
+<li>避免过拟合，获得更稳健的模型性能估计</li>
+<li><code>caret</code> 包提供了统一的交叉验证框架</li>
+</ul>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用caret包进行10折交叉验证</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(caret)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置交叉验证</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>train_control <span class="ot">&lt;-</span> <span class="fu">trainControl</span>(</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"cv"</span>,</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">number =</span> <span class="dv">10</span>,</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">savePredictions =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">classProbs =</span> <span class="cn">TRUE</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 训练GLM模型（以物种分布数据为例）</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>sdm_cv <span class="ot">&lt;-</span> <span class="fu">train</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as.factor</span>(presence) <span class="sc">~</span> temperature <span class="sc">+</span> precipitation,</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">data =</span> env_data,</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="st">"glm"</span>,</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">trControl =</span> train_control</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"交叉验证准确率:"</span>, <span class="fu">round</span>(<span class="fu">mean</span>(sdm_cv<span class="sc">$</span>resample<span class="sc">$</span>Accuracy), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+<p><strong>超参数搜索</strong>（以GAM为例）：</p>
+<p>GAM中平滑项的参数（k）需要通过交叉验证来选择。k值过小会欠拟合，k值过大会过拟合。</p>
+</section>
+<section id="结果解读规范" class="level3" data-number="12.8.3">
+<h3 data-number="12.8.3" class="anchored" data-anchor-id="结果解读规范"><span class="header-section-number">12.8.3</span> 3. 结果解读规范</h3>
+<p>发表论文时，模型结果的解读应包含：</p>
+<ol type="1">
+<li><strong>模型结构报告</strong>：列出所有自变量及其编码方式</li>
+<li><strong>效应大小</strong>：回归系数、标准误、置信区间</li>
+<li><strong>模型性能指标</strong>：AUC、R²、RMSE、交叉验证结果</li>
+<li><strong>不确定性量化</strong>：参数不确定性和预测不确定性</li>
+<li><strong>模型局限性</strong>：明确说明模型假设和外推限制</li>
+</ol>
+<div class="callout callout-style-default callout-warning callout-titled" title="常见误区">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>常见误区
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>混淆相关性与因果</strong>：SDM揭示的是”物种分布与环境变量的关联”，不是因果关系</li>
+<li><strong>忽视空间自相关</strong>：相邻样点的数据不独立，会导致虚假的高精度</li>
+<li><strong>过度依赖p值</strong>：统计显著不等于生态学上重要</li>
+<li><strong>外推风险</strong>：模型无法可靠预测环境条件超出训练数据范围的区域</li>
+</ol>
+</div>
+</div>
+</section>
+</section>
+<section id="r代码示例简单统计模型" class="level2" data-number="12.9">
+<h2 data-number="12.9" class="anchored" data-anchor-id="r代码示例简单统计模型"><span class="header-section-number">12.9</span> R代码示例：简单统计模型</h2>
+<p>下面以一个经典的生态学问题——<strong>树高与胸径的关系</strong>——为例，演示如何在R中构建线性回归模型、进行模型诊断和结果解读。</p>
+<section id="准备数据" class="level3" data-number="12.9.1">
+<h3 data-number="12.9.1" class="anchored" data-anchor-id="准备数据"><span class="header-section-number">12.9.1</span> 准备数据</h3>
+<p>我们模拟一组亚热带常绿阔叶林的树木测量数据。在生态学中，树高（height）与胸径（DBH, diameter at breast height）之间通常存在正相关关系。</p>
+<div class="cell">
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟50棵树的胸径和树高数据</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">42</span>)</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">50</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>tree_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_id  =</span> <span class="dv">1</span><span class="sc">:</span>n,</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">species  =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>), n, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm   =</span> <span class="fu">runif</span>(n, <span class="at">min =</span> <span class="dv">5</span>, <span class="at">max =</span> <span class="dv">40</span>),                          <span class="co"># 胸径 5-40 cm</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fl">2.5</span> <span class="sc">+</span> <span class="fl">0.35</span> <span class="sc">*</span> dbh_cm <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="at">mean =</span> <span class="dv">0</span>, <span class="at">sd =</span> <span class="fl">1.5</span>)   <span class="co"># 树高 = 截距 + 斜率*胸径 + 噪声</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看前几行</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(tree_data)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</div>
+</section>
+<section id="拟合线性回归模型" class="level3" data-number="12.9.2">
+<h3 data-number="12.9.2" class="anchored" data-anchor-id="拟合线性回归模型"><span class="header-section-number">12.9.2</span> 拟合线性回归模型</h3>
 <p>使用 <code>lm()</code> 函数拟合树高对胸径的线性回归。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合模型：树高 ~ 胸径</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(height_m <span class="sc">~</span> dbh_cm, <span class="at">data =</span> tree_data)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看模型摘要</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 拟合模型：树高 ~ 胸径</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>model <span class="ot">&lt;-</span> <span class="fu">lm</span>(height_m <span class="sc">~</span> dbh_cm, <span class="at">data =</span> tree_data)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看模型摘要</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(model)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-note callout-titled" title="如何解读 summary() 输出？">
 <div class="callout-header d-flex align-content-center">
@@ -514,38 +1186,38 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>Estimate（估计值）</strong>：截距（Intercept）表示胸径为 0 时的预测树高，<code>dbh_cm</code> 的系数表示胸径每增加 1 cm，树高平均增加多少米</li>
-<li><strong>Pr(&gt;|t|)</strong>：p 值，小于 0.05 通常认为该变量对树高有显著影响</li>
-<li><strong>R-squared</strong>：决定系数，表示胸径能解释树高变异的比例，越接近 1 说明模型拟合越好</li>
+<li><strong>Estimate（估计值）</strong>：截距（Intercept）表示胸径为0时的预测树高，<code>dbh_cm</code> 的系数表示胸径每增加1cm，树高平均增加多少米</li>
+<li><strong>Pr(&gt;|t|)</strong>：p值，小于0.05通常认为该变量对树高有显著影响</li>
+<li><strong>R-squared</strong>：决定系数，表示胸径能解释树高变异的比例，越接近1说明模型拟合越好</li>
 <li><strong>Residual standard error</strong>：残差标准误，反映预测值与实际值的平均偏差</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="可视化回归结果" class="level3" data-number="10.6.3">
-<h3 data-number="10.6.3" class="anchored" data-anchor-id="可视化回归结果"><span class="header-section-number">10.6.3</span> 可视化回归结果</h3>
+<section id="可视化回归结果" class="level3" data-number="12.9.3">
+<h3 data-number="12.9.3" class="anchored" data-anchor-id="可视化回归结果"><span class="header-section-number">12.9.3</span> 可视化回归结果</h3>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_data, <span class="fu">aes</span>(<span class="at">x =</span> dbh_cm, <span class="at">y =</span> height_m)) <span class="sc">+</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"胸径 (cm)"</span>,</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"树高 (m)"</span>,</span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"树高与胸径的线性关系"</span>,</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"树种"</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(tree_data, <span class="fu">aes</span>(<span class="at">x =</span> dbh_cm, <span class="at">y =</span> height_m)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> species), <span class="at">size =</span> <span class="dv">2</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"胸径 (cm)"</span>,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"树高 (m)"</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"树高与胸径的线性关系"</span>,</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"树种"</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </section>
-<section id="模型诊断" class="level3" data-number="10.6.4">
-<h3 data-number="10.6.4" class="anchored" data-anchor-id="模型诊断"><span class="header-section-number">10.6.4</span> 模型诊断</h3>
+<section id="模型诊断" class="level3" data-number="12.9.4">
+<h3 data-number="12.9.4" class="anchored" data-anchor-id="模型诊断"><span class="header-section-number">12.9.4</span> 模型诊断</h3>
 <p>拟合模型后，必须检查模型假设是否成立。<code>plot()</code> 函数会生成四张诊断图。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 四张诊断图</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">1</span>)  <span class="co"># 残差 vs 拟合值：检查线性假设和等方差性</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">2</span>)  <span class="co"># Q-Q 图：检查残差是否服从正态分布</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">3</span>)  <span class="co"># 标准化残差 vs 拟合值：检查方差齐性</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">5</span>)  <span class="co"># 残差 vs 杠杆值：识别强影响点</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 四张诊断图</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mar =</span> <span class="fu">c</span>(<span class="dv">4</span>, <span class="dv">4</span>, <span class="dv">2</span>, <span class="dv">1</span>))</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">1</span>)  <span class="co"># 残差 vs 拟合值：检查线性假设和等方差性</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">2</span>)  <span class="co"># Q-Q图：检查残差是否服从正态分布</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">3</span>)  <span class="co"># 标准化残差 vs 拟合值：检查方差齐性</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model, <span class="at">which =</span> <span class="dv">5</span>)  <span class="co"># 残差 vs 杠杆值：识别强影响点</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="cell quarto-layout-panel" data-layout-ncol="2">
 
 </div>
@@ -560,26 +1232,26 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <div class="callout-body-container callout-body">
 <ol type="1">
-<li><strong>残差 vs 拟合值</strong>：点应随机分布在 0 线两侧，无明显趋势。若呈现弯曲，说明线性假设不成立</li>
-<li><strong>Q-Q 图</strong>：点应大致落在对角线上。若两端偏离严重，说明残差不服从正态分布</li>
-<li><strong>Scale-Location 图</strong>：红线应大致水平，否则说明存在异方差</li>
-<li><strong>Residuals vs Leverage</strong>：关注 Cook’s distance 超过 0.5 的点，它们可能是强影响观测值</li>
+<li><strong>残差 vs 拟合值</strong>：点应随机分布在0线两侧，无明显趋势。若呈现弯曲，说明线性假设不成立</li>
+<li><strong>Q-Q图</strong>：点应大致落在对角线上。若两端偏离严重，说明残差不服从正态分布</li>
+<li><strong>Scale-Location图</strong>：红线应大致水平，否则说明存在异方差</li>
+<li><strong>Residuals vs Leverage</strong>：关注Cook’s distance超过0.5的点，它们可能是强影响观测值</li>
 </ol>
 </div>
 </div>
 </section>
-<section id="使用模型生成预测数据" class="level3" data-number="10.6.5">
-<h3 data-number="10.6.5" class="anchored" data-anchor-id="使用模型生成预测数据"><span class="header-section-number">10.6.5</span> 使用模型生成预测数据</h3>
+<section id="使用模型生成预测数据" class="level3" data-number="12.9.5">
+<h3 data-number="12.9.5" class="anchored" data-anchor-id="使用模型生成预测数据"><span class="header-section-number">12.9.5</span> 使用模型生成预测数据</h3>
 <p>模型的核心价值在于预测。下面演示如何用拟合好的模型为新数据生成预测值及其置信区间——这就是”模型作为数据生成器”的具体体现。</p>
 <div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 为新的胸径值生成预测</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>new_trees <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">dbh_cm =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测树高及 95% 置信区间</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> new_trees, <span class="at">interval =</span> <span class="st">"confidence"</span>)</span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(new_trees, <span class="fu">as_tibble</span>(predictions))</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 为新的胸径值生成预测</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>new_trees <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">dbh_cm =</span> <span class="fu">seq</span>(<span class="dv">5</span>, <span class="dv">40</span>, <span class="at">by =</span> <span class="dv">1</span>))</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 预测树高及95%置信区间</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>predictions <span class="ot">&lt;-</span> <span class="fu">predict</span>(model, <span class="at">newdata =</span> new_trees, <span class="at">interval =</span> <span class="st">"confidence"</span>)</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>pred_df <span class="ot">&lt;-</span> <span class="fu">bind_cols</span>(new_trees, <span class="fu">as_tibble</span>(predictions))</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="fu">head</span>(pred_df)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 <div class="callout callout-style-default callout-tip callout-titled" title="预测区间 vs 置信区间">
 <div class="callout-header d-flex align-content-center">
@@ -599,19 +1271,84 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </section>
 </section>
-<section id="总结" class="level2" data-number="10.7">
-<h2 data-number="10.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">10.7</span> 总结</h2>
-<p>模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家 George Box 所言：“所有模型都是错的，但有些是有用的”（Box, 1976, <em>Journal of the American Statistical Association</em>, 71: 791–799, DOI: 10.1080/01621459.1976.10480949）。在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。</p>
+<section id="总结" class="level2" data-number="12.10">
+<h2 data-number="12.10" class="anchored" data-anchor-id="总结"><span class="header-section-number">12.10</span> 总结</h2>
+<p>模型数据采集方法极大地扩展了生态学的研究边界。它将零散的观测和实验数据整合进统一的理论框架中，使我们能够预见未来并评估复杂的生态反馈。然而，正如统计学家George Box所言：“所有模型都是错的，但有些是有用的”（Box, 1976, <em>Journal of the American Statistical Association</em>, 71: 791-799, DOI: 10.1080/01621459.1976.10480949）。在使用模型数据时，始终保持对其不确定性的清醒认识，并不断用实测数据进行修正，是科学建模的核心要求。</p>
 </section>
-<section id="课后练习" class="level2" data-number="10.8">
-<h2 data-number="10.8" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">10.8</span> 课后练习</h2>
+<section id="延伸阅读" class="level2" data-number="12.11">
+<h2 data-number="12.11" class="anchored" data-anchor-id="延伸阅读"><span class="header-section-number">12.11</span> 延伸阅读</h2>
+<section id="经典文献" class="level3" data-number="12.11.1">
+<h3 data-number="12.11.1" class="anchored" data-anchor-id="经典文献"><span class="header-section-number">12.11.1</span> 经典文献</h3>
 <ol type="1">
-<li><p>修改本章的线性回归代码，尝试拟合一个对数模型（<code>height_m ~ log(dbh_cm)</code>），比较其与线性模型的 R-squared 值和诊断图，判断哪个模型更合适。</p></li>
-<li><p>查阅 IPCC 第六次评估报告，列举至少两种用于预测全球植被变化的机理模型（DGVM），简要说明它们的输入数据和输出数据分别是什么。</p></li>
-<li><p>使用 <code>predict()</code> 函数为胸径 50 cm 的树木生成预测树高。讨论：这个预测可靠吗？为什么？（提示：考虑外推问题）</p></li>
+<li><p>Box, G.E.P. (1976). Science and statistics. <em>Journal of the American Statistical Association</em>, 71: 791-799. DOI: 10.1080/01621459.1976.10480949</p></li>
+<li><p>Caswell, H. (2001). <em>Matrix Population Models: Construction, Analysis, and Interpretation</em> (2nd ed.). Sinauer Associates.</p></li>
+<li><p>Elith, J. &amp; Leathwick, J.R. (2009). Species distribution models: ecological explanation and prediction across space and time. <em>Annual Review of Ecology, Evolution, and Systematics</em>, 40: 677-697. DOI: 10.1146/annurev.ecolsys.110308.120159</p></li>
+<li><p>Gotelli, N.J. (2008). <em>A Primer of Ecology</em> (4th ed.). Sinauer Associates.</p></li>
+<li><p>Phillips, S.J., Anderson, R.P. &amp; Schapire, R.E. (2006). Maximum entropy modeling of species geographic distributions. <em>Ecological Modelling</em>, 190: 231-259. DOI: 10.1016/j.ecolmodel.2005.03.026</p></li>
+<li><p>Turner, M.G., et al.&nbsp;(2015). Teleconnecting landscape ecology to biodiversity, ecosystem services, and human well-being. <em>Ecology Letters</em>, 18: 1189-1207. DOI: 10.1111/ele.12481</p></li>
 </ol>
+</section>
+<section id="在线资源" class="level3" data-number="12.11.2">
+<h3 data-number="12.11.2" class="anchored" data-anchor-id="在线资源"><span class="header-section-number">12.11.2</span> 在线资源</h3>
+<ul>
+<li><strong>MaxEnt软件</strong>: https://biodiversityinformatics.amnh.org/open_source/maxent/</li>
+<li><strong>Biomod2包文档</strong>: https://biomodhub.github.io/biomod2/</li>
+<li><strong>SDM手册</strong>: https://consbiol.univie.ac.at/en/resources/software/sdm/</li>
+<li><strong>R群落生态学vegandoc</strong>: https://www.math.ntnu.no/~hrue/ECOLOGICAL/</li>
+</ul>
+</section>
+</section>
+<section id="课后练习" class="level2" data-number="12.12">
+<h2 data-number="12.12" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">12.12</span> 课后练习</h2>
+<section id="练习一逻辑斯蒂模型的参数敏感性分析" class="level3" data-number="12.12.1">
+<h3 data-number="12.12.1" class="anchored" data-anchor-id="练习一逻辑斯蒂模型的参数敏感性分析"><span class="header-section-number">12.12.1</span> 练习一：逻辑斯蒂模型的参数敏感性分析</h3>
+<p><strong>问题</strong>：修改逻辑斯蒂增长模型代码，设置三组不同的参数组合（r=0.1, K=100; r=0.5, K=500; r=1.0, K=1000），将三组结果绘制在同一张图上，并讨论：（1）初始种群大小对长期平衡的影响；（2）内禀增长率r与达到K一半时间的关系。</p>
+<p><strong>参考答案</strong>：</p>
+<ul>
+<li>当 <span class="math inline">\(N_0 \ll K\)</span> 时，逻辑斯蒂模型近似指数增长，达到K/2的时间为 <span class="math inline">\(t_{1/2} = \frac{\ln(K/N_0-1)}{r}\)</span></li>
+<li>r越大，到达平衡的速度越快，但最终稳定值都是K</li>
+<li>初始条件不影响长期平衡，只影响达到平衡的过渡期</li>
+</ul>
+</section>
+<section id="练习二物种分布模型评估" class="level3" data-number="12.12.2">
+<h3 data-number="12.12.2" class="anchored" data-anchor-id="练习二物种分布模型评估"><span class="header-section-number">12.12.2</span> 练习二：物种分布模型评估</h3>
+<p><strong>问题</strong>：使用以下模拟数据，计算模型的正确率（Accuracy）、敏感性（Sensitivity）和特异性（Specificity），并绘制混淆矩阵。</p>
+<p><strong>提示</strong>：可使用<code>caret::confusionMatrix()</code>函数。</p>
+<p><strong>参考答案</strong>：</p>
+<ul>
+<li>正确率 = (TP + TN) / (TP + TN + FP + FN)</li>
+<li>敏感性 = TP / (TP + FN)（能正确识别多少”存在”点）</li>
+<li>特异性 = TN / (TN + FP)（能正确识别多少”不存在”点）</li>
+</ul>
+</section>
+<section id="练习三模型选择与aic比较" class="level3" data-number="12.12.3">
+<h3 data-number="12.12.3" class="anchored" data-anchor-id="练习三模型选择与aic比较"><span class="header-section-number">12.12.3</span> 练习三：模型选择与AIC比较</h3>
+<p><strong>问题</strong>：分别拟合以下三个模型并使用AIC比较：</p>
+<ol type="1">
+<li>简单线性模型：height_m ~ dbh_cm</li>
+<li>多项式模型：height_m ~ poly(dbh_cm, 2)</li>
+<li>对数模型：height_m ~ log(dbh_cm)</li>
+</ol>
+<p>哪个模型最优？使用调整R²验证AIC的结论是否一致。</p>
+<p><strong>参考答案</strong>：</p>
+<ul>
+<li>AIC越小越好，差异&gt;2通常认为有实质差异</li>
+<li>多项式模型可能获得更高的R²，但可能过拟合</li>
+<li>需要结合生态学解释和预测能力综合判断</li>
+</ul>
+</section>
+<section id="练习四思考外推风险" class="level3" data-number="12.12.4">
+<h3 data-number="12.12.4" class="anchored" data-anchor-id="练习四思考外推风险"><span class="header-section-number">12.12.4</span> 练习四：思考外推风险</h3>
+<p><strong>问题</strong>：假设某物种分布模型使用温度范围为15-25°C的数据训练。如果要将模型应用于温度达到30°C的未来气候情景，讨论：（1）模型预测是否可靠？（2）哪些类型的SDM方法在外推方面更具鲁棒性？（3）如何量化外推不确定性？</p>
+<p><strong>参考答案</strong>：</p>
+<ul>
+<li>超过训练数据范围的预测属于”外推”，可靠性显著下降</li>
+<li>机理模型（process-based）通常比统计模型具有更好的外推能力</li>
+<li>可以使用”novel climate space”分析识别外推区域</li>
+</ul>
 
 
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1021,12 +1758,12 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./0203-experimentation.html" class="pagination-link" aria-label="生态学实验数据采集方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./0205-public-data.html" class="pagination-link" aria-label="生态学公共数据获取方法">
-        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>

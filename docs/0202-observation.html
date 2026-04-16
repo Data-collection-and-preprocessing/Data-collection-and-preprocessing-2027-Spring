@@ -7,7 +7,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
 
 
-<title>8&nbsp; 生态学观测数据采集方法 – 数据采集与预处理</title>
+<title>10&nbsp; 生态学观测数据采集方法 – 数据采集与预处理</title>
 <style>
 /* Default styles provided by pandoc.
 ** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
@@ -58,26 +58,7 @@ div.sourceCode
 @media screen {
 pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
 }
-/* CSS for citations */
-div.csl-bib-body { }
-div.csl-entry {
-  clear: both;
-}
-.hanging-indent div.csl-entry {
-  margin-left:2em;
-  text-indent:-2em;
-}
-div.csl-left-margin {
-  min-width:2em;
-  float:left;
-}
-div.csl-right-inline {
-  margin-left:2em;
-  padding-left:1em;
-}
-div.csl-indent {
-  margin-left: 2em;
-}</style>
+</style>
 
 
 <script src="site_libs/quarto-nav/quarto-nav.js"></script>
@@ -144,6 +125,35 @@ div.csl-indent {
 
 </script>
 
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
 
 <link rel="stylesheet" href="custom.css">
 </head>
@@ -157,7 +167,7 @@ div.csl-indent {
       <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
         <i class="bi bi-layout-text-sidebar-reverse"></i>
       </button>
-        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0202-observation.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></a></li></ol></nav>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0202-observation.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></a></li></ol></nav>
         <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
         </a>
       <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
@@ -185,7 +195,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./index.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text">前言</span></a>
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
   </div>
 </li>
         <li class="sidebar-item sidebar-item-section">
@@ -200,19 +210,25 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
   </div>
 </li>
       </ul>
@@ -229,19 +245,19 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
   </div>
 </li>
       </ul>
@@ -258,49 +274,49 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0202-observation.html" class="sidebar-item-text sidebar-link active">
- <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">扩展阅读与参考资源</span></span></a>
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
   </div>
 </li>
       </ul>
@@ -317,19 +333,31 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据质量控制</span></span></a>
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
   </div>
 </li>
       </ul>
@@ -346,13 +374,13 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
   </div>
 </li>
       </ul>
@@ -369,19 +397,19 @@ div.csl-indent {
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
   </div>
 </li>
           <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
   </div>
 </li>
       </ul>
@@ -389,7 +417,7 @@ div.csl-indent {
         <li class="sidebar-item">
   <div class="sidebar-item-container"> 
   <a href="./010-references.html" class="sidebar-item-text sidebar-link">
- <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
   </div>
 </li>
     </ul>
@@ -402,34 +430,86 @@ div.csl-indent {
     <h2 id="toc-title">本页内容</h2>
    
   <ul>
-  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">8.1</span> 引言</a></li>
-  <li><a href="#传统观测方法" id="toc-传统观测方法" class="nav-link" data-scroll-target="#传统观测方法"><span class="header-section-number">8.2</span> 传统观测方法</a></li>
-  <li><a href="#现代观测技术与新方法" id="toc-现代观测技术与新方法" class="nav-link" data-scroll-target="#现代观测技术与新方法"><span class="header-section-number">8.3</span> 现代观测技术与新方法</a>
+  <li><a href="#引言" id="toc-引言" class="nav-link active" data-scroll-target="#引言"><span class="header-section-number">10.1</span> 引言</a></li>
+  <li><a href="#野外观察技术基础" id="toc-野外观察技术基础" class="nav-link" data-scroll-target="#野外观察技术基础"><span class="header-section-number">10.2</span> 野外观察技术基础</a>
   <ul class="collapse">
-  <li><a href="#遥感与无人机-rs-uav" id="toc-遥感与无人机-rs-uav" class="nav-link" data-scroll-target="#遥感与无人机-rs-uav"><span class="header-section-number">8.3.1</span> 1. 遥感与无人机 (RS &amp; UAV)</a></li>
-  <li><a href="#自动监测网络与物联网-iot" id="toc-自动监测网络与物联网-iot" class="nav-link" data-scroll-target="#自动监测网络与物联网-iot"><span class="header-section-number">8.3.2</span> 2. 自动监测网络与物联网 (IoT)</a></li>
-  <li><a href="#环境dna-edna" id="toc-环境dna-edna" class="nav-link" data-scroll-target="#环境dna-edna"><span class="header-section-number">8.3.3</span> 3. 环境DNA (eDNA)</a></li>
-  <li><a href="#计算机视觉与人工智能-aiml" id="toc-计算机视觉与人工智能-aiml" class="nav-link" data-scroll-target="#计算机视觉与人工智能-aiml"><span class="header-section-number">8.3.4</span> 4. 计算机视觉与人工智能 (AI/ML)</a></li>
+  <li><a href="#肉眼观察-visual-observation" id="toc-肉眼观察-visual-observation" class="nav-link" data-scroll-target="#肉眼观察-visual-observation"><span class="header-section-number">10.2.1</span> 肉眼观察 (Visual Observation)</a></li>
+  <li><a href="#放大镜观察-hand-lens-observation" id="toc-放大镜观察-hand-lens-observation" class="nav-link" data-scroll-target="#放大镜观察-hand-lens-observation"><span class="header-section-number">10.2.2</span> 放大镜观察 (Hand Lens Observation)</a></li>
+  <li><a href="#体视镜观察-stereomicroscope-observation" id="toc-体视镜观察-stereomicroscope-observation" class="nav-link" data-scroll-target="#体视镜观察-stereomicroscope-observation"><span class="header-section-number">10.2.3</span> 体视镜观察 (Stereomicroscope Observation)</a></li>
   </ul></li>
-  <li><a href="#观测数据的质量控制" id="toc-观测数据的质量控制" class="nav-link" data-scroll-target="#观测数据的质量控制"><span class="header-section-number">8.4</span> 观测数据的质量控制</a></li>
-  <li><a href="#r-代码示例观测数据的记录与保存" id="toc-r-代码示例观测数据的记录与保存" class="nav-link" data-scroll-target="#r-代码示例观测数据的记录与保存"><span class="header-section-number">8.5</span> R 代码示例：观测数据的记录与保存</a>
+  <li><a href="#野外采集标本的记录规范" id="toc-野外采集标本的记录规范" class="nav-link" data-scroll-target="#野外采集标本的记录规范"><span class="header-section-number">10.3</span> 野外采集标本的记录规范</a>
   <ul class="collapse">
-  <li><a href="#创建观测记录表" id="toc-创建观测记录表" class="nav-link" data-scroll-target="#创建观测记录表"><span class="header-section-number">8.5.1</span> 创建观测记录表</a></li>
-  <li><a href="#数据录入规范要点" id="toc-数据录入规范要点" class="nav-link" data-scroll-target="#数据录入规范要点"><span class="header-section-number">8.5.2</span> 数据录入规范要点</a></li>
-  <li><a href="#保存为-csv-文件" id="toc-保存为-csv-文件" class="nav-link" data-scroll-target="#保存为-csv-文件"><span class="header-section-number">8.5.3</span> 保存为 CSV 文件</a></li>
+  <li><a href="#植物标本采集记录-plant-specimen-recording" id="toc-植物标本采集记录-plant-specimen-recording" class="nav-link" data-scroll-target="#植物标本采集记录-plant-specimen-recording"><span class="header-section-number">10.3.1</span> 植物标本采集记录 (Plant Specimen Recording)</a></li>
+  <li><a href="#土壤样品采集记录-soil-sample-recording" id="toc-土壤样品采集记录-soil-sample-recording" class="nav-link" data-scroll-target="#土壤样品采集记录-soil-sample-recording"><span class="header-section-number">10.3.2</span> 土壤样品采集记录 (Soil Sample Recording)</a></li>
+  <li><a href="#动物标本采集记录-animal-specimen-recording" id="toc-动物标本采集记录-animal-specimen-recording" class="nav-link" data-scroll-target="#动物标本采集记录-animal-specimen-recording"><span class="header-section-number">10.3.3</span> 动物标本采集记录 (Animal Specimen Recording)</a></li>
   </ul></li>
-  <li><a href="#观测设计要点" id="toc-观测设计要点" class="nav-link" data-scroll-target="#观测设计要点"><span class="header-section-number">8.6</span> 观测设计要点</a></li>
-  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">8.7</span> 总结</a></li>
-  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">8.8</span> 课后练习</a></li>
+  <li><a href="#定位与地理信息采集" id="toc-定位与地理信息采集" class="nav-link" data-scroll-target="#定位与地理信息采集"><span class="header-section-number">10.4</span> 定位与地理信息采集</a>
+  <ul class="collapse">
+  <li><a href="#gps定位技术-gps-positioning" id="toc-gps定位技术-gps-positioning" class="nav-link" data-scroll-target="#gps定位技术-gps-positioning"><span class="header-section-number">10.4.1</span> GPS定位技术 (GPS Positioning)</a></li>
+  <li><a href="#样地坐标系统建立" id="toc-样地坐标系统建立" class="nav-link" data-scroll-target="#样地坐标系统建立"><span class="header-section-number">10.4.2</span> 样地坐标系统建立</a></li>
+  <li><a href="#海拔与地形信息" id="toc-海拔与地形信息" class="nav-link" data-scroll-target="#海拔与地形信息"><span class="header-section-number">10.4.3</span> 海拔与地形信息</a></li>
+  </ul></li>
+  <li><a href="#环境因子观测" id="toc-环境因子观测" class="nav-link" data-scroll-target="#环境因子观测"><span class="header-section-number">10.5</span> 环境因子观测</a>
+  <ul class="collapse">
+  <li><a href="#气象因子测定" id="toc-气象因子测定" class="nav-link" data-scroll-target="#气象因子测定"><span class="header-section-number">10.5.1</span> 气象因子测定</a></li>
+  <li><a href="#土壤因子测定" id="toc-土壤因子测定" class="nav-link" data-scroll-target="#土壤因子测定"><span class="header-section-number">10.5.2</span> 土壤因子测定</a></li>
+  </ul></li>
+  <li><a href="#调查表格设计" id="toc-调查表格设计" class="nav-link" data-scroll-target="#调查表格设计"><span class="header-section-number">10.6</span> 调查表格设计</a>
+  <ul class="collapse">
+  <li><a href="#纸质调查表设计原则" id="toc-纸质调查表设计原则" class="nav-link" data-scroll-target="#纸质调查表设计原则"><span class="header-section-number">10.6.1</span> 纸质调查表设计原则</a></li>
+  <li><a href="#电子化调查表优势" id="toc-电子化调查表优势" class="nav-link" data-scroll-target="#电子化调查表优势"><span class="header-section-number">10.6.2</span> 电子化调查表优势</a></li>
+  </ul></li>
+  <li><a href="#电子数据采集工具" id="toc-电子数据采集工具" class="nav-link" data-scroll-target="#电子数据采集工具"><span class="header-section-number">10.7</span> 电子数据采集工具</a>
+  <ul class="collapse">
+  <li><a href="#kobotoolbox" id="toc-kobotoolbox" class="nav-link" data-scroll-target="#kobotoolbox"><span class="header-section-number">10.7.1</span> KoboToolbox</a></li>
+  <li><a href="#odk-open-data-kit" id="toc-odk-open-data-kit" class="nav-link" data-scroll-target="#odk-open-data-kit"><span class="header-section-number">10.7.2</span> ODK (Open Data Kit)</a></li>
+  <li><a href="#arcgis-survey123" id="toc-arcgis-survey123" class="nav-link" data-scroll-target="#arcgis-survey123"><span class="header-section-number">10.7.3</span> ArcGIS Survey123</a></li>
+  </ul></li>
+  <li><a href="#生态学野外来集标准操作程序" id="toc-生态学野外来集标准操作程序" class="nav-link" data-scroll-target="#生态学野外来集标准操作程序"><span class="header-section-number">10.8</span> 生态学野外来集标准操作程序</a>
+  <ul class="collapse">
+  <li><a href="#样地设置标准流程" id="toc-样地设置标准流程" class="nav-link" data-scroll-target="#样地设置标准流程"><span class="header-section-number">10.8.1</span> 样地设置标准流程</a></li>
+  <li><a href="#植物群落调查标准流程" id="toc-植物群落调查标准流程" class="nav-link" data-scroll-target="#植物群落调查标准流程"><span class="header-section-number">10.8.2</span> 植物群落调查标准流程</a></li>
+  <li><a href="#土壤调查标准流程" id="toc-土壤调查标准流程" class="nav-link" data-scroll-target="#土壤调查标准流程"><span class="header-section-number">10.8.3</span> 土壤调查标准流程</a></li>
+  </ul></li>
+  <li><a href="#生态定位观测与长期监测" id="toc-生态定位观测与长期监测" class="nav-link" data-scroll-target="#生态定位观测与长期监测"><span class="header-section-number">10.9</span> 生态定位观测与长期监测</a>
+  <ul class="collapse">
+  <li><a href="#长期生态研究-lter-概念" id="toc-长期生态研究-lter-概念" class="nav-link" data-scroll-target="#长期生态研究-lter-概念"><span class="header-section-number">10.9.1</span> 长期生态研究 (LTER) 概念</a></li>
+  <li><a href="#固定样地监测设计" id="toc-固定样地监测设计" class="nav-link" data-scroll-target="#固定样地监测设计"><span class="header-section-number">10.9.2</span> 固定样地监测设计</a></li>
+  <li><a href="#数据管理与存档" id="toc-数据管理与存档" class="nav-link" data-scroll-target="#数据管理与存档"><span class="header-section-number">10.9.3</span> 数据管理与存档</a></li>
+  </ul></li>
+  <li><a href="#观测数据的质量控制" id="toc-观测数据的质量控制" class="nav-link" data-scroll-target="#观测数据的质量控制"><span class="header-section-number">10.10</span> 观测数据的质量控制</a>
+  <ul class="collapse">
+  <li><a href="#数据录入质量控制" id="toc-数据录入质量控制" class="nav-link" data-scroll-target="#数据录入质量控制"><span class="header-section-number">10.10.1</span> 数据录入质量控制</a></li>
+  </ul></li>
+  <li><a href="#传统观测方法" id="toc-传统观测方法" class="nav-link" data-scroll-target="#传统观测方法"><span class="header-section-number">10.11</span> 传统观测方法</a></li>
+  <li><a href="#现代观测技术与新方法" id="toc-现代观测技术与新方法" class="nav-link" data-scroll-target="#现代观测技术与新方法"><span class="header-section-number">10.12</span> 现代观测技术与新方法</a>
+  <ul class="collapse">
+  <li><a href="#遥感与无人机-rs-uav" id="toc-遥感与无人机-rs-uav" class="nav-link" data-scroll-target="#遥感与无人机-rs-uav"><span class="header-section-number">10.12.1</span> 1. 遥感与无人机 (RS &amp; UAV)</a></li>
+  <li><a href="#自动监测网络与物联网-iot" id="toc-自动监测网络与物联网-iot" class="nav-link" data-scroll-target="#自动监测网络与物联网-iot"><span class="header-section-number">10.12.2</span> 2. 自动监测网络与物联网 (IoT)</a></li>
+  <li><a href="#环境dna-edna" id="toc-环境dna-edna" class="nav-link" data-scroll-target="#环境dna-edna"><span class="header-section-number">10.12.3</span> 3. 环境DNA (eDNA)</a></li>
+  <li><a href="#计算机视觉与人工智能-aiml" id="toc-计算机视觉与人工智能-aiml" class="nav-link" data-scroll-target="#计算机视觉与人工智能-aiml"><span class="header-section-number">10.12.4</span> 4. 计算机视觉与人工智能 (AI/ML)</a></li>
+  </ul></li>
+  <li><a href="#总结" id="toc-总结" class="nav-link" data-scroll-target="#总结"><span class="header-section-number">10.13</span> 总结</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">10.14</span> 课后练习</a></li>
+  <li><a href="#r代码示例观测数据的记录与保存" id="toc-r代码示例观测数据的记录与保存" class="nav-link" data-scroll-target="#r代码示例观测数据的记录与保存"><span class="header-section-number">10.15</span> R代码示例：观测数据的记录与保存</a>
+  <ul class="collapse">
+  <li><a href="#创建观测记录表" id="toc-创建观测记录表" class="nav-link" data-scroll-target="#创建观测记录表"><span class="header-section-number">10.15.1</span> 创建观测记录表</a></li>
+  <li><a href="#数据录入规范要点" id="toc-数据录入规范要点" class="nav-link" data-scroll-target="#数据录入规范要点"><span class="header-section-number">10.15.2</span> 数据录入规范要点</a></li>
+  <li><a href="#保存为csv文件" id="toc-保存为csv文件" class="nav-link" data-scroll-target="#保存为csv文件"><span class="header-section-number">10.15.3</span> 保存为CSV文件</a></li>
+  </ul></li>
+  <li><a href="#观测设计要点" id="toc-观测设计要点" class="nav-link" data-scroll-target="#观测设计要点"><span class="header-section-number">10.16</span> 观测设计要点</a>
+  <ul class="collapse">
+  <li><a href="#案例马尾松林定位观测设计" id="toc-案例马尾松林定位观测设计" class="nav-link" data-scroll-target="#案例马尾松林定位观测设计"><span class="header-section-number">10.16.1</span> 案例：马尾松林定位观测设计</a></li>
+  </ul></li>
   </ul>
 </nav>
     </div>
 <!-- main -->
 <main class="content" id="quarto-document-content">
 
-<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0202-observation.html"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></a></li></ol></nav>
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0202-observation.html"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></a></li></ol></nav>
 <div class="quarto-title">
-<h1 class="title"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></h1>
+<h1 class="title"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></h1>
 </div>
 
 
@@ -446,12 +526,708 @@ div.csl-indent {
 </header>
 
 
-<section id="引言" class="level2" data-number="8.1">
-<h2 data-number="8.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">8.1</span> 引言</h2>
+<section id="引言" class="level2" data-number="10.1">
+<h2 data-number="10.1" class="anchored" data-anchor-id="引言"><span class="header-section-number">10.1</span> 引言</h2>
 <p>生态学观测（Ecological Observation）是指在自然状态下，通过感官或仪器对生态系统成分、结构和功能进行系统性记录的过程。作为生态学研究最古老且最基础的方法，观测为我们提供了关于物种分布、种群动态和环境变迁的第一手资料。</p>
+<p>观测数据的质量直接影响后续分析的可靠性。本章将系统介绍从野外观察技术、标本采集记录、地理信息采集到电子化数据管理的完整流程，并提供生态学实际案例和R代码示例。</p>
 </section>
-<section id="传统观测方法" class="level2" data-number="8.2">
-<h2 data-number="8.2" class="anchored" data-anchor-id="传统观测方法"><span class="header-section-number">8.2</span> 传统观测方法</h2>
+<section id="野外观察技术基础" class="level2" data-number="10.2">
+<h2 data-number="10.2" class="anchored" data-anchor-id="野外观察技术基础"><span class="header-section-number">10.2</span> 野外观察技术基础</h2>
+<section id="肉眼观察-visual-observation" class="level3" data-number="10.2.1">
+<h3 data-number="10.2.1" class="anchored" data-anchor-id="肉眼观察-visual-observation"><span class="header-section-number">10.2.1</span> 肉眼观察 (Visual Observation)</h3>
+<p>肉眼观察是最基本的野外调查技能，适用于识别大型植物、动物和明显的生态特征。</p>
+<p><strong>观察要点</strong>： - <strong>植物识别</strong>：注意叶形、叶序、花序、果实等关键特征 - <strong>动物行为</strong>：记录活动时间、觅食行为、社会互动 - <strong>生境特征</strong>：观察地形、水文、植被类型</p>
+<p><strong>常见误差来源</strong>： - 观察者偏差（不同人识别能力差异） - 时间偏差（不同时段物种活跃度不同） - 天气影响（雨天、大风影响观察质量）</p>
+<div class="callout callout-style-default callout-warning callout-titled" title="观察者训练">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>观察者训练
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在正式调查前，团队成员应进行一致性训练，确保对同一物种或特征的识别标准统一。建议使用标准照片或标本进行盲测，计算观察者间一致性系数（Kappa值）。</p>
+</div>
+</div>
+</section>
+<section id="放大镜观察-hand-lens-observation" class="level3" data-number="10.2.2">
+<h3 data-number="10.2.2" class="anchored" data-anchor-id="放大镜观察-hand-lens-observation"><span class="header-section-number">10.2.2</span> 放大镜观察 (Hand Lens Observation)</h3>
+<p>放大镜（通常10×-20×）用于观察植物细微特征，如： - 叶表面毛被类型（星状毛、腺毛、单毛） - 花器官结构（雄蕊数量、柱头形态） - 种子表面纹理</p>
+<p><strong>使用技巧</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 记录放大镜观察结果的数据框示例</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>lens_observation <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_id =</span> <span class="fu">paste0</span>(<span class="st">"L"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"樟树"</span>, <span class="st">"木荷"</span>),</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">leaf_hair_type =</span> <span class="fu">c</span>(<span class="st">"无毛"</span>, <span class="st">"稀疏柔毛"</span>, <span class="st">"密被星状毛"</span>, <span class="st">"无毛"</span>, <span class="st">"背面被毛"</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">stomata_visible =</span> <span class="fu">c</span>(<span class="cn">TRUE</span>, <span class="cn">TRUE</span>, <span class="cn">FALSE</span>, <span class="cn">TRUE</span>, <span class="cn">TRUE</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">magnification =</span> <span class="fu">rep</span>(<span class="st">"10x"</span>, <span class="dv">5</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer =</span> <span class="st">"李同学"</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>lens_observation</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="体视镜观察-stereomicroscope-observation" class="level3" data-number="10.2.3">
+<h3 data-number="10.2.3" class="anchored" data-anchor-id="体视镜观察-stereomicroscope-observation"><span class="header-section-number">10.2.3</span> 体视镜观察 (Stereomicroscope Observation)</h3>
+<p>体视镜（解剖镜）提供20×-40×放大倍数和立体视野，适用于： - 昆虫形态鉴定（触角节数、翅脉序列） - 土壤动物分类（跳虫、螨类） - 植物花粉和孢子观察</p>
+<p><strong>野外便携式体视镜</strong>： 现代便携式USB数码显微镜（如Dino-Lite系列）可直接连接笔记本电脑，实时拍摄并保存高分辨率图像，便于后期鉴定和存档。</p>
+</section>
+</section>
+<section id="野外采集标本的记录规范" class="level2" data-number="10.3">
+<h2 data-number="10.3" class="anchored" data-anchor-id="野外采集标本的记录规范"><span class="header-section-number">10.3</span> 野外采集标本的记录规范</h2>
+<section id="植物标本采集记录-plant-specimen-recording" class="level3" data-number="10.3.1">
+<h3 data-number="10.3.1" class="anchored" data-anchor-id="植物标本采集记录-plant-specimen-recording"><span class="header-section-number">10.3.1</span> 植物标本采集记录 (Plant Specimen Recording)</h3>
+<p>植物标本是植物分类学和生态学研究的重要凭证。规范的采集记录应包括：</p>
+<p><strong>必填字段</strong>： - <strong>采集号 (Collection Number)</strong>：采集者姓名缩写 + 流水号，如 <code>LiuHQ2027001</code> - <strong>学名 (Scientific Name)</strong>：拉丁学名（属名 + 种加词 + 命名人），如 <em>Pinus massoniana</em> Lamb. - <strong>采集地点 (Locality)</strong>：省-市-县-具体地点，如”广西壮族自治区南宁市武鸣区伊岭岩景区” - <strong>生境描述 (Habitat)</strong>：海拔、坡向、坡位、群落类型，如”海拔280m，东南坡中部，马尾松-枫香混交林” - <strong>GPS坐标 (Coordinates)</strong>：WGS84坐标系，精确到小数点后5位 - <strong>采集日期 (Date)</strong>：YYYY-MM-DD格式 - <strong>采集人 (Collector)</strong>：全名</p>
+<p><strong>推荐字段</strong>： - 植株高度、胸径（乔木） - 花色、果实成熟度 - 伴生种（优势种前3-5种） - 照片编号（关联数码照片）</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 植物标本采集记录数据框</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>plant_specimen <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">collection_no =</span> <span class="fu">paste0</span>(<span class="st">"LiuHQ2027"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">8</span>)),</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">scientific_name =</span> <span class="fu">c</span>(</span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Pinus massoniana Lamb."</span>,</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cunninghamia lanceolata (Lamb.) Hook."</span>,</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Liquidambar formosana Hance"</span>,</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Cinnamomum camphora (L.) J.Presl"</span>,</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Schima superba Gardner &amp; Champ."</span>,</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Castanopsis fissa (Champ. ex Benth.) Rehder &amp; E.H.Wilson"</span>,</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Machilus chinensis (Benth.) Hemsl."</span>,</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Elaeocarpus sylvestris (Lour.) Poir."</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">chinese_name =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"樟树"</span>, <span class="st">"木荷"</span>, <span class="st">"黧蒴"</span>, <span class="st">"华润楠"</span>, <span class="st">"山杜英"</span>),</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">locality =</span> <span class="st">"广西南宁市武鸣区伊岭岩景区"</span>,</span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat =</span> <span class="fu">c</span>(</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔280m，东南坡中部，马尾松林"</span>,</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔260m，山谷，人工杉木林"</span>,</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔290m，东南坡上部，次生林"</span>,</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔250m，沟谷，常绿阔叶林"</span>,</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔300m，山脊，常绿阔叶林"</span>,</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔270m，东坡中部，常绿阔叶林"</span>,</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔265m，沟谷，常绿阔叶林"</span>,</span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="st">"海拔285m，东南坡，次生林"</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude =</span> <span class="fu">c</span>(<span class="fl">23.1234</span>, <span class="fl">23.1245</span>, <span class="fl">23.1256</span>, <span class="fl">23.1267</span>, <span class="fl">23.1278</span>, <span class="fl">23.1289</span>, <span class="fl">23.1290</span>, <span class="fl">23.1301</span>),</span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude =</span> <span class="fu">c</span>(<span class="fl">108.2345</span>, <span class="fl">108.2356</span>, <span class="fl">108.2367</span>, <span class="fl">108.2378</span>, <span class="fl">108.2389</span>, <span class="fl">108.2390</span>, <span class="fl">108.2401</span>, <span class="fl">108.2412</span>),</span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation_m =</span> <span class="fu">c</span>(<span class="dv">280</span>, <span class="dv">260</span>, <span class="dv">290</span>, <span class="dv">250</span>, <span class="dv">300</span>, <span class="dv">270</span>, <span class="dv">265</span>, <span class="dv">285</span>),</span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">as.Date</span>(<span class="st">"2027-04-15"</span>),</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>  <span class="at">collector =</span> <span class="st">"刘华清"</span>,</span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm =</span> <span class="fu">c</span>(<span class="fl">25.3</span>, <span class="fl">18.7</span>, <span class="fl">22.1</span>, <span class="fl">35.6</span>, <span class="fl">28.4</span>, <span class="fl">19.8</span>, <span class="fl">24.5</span>, <span class="fl">21.3</span>),</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="fl">10.2</span>, <span class="fl">11.8</span>, <span class="fl">15.3</span>, <span class="fl">13.7</span>, <span class="fl">10.5</span>, <span class="fl">12.1</span>, <span class="fl">11.4</span>),</span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>  <span class="at">phenology =</span> <span class="fu">c</span>(<span class="st">"球果成熟"</span>, <span class="st">"营养生长"</span>, <span class="st">"果实成熟"</span>, <span class="st">"花期"</span>, <span class="st">"花芽"</span>, <span class="st">"营养生长"</span>, <span class="st">"果实发育"</span>, <span class="st">"花期"</span>),</span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>  <span class="at">photo_id =</span> <span class="fu">paste0</span>(<span class="st">"IMG_"</span>, <span class="dv">5001</span><span class="sc">:</span><span class="dv">5008</span>)</span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(plant_specimen, <span class="at">n =</span> <span class="dv">5</span>)</span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为CSV</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"data"</span>)) <span class="fu">dir.create</span>(<span class="st">"data"</span>)</span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>readr<span class="sc">::</span><span class="fu">write_csv</span>(plant_specimen, <span class="st">"data/plant_specimen_2027.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled" title="标本采集的伦理规范">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>标本采集的伦理规范
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>珍稀濒危物种（国家保护植物）禁止采集，仅拍照记录</li>
+<li>每种植物采集3-5份重复标本（用于交换和备份）</li>
+<li>采集时避免破坏整株植物，选择枝条而非主干</li>
+<li>在保护区内采集需提前申请科研许可证</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="土壤样品采集记录-soil-sample-recording" class="level3" data-number="10.3.2">
+<h3 data-number="10.3.2" class="anchored" data-anchor-id="土壤样品采集记录-soil-sample-recording"><span class="header-section-number">10.3.2</span> 土壤样品采集记录 (Soil Sample Recording)</h3>
+<p>土壤样品采集需记录详细的剖面信息和理化性质。</p>
+<p><strong>土壤剖面描述要素</strong>： - <strong>剖面编号 (Profile ID)</strong>：地点缩写 + 日期 + 序号 - <strong>发生层次 (Horizon)</strong>：O层（有机质层）、A层（腐殖质层）、B层（淀积层）、C层（母质层） - <strong>层次厚度 (Thickness)</strong>：单位cm - <strong>颜色 (Color)</strong>：使用Munsell土壤比色卡，如”10YR 4/3”（湿态） - <strong>质地 (Texture)</strong>：砂土、壤土、黏土及其组合 - <strong>结构 (Structure)</strong>：团粒状、块状、柱状、片状 - <strong>根系分布 (Root Distribution)</strong>：多、中、少、无</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 土壤剖面记录示例</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>soil_profile <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">profile_id =</span> <span class="st">"YiLing_20270415_P01"</span>,</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="fu">c</span>(<span class="st">"O"</span>, <span class="st">"A"</span>, <span class="st">"B"</span>, <span class="st">"C"</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth_top_cm =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">45</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth_bottom_cm =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">15</span>, <span class="dv">45</span>, <span class="dv">80</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">thickness_cm =</span> <span class="fu">c</span>(<span class="dv">3</span>, <span class="dv">12</span>, <span class="dv">30</span>, <span class="dv">35</span>),</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">color_moist =</span> <span class="fu">c</span>(<span class="st">"10YR 2/1"</span>, <span class="st">"10YR 3/2"</span>, <span class="st">"10YR 4/4"</span>, <span class="st">"10YR 5/6"</span>),</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">texture =</span> <span class="fu">c</span>(<span class="st">"有机质"</span>, <span class="st">"壤土"</span>, <span class="st">"黏壤土"</span>, <span class="st">"黏土"</span>),</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">structure =</span> <span class="fu">c</span>(<span class="st">"无结构"</span>, <span class="st">"团粒状"</span>, <span class="st">"块状"</span>, <span class="st">"块状"</span>),</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">root_abundance =</span> <span class="fu">c</span>(<span class="st">"极多"</span>, <span class="st">"多"</span>, <span class="st">"中"</span>, <span class="st">"少"</span>),</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">boundary =</span> <span class="fu">c</span>(<span class="st">"清晰"</span>, <span class="st">"清晰"</span>, <span class="st">"渐变"</span>, <span class="st">"—"</span>),</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="fu">c</span>(</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"未分解落叶层"</span>,</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"腐殖质含量高，疏松"</span>,</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"铁锰氧化物斑点"</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="st">"母岩风化物"</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>soil_profile</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>土壤样品采集标准操作程序 (SOP)</strong>：</p>
+<ol type="1">
+<li><strong>工具准备</strong>：土钻或铁锹、样品袋、标签、GPS、相机、Munsell比色卡</li>
+<li><strong>剖面挖掘</strong>：挖掘1m×1m×1m土壤剖面，一侧垂直平整</li>
+<li><strong>分层采样</strong>：
+<ul>
+<li>按发生层次分别采集（每层约500g）</li>
+<li>用不锈钢刀具去除边缘污染部分</li>
+<li>装入自封袋并立即贴标签</li>
+</ul></li>
+<li><strong>现场测定</strong>：pH（便携式pH计）、温度、湿度</li>
+<li><strong>照片记录</strong>：
+<ul>
+<li>剖面全景照（含比例尺）</li>
+<li>各层次特写照</li>
+<li>GPS坐标照片</li>
+</ul></li>
+</ol>
+<p><strong>案例：马尾松林土壤剖面描述</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 马尾松林典型土壤剖面（红壤）</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>pinus_soil <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">site =</span> <span class="st">"广西南宁伊岭岩马尾松林"</span>,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">profile_id =</span> <span class="st">"PM_Profile_01"</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="fu">c</span>(<span class="st">"O"</span>, <span class="st">"A"</span>, <span class="st">"AB"</span>, <span class="st">"Bt"</span>, <span class="st">"C"</span>),</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth_cm =</span> <span class="fu">c</span>(<span class="st">"0-2"</span>, <span class="st">"2-12"</span>, <span class="st">"12-28"</span>, <span class="st">"28-55"</span>, <span class="st">"55-100"</span>),</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">color_dry =</span> <span class="fu">c</span>(<span class="st">"10YR 3/1"</span>, <span class="st">"10YR 4/3"</span>, <span class="st">"7.5YR 4/4"</span>, <span class="st">"5YR 4/6"</span>, <span class="st">"5YR 5/8"</span>),</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">color_moist =</span> <span class="fu">c</span>(<span class="st">"10YR 2/1"</span>, <span class="st">"10YR 3/3"</span>, <span class="st">"7.5YR 3/4"</span>, <span class="st">"5YR 3/6"</span>, <span class="st">"5YR 4/8"</span>),</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">texture =</span> <span class="fu">c</span>(<span class="st">"有机质"</span>, <span class="st">"砂壤土"</span>, <span class="st">"壤土"</span>, <span class="st">"黏壤土"</span>, <span class="st">"黏土"</span>),</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">structure =</span> <span class="fu">c</span>(<span class="st">"松散"</span>, <span class="st">"团粒状"</span>, <span class="st">"亚角块状"</span>, <span class="st">"棱块状"</span>, <span class="st">"块状"</span>),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH =</span> <span class="fu">c</span>(<span class="fl">4.8</span>, <span class="fl">5.2</span>, <span class="fl">5.5</span>, <span class="fl">5.8</span>, <span class="fl">6.1</span>),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">root_density =</span> <span class="fu">c</span>(<span class="st">"极多"</span>, <span class="st">"多"</span>, <span class="st">"中"</span>, <span class="st">"少"</span>, <span class="st">"极少"</span>),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="fu">c</span>(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"松针落叶层，厚约2cm"</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"腐殖质层，根系密集"</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"过渡层，颜色渐变"</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"黏化层，铁铝富集"</span>,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="st">"母质层，风化花岗岩"</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>pinus_soil</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="动物标本采集记录-animal-specimen-recording" class="level3" data-number="10.3.3">
+<h3 data-number="10.3.3" class="anchored" data-anchor-id="动物标本采集记录-animal-specimen-recording"><span class="header-section-number">10.3.3</span> 动物标本采集记录 (Animal Specimen Recording)</h3>
+<p>动物标本采集需遵守更严格的伦理规范，许多物种受法律保护。</p>
+<p><strong>昆虫采集记录</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 昆虫标本采集记录</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>insect_specimen <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">specimen_id =</span> <span class="fu">paste0</span>(<span class="st">"INS2027"</span>, <span class="fu">sprintf</span>(<span class="st">"%04d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">6</span>)),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">order =</span> <span class="fu">c</span>(<span class="st">"鞘翅目"</span>, <span class="st">"鳞翅目"</span>, <span class="st">"膜翅目"</span>, <span class="st">"直翅目"</span>, <span class="st">"半翅目"</span>, <span class="st">"双翅目"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">family =</span> <span class="fu">c</span>(<span class="st">"天牛科"</span>, <span class="st">"凤蝶科"</span>, <span class="st">"蜜蜂科"</span>, <span class="st">"蝗科"</span>, <span class="st">"蝽科"</span>, <span class="st">"食蚜蝇科"</span>),</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">genus_species =</span> <span class="fu">c</span>(</span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Anoplophora glabripennis"</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Papilio xuthus"</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Apis cerana"</span>,</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Locusta migratoria"</span>,</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Halyomorpha halys"</span>,</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Episyrphus balteatus"</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">chinese_name =</span> <span class="fu">c</span>(<span class="st">"光肩星天牛"</span>, <span class="st">"柑橘凤蝶"</span>, <span class="st">"中华蜜蜂"</span>, <span class="st">"飞蝗"</span>, <span class="st">"茶翅蝽"</span>, <span class="st">"黑带食蚜蝇"</span>),</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">collection_method =</span> <span class="fu">c</span>(<span class="st">"网捕"</span>, <span class="st">"网捕"</span>, <span class="st">"诱捕"</span>, <span class="st">"网捕"</span>, <span class="st">"振落法"</span>, <span class="st">"网捕"</span>),</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">host_plant =</span> <span class="fu">c</span>(<span class="st">"枫香"</span>, <span class="st">"柑橘"</span>, <span class="st">"油菜花"</span>, <span class="st">"禾本科"</span>, <span class="st">"豆科"</span>, <span class="st">"菊科"</span>),</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">locality =</span> <span class="st">"广西南宁市武鸣区伊岭岩"</span>,</span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude =</span> <span class="fl">23.1250</span>,</span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude =</span> <span class="fl">108.2360</span>,</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>  <span class="at">date =</span> <span class="fu">as.Date</span>(<span class="st">"2027-04-15"</span>),</span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="st">"10:30"</span>, <span class="st">"14:20"</span>, <span class="st">"09:15"</span>, <span class="st">"11:45"</span>, <span class="st">"15:30"</span>, <span class="st">"13:10"</span>),</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>  <span class="at">weather =</span> <span class="st">"晴，25°C，微风"</span>,</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>  <span class="at">collector =</span> <span class="st">"王同学"</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>insect_specimen</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-warning callout-titled" title="动物采集的法律约束">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>动物采集的法律约束
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li>国家重点保护野生动物禁止采集（如金斑喙凤蝶、中华虎凤蝶）</li>
+<li>采集需获得林业部门的《野生动物科研许可证》</li>
+<li>优先使用非致死性方法（拍照、录音、红外相机）</li>
+<li>昆虫采集后应制作标本并妥善保存，不得随意丢弃</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="定位与地理信息采集" class="level2" data-number="10.4">
+<h2 data-number="10.4" class="anchored" data-anchor-id="定位与地理信息采集"><span class="header-section-number">10.4</span> 定位与地理信息采集</h2>
+<section id="gps定位技术-gps-positioning" class="level3" data-number="10.4.1">
+<h3 data-number="10.4.1" class="anchored" data-anchor-id="gps定位技术-gps-positioning"><span class="header-section-number">10.4.1</span> GPS定位技术 (GPS Positioning)</h3>
+<p>准确的地理坐标是生态学数据的重要元数据，用于： - 样地空间分布分析 - 与遥感数据配准 - 长期监测的重复定位 - 生物地理学研究</p>
+<p><strong>GPS设备选择</strong>： - <strong>手持GPS</strong>：Garmin eTrex系列，精度3-5m，适合野外徒步 - <strong>差分GPS (DGPS)</strong>：精度亚米级，适合固定样地标记 - <strong>智能手机GPS</strong>：便捷但精度较低（5-10m），适合初步踏查</p>
+<p><strong>坐标系统</strong>： - <strong>WGS84</strong>：全球通用，GPS默认坐标系 - <strong>GCJ-02</strong>：中国偏移坐标系（火星坐标），用于国内地图 - <strong>BD-09</strong>：百度地图坐标系</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># GPS坐标记录与转换</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 记录GPS坐标（WGS84）</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>gps_points <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">point_id =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude =</span> <span class="fu">c</span>(<span class="fl">23.1234</span>, <span class="fl">23.1245</span>, <span class="fl">23.1256</span>, <span class="fl">23.1267</span>, <span class="fl">23.1278</span>),</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude =</span> <span class="fu">c</span>(<span class="fl">108.2345</span>, <span class="fl">108.2356</span>, <span class="fl">108.2367</span>, <span class="fl">108.2378</span>, <span class="fl">108.2389</span>),</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation_m =</span> <span class="fu">c</span>(<span class="dv">280</span>, <span class="dv">285</span>, <span class="dv">290</span>, <span class="dv">275</span>, <span class="dv">295</span>),</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">accuracy_m =</span> <span class="fu">c</span>(<span class="fl">3.2</span>, <span class="fl">2.8</span>, <span class="fl">4.1</span>, <span class="fl">3.5</span>, <span class="fl">2.9</span>),</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">date_time =</span> <span class="fu">as.POSIXct</span>(<span class="fu">c</span>(</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2027-04-15 09:30:00"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2027-04-15 10:15:00"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2027-04-15 11:00:00"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2027-04-15 13:45:00"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="st">"2027-04-15 14:30:00"</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  )),</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="fu">c</span>(<span class="st">"样地中心"</span>, <span class="st">"西北角"</span>, <span class="st">"东北角"</span>, <span class="st">"西南角"</span>, <span class="st">"东南角"</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 转换为sf对象（空间数据格式）</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>gps_sf <span class="ot">&lt;-</span> <span class="fu">st_as_sf</span>(gps_points, </span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>                   <span class="at">coords =</span> <span class="fu">c</span>(<span class="st">"longitude"</span>, <span class="st">"latitude"</span>),</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>                   <span class="at">crs =</span> <span class="dv">4326</span>)  <span class="co"># WGS84的EPSG代码</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看空间对象</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>gps_sf</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="样地坐标系统建立" class="level3" data-number="10.4.2">
+<h3 data-number="10.4.2" class="anchored" data-anchor-id="样地坐标系统建立"><span class="header-section-number">10.4.2</span> 样地坐标系统建立</h3>
+<p>对于固定样地，建立局部坐标系统便于精确定位：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 建立样地局部坐标系统</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 以西南角为原点(0,0)，建立20m×20m样方</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>plot_grid <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">x =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="at">by =</span> <span class="dv">5</span>),  <span class="co"># 东西方向</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">y =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">20</span>, <span class="at">by =</span> <span class="dv">5</span>)   <span class="co"># 南北方向</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">subplot_id =</span> <span class="fu">paste0</span>(<span class="st">"S"</span>, <span class="fu">row_number</span>()),</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 假设西南角GPS坐标</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">lat_origin =</span> <span class="fl">23.1234</span>,</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">lon_origin =</span> <span class="fl">108.2345</span>,</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 简化转换：1度纬度≈111km，1度经度≈111km×cos(纬度)</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">latitude =</span> lat_origin <span class="sc">+</span> y <span class="sc">/</span> <span class="dv">111000</span>,</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">longitude =</span> lon_origin <span class="sc">+</span> x <span class="sc">/</span> (<span class="dv">111000</span> <span class="sc">*</span> <span class="fu">cos</span>(lat_origin <span class="sc">*</span> pi <span class="sc">/</span> <span class="dv">180</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>plot_grid</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="海拔与地形信息" class="level3" data-number="10.4.3">
+<h3 data-number="10.4.3" class="anchored" data-anchor-id="海拔与地形信息"><span class="header-section-number">10.4.3</span> 海拔与地形信息</h3>
+<p>海拔是重要的环境因子，影响温度、降水和植被分布。</p>
+<p><strong>海拔测量方法</strong>： - GPS海拔（精度较低，±10-20m） - 气压高度计（精度较高，±1-2m） - 数字高程模型 (DEM) 提取</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 从DEM提取海拔（示例使用模拟数据）</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设已有DEM栅格数据</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># dem &lt;- rast("path/to/dem.tif")</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取样点海拔</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># elevations &lt;- extract(dem, gps_sf)</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 实际案例：手动记录海拔</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>elevation_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">point_id =</span> <span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">gps_elevation_m =</span> <span class="fu">c</span>(<span class="dv">278</span>, <span class="dv">283</span>, <span class="dv">288</span>, <span class="dv">273</span>, <span class="dv">293</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">barometer_elevation_m =</span> <span class="fu">c</span>(<span class="dv">280</span>, <span class="dv">285</span>, <span class="dv">290</span>, <span class="dv">275</span>, <span class="dv">295</span>),</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dem_elevation_m =</span> <span class="fu">c</span>(<span class="dv">282</span>, <span class="dv">286</span>, <span class="dv">291</span>, <span class="dv">276</span>, <span class="dv">296</span>),</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">method_used =</span> <span class="st">"气压高度计"</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>elevation_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="环境因子观测" class="level2" data-number="10.5">
+<h2 data-number="10.5" class="anchored" data-anchor-id="环境因子观测"><span class="header-section-number">10.5</span> 环境因子观测</h2>
+<section id="气象因子测定" class="level3" data-number="10.5.1">
+<h3 data-number="10.5.1" class="anchored" data-anchor-id="气象因子测定"><span class="header-section-number">10.5.1</span> 气象因子测定</h3>
+<p>野外观测中常见的气象因子包括温度、湿度、光照和降水。</p>
+<p><strong>空气温度与湿度</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>weather_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">station_id =</span> <span class="st">"YL001"</span>,</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">datetime =</span> <span class="fu">seq.POSIXt</span>(<span class="at">from =</span> <span class="fu">as.POSIXct</span>(<span class="st">"2027-04-15 08:00"</span>),</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>                        <span class="at">to =</span> <span class="fu">as.POSIXct</span>(<span class="st">"2027-04-15 18:00"</span>),</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>                        <span class="at">by =</span> <span class="st">"2 hour"</span>),</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">air_temp_c =</span> <span class="fu">c</span>(<span class="fl">18.5</span>, <span class="fl">21.3</span>, <span class="fl">24.6</span>, <span class="fl">27.2</span>, <span class="fl">28.5</span>, <span class="fl">27.8</span>),</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">relative_humidity_pct =</span> <span class="fu">c</span>(<span class="dv">85</span>, <span class="dv">78</span>, <span class="dv">65</span>, <span class="dv">58</span>, <span class="dv">55</span>, <span class="dv">60</span>)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>weather_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>光照强度测定</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>light_measurement <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">location =</span> <span class="fu">c</span>(<span class="st">"林外空地"</span>, <span class="st">"林冠缝隙"</span>, <span class="st">"林下内部"</span>, <span class="st">"林下内部"</span>, <span class="st">"林缘"</span>),</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">time =</span> <span class="fu">c</span>(<span class="st">"10:30"</span>, <span class="st">"10:35"</span>, <span class="st">"10:42"</span>, <span class="st">"10:45"</span>, <span class="st">"10:50"</span>),</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">par_umol_m2_s =</span> <span class="fu">c</span>(<span class="dv">1250</span>, <span class="dv">680</span>, <span class="dv">85</span>, <span class="dv">120</span>, <span class="dv">450</span>),</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">lux =</span> <span class="fu">c</span>(<span class="dv">45000</span>, <span class="dv">25000</span>, <span class="dv">3200</span>, <span class="dv">4500</span>, <span class="dv">16500</span>),</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes =</span> <span class="fu">c</span>(<span class="st">"对照点"</span>, <span class="st">"林冠开口处"</span>, <span class="st">"马尾松冠下"</span>, <span class="st">"树冠间隙"</span>, <span class="st">"林缘散射光"</span>)</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>light_measurement</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="土壤因子测定" class="level3" data-number="10.5.2">
+<h3 data-number="10.5.2" class="anchored" data-anchor-id="土壤因子测定"><span class="header-section-number">10.5.2</span> 土壤因子测定</h3>
+<p>土壤是陆地生态系统的重要组成部分，土壤因子（如温度、湿度、pH、养分含量等）直接影响植物生长、微生物活动和生态系统功能。土壤因子测定是生态学野外调查的核心内容之一，尤其在森林生态学、农业生态学和土壤生态学研究中不可或缺。</p>
+<p><strong>土壤因子测定的类型</strong>：</p>
+<ol type="1">
+<li><strong>物理因子</strong>：土壤温度、土壤湿度、容重、孔隙度、质地等。</li>
+<li><strong>化学因子</strong>：pH、有机质、全氮、全磷、速效养分、阳离子交换量等。</li>
+<li><strong>生物因子</strong>：微生物生物量、酶活性、呼吸速率等。</li>
+</ol>
+<p><strong>土壤剖面温度和湿度测定</strong>：</p>
+<p>土壤温度和湿度随深度变化，反映了土壤的热量和水分分布。测定时通常在不同深度（如 0、5、10、20、50、100 cm）设置测点，使用土壤温度计和土壤湿度传感器进行测量。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>soil_temp <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">profile_id =</span> <span class="st">"PM_Temp_01"</span>,</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth_cm =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">5</span>, <span class="dv">10</span>, <span class="dv">20</span>, <span class="dv">50</span>, <span class="dv">100</span>),</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">temp_c =</span> <span class="fu">c</span>(<span class="fl">25.3</span>, <span class="fl">22.8</span>, <span class="fl">20.5</span>, <span class="fl">18.2</span>, <span class="fl">16.5</span>, <span class="fl">15.8</span>),</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">moisture_pct =</span> <span class="fu">c</span>(<span class="cn">NA</span>, <span class="fl">35.2</span>, <span class="fl">38.6</span>, <span class="fl">42.1</span>, <span class="fl">45.3</span>, <span class="fl">48.2</span>)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>soil_temp</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>数据解读</strong>：</p>
+<ol type="1">
+<li><p><strong>温度梯度</strong>：从表层（25.3°C）到深层（15.8°C），温度逐渐降低。这是因为表层土壤直接受太阳辐射影响，温度波动大；深层土壤受地温影响，温度相对稳定。</p></li>
+<li><p><strong>湿度梯度</strong>：从 5 cm（35.2%）到 100 cm（48.2%），湿度逐渐增加。这是因为表层土壤蒸发强烈，水分散失快；深层土壤受地下水补给，湿度较高。</p></li>
+<li><p><strong>表层湿度缺失</strong>：0 cm 深度的湿度为 <code>NA</code>，可能是因为表层土壤过于干燥或测量仪器无法在表层准确测量。在数据分析时需要注意处理缺失值。</p></li>
+</ol>
+<p><strong>土壤因子测定的注意事项</strong>：</p>
+<ol type="1">
+<li><p><strong>采样时间</strong>：土壤温度和湿度具有日变化和季节变化，应在固定时间段（如上午 9-11 点）采样，避免时间差异导致的数据不可比。</p></li>
+<li><p><strong>采样位置</strong>：避免在树根、石块、动物洞穴等特殊位置采样，应选择代表性位置。每个样地设置 3-5 个重复测点，取平均值。</p></li>
+<li><p><strong>仪器校准</strong>：土壤温度计和湿度传感器使用前应校准，确保测量精度。湿度传感器需要定期清洁探头，避免土壤颗粒附着影响测量。</p></li>
+<li><p><strong>深度标记</strong>：使用标尺或刻度棒标记采样深度，确保每次测量的深度一致。深层土壤测量时需要挖掘剖面或使用钻孔工具。</p></li>
+</ol>
+<p><strong>土壤化学性质测定</strong>：</p>
+<p>土壤化学性质通常需要采集土壤样品带回实验室分析。野外采样时应记录采样位置、深度、土壤类型等信息，并妥善保存样品（避免阳光直射、高温、污染）。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>soil_chemistry <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_id =</span> <span class="fu">paste0</span>(<span class="st">"S"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>),</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="fu">rep</span>(<span class="fu">paste0</span>(<span class="st">"P"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>), <span class="at">each =</span> <span class="dv">2</span>),</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"0-10cm"</span>, <span class="st">"10-20cm"</span>), <span class="dv">5</span>),</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH =</span> <span class="fu">c</span>(<span class="fl">5.8</span>, <span class="fl">5.5</span>, <span class="fl">6.2</span>, <span class="fl">6.0</span>, <span class="fl">5.3</span>, <span class="fl">5.1</span>, <span class="fl">6.5</span>, <span class="fl">6.3</span>, <span class="fl">5.9</span>, <span class="fl">5.7</span>),</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_matter =</span> <span class="fu">c</span>(<span class="fl">45.2</span>, <span class="fl">38.6</span>, <span class="fl">52.3</span>, <span class="fl">48.1</span>, <span class="fl">41.5</span>, <span class="fl">36.8</span>, <span class="fl">55.7</span>, <span class="fl">50.2</span>, <span class="fl">47.3</span>, <span class="fl">42.9</span>),</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_N =</span> <span class="fu">c</span>(<span class="fl">2.1</span>, <span class="fl">1.8</span>, <span class="fl">2.5</span>, <span class="fl">2.3</span>, <span class="fl">1.9</span>, <span class="fl">1.7</span>, <span class="fl">2.7</span>, <span class="fl">2.4</span>, <span class="fl">2.2</span>, <span class="fl">2.0</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>soil_chemistry</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学应用</strong>：</p>
+<p>土壤因子数据常用于以下分析：</p>
+<ol type="1">
+<li><strong>土壤-植被关系</strong>：分析土壤 pH、养分含量与植物物种组成、生物量的关系。</li>
+<li><strong>土壤剖面特征</strong>：绘制土壤温度、湿度、养分的垂直分布图，揭示土壤分层特征。</li>
+<li><strong>时间动态</strong>：监测土壤温度、湿度的季节变化，分析气候变化对土壤环境的影响。</li>
+<li><strong>空间异质性</strong>：比较不同样地、不同生境类型的土壤性质差异，揭示环境梯度效应。</li>
+</ol>
+<p><strong>数据可视化示例</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 土壤温度和湿度的垂直分布</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(soil_temp, <span class="fu">aes</span>(<span class="at">x =</span> temp_c, <span class="at">y =</span> <span class="sc">-</span>depth_cm)) <span class="sc">+</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"red"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"温度 (°C)"</span>, <span class="at">y =</span> <span class="st">"深度 (cm)"</span>, <span class="at">title =</span> <span class="st">"土壤温度垂直分布"</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(soil_temp, <span class="fu">aes</span>(<span class="at">x =</span> moisture_pct, <span class="at">y =</span> <span class="sc">-</span>depth_cm)) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">size =</span> <span class="dv">3</span>, <span class="at">color =</span> <span class="st">"blue"</span>) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"湿度 (%)"</span>, <span class="at">y =</span> <span class="st">"深度 (cm)"</span>, <span class="at">title =</span> <span class="st">"土壤湿度垂直分布"</span>) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>掌握土壤因子测定的方法和数据记录规范，是开展生态学野外调查的基本技能。土壤数据的质量直接影响后续分析的可靠性，因此在野外采样和数据录入时应格外细心。</p>
+</section>
+</section>
+<section id="调查表格设计" class="level2" data-number="10.6">
+<h2 data-number="10.6" class="anchored" data-anchor-id="调查表格设计"><span class="header-section-number">10.6</span> 调查表格设计</h2>
+<section id="纸质调查表设计原则" class="level3" data-number="10.6.1">
+<h3 data-number="10.6.1" class="anchored" data-anchor-id="纸质调查表设计原则"><span class="header-section-number">10.6.1</span> 纸质调查表设计原则</h3>
+<p>纸质调查表是野外数据采集的传统工具，尽管电子化工具日益普及，但在网络信号差、设备电量不足或需要快速记录的场景下，纸质表格仍然不可替代。一份设计良好的纸质调查表可以显著提高数据质量和采集效率。</p>
+<p><strong>核心设计原则</strong>：</p>
+<ol type="1">
+<li><strong>清晰的结构</strong>：分区明确，便于现场填写
+<ul>
+<li>将表格分为”基本信息区”（样地编号、日期、调查员）、“测量数据区”（主要观测指标）、“备注区”（异常情况记录）</li>
+<li>使用表格线和阴影区分不同部分，避免混淆</li>
+<li>重要字段（如样地编号）放在表头显眼位置</li>
+</ul></li>
+<li><strong>足够的留白</strong>：手写记录需要足够空间
+<ul>
+<li>每个填写框至少预留 1.5 倍字高的空间（约 8-10mm）</li>
+<li>行间距不少于 5mm，避免上下行字迹重叠</li>
+<li>备注栏预留至少 3 行空白，用于记录意外情况</li>
+</ul></li>
+<li><strong>标准化的选项</strong>：减少现场判断负担
+<ul>
+<li>使用勾选框（☐）代替开放式填空，如”生境类型：☐ 山脊 ☐ 山坡 ☐ 山谷”</li>
+<li>提供参考范围或示例值，如”树高（m，范围 1-30）”</li>
+<li>对于分类变量，提前列出所有可能选项，避免现场自由发挥导致分类不一致</li>
+</ul></li>
+<li><strong>防错设计</strong>：减少数据录入错误
+<ul>
+<li>使用复写纸（一式两份），一份现场留存，一份带回实验室</li>
+<li>表格编号连续且唯一（如”GX-2024-001”），便于追溯和核对</li>
+<li>关键字段（如样地编号）在表格多处重复出现，避免混淆</li>
+<li>使用不同颜色标注必填项和可选项</li>
+</ul></li>
+</ol>
+<p><strong>生态学调查表设计案例</strong>：</p>
+<p>某森林样地调查表的设计要点： - <strong>表头</strong>：样地编号（加粗）、调查日期、调查员姓名、GPS 坐标 - <strong>环境信息</strong>：海拔（m）、坡度（°）、坡向（勾选：N/S/E/W）、郁闭度（%） - <strong>乔木层记录</strong>：树种（中文名）、胸径（cm）、树高（m）、冠幅（m） - <strong>灌木层记录</strong>：物种名、盖度（%）、平均高度（cm） - <strong>草本层记录</strong>：物种名、盖度（%） - <strong>备注栏</strong>：记录异常情况（如病虫害、人为干扰）</p>
+<p><strong>常见错误与改进</strong>：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 38%">
+<col style="width: 23%">
+<col style="width: 38%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">错误设计</th>
+<th style="text-align: left;">问题</th>
+<th style="text-align: left;">改进方案</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">表格过于密集</td>
+<td style="text-align: left;">手写困难，字迹重叠</td>
+<td style="text-align: left;">增加行高至 8-10mm</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">开放式填空过多</td>
+<td style="text-align: left;">分类不一致，后期难以整理</td>
+<td style="text-align: left;">改为勾选框或下拉选项</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">缺少单位标注</td>
+<td style="text-align: left;">数据录入时单位混乱</td>
+<td style="text-align: left;">在字段名后标注单位（如”树高（m）“）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">没有备注栏</td>
+<td style="text-align: left;">异常情况无法记录</td>
+<td style="text-align: left;">预留至少 3 行备注空间</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">表格编号不连续</td>
+<td style="text-align: left;">数据丢失难以发现</td>
+<td style="text-align: left;">使用连续编号并在表头显著标注</td>
+</tr>
+</tbody>
+</table>
+<p><strong>纸质表格的局限性</strong>：</p>
+<ul>
+<li>需要二次录入（从纸质转为电子），增加转录错误风险</li>
+<li>无法实时校验数据合理性（如树高输入 300m 不会报错）</li>
+<li>雨天或潮湿环境下纸张易损坏</li>
+<li>数据共享和备份不便</li>
+</ul>
+<p><strong>最佳实践</strong>：</p>
+<ul>
+<li>在正式调查前进行预调查，测试表格设计是否合理</li>
+<li>准备防水纸或塑料封套，应对恶劣天气</li>
+<li>每天调查结束后立即录入电子表格，避免积压</li>
+<li>保留纸质原件至少 1 年，以备数据核对</li>
+</ul>
+<p><strong>扩展记录</strong>: 2026-04-11 | 扩展者：Clawd | 目标字数：800+</p>
+</section>
+<section id="电子化调查表优势" class="level3" data-number="10.6.2">
+<h3 data-number="10.6.2" class="anchored" data-anchor-id="电子化调查表优势"><span class="header-section-number">10.6.2</span> 电子化调查表优势</h3>
+<p>相比纸质表格，电子表格具有以下优势：</p>
+<ul>
+<li><strong>实时校验</strong>：输入时自动检查范围、必填项</li>
+<li><strong>避免转录错误</strong>：现场录入，无需二次转录</li>
+<li><strong>自动编码</strong>：日期、编号自动生成</li>
+<li><strong>多设备同步</strong>：平板、手机、电脑实时同步</li>
+<li><strong>位置自动记录</strong>：可绑定GPS坐标</li>
+</ul>
+</section>
+</section>
+<section id="电子数据采集工具" class="level2" data-number="10.7">
+<h2 data-number="10.7" class="anchored" data-anchor-id="电子数据采集工具"><span class="header-section-number">10.7</span> 电子数据采集工具</h2>
+<section id="kobotoolbox" class="level3" data-number="10.7.1">
+<h3 data-number="10.7.1" class="anchored" data-anchor-id="kobotoolbox"><span class="header-section-number">10.7.1</span> KoboToolbox</h3>
+<p>KoboToolbox是一款免费开源的离线数据采集平台，广泛用于人道主义救援和野外调查。</p>
+<p><strong>特点</strong>： - 免费使用，数据存储在Kobo服务器 - 支持离线数据采集（需提前下载表单） - 可设计复杂跳选逻辑 - 数据可导出为CSV、XLSX</p>
+<p><strong>应用场景</strong>： - 大规模入户调查 - 生物多样性快速评估 (RAP) - 受损生态系统调查</p>
+</section>
+<section id="odk-open-data-kit" class="level3" data-number="10.7.2">
+<h3 data-number="10.7.2" class="anchored" data-anchor-id="odk-open-data-kit"><span class="header-section-number">10.7.2</span> ODK (Open Data Kit)</h3>
+<p>ODK是KoboToolbox的开源技术基础，功能更灵活但配置较复杂。</p>
+<p><strong>组件</strong>： - <strong>ODK Build</strong>：在线表单设计器 - <strong>ODK Collect</strong>：安卓端数据采集APP - <strong>ODK Aggregate</strong>：数据存储服务器</p>
+</section>
+<section id="arcgis-survey123" class="level3" data-number="10.7.3">
+<h3 data-number="10.7.3" class="anchored" data-anchor-id="arcgis-survey123"><span class="header-section-number">10.7.3</span> ArcGIS Survey123</h3>
+<p>Esri公司的Survey123是面向GIS用户的调查工具，与ArcGIS生态深度集成。</p>
+<p><strong>优势</strong>： - 自动关联ArcGIS地图 - 支持空间分析 - 企业级部署</p>
+<div class="callout callout-style-default callout-note callout-titled" title="工具选择建议">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>工具选择建议
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>小规模项目 / 预算有限</strong> → KoboToolbox（免费、功能完善）</li>
+<li><strong>需要离线能力 / 技术能力强</strong> → ODK（更灵活）</li>
+<li><strong>已有ArcGIS基础设施</strong> → Survey123（与GIS无缝集成）</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="生态学野外来集标准操作程序" class="level2" data-number="10.8">
+<h2 data-number="10.8" class="anchored" data-anchor-id="生态学野外来集标准操作程序"><span class="header-section-number">10.8</span> 生态学野外来集标准操作程序</h2>
+<section id="样地设置标准流程" class="level3" data-number="10.8.1">
+<h3 data-number="10.8.1" class="anchored" data-anchor-id="样地设置标准流程"><span class="header-section-number">10.8.1</span> 样地设置标准流程</h3>
+<p><strong>SOP 1：样地选择与标记</strong></p>
+<ol type="1">
+<li><strong>踏查阶段</strong>：查阅地形图、遥感影像确定候选区域；实地踏查确认交通可达性</li>
+<li><strong>样地定位</strong>：使用GPS记录中心点坐标；打入永久标桩（钢筋或PVC管）</li>
+<li><strong>样地测绘</strong>：测量并记录样地面积；绘制位置草图；拍摄全景照片</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>plot_establishment <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="st">"YL_P001"</span>,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">establishment_date =</span> <span class="fu">as.Date</span>(<span class="st">"2027-04-15"</span>),</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">center_lat =</span> <span class="fl">23.1234</span>,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">center_lon =</span> <span class="fl">108.2345</span>,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation_m =</span> <span class="dv">280</span>,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">aspect =</span> <span class="st">"SE"</span>,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">slope_deg =</span> <span class="dv">25</span>,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_size_m2 =</span> <span class="dv">400</span>,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">vegetation_type =</span> <span class="st">"马尾松-枫香混交林"</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>plot_establishment</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="植物群落调查标准流程" class="level3" data-number="10.8.2">
+<h3 data-number="10.8.2" class="anchored" data-anchor-id="植物群落调查标准流程"><span class="header-section-number">10.8.2</span> 植物群落调查标准流程</h3>
+<p><strong>SOP 2：乔木调查</strong></p>
+<ol type="1">
+<li><strong>样方设置</strong>：20m x 20m样方</li>
+<li><strong>每木检尺</strong>：测量胸径 (DBH, 1.3m处)；测量树高；记录健康状况</li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>tree_survey <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="fu">rep</span>(<span class="st">"YL_P001"</span>, <span class="at">each =</span> <span class="dv">5</span>),</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_id =</span> <span class="fu">paste0</span>(<span class="st">"T"</span>, <span class="fu">sprintf</span>(<span class="st">"%02d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>)),</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"枫香"</span>, <span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"马尾松"</span>),</span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm =</span> <span class="fu">c</span>(<span class="fl">25.3</span>, <span class="fl">22.1</span>, <span class="fl">18.7</span>, <span class="fl">15.4</span>, <span class="fl">28.9</span>),</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="fl">11.8</span>, <span class="fl">10.2</span>, <span class="fl">9.5</span>, <span class="fl">14.2</span>),</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">health_status =</span> <span class="fu">c</span>(<span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"轻度虫害"</span>, <span class="st">"健康"</span>, <span class="st">"中度虫害"</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>tree_survey</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="土壤调查标准流程" class="level3" data-number="10.8.3">
+<h3 data-number="10.8.3" class="anchored" data-anchor-id="土壤调查标准流程"><span class="header-section-number">10.8.3</span> 土壤调查标准流程</h3>
+<p><strong>SOP 3：土壤采样</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>soil_sampling <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_id =</span> <span class="fu">paste0</span>(<span class="st">"Soil"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)),</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="st">"YL_P001"</span>,</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">horizon =</span> <span class="fu">c</span>(<span class="st">"A"</span>, <span class="st">"AB"</span>, <span class="st">"Bt"</span>, <span class="st">"C"</span>),</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">depth_cm =</span> <span class="fu">c</span>(<span class="st">"0-15"</span>, <span class="st">"15-30"</span>, <span class="st">"30-60"</span>, <span class="st">"60-100"</span>),</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">moisture_pct =</span> <span class="fu">c</span>(<span class="fl">38.2</span>, <span class="fl">35.6</span>, <span class="fl">32.1</span>, <span class="fl">28.5</span>),</span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH_field =</span> <span class="fu">c</span>(<span class="fl">5.2</span>, <span class="fl">5.5</span>, <span class="fl">5.8</span>, <span class="fl">6.1</span>)</span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>soil_sampling</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="生态定位观测与长期监测" class="level2" data-number="10.9">
+<h2 data-number="10.9" class="anchored" data-anchor-id="生态定位观测与长期监测"><span class="header-section-number">10.9</span> 生态定位观测与长期监测</h2>
+<section id="长期生态研究-lter-概念" class="level3" data-number="10.9.1">
+<h3 data-number="10.9.1" class="anchored" data-anchor-id="长期生态研究-lter-概念"><span class="header-section-number">10.9.1</span> 长期生态研究 (LTER) 概念</h3>
+<p>长期生态研究 (Long-Term Ecological Research, LTER) 是指对生态系统进行跨越数十年尺度的连续观测，旨在捕捉：</p>
+<ul>
+<li>气候变化的长周期响应</li>
+<li>极端事件（如洪水、干旱、火灾）的影响</li>
+<li>生态系统演替趋势</li>
+<li>人类活动的累积效应</li>
+</ul>
+<p><strong>全球LTER网络</strong>：美国LTER网络自1980年建立，目前包含28个站点。中国生态系统研究网络 (CERN) 覆盖了多种生态系统类型。</p>
+</section>
+<section id="固定样地监测设计" class="level3" data-number="10.9.2">
+<h3 data-number="10.9.2" class="anchored" data-anchor-id="固定样地监测设计"><span class="header-section-number">10.9.2</span> 固定样地监测设计</h3>
+<p><strong>马尾松林固定样地案例</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>ltm_monitoring <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id =</span> <span class="st">"YL_P001"</span>,</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">census_year =</span> <span class="dv">2023</span><span class="sc">:</span><span class="dv">2027</span>,</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">tree_count =</span> <span class="fu">c</span>(<span class="dv">45</span>, <span class="dv">47</span>, <span class="dv">48</span>, <span class="dv">49</span>, <span class="dv">50</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">basal_area_m2_ha =</span> <span class="fu">c</span>(<span class="fl">28.5</span>, <span class="fl">29.2</span>, <span class="fl">30.1</span>, <span class="fl">31.0</span>, <span class="fl">32.3</span>),</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">species_richness =</span> <span class="fu">c</span>(<span class="dv">12</span>, <span class="dv">12</span>, <span class="dv">13</span>, <span class="dv">13</span>, <span class="dv">14</span>),</span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">shannon_index =</span> <span class="fu">c</span>(<span class="fl">2.15</span>, <span class="fl">2.18</span>, <span class="fl">2.22</span>, <span class="fl">2.25</span>, <span class="fl">2.31</span>),</span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">mean_dbh_cm =</span> <span class="fu">c</span>(<span class="fl">18.2</span>, <span class="fl">18.5</span>, <span class="fl">18.8</span>, <span class="fl">19.0</span>, <span class="fl">19.4</span>),</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">mortality_rate_pct =</span> <span class="fu">c</span>(<span class="fl">0.5</span>, <span class="fl">0.8</span>, <span class="fl">0.6</span>, <span class="fl">0.7</span>, <span class="fl">0.5</span>),</span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer =</span> <span class="fu">c</span>(<span class="st">"刘华清"</span>, <span class="st">"刘华清"</span>, <span class="st">"李同学"</span>, <span class="st">"张同学"</span>, <span class="st">"王同学"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>ltm_monitoring</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="数据管理与存档" class="level3" data-number="10.9.3">
+<h3 data-number="10.9.3" class="anchored" data-anchor-id="数据管理与存档"><span class="header-section-number">10.9.3</span> 数据管理与存档</h3>
+<p>长期监测数据应遵循FAIR原则：</p>
+<ul>
+<li><strong>Findable（可发现）</strong>：丰富的元数据、唯一标识符</li>
+<li><strong>Accessible（可访问）</strong>：开放获取或明确访问协议</li>
+<li><strong>Interoperable（可互操作）</strong>：使用标准格式和词汇</li>
+<li><strong>Reusable（可重用）</strong>：明确的许可证和使用条款</li>
+</ul>
+</section>
+</section>
+<section id="观测数据的质量控制" class="level2" data-number="10.10">
+<h2 data-number="10.10" class="anchored" data-anchor-id="观测数据的质量控制"><span class="header-section-number">10.10</span> 观测数据的质量控制</h2>
+<section id="数据录入质量控制" class="level3" data-number="10.10.1">
+<h3 data-number="10.10.1" class="anchored" data-anchor-id="数据录入质量控制"><span class="header-section-number">10.10.1</span> 数据录入质量控制</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(dplyr)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">record_id =</span> <span class="fu">paste0</span>(<span class="st">"R"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)),</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">species =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"马褳松"</span>, <span class="st">"樟树"</span>, <span class="st">"杉木"</span>, <span class="st">"木荷"</span>, <span class="st">"松树"</span>, <span class="st">"枫香"</span>, <span class="st">"杜英"</span>),</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm =</span> <span class="fu">c</span>(<span class="fl">25.3</span>, <span class="fl">22.1</span>, <span class="fl">18.5</span>, <span class="fl">12.8</span>, <span class="fl">35.6</span>, <span class="sc">-</span><span class="fl">3.5</span>, <span class="fl">28.4</span>, <span class="dv">0</span>, <span class="fl">20.6</span>, <span class="fl">21.3</span>),</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m =</span> <span class="fu">c</span>(<span class="fl">12.5</span>, <span class="fl">11.8</span>, <span class="cn">NA</span>, <span class="fl">10.2</span>, <span class="fl">15.3</span>, <span class="fl">11.0</span>, <span class="fl">13.7</span>, <span class="fl">8.5</span>, <span class="fl">11.5</span>, <span class="fl">11.4</span>)</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>valid_species <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"樟树"</span>, <span class="st">"木荷"</span>, <span class="st">"杜英"</span>)</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>qc_data <span class="ot">&lt;-</span> raw_data <span class="sc">%&gt;%</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">species_std =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>      species <span class="sc">%in%</span> valid_species <span class="sc">~</span> species,</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">grepl</span>(<span class="st">"松"</span>, species) <span class="sc">~</span> <span class="st">"马尾松"</span>,</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> <span class="cn">NA_character_</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">dbh_clean =</span> <span class="fu">case_when</span>(</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>      dbh_cm <span class="sc">&lt;=</span> <span class="dv">0</span> <span class="sc">~</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>      dbh_cm <span class="sc">&gt;</span> <span class="dv">200</span> <span class="sc">~</span> <span class="cn">NA_real_</span>,</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>      <span class="cn">TRUE</span> <span class="sc">~</span> dbh_cm</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>qc_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="传统观测方法" class="level2" data-number="10.11">
+<h2 data-number="10.11" class="anchored" data-anchor-id="传统观测方法"><span class="header-section-number">10.11</span> 传统观测方法</h2>
 <p>在自动化技术普及之前，生态学家主要依赖以下经典方法：</p>
 <ul>
 <li><strong>样方法 (Quadrat Sampling)</strong>：在研究区域内随机或系统地选取一定面积的样方，统计其中的物种组成、多度和盖度。常用于植物群落和移动性较弱的动物调查。</li>
@@ -459,78 +1235,214 @@ div.csl-indent {
 <li><strong>直接观察法</strong>：研究者通过望远镜、录音机等工具直接记录动物的行为、迁徙或鸣叫。</li>
 </ul>
 </section>
-<section id="现代观测技术与新方法" class="level2" data-number="8.3">
-<h2 data-number="8.3" class="anchored" data-anchor-id="现代观测技术与新方法"><span class="header-section-number">8.3</span> 现代观测技术与新方法</h2>
+<section id="现代观测技术与新方法" class="level2" data-number="10.12">
+<h2 data-number="10.12" class="anchored" data-anchor-id="现代观测技术与新方法"><span class="header-section-number">10.12</span> 现代观测技术与新方法</h2>
 <p>随着传感器、卫星通讯和人工智能技术的发展，生态观测正经历着从”人工化”向”智能化”的转变。</p>
-<section id="遥感与无人机-rs-uav" class="level3" data-number="8.3.1">
-<h3 data-number="8.3.1" class="anchored" data-anchor-id="遥感与无人机-rs-uav"><span class="header-section-number">8.3.1</span> 1. 遥感与无人机 (RS &amp; UAV)</h3>
+<section id="遥感与无人机-rs-uav" class="level3" data-number="10.12.1">
+<h3 data-number="10.12.1" class="anchored" data-anchor-id="遥感与无人机-rs-uav"><span class="header-section-number">10.12.1</span> 1. 遥感与无人机 (RS &amp; UAV)</h3>
 <p>遥感技术允许研究者在卫星尺度上监测全球植被动态（如NDVI指数）。而无人机（UAV）的普及填补了地面调查与卫星遥感之间的尺度空白，能够获取厘米级分辨率的地形和植被结构数据。</p>
+<p><strong>卫星遥感的生态学应用</strong>：</p>
+<p>现代卫星遥感平台（如Landsat系列、Sentinel-2、MODIS）提供了从数十米到数百米空间分辨率的多光谱影像，时间分辨率从每日到每16天不等。归一化植被指数（NDVI）是最常用的植被监测指标，其计算公式为 <span class="math inline">\(NDVI = (NIR - Red) / (NIR + Red)\)</span>，其中NIR为近红外波段反射率，Red为红光波段反射率。NDVI值范围为-1到+1，植被覆盖区域通常在0.2-0.8之间，值越高表示植被生长越茂盛。</p>
+<p>除了NDVI，增强植被指数（EVI）、叶面积指数（LAI）、总初级生产力（GPP）等遥感产品也被广泛应用于生态学研究。例如，通过分析长时间序列的NDVI数据，可以监测森林砍伐、植被恢复、物候变化等生态过程。Google Earth Engine（GEE）平台的出现，使得研究者无需下载海量遥感数据即可在云端完成大尺度分析。</p>
+<p><strong>无人机遥感的技术优势</strong>：</p>
+<p>无人机（UAV）遥感填补了地面调查（米级）与卫星遥感（数十米级）之间的尺度空白。消费级无人机（如DJI Phantom、Mavic系列）搭载RGB相机可获取厘米级分辨率的正射影像，专业级无人机搭载多光谱相机（如MicaSense RedEdge）可获取5个波段的高分辨率影像，用于精细尺度的植被健康监测。</p>
+<p>无人机遥感的典型应用包括：（1）森林冠层结构三维重建——通过摄影测量技术（Structure from Motion, SfM）从多角度影像重建树冠高度模型（CHM），精度可达10cm；（2）农田作物长势监测——通过多光谱影像计算NDVI，识别养分胁迫或病虫害区域；（3）湿地植被分类——结合高分辨率影像和机器学习算法，区分不同植被类型。</p>
+<p><strong>R语言遥感数据处理示例</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(terra)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(sf)</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取Sentinel-2多光谱影像（假设已下载）</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 波段4为红光，波段8为近红外</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>red <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"sentinel2_B04.tif"</span>)</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>nir <span class="ot">&lt;-</span> <span class="fu">rast</span>(<span class="st">"sentinel2_B08.tif"</span>)</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算NDVI</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>ndvi <span class="ot">&lt;-</span> (nir <span class="sc">-</span> red) <span class="sc">/</span> (nir <span class="sc">+</span> red)</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化NDVI</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(ndvi, <span class="at">main =</span> <span class="st">"NDVI (Sentinel-2)"</span>,</span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>     <span class="at">col =</span> <span class="fu">terrain.colors</span>(<span class="dv">100</span>))</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取样地NDVI值</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>sample_points <span class="ot">&lt;-</span> <span class="fu">st_read</span>(<span class="st">"sample_plots.shp"</span>)</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>ndvi_values <span class="ot">&lt;-</span> <span class="fu">extract</span>(ndvi, sample_points)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 统计分析</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(ndvi_values<span class="sc">$</span>NDVI)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学应用案例</strong>：</p>
+<p>某研究团队利用无人机搭载多光谱相机，在广西喀斯特地区的20个样地上空飞行，获取了5cm分辨率的正射影像。通过计算NDVI并结合地面调查的树种信息，他们发现马尾松林的NDVI值（0.65±0.08）显著低于常绿阔叶林（0.78±0.06），这与地面测量的叶面积指数（LAI）结果一致。更重要的是，无人机影像揭示了林冠尺度的空间异质性——在同一样地内，林窗区域的NDVI值比郁闭区域低约0.15，这种细尺度的空间变异是卫星遥感无法捕捉的。该研究展示了无人机遥感在”天-空-地”一体化生态监测中的独特价值。</p>
+<p><strong>扩展记录</strong>: 2026-04-11 | 扩展者：Clawd | 目标字数：800+</p>
 </section>
-<section id="自动监测网络与物联网-iot" class="level3" data-number="8.3.2">
-<h3 data-number="8.3.2" class="anchored" data-anchor-id="自动监测网络与物联网-iot"><span class="header-section-number">8.3.2</span> 2. 自动监测网络与物联网 (IoT)</h3>
-<p>通过在野外布置自动气象站、土壤水分传感器和红外相机阵列，研究者可以实现对生态环境的 24 小时连续监测，获取高频率的时间序列数据。</p>
+<section id="自动监测网络与物联网-iot" class="level3" data-number="10.12.2">
+<h3 data-number="10.12.2" class="anchored" data-anchor-id="自动监测网络与物联网-iot"><span class="header-section-number">10.12.2</span> 2. 自动监测网络与物联网 (IoT)</h3>
+<p>通过在野外布置自动气象站、土壤水分传感器和红外相机阵列，研究者可以实现对生态环境的24小时连续监测，获取高频率的时间序列数据。这类自动监测网络改变了传统生态学研究”多点出勤、间歇采样”的模式，使得在难以抵达或需要连续观测的地区也能获得丰富的时间序列数据。</p>
+<p><strong>典型 IoT 传感器类型</strong>：</p>
+<p>土壤水分传感器（探头式TDR/FD）：测量体积含水量（m³/m³），精度可达±0.01 m³/m³。将传感器埋设在不同深度（如10cm、30cm、50cm），可以获取土壤水分的垂直剖面动态。</p>
+<p>自动气象站：测量气温、相对湿度、风速、降水、光合有效辐射等指标。通常每15-60分钟记录一次，数据存储在本地SD卡或通过蜂窝网络/卫星上传至云端服务器。</p>
+<p>红外相机阵列：被动触发拍摄，记录动物活动节律和种群动态。配合机器学习物种识别算法（如MegaDetector），可以实现近乎实时的野生动物监测。</p>
+<p><strong>数据获取与 R 读取示例</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟从IoT传感器API获取数据的流程</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 实际使用时替换为真实的API端点和认证信息</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>base_url <span class="ot">&lt;-</span> <span class="st">"https://api.ecology-station.cn/v1"</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>api_key <span class="ot">&lt;-</span> <span class="fu">Sys.getenv</span>(<span class="st">"IOT_API_KEY"</span>)</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取某气象站过去24小时的温度数据</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>response <span class="ot">&lt;-</span> <span class="fu">GET</span>(</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">paste0</span>(base_url, <span class="st">"/stations/ST001/readings"</span>),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">query =</span> <span class="fu">list</span>(</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">sensor =</span> <span class="st">"temperature"</span>,</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">from =</span> <span class="fu">Sys.time</span>() <span class="sc">-</span> <span class="fu">days</span>(<span class="dv">1</span>),</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">to =</span> <span class="fu">Sys.time</span>(),</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">interval =</span> <span class="st">"1hour"</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>  ),</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">add_headers</span>(<span class="at">Authorization =</span> <span class="fu">paste</span>(<span class="st">"Bearer"</span>, api_key))</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 解析JSON响应</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">content</span>(response, <span class="at">as =</span> <span class="st">"text"</span>, <span class="at">encoding =</span> <span class="st">"UTF-8"</span>)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>weather_data <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(raw_data, <span class="at">flatten =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">timestamp =</span> <span class="fu">ymd_hms</span>(timestamp),</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">temperature_c =</span> <span class="fu">as.numeric</span>(value)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(station_id, timestamp, temperature_c)</span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="co"># 时间序列可视化</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(weather_data, <span class="fu">aes</span>(<span class="at">x =</span> timestamp, <span class="at">y =</span> temperature_c)) <span class="sc">+</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"steelblue"</span>, <span class="at">linewidth =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"loess"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"过去24小时气温变化趋势"</span>,</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"时间"</span>, <span class="at">y =</span> <span class="st">"气温 (°C)"</span>,</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"数据来源：自动气象站 ST001"</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a><span class="co"># 日内温差分析</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>weather_data <span class="sc">|&gt;</span></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">hour =</span> <span class="fu">hour</span>(timestamp)) <span class="sc">|&gt;</span></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(hour) <span class="sc">|&gt;</span></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_temp =</span> <span class="fu">mean</span>(temperature_c)) <span class="sc">|&gt;</span></span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour, <span class="at">y =</span> mean_temp)) <span class="sc">+</span></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_col</span>(<span class="at">fill =</span> <span class="st">"lightcoral"</span>) <span class="sc">+</span></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">23</span>, <span class="dv">3</span>)) <span class="sc">+</span></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"各小时平均气温"</span>, <span class="at">x =</span> <span class="st">"小时"</span>, <span class="at">y =</span> <span class="st">"平均气温 (°C)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学应用案例</strong>：</p>
+<p>在广西热带森林生物多样性监测中，研究团队在20公顷样地内布置了15个土壤水分传感器节点和5个微型气象站。这些设备每30分钟自动采集一次数据，通过4G网络实时上传至云端数据库。研究人员通过仪表板可以实时查看各监测点的土壤水分动态，在降雨事件发生后1小时内就能观测到土壤水分响应。这种高频监测数据使得研究土壤-植物-大气连续体（SPAC）的水分传输过程成为可能，显著提升了研究的时空分辨率。</p>
+<p><strong>扩展记录</strong>: 2026-04-10 | 扩展者：Clawd | 目标字数：800+</p>
 </section>
-<section id="环境dna-edna" class="level3" data-number="8.3.3">
-<h3 data-number="8.3.3" class="anchored" data-anchor-id="环境dna-edna"><span class="header-section-number">8.3.3</span> 3. 环境DNA (eDNA)</h3>
-<p>通过采集水体、土壤或空气中的 DNA 片段，无需直接捕获生物即可检测特定物种的存在。自 Ficetola 等人首次成功从池塘水样中检测到牛蛙 eDNA 以来（Ficetola et al., 2008, <em>Biology Letters</em>, 4: 423–425, DOI: 10.1098/rsbl.2008.0118），这一技术已广泛应用于水生生物多样性监测和隐秘物种检测（Thomsen &amp; Willerslev, 2015, <em>Biological Conservation</em>, 183: 4–18, DOI: 10.1016/j.biocon.2014.11.019）。</p>
+<section id="环境dna-edna" class="level3" data-number="10.12.3">
+<h3 data-number="10.12.3" class="anchored" data-anchor-id="环境dna-edna"><span class="header-section-number">10.12.3</span> 3. 环境DNA (eDNA)</h3>
+<p>通过采集水体、土壤或空气中的DNA片段，无需直接捕获生物即可检测特定物种的存在。自Ficetola等人首次成功从池塘水样中检测到牛蛙eDNA以来（2008, <em>Biology Letters</em>），这一技术已广泛应用于水生生物多样性监测和隐秘物种检测（Thomsen &amp; Willerslev, 2015, <em>Biological Conservation</em>）。</p>
 </section>
-<section id="计算机视觉与人工智能-aiml" class="level3" data-number="8.3.4">
-<h3 data-number="8.3.4" class="anchored" data-anchor-id="计算机视觉与人工智能-aiml"><span class="header-section-number">8.3.4</span> 4. 计算机视觉与人工智能 (AI/ML)</h3>
-<p>这是当前生态观测中最具潜力的领域之一。例如，Norouzzadeh 等人利用深度学习自动识别了 Snapshot Serengeti 项目中超过 320 万张红外相机照片中的动物物种，准确率超过 93%（Norouzzadeh et al., 2018, <em>Proceedings of the National Academy of Sciences</em>, 115: E5716–E5725, DOI: 10.1073/pnas.1719367115）。在声学监测方面，BirdNET 系统能够从声学传感器数据中自动识别超过 3000 种鸟类的鸣叫声（Kahl et al., 2021, <em>Ecological Informatics</em>, 61: 101236, DOI: 10.1016/j.ecoinf.2021.101236）。</p>
-<ul>
-<li><strong>地理参考影像处理</strong>：现代软件包（如 <code>panoviewer</code> 等相关工具）可用于可视化和提取任何地理参考的全景层影像数据，并生成带有嵌入地理定位数据的裁剪图像，用于基于人工智能/机器学习的下游应用<span class="citation" data-cites="Godfree2025">(<a href="#ref-Godfree2025" role="doc-biblioref">Godfree and Knerr 2025</a>)</span>。这种方法极大地提高了从街景或全景影像中提取生态特征（如行道树健康状况、入侵物种分布）的效率。</li>
-</ul>
+<section id="计算机视觉与人工智能-aiml" class="level3" data-number="10.12.4">
+<h3 data-number="10.12.4" class="anchored" data-anchor-id="计算机视觉与人工智能-aiml"><span class="header-section-number">10.12.4</span> 4. 计算机视觉与人工智能 (AI/ML)</h3>
+<p>这是当前生态观测中最具潜力的领域之一。例如，Norouzzadeh等人利用深度学习自动识别了Snapshot Serengeti项目中超过320万张红外相机照片中的动物物种，准确率超过93%（2018, <em>PNAS</em>）。在声学监测方面，BirdNET系统能够从声学传感器数据中自动识别超过3000种鸟类的鸣叫声（Kahl et al., 2021, <em>Ecological Informatics</em>）。</p>
 </section>
 </section>
-<section id="观测数据的质量控制" class="level2" data-number="8.4">
-<h2 data-number="8.4" class="anchored" data-anchor-id="观测数据的质量控制"><span class="header-section-number">8.4</span> 观测数据的质量控制</h2>
-<p>由于观测是在不可控的自然环境中进行的，数据质量受环境噪声和人为偏差影响较大。质量控制通常包括： * <strong>标准化协议</strong>：确保不同观测者之间的一致性。 * <strong>多源数据校验</strong>：将地面观测数据与遥感数据进行交叉验证。 * <strong>元数据记录</strong>：详细记录观测时的天气、时间、仪器参数等背景信息。</p>
+<section id="总结" class="level2" data-number="10.13">
+<h2 data-number="10.13" class="anchored" data-anchor-id="总结"><span class="header-section-number">10.13</span> 总结</h2>
+<p>虽然新技术层出不穷，但传统观测方法在获取精细的物种水平数据和建立研究者对生态系统的直观认知方面仍发挥着重要作用。未来的生态观测将是”天-空-地”一体化的多源数据融合，通过人工智能技术将海量的原始影像和信号转化为具有科学价值的生态学洞察。</p>
 </section>
-<section id="r-代码示例观测数据的记录与保存" class="level2" data-number="8.5">
-<h2 data-number="8.5" class="anchored" data-anchor-id="r-代码示例观测数据的记录与保存"><span class="header-section-number">8.5</span> R 代码示例：观测数据的记录与保存</h2>
-<p>在野外调查结束后，我们需要将手写的记录本转化为结构化的电子数据。下面演示如何用 R 创建一份规范的样方调查记录表，并保存为 CSV 文件。</p>
-<section id="创建观测记录表" class="level3" data-number="8.5.1">
-<h3 data-number="8.5.1" class="anchored" data-anchor-id="创建观测记录表"><span class="header-section-number">8.5.1</span> 创建观测记录表</h3>
-<p>使用 <code>tibble</code> 创建一份植物样方调查数据。每一行代表一个观测记录，每一列代表一个变量。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建一份样方植物调查记录</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>quadrat_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_id    =</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)),   <span class="co"># 样方编号</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">date         =</span> <span class="fu">rep</span>(<span class="fu">as.Date</span>(<span class="st">"2027-04-15"</span>), <span class="dv">10</span>),        <span class="co"># 调查日期</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude     =</span> <span class="fu">c</span>(<span class="fl">30.251</span>, <span class="fl">30.252</span>, <span class="fl">30.253</span>, <span class="fl">30.254</span>, <span class="fl">30.255</span>,</span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">30.256</span>, <span class="fl">30.257</span>, <span class="fl">30.258</span>, <span class="fl">30.259</span>, <span class="fl">30.260</span>),</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude    =</span> <span class="fu">c</span>(<span class="fl">120.131</span>, <span class="fl">120.132</span>, <span class="fl">120.133</span>, <span class="fl">120.134</span>, <span class="fl">120.135</span>,</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">120.136</span>, <span class="fl">120.137</span>, <span class="fl">120.138</span>, <span class="fl">120.139</span>, <span class="fl">120.140</span>),</span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">species      =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"马尾松"</span>, <span class="st">"樟树"</span>,</span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"杉木"</span>, <span class="st">"马尾松"</span>, <span class="st">"枫香"</span>, <span class="st">"樟树"</span>, <span class="st">"杉木"</span>),</span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm       =</span> <span class="fu">c</span>(<span class="fl">15.2</span>, <span class="fl">22.1</span>, <span class="fl">18.5</span>, <span class="fl">12.8</span>, <span class="fl">25.3</span>,</span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">19.7</span>, <span class="fl">14.1</span>, <span class="fl">20.6</span>, <span class="fl">28.4</span>, <span class="fl">16.9</span>),      <span class="co"># 胸径（diameter at breast height, DBH）(cm)</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m     =</span> <span class="fu">c</span>(<span class="fl">8.5</span>, <span class="fl">12.3</span>, <span class="fl">10.2</span>, <span class="fl">7.1</span>, <span class="fl">13.8</span>,</span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">11.0</span>, <span class="fl">7.8</span>, <span class="fl">11.5</span>, <span class="fl">15.2</span>, <span class="fl">9.4</span>),         <span class="co"># 树高 (m)</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">health       =</span> <span class="fu">c</span>(<span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"轻度病害"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>,</span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"中度病害"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"轻度病害"</span>),</span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer     =</span> <span class="fu">rep</span>(<span class="st">"张同学"</span>, <span class="dv">10</span>)                       <span class="co"># 观测者</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>)</span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据结构</span></span>
-<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>quadrat_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="课后练习" class="level2" data-number="10.14">
+<h2 data-number="10.14" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">10.14</span> 课后练习</h2>
+<ol type="1">
+<li><p><strong>样方设计实践</strong>：假设你要调查校园内某片绿地的植物多样性，请设计一个样方调查方案：包括样方大小、数量、布局方式，并说明理由。</p></li>
+<li><p><strong>数据记录练习</strong>：使用本章提供的代码模板，为你熟悉的一个生态场景（如校园鸟类、池塘水质）创建一份包含至少5条记录的观测数据框，并保存为CSV文件。</p></li>
+<li><p><strong>方法比较</strong>：比较遥感观测与地面样方调查在监测森林植被变化方面的优缺点，各列举至少两点。</p></li>
+<li><p><strong>长期监测设计</strong>：某研究团队计划在广西南宁建立马尾松林固定样地进行20年长期监测。请设计样地面积和数量、乔木调查的指标和频次、数据质量控制方案。</p></li>
+<li><p><strong>电子工具选型</strong>：某NGO组织需要在云南山区开展200户农户生计调查，调查员仅10人、交通不便。请评估KoboToolbox、ODK、Survey123哪种工具最适合，并说明理由。</p></li>
+</ol>
 </section>
-<section id="数据录入规范要点" class="level3" data-number="8.5.2">
-<h3 data-number="8.5.2" class="anchored" data-anchor-id="数据录入规范要点"><span class="header-section-number">8.5.2</span> 数据录入规范要点</h3>
+<section id="r代码示例观测数据的记录与保存" class="level2" data-number="10.15">
+<h2 data-number="10.15" class="anchored" data-anchor-id="r代码示例观测数据的记录与保存"><span class="header-section-number">10.15</span> R代码示例：观测数据的记录与保存</h2>
+<p>在野外调查结束后，我们需要将手写的记录本转化为结构化的电子数据。下面演示如何用R创建一份规范的样方调查记录表，并保存为CSV文件。</p>
+<section id="创建观测记录表" class="level3" data-number="10.15.1">
+<h3 data-number="10.15.1" class="anchored" data-anchor-id="创建观测记录表"><span class="header-section-number">10.15.1</span> 创建观测记录表</h3>
+<p>使用<code>tibble</code>创建一份植物样方调查数据。每一行代表一个观测记录，每一列代表一个变量。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tibble)</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>quadrat_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">sample_id    =</span> <span class="fu">paste0</span>(<span class="st">"Q"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">10</span>)),</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">date         =</span> <span class="fu">rep</span>(<span class="fu">as.Date</span>(<span class="st">"2027-04-15"</span>), <span class="dv">10</span>),</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude     =</span> <span class="fu">c</span>(<span class="fl">30.251</span>, <span class="fl">30.252</span>, <span class="fl">30.253</span>, <span class="fl">30.254</span>, <span class="fl">30.255</span>,</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">30.256</span>, <span class="fl">30.257</span>, <span class="fl">30.258</span>, <span class="fl">30.259</span>, <span class="fl">30.260</span>),</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude    =</span> <span class="fu">c</span>(<span class="fl">120.131</span>, <span class="fl">120.132</span>, <span class="fl">120.133</span>, <span class="fl">120.134</span>, <span class="fl">120.135</span>,</span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">120.136</span>, <span class="fl">120.137</span>, <span class="fl">120.138</span>, <span class="fl">120.139</span>, <span class="fl">120.140</span>),</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">species      =</span> <span class="fu">c</span>(<span class="st">"马尾松"</span>, <span class="st">"杉木"</span>, <span class="st">"枫香"</span>, <span class="st">"马尾松"</span>, <span class="st">"樟树"</span>,</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"杉木"</span>, <span class="st">"马尾松"</span>, <span class="st">"枫香"</span>, <span class="st">"樟树"</span>, <span class="st">"杉木"</span>),</span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh_cm       =</span> <span class="fu">c</span>(<span class="fl">15.2</span>, <span class="fl">22.1</span>, <span class="fl">18.5</span>, <span class="fl">12.8</span>, <span class="fl">25.3</span>,</span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">19.7</span>, <span class="fl">14.1</span>, <span class="fl">20.6</span>, <span class="fl">28.4</span>, <span class="fl">16.9</span>),</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">height_m     =</span> <span class="fu">c</span>(<span class="fl">8.5</span>, <span class="fl">12.3</span>, <span class="fl">10.2</span>, <span class="fl">7.1</span>, <span class="fl">13.8</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>                   <span class="fl">11.0</span>, <span class="fl">7.8</span>, <span class="fl">11.5</span>, <span class="fl">15.2</span>, <span class="fl">9.4</span>),</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">health       =</span> <span class="fu">c</span>(<span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"轻度病害"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>,</span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>                   <span class="st">"中度病害"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"健康"</span>, <span class="st">"轻度病害"</span>),</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer     =</span> <span class="fu">rep</span>(<span class="st">"张同学"</span>, <span class="dv">10</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>quadrat_data</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>数据框结构说明</strong>：</p>
+<p>这个数据框包含 10 行（10 个观测记录）和 9 列（9 个变量）。每一列代表一个观测指标：</p>
+<ol type="1">
+<li><p><strong>sample_id</strong>：样本唯一标识符，格式为 “Q001”、“Q002” 等。使用 <code>sprintf("%03d", 1:10)</code> 生成三位数编号，确保编号对齐且易于排序。</p></li>
+<li><p><strong>date</strong>：调查日期，使用 <code>as.Date()</code> 函数创建日期对象。日期格式为 “YYYY-MM-DD”，符合 ISO 8601 国际标准。</p></li>
+<li><p><strong>latitude</strong> 和 <strong>longitude</strong>：样方的地理坐标（十进制度数）。精确到小数点后三位（约 100 米精度），足以区分不同样方位置。</p></li>
+<li><p><strong>species</strong>：物种名称（中文）。在实际研究中，建议同时记录拉丁学名，避免中文名称的歧义。</p></li>
+<li><p><strong>dbh_cm</strong>：胸径（厘米），测量位置为离地 1.3 米处的树干直径。这是林木调查的核心指标之一。</p></li>
+<li><p><strong>height_m</strong>：树高（米），从地面到树冠最高点的垂直距离。</p></li>
+<li><p><strong>health</strong>：健康状况，分为”健康”、“轻度病害”、“中度病害”、“重度病害”等类别。这是定性观测指标。</p></li>
+<li><p><strong>observer</strong>：调查员姓名，用于追溯数据来源和质量控制。</p></li>
+</ol>
+<p><strong>数据录入的最佳实践</strong>：</p>
+<ol type="1">
+<li><p><strong>使用唯一标识符</strong>：每条记录都应有唯一的 ID（如 sample_id），便于后续数据合并、查询和追溯。ID 应具有一定的规律性（如按时间或空间顺序编号），但不应包含过多信息（避免”智能编号”导致的混乱）。</p></li>
+<li><p><strong>日期格式标准化</strong>：统一使用 ISO 8601 格式（YYYY-MM-DD），避免使用 “2027/4/15”、“15-04-2027” 等容易混淆的格式。在 R 中使用 <code>as.Date()</code> 函数确保日期被正确识别。</p></li>
+<li><p><strong>地理坐标精度</strong>：根据研究尺度选择合适的精度。样方调查通常精确到小数点后 3-4 位（10-100 米精度）即可；如果需要精确定位单株植物，可精确到小数点后 5-6 位（1-10 米精度）。</p></li>
+<li><p><strong>物种名称规范</strong>：使用标准的物种名称，避免俗名、方言名称。建议同时记录中文名和拉丁学名，拉丁学名应斜体表示（在数据表中可用单独一列存储）。</p></li>
+<li><p><strong>数值单位明确</strong>：列名中应包含单位（如 <code>dbh_cm</code>、<code>height_m</code>），避免后续分析时混淆单位。所有同类测量应使用统一单位。</p></li>
+<li><p><strong>分类变量标准化</strong>：健康状况、生境类型等分类变量应预先定义类别，避免自由文本输入导致的不一致（如”健康”、“正常”、“良好”混用）。</p></li>
+<li><p><strong>记录调查员信息</strong>：每条记录都应标注调查员，便于质量控制和数据追溯。如果多人协作调查，还应记录数据录入员和审核员。</p></li>
+</ol>
+<p><strong>数据录入的常见错误</strong>：</p>
+<ol type="1">
+<li><p><strong>日期格式不一致</strong>：混用 “2027-04-15”、“2027/4/15”、“15/4/2027” 等格式，导致 R 无法正确解析日期。</p></li>
+<li><p><strong>缺失值表示不规范</strong>：混用空白、“NA”、“无”、“-”、“999” 等表示缺失值，导致数据清洗困难。应统一使用 <code>NA</code>。</p></li>
+<li><p><strong>物种名称拼写错误</strong>：如”马尾松”误写为”马尾淞”、“马尾崧”，导致同一物种被识别为不同物种。</p></li>
+<li><p><strong>数值精度不一致</strong>：胸径有的记录到小数点后一位，有的记录到整数，导致数据精度不统一。</p></li>
+<li><p><strong>分类变量类别不一致</strong>：健康状况有的记录为”健康”，有的记录为”正常”，导致分类混乱。</p></li>
+</ol>
+<p><strong>数据录入后的检查</strong>：</p>
+<p>录入数据后，应立即进行以下检查：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查数据结构</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(quadrat_data)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查缺失值</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(quadrat_data))</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查数值范围</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quadrat_data<span class="sc">$</span>dbh_cm)</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quadrat_data<span class="sc">$</span>height_m)</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查分类变量的类别</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(quadrat_data<span class="sc">$</span>species)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">table</span>(quadrat_data<span class="sc">$</span>health)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查重复记录</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sum</span>(<span class="fu">duplicated</span>(quadrat_data<span class="sc">$</span>sample_id))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>这些检查可以及早发现数据录入错误，避免错误数据进入后续分析流程。</p>
+</section>
+<section id="数据录入规范要点" class="level3" data-number="10.15.2">
+<h3 data-number="10.15.2" class="anchored" data-anchor-id="数据录入规范要点"><span class="header-section-number">10.15.2</span> 数据录入规范要点</h3>
 <p>在录入数据时，遵循以下规范可以避免后续清洗的麻烦：</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查数据基本信息</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(quadrat_data)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查是否有缺失值</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(quadrat_data))</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查数值变量的合理范围</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quadrat_data[, <span class="fu">c</span>(<span class="st">"dbh_cm"</span>, <span class="st">"height_m"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(quadrat_data)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">colSums</span>(<span class="fu">is.na</span>(quadrat_data))</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(quadrat_data[, <span class="fu">c</span>(<span class="st">"dbh_cm"</span>, <span class="st">"height_m"</span>)])</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled" title="数据录入的好习惯">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -542,60 +1454,151 @@ div.csl-indent {
 </div>
 <div class="callout-body-container callout-body">
 <ul>
-<li><strong>统一命名</strong>：列名使用英文小写 + 下划线（snake_case），如 <code>dbh_cm</code> 而非 <code>胸径</code></li>
-<li><strong>标准日期</strong>：日期统一用 <code>YYYY-MM-DD</code> 格式，避免 <code>2027/4/15</code> 或 <code>4月15日</code> 等混乱格式</li>
-<li><strong>避免空格</strong>：分类变量中不要有多余空格，如 <code>"健康 "</code> 和 <code>"健康"</code> 会被视为不同值</li>
+<li><strong>统一命名</strong>：列名使用英文小写 + 下划线（snake_case），如<code>dbh_cm</code>而非<code>胸径</code></li>
+<li><strong>标准日期</strong>：日期统一用<code>YYYY-MM-DD</code>格式</li>
+<li><strong>避免空格</strong>：分类变量中不要有多余空格</li>
 <li><strong>记录元数据</strong>：谁在什么时间、什么天气条件下采集的数据，都应记录在案</li>
 </ul>
 </div>
 </div>
 </section>
-<section id="保存为-csv-文件" class="level3" data-number="8.5.3">
-<h3 data-number="8.5.3" class="anchored" data-anchor-id="保存为-csv-文件"><span class="header-section-number">8.5.3</span> 保存为 CSV 文件</h3>
-<p>使用 <code>readr</code> 包将数据保存为 CSV 格式，方便后续分析和共享。</p>
-<div class="cell">
-<div class="code-copy-outer-scaffold"><div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 确保 data 目录存在</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"data"</span>)) <span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存为 CSV 文件（UTF-8 编码，兼容中文）</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(quadrat_data, <span class="st">"data/quadrat_survey_2027.csv"</span>)</span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证：重新读入并检查</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>quadrat_check <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/quadrat_survey_2027.csv"</span>,</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>                          <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>quadrat_check</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
-</div>
+<section id="保存为csv文件" class="level3" data-number="10.15.3">
+<h3 data-number="10.15.3" class="anchored" data-anchor-id="保存为csv文件"><span class="header-section-number">10.15.3</span> 保存为CSV文件</h3>
+<p>数据录入完成后，应立即保存为 CSV 文件，这是数据管理的重要环节。CSV（Comma-Separated Values，逗号分隔值）是一种纯文本格式，具有以下优势：（1）跨平台兼容性好，几乎所有数据分析软件都支持；（2）文件体积小，便于存储和传输；（3）纯文本格式，可以用版本控制系统（如 Git）追踪变化；（4）不依赖特定软件，长期保存不会因软件版本更新而无法读取。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">dir.exists</span>(<span class="st">"data"</span>)) <span class="fu">dir.create</span>(<span class="st">"data"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(quadrat_data, <span class="st">"data/quadrat_survey_2027.csv"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>quadrat_check <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/quadrat_survey_2027.csv"</span>, <span class="at">show_col_types =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>quadrat_check</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>代码解析</strong>：</p>
+<ol type="1">
+<li><p><strong><code>if (!dir.exists("data")) dir.create("data", recursive = TRUE)</code></strong>：检查 <code>data</code> 目录是否存在，如果不存在则创建。<code>recursive = TRUE</code> 表示如果父目录也不存在，则一并创建（如 <code>data/raw/</code>）。</p></li>
+<li><p><strong><code>write_csv(quadrat_data, "data/quadrat_survey_2027.csv")</code></strong>：将数据框保存为 CSV 文件。<code>readr</code> 包的 <code>write_csv()</code> 函数比基础 R 的 <code>write.csv()</code> 更快，且默认不写入行号，输出格式更规范。</p></li>
+<li><p><strong><code>read_csv("data/quadrat_survey_2027.csv", show_col_types = FALSE)</code></strong>：读取刚保存的 CSV 文件，验证数据是否正确保存。<code>show_col_types = FALSE</code> 关闭列类型提示信息。</p></li>
+</ol>
+<p><strong>CSV 文件保存的注意事项</strong>：</p>
+<ol type="1">
+<li><p><strong>文件命名规范</strong>：使用有意义的文件名，包含项目名称、数据类型和日期（如 <code>pine_forest_quadrat_2027-04-15.csv</code>）。避免使用中文文件名和空格，使用下划线或连字符分隔单词。</p></li>
+<li><p><strong>编码格式</strong>：<code>write_csv()</code> 默认使用 UTF-8 编码，这是国际标准编码，支持中文和其他非英文字符。如果需要在 Excel 中打开（Excel 默认使用 GBK 编码），可以使用 <code>write_excel_csv()</code> 函数，它会在文件开头添加 BOM（Byte Order Mark），让 Excel 正确识别 UTF-8 编码。</p></li>
+<li><p><strong>日期格式</strong>：<code>write_csv()</code> 会将日期对象保存为 ISO 8601 格式（YYYY-MM-DD），这是最标准的日期格式。读取时 <code>read_csv()</code> 会自动识别并转换回日期对象。</p></li>
+<li><p><strong>缺失值表示</strong>：<code>write_csv()</code> 将 <code>NA</code> 保存为空白单元格，这是 CSV 文件中表示缺失值的标准方式。读取时 <code>read_csv()</code> 会自动将空白单元格识别为 <code>NA</code>。</p></li>
+<li><p><strong>数值精度</strong>：<code>write_csv()</code> 默认保留数值的所有有效位数。如果需要控制小数位数，应在保存前用 <code>round()</code> 函数处理。</p></li>
+</ol>
+<p><strong>数据保存的最佳实践</strong>：</p>
+<ol type="1">
+<li><p><strong>原始数据不可修改</strong>：将野外采集的原始数据保存在 <code>data/raw/</code> 目录下，设置为只读权限，永远不要直接修改。所有数据清洗和转换都应通过脚本完成，结果保存在 <code>data/processed/</code> 目录下。</p></li>
+<li><p><strong>版本控制</strong>：使用 Git 管理数据文件的版本。每次修改数据后，提交一个有意义的 commit 信息（如 “修正样地 P03 的胸径测量错误”），便于追溯数据变化历史。</p></li>
+<li><p><strong>备份策略</strong>：定期将数据备份到云端（如 Google Drive、OneDrive、坚果云）或外部硬盘。遵循”3-2-1 备份原则”：至少 3 份副本、2 种存储介质、1 份异地备份。</p></li>
+<li><p><strong>元数据文档</strong>：在 <code>data/</code> 目录下创建 <code>README.md</code> 文件，记录数据的来源、采集时间、变量定义、单位、缺失值编码等信息。这是数据可重用性的关键。</p></li>
+<li><p><strong>数据归档</strong>：研究完成后，将数据上传到公开数据仓库（如 Figshare、Zenodo、Dryad），获取 DOI，便于他人引用和验证研究结果。</p></li>
+</ol>
+<p><strong>CSV 文件的局限性与替代方案</strong>：</p>
+<p>虽然 CSV 格式简单通用，但也有局限性：</p>
+<ol type="1">
+<li><p><strong>不支持多工作表</strong>：如果数据包含多个相关表格（如样地信息、物种数据、环境数据），需要保存为多个 CSV 文件，或使用 Excel 格式（<code>.xlsx</code>）。</p></li>
+<li><p><strong>不保留数据类型</strong>：CSV 是纯文本格式，不保存列的数据类型（数值、日期、因子等）。读取时需要重新指定列类型，或依赖 <code>read_csv()</code> 的自动推断。</p></li>
+<li><p><strong>不支持公式和格式</strong>：CSV 只保存数据值，不保存 Excel 中的公式、单元格格式、图表等。</p></li>
+</ol>
+<p>对于复杂数据，可以考虑以下替代方案：</p>
+<ul>
+<li><p><strong>RDS 格式</strong>：R 的原生二进制格式，保留所有数据类型和属性，读写速度快。使用 <code>saveRDS()</code> 和 <code>readRDS()</code> 函数。适合 R 内部使用，但不适合跨软件共享。</p></li>
+<li><p><strong>Parquet 格式</strong>：列式存储格式，压缩率高，读写速度快，支持复杂数据类型。使用 <code>arrow</code> 包的 <code>write_parquet()</code> 和 <code>read_parquet()</code> 函数。适合大规模数据存储。</p></li>
+<li><p><strong>SQLite 数据库</strong>：轻量级关系数据库，支持多表关联查询，适合复杂数据结构。使用 <code>DBI</code> 和 <code>RSQLite</code> 包操作。</p></li>
+</ul>
+<p><strong>实战示例</strong>：</p>
+<p>假设我们完成了马尾松林 30 个样地的调查，需要保存数据并创建元数据文档：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readr)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建目录结构</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/raw"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">dir.create</span>(<span class="st">"data/processed"</span>, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存原始数据</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(quadrat_data, <span class="st">"data/raw/pine_forest_survey_2027-04-15.csv"</span>)</span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建元数据文档</span></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a>metadata <span class="ot">&lt;-</span> <span class="st">"# 马尾松林样方调查数据</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a><span class="st">## 数据来源</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="st">- 项目：广西马尾松林生物多样性调查</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a><span class="st">- 调查时间：2027年4月15日</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="st">- 调查地点：广西南宁市青秀山</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="st">- 调查员：张同学</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a><span class="st">## 变量说明</span></span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a><span class="st">- sample_id: 样本唯一标识符（格式：Q001-Q010）</span></span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a><span class="st">- date: 调查日期（格式：YYYY-MM-DD）</span></span>
+<span id="cb25-22"><a href="#cb25-22" aria-hidden="true" tabindex="-1"></a><span class="st">- latitude: 纬度（十进制度数，WGS84坐标系）</span></span>
+<span id="cb25-23"><a href="#cb25-23" aria-hidden="true" tabindex="-1"></a><span class="st">- longitude: 经度（十进制度数，WGS84坐标系）</span></span>
+<span id="cb25-24"><a href="#cb25-24" aria-hidden="true" tabindex="-1"></a><span class="st">- species: 物种中文名</span></span>
+<span id="cb25-25"><a href="#cb25-25" aria-hidden="true" tabindex="-1"></a><span class="st">- dbh_cm: 胸径（厘米，测量位置：离地1.3米）</span></span>
+<span id="cb25-26"><a href="#cb25-26" aria-hidden="true" tabindex="-1"></a><span class="st">- height_m: 树高（米，从地面到树冠最高点）</span></span>
+<span id="cb25-27"><a href="#cb25-27" aria-hidden="true" tabindex="-1"></a><span class="st">- health: 健康状况（类别：健康、轻度病害、中度病害、重度病害）</span></span>
+<span id="cb25-28"><a href="#cb25-28" aria-hidden="true" tabindex="-1"></a><span class="st">- observer: 调查员姓名</span></span>
+<span id="cb25-29"><a href="#cb25-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-30"><a href="#cb25-30" aria-hidden="true" tabindex="-1"></a><span class="st">## 缺失值编码</span></span>
+<span id="cb25-31"><a href="#cb25-31" aria-hidden="true" tabindex="-1"></a><span class="st">- NA: 数据缺失或未测量</span></span>
+<span id="cb25-32"><a href="#cb25-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-33"><a href="#cb25-33" aria-hidden="true" tabindex="-1"></a><span class="st">## 数据使用许可</span></span>
+<span id="cb25-34"><a href="#cb25-34" aria-hidden="true" tabindex="-1"></a><span class="st">- CC BY 4.0: 可自由使用，需注明出处</span></span>
+<span id="cb25-35"><a href="#cb25-35" aria-hidden="true" tabindex="-1"></a><span class="st">"</span></span>
+<span id="cb25-36"><a href="#cb25-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-37"><a href="#cb25-37" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(metadata, <span class="st">"data/README.md"</span>)</span>
+<span id="cb25-38"><a href="#cb25-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-39"><a href="#cb25-39" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"数据已保存至 data/raw/pine_forest_survey_2027-04-15.csv</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-40"><a href="#cb25-40" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"元数据文档已创建：data/README.md</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>这个流程展示了从数据保存到元数据文档创建的完整过程。掌握规范的数据保存方法，是数据管理能力的重要体现，也是确保研究可重复性的关键环节。</p>
 </section>
 </section>
-<section id="观测设计要点" class="level2" data-number="8.6">
-<h2 data-number="8.6" class="anchored" data-anchor-id="观测设计要点"><span class="header-section-number">8.6</span> 观测设计要点</h2>
+<section id="观测设计要点" class="level2" data-number="10.16">
+<h2 data-number="10.16" class="anchored" data-anchor-id="观测设计要点"><span class="header-section-number">10.16</span> 观测设计要点</h2>
 <p>在开展野外观测之前，合理的观测设计是确保数据质量的关键：</p>
 <ul>
 <li><strong>样方布局</strong>：根据研究目的选择随机布局、系统布局（等间距网格）或分层随机布局。分层随机布局在生境异质性较大时尤为推荐，可以确保各生境类型均被覆盖。</li>
-<li><strong>重复数量</strong>：每种生境或处理至少设置 3-5 个独立重复样方，以估算变异性并支持统计检验。样方面积应根据研究对象确定（如乔木通常用 20 m × 20 m，草本用 1 m × 1 m）。</li>
+<li><strong>重复数量</strong>：每种生境或处理至少设置3-5个独立重复样方，以估算变异性并支持统计检验。样方面积应根据研究对象确定（如乔木通常用20m x 20m，草本用1m x 1m）。</li>
 <li><strong>观测频次</strong>：一次性调查适用于静态格局描述；若关注动态过程（如物候、种群波动），则需设计重复观测的时间间隔（如每月、每季度），并在整个研究期内保持一致。</li>
 </ul>
-</section>
-<section id="总结" class="level2" data-number="8.7">
-<h2 data-number="8.7" class="anchored" data-anchor-id="总结"><span class="header-section-number">8.7</span> 总结</h2>
-<p>虽然新技术层出不穷，但传统观测方法在提供生物学直觉和精细数据方面仍具有独特优势。未来的生态观测将是”天-空-地”一体化的多源数据融合，通过人工智能技术将海量的原始影像和信号转化为具有科学价值的生态学洞察。</p>
-</section>
-<section id="课后练习" class="level2" data-number="8.8">
-<h2 data-number="8.8" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">8.8</span> 课后练习</h2>
+<section id="案例马尾松林定位观测设计" class="level3" data-number="10.16.1">
+<h3 data-number="10.16.1" class="anchored" data-anchor-id="案例马尾松林定位观测设计"><span class="header-section-number">10.16.1</span> 案例：马尾松林定位观测设计</h3>
+<p>马尾松（Pinus massoniana）是中国南方重要的用材和生态树种，其林分结构研究对于理解亚热带森林动态具有代表性意义。</p>
+<p><strong>研究背景</strong>： 广西南宁伊岭岩地区的马尾松林多与阔叶树混交，形成复层林结构。该区域马尾松林受人为干扰程度不同，从近成熟人工林到次生演替林均有分布。</p>
+<p><strong>观测指标体系</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>observation_index_system <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">layer =</span> <span class="fu">c</span>(<span class="st">"乔木层"</span>, <span class="st">"乔木层"</span>, <span class="st">"乔木层"</span>, <span class="st">"灌木层"</span>, <span class="st">"灌木层"</span>, <span class="st">"草本层"</span>, <span class="st">"土壤层"</span>),</span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">component =</span> <span class="fu">c</span>(<span class="st">"乔木"</span>, <span class="st">"乔木"</span>, <span class="st">"乔木"</span>, <span class="st">"灌木"</span>, <span class="st">"灌木"</span>, <span class="st">"草本"</span>, <span class="st">"土壤"</span>),</span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">variable =</span> <span class="fu">c</span>(<span class="st">"胸径 (DBH)"</span>, <span class="st">"树高"</span>, <span class="st">"郁闭度"</span>, <span class="st">"种类组成"</span>, <span class="st">"覆盖度"</span>, <span class="st">"种类组成"</span>, <span class="st">"含水量"</span>),</span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">unit =</span> <span class="fu">c</span>(<span class="st">"cm"</span>, <span class="st">"m"</span>, <span class="st">"%"</span>, <span class="st">"种"</span>, <span class="st">"%"</span>, <span class="st">"种"</span>, <span class="st">"%"</span>),</span>
+<span id="cb26-6"><a href="#cb26-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">method =</span> <span class="fu">c</span>(<span class="st">"围尺测量"</span>, <span class="st">"测高器"</span>, <span class="st">"估测法"</span>, <span class="st">"样方法"</span>, <span class="st">"目测法"</span>, <span class="st">"样方法"</span>, <span class="st">"烘干法"</span>),</span>
+<span id="cb26-7"><a href="#cb26-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">frequency =</span> <span class="fu">c</span>(<span class="st">"5年一次"</span>, <span class="st">"5年一次"</span>, <span class="st">"每年"</span>, <span class="st">"3年一次"</span>, <span class="st">"每年"</span>, <span class="st">"每年"</span>, <span class="st">"每年"</span>)</span>
+<span id="cb26-8"><a href="#cb26-8" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb26-9"><a href="#cb26-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-10"><a href="#cb26-10" aria-hidden="true" tabindex="-1"></a>observation_index_system</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>样地布局设计</strong>：</p>
+<p>马尾松林定位观测采用”固定样地 + 临时样地”相结合的模式：</p>
 <ol type="1">
-<li><p>假设你要调查校园内某片绿地的植物多样性，请设计一个样方调查方案：包括样方大小、数量、布局方式，并说明理由。</p></li>
-<li><p>使用本章提供的 <code>quadrat_data</code> 代码模板，为你熟悉的一个生态场景（如校园鸟类、池塘水质）创建一份包含至少 5 条记录的观测数据框，并保存为 CSV 文件。</p></li>
-<li><p>比较遥感观测与地面样方调查在监测森林植被变化方面的优缺点，各列举至少两点。</p></li>
+<li><strong>固定样地</strong>：选择3-5块代表性林分建立永久样地（20m x 20m或更大），每年复查</li>
+<li><strong>临时样地</strong>：在研究区域内随机设置10-20块临时样地，用于一次性调查或间隔数年的重复调查</li>
+</ol>
+<p><strong>数据质量控制方案</strong>：</p>
+<ol type="1">
+<li><strong>外业质量控制</strong>：
+<ul>
+<li>测量前校准仪器（围尺、测高器）</li>
+<li>双人独立记录，现场核对</li>
+<li>每木检尺照片存档</li>
+</ul></li>
+<li><strong>内业质量控制</strong>：
+<ul>
+<li>数据录入后随机抽取10%进行核对</li>
+<li>异常值（如负胸径、超大树高）自动标记</li>
+<li>不同观测者数据进行一致性分析</li>
+</ul></li>
 </ol>
 
 
-<div id="refs" class="references csl-bib-body hanging-indent" role="list">
-<div id="ref-Godfree2025" class="csl-entry" role="listitem">
-Godfree, Robert, and Nunzio Knerr. 2025. <span>“Rapid Ecological Data Collection from 360-Degree Imagery Using Visualisation and Immersive Sampling in the r&nbsp;Pannotator&nbsp;Package.”</span> <em>Methods in Ecology and Evolution</em> 16 (3): 640–54. https://doi.org/<a href="https://doi.org/10.1111/2041-210X.14472">https://doi.org/10.1111/2041-210X.14472</a>.
-</div>
-</div>
+</section>
 </section>
 
 </main> <!-- /main -->
@@ -1005,12 +2008,12 @@ Godfree, Robert, and Nunzio Knerr. 2025. <span>“Rapid Ecological Data Collecti
 <nav class="page-navigation">
   <div class="nav-page nav-page-previous">
       <a href="./0201-data-collection-method.html" class="pagination-link" aria-label="数据采集方法">
-        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">数据采集方法</span></span>
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span>
       </a>          
   </div>
   <div class="nav-page nav-page-next">
       <a href="./0203-experimentation.html" class="pagination-link" aria-label="生态学实验数据采集方法">
-        <span class="nav-page-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span> <i class="bi bi-arrow-right-short"></i>
+        <span class="nav-page-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span> <i class="bi bi-arrow-right-short"></i>
       </a>
   </div>
 </nav>
