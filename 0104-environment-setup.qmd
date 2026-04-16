@@ -143,7 +143,7 @@ R --version
 
 1. 访问 Positron 下载页面：<https://posit.com/download/
 2. 页面会自动检测你的操作系统，点击 "Download Positron Desktop for Windows"
-3. 下载完成后，双击 `Positron-2024.x.x.exe` 安装程序
+3. 下载完成后，双击 `Positron-2024.11.155.exe` 安装程序
 4. 安装步骤：
    - 接受许可协议
    - 选择安装路径（建议保持默认 `C:\Program Files\Positron`）
@@ -154,7 +154,7 @@ R --version
 #### macOS 系统
 
 1. 访问 Positron 下载页面：<https://posit.com/download/
-2. 下载 `Positron-2024.x.x.dmg` 文件
+2. 下载 `Positron-2024.11.155.dmg` 文件
 3. 双击 .dmg 文件，将 Positron 图标拖到 Applications 文件夹
 4. 在 "应用程序" 中找到 Positron，双击启动
 5. 首次启动可能提示 "无法验证开发者"，需要：
@@ -167,10 +167,10 @@ R --version
 
 ```bash
 # 下载 Positron（以 Ubuntu 22.04 为例）
-wget https://github.com/posit-dev/positron/releases/download/v2024.x.x/Positron-2024.x.x-linux-amd64.deb
+wget https://github.com/posit-dev/positron/releases/download/2024.11.155/Positron-2024.11.155-linux-amd64.deb
 
 # 安装
-sudo dpkg -i Positron-2024.x.x-linux-amd64.deb
+sudo dpkg -i Positron-2024.11.155-linux-amd64.deb
 
 # 如果有依赖问题，运行：
 sudo apt-get install -f
@@ -180,10 +180,10 @@ sudo apt-get install -f
 
 ```bash
 # 下载 Positron
-wget https://github.com/posit-dev/positron/releases/download/v2024.x.x/Positron-2024.x.x-linux-x86_64.rpm
+wget https://github.com/posit-dev/positron/releases/download/2024.11.155/Positron-2024.11.155-linux-x86_64.rpm
 
 # 安装
-sudo yum install Positron-2024.x.x-linux-x86_64.rpm
+sudo yum install Positron-2024.11.155-linux-x86_64.rpm
 ```
 
 #### 首次启动配置

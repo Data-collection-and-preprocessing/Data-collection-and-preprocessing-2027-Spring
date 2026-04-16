@@ -713,14 +713,14 @@ metadata_template <- '
 
 # 相关数据集
 关联数据: |
-  - 马尾松林分调查数据集 (DOI: 10.xxxx/massonian_forest)
+  - 马尾松林分调查数据集 （来源: 广西大学土壤生态学研究团队，2024）
   - 广西土壤类型图 (来源: 国家地球系统科学数据中心)
-  - WorldClim气候数据 (DOI: 10.xxxx/worldclim21)
+  - WorldClim气候数据 （来源: worldclim.org）
 
 # 引用格式
 推荐引用: |
   广西大学土壤生态学研究团队 (2024). 马尾松天然林土壤孔隙特征
-  数据集(v1.0). 广西大学. https://doi.org/10.xxxx/soil_porosity
+  数据集(v1.0). 广西大学. （正式发布后将更新DOI）
 
 参考文献: |
   - GBIF (2023). Darwin Core: A standard for biodiversity data. 
