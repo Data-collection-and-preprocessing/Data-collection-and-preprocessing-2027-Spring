@@ -65,5 +65,6 @@ jobs:
       - name: Publish to GitHub Pages
         uses: quarto-dev/quarto-actions/publish@v2
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           target: gh-pages
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
