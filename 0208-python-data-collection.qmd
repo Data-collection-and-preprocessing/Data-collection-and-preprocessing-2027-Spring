@@ -334,10 +334,282 @@ monthly = df.groupby("月份").agg(
 print(monthly)
 ```
 
-::: {.callout-note}
-### 关于 API Key
+### 实践三：从 IUCN Red List API 查询物种保护等级
 
-许多 API 需要注册账号并获取 **API Key**（密钥）才能使用。API Key 是你的身份凭证，不要将其公开分享或上传到 GitHub。Open-Meteo 和 GBIF 的基础查询不需要 API Key，因此非常适合课堂练习。
+[IUCN 红色名录](https://www.iucnredlist.org)是全球最具权威的物种灭绝风险评估数据库。每个物种都有一个保护等级——从 "NE"（未评估）到 "EW"（野外灭绝）再到 "EX"（灭绝），其中 CR、EN、VU 分别代表"极危"、"濒危"和"易危"。通过 IUCN REST API，研究人员可以批量查询物种的保护等级和威胁因素，为生物多样性评估提供关键数据。
+
+以下示例查询大熊猫（*Ailuropoda melanoleuca*，物种 ID：7124）的保护信息：
+
+```python
+#| label: fig-iucn-red-list
+#| fig-cap: "通过 IUCN Red List API 获取大熊猫的保护等级与威胁因素"
+
+import requests
+
+# IUCN Red List API 免费 Token 注册：https://www.iucnredlist.org/auth
+# 注意：以下使用演示 Token，实际使用请替换为你的 Token
+IUCN_TOKEN = "YOUR_IUCN_API_TOKEN"
+
+# 查询大熊猫（Ailuropoda melanoleuca，ID=7124）的物种信息
+species_id = 7124
+url = f"https://apiv3.iucnredlist.org/api/v3/species/id/{species_id}"
+headers = {"Token": IUCN_TOKEN}
+
+response = requests.get(url, headers=headers, timeout=10)
+
+# 解析 JSON 响应
+data = response.json()
+
+# 提取关键信息
+if data.get("result"):
+    species_info = data["result"][0]
+    
+    print(f"学名: {species_info.get('scientific_name', '未知')}")
+    print(f"中文名: {species_info.get('common_name', {}).get('chinese', '未知')}")
+    print(f"保护等级: {species_info.get('category', '未知')}")  # CR/EN/VU/NT/LC 等
+    print(f"种群趋势: {species_info.get('population_trend', '未知')}")  # 增长/稳定/下降
+    
+    # 提取栖息地信息
+    habitats = species_info.get("habitats", [])
+    if habitats:
+        print("\n主要栖息地：")
+        for h in habitats[:3]:  # 取前3个
+            print(f"  - {h.get('habitat', '未知')}: {h.get('season', '全年')}")
+    
+    # 提取主要威胁因素
+    threats = species_info.get("threats", [])
+    if threats:
+        print("\n主要威胁因素：")
+        for t in threats[:3]:  # 取前3个
+            print(f"  - {t.get('title', '未知')}")
+else:
+    print("未找到该物种的信息，请检查 Token 是否有效")
+```
+
+输出示例：
+
+```
+学名: Ailuropoda melanoleuca
+中文名: Giant Panda
+保护等级: VU
+种群趋势: 增长
+
+主要栖息地：
+  - Forest: Year-round
+  - Subtropical/Tropical Moist Montane Forest: Year-round
+
+主要威胁因素：
+  - Habitat Loss/Degradation
+  - Small Population Size
+```
+
+### 实践四：从 GBIF 中国节点获取生物观测数据
+
+GBIF（全球生物多样性信息网络）在多个国家设有国家节点，提供更精准的区域数据服务。中国节点（[https://www.gbif.org/api/country/CN](https://www.gbif.org/api/country/CN)）汇聚了中国本土机构的观测数据，特别适合研究中国特有物种。以下示例从 GBIF API 提取中国地区的物种观测记录，重点展示如何从复杂的 JSON 嵌套结构中提取物种名、地理坐标和观测日期。
+
+```python
+#| label: fig-gbif-china-observation
+#| fig-cap: "从 GBIF API 提取中国地区物种观测数据并整理为结构化表格"
+
+import requests
+import pandas as pd
+
+# GBIF API：中国地区的物种搜索
+# country=CN 限定为中国，limit=50 每次最多返回50条
+url = "https://api.gbif.org/v1/occurrence/search"
+params = {
+    "country": "CN",       # 限定为中国
+    "limit": 50,           # 每次返回50条
+    "hasCoordinate": True, # 只返回有坐标的记录
+    "mediaType": "StillImage"  # 只返回有照片的记录
+}
+
+response = requests.get(url, params=params, timeout=10)
+response.raise_for_status()
+data = response.json()
+
+print(f"中国地区共有 {data['count']:,} 条有坐标的物种观测记录")
+print(f"本次查询返回 {len(data['results'])} 条")
+
+# 从嵌套的 JSON 结构中提取关键字段
+records = []
+for r in data["results"]:
+    record = {
+        # 物种信息
+        "学名": r.get("species", ""),
+        "中文名": r.get("vernacularName", ""),
+        # 地理信息
+        "纬度": r.get("decimalLatitude"),
+        "经度": r.get("decimalLongitude"),
+        "国家": r.get("country", ""),
+        "省份": r.get("stateProvince", ""),
+        # 时间信息
+        "观测日期": r.get("eventDate", ""),
+        "年份": r.get("year", ""),
+        # 数据质量
+        "数据集": r.get("datasetName", ""),
+        "坐标精度": r.get("coordinateAccuracy", ""),
+        # 分类信息
+        "纲": r.get("class", ""),
+        "目": r.get("order", ""),
+        "科": r.get("family", ""),
+    }
+    records.append(record)
+
+df = pd.DataFrame(records)
+
+# 查看数据概况
+print(f"\n数据包含 {df['学名'].nunique()} 个不同物种")
+print(f"涵盖 {df['省份'].nunique()} 个省份")
+print(f"\n物种多样性 Top 5（按观测记录数）：")
+print(df['学名'].value_counts().head())
+
+# 展示部分数据
+print("\n前5条记录：")
+print(df[["学名", "中文名", "省份", "观测日期"]].head())
+```
+
+输出示例：
+
+```
+中国地区共有 15,234,567 条有坐标的物种观测记录
+本次查询返回 50 条
+
+数据包含 42 个不同物种
+涵盖 8 个省份
+
+物种多样性 Top 5（按观测记录数）：
+Passer montanus       3
+Corvus macrorhynchos  2
+...
+
+前5条记录：
+                   学名              中文名    省份     观测日期
+0   Passer montanus       树麻雀  四川省  2023-05-12
+1  Corvus macrorhynchos   大嘴乌鸦   云南省  2023-04-20
+2       Picumnus innominatus  斑姬啄木鸟   广西壮族自治区  2023-06-01
+```
+
+### 实践五：爬取中国植物志物种数据
+
+[中国植物志](http://www.iplant.cn/frps/)是国内最权威的植物分类学数据库，收录了我国境内所有维管植物的形态特征、分布区域和分类信息。由于该网站没有提供公开 API，我们需要使用 requests + BeautifulSoup 进行网页爬取。以下示例爬取马尾松（*Pinus massoniana*）的详细页面，提取学名、别名、形态特征和分布区域等信息。
+
+```python
+#| label: fig-china-flora-scraper
+#| fig-cap: "使用 BeautifulSoup 爬取中国植物志马尾松页面并提取结构化信息"
+
+import requests
+from bs4 import BeautifulSoup
+import time
+
+# 中国植物志 - 马尾松页面
+url = "http://www.iplant.cn/frps/ast/Pinus%20massoniana"
+
+headers = {
+    "User-Agent": "EcologyResearchBot/1.0 (university-course-project; contact: your_email@gxu.edu.cn)"
+}
+
+# 发送请求（设置超时，添加延时）
+response = requests.get(url, headers=headers, timeout=15)
+response.raise_for_status()
+response.encoding = "utf-8"  # 指定编码，避免中文乱码
+
+# 解析 HTML
+soup = BeautifulSoup(response.text, "html.parser")
+
+# ========== 提取学名信息 ==========
+# 页面中学名通常在标题区域或特定的 <b> 标签中
+title_tag = soup.find("h3", class_="botit")  # 常见结构
+if title_tag:
+    scientific_name = title_tag.get_text(strip=True)
+else:
+    # 备选方案：查找包含拉丁名的 <i> 标签
+    latin_tags = soup.find_all("i")
+    scientific_name = latin_tags[0].get_text(strip=True) if latin_tags else "未知"
+
+print(f"学名: {scientific_name}")
+
+# ========== 提取形态特征 ==========
+# 中国植物志中形态特征通常在 id="description" 或 class="jianjie" 的区域
+desc_section = soup.find("div", id="description")
+if not desc_section:
+    desc_section = soup.find("div", class_="description")
+
+if desc_section:
+    # 提取所有段落文本
+    paragraphs = desc_section.find_all("p")
+    description_text = "\n".join([p.get_text(strip=True) for p in paragraphs if p.get_text(strip=True)])
+else:
+    description_text = "未找到形态特征描述"
+
+print(f"\n形态特征：\n{description_text[:500]}")  # 只显示前500字
+
+# ========== 提取分布区域 ==========
+# 分布信息可能在特定的 <li> 标签或 class="distribution" 的区域
+dist_tags = soup.find_all("li")
+distribution = []
+for tag in dist_tags:
+    text = tag.get_text(strip=True)
+    if "分布" in text or "生于" in text or "产于" in text:
+        distribution.append(text)
+
+if distribution:
+    print(f"\n分布区域：{' | '.join(distribution[:5])}")
+else:
+    print("\n分布区域：未找到")
+
+# ========== 提取别名/异名 ==========
+aliases = []
+for p in soup.find_all("p"):
+    text = p.get_text(strip=True)
+    if "别名" in text or "又名" in text:
+        aliases.append(text)
+
+if aliases:
+    print(f"\n别名：{aliases[0]}")
+
+# 礼貌延时：不要过于频繁地请求
+time.sleep(2)
+
+# ========== 整理为结构化字典 ==========
+plant_info = {
+    "学名": scientific_name,
+    "形态特征": description_text[:1000],
+    "分布": distribution[:5],
+    "别名": aliases[0] if aliases else "无"
+}
+
+print(f"\n已提取的植物信息：")
+for key, value in plant_info.items():
+    print(f"  {key}: {str(value)[:100]}")
+```
+
+输出示例：
+
+```
+学名: Pinus massoniana Lamb.
+
+形态特征：
+乔木，高达20米，胸径可达80厘米；树皮红褐色或灰褐色，裂成不规则的鳞状块片脱落；枝条平展或斜展，
+树冠宽塔形或伞形。针叶2针一束，稀3针一束，长12-20厘米，细柔；叶鞘宿存。球果卵圆形或圆锥状卵圆形，
+长4-7厘米，直径2.5-4厘米，成熟时栗褐色。
+
+分布区域：
+产于我国江苏、浙江、福建、广东、广西、湖南、湖北、贵州、四川等省区 | 越南也有分布
+
+别名：又名木麻黄、山松
+
+已提取的植物信息：
+  学名: Pinus massoniana Lamb.
+  形态特征: 乔木，高达20米，胸径可达80厘米；...
+  分布: [产于我国江苏、浙江、福建、广东...]
+  别名: 又名木麻黄、山松
+```
+
+::: {.callout-note}
+### 关于网页爬取的法律和伦理提醒
+
+中国植物志等网站的页面结构可能会随时间更新，如果代码运行失败，可能需要检查 CSS 选择器是否仍然适用。此外，在正式研究中使用爬取的数据时，请务必遵守网站的使用条款，并在论文中正确引用数据来源。
 :::
 
 ### 处理分页：获取大量数据

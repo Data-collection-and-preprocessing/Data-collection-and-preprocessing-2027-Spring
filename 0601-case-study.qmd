@@ -166,13 +166,36 @@ print(sample_record)
 
 ### 3.3 API 编程采集
 
-对于需要大规模自动化采集的场景，可以使用 API：
+对于需要大规模自动化采集的场景，API（Application Programming Interface，应用程序接口）是最高效的数据获取方式。API允许程序直接与数据库通信，无需手动下载，适合批量获取物种分布、气候数据、遥感影像等。
+
+**什么是API？**
+
+API是数据提供方开放的"数据接口"，就像餐厅的点餐系统——你不需要进入厨房，只需要通过菜单（API文档）告诉服务员（API服务器）你要什么，服务员就会把菜（数据）端给你。
+
+**API的优势**：
+1. **自动化**：编写一次代码，可以重复运行获取最新数据
+2. **批量获取**：一次请求可以获取成千上万条记录
+3. **实时更新**：数据库更新后，API立即返回最新数据
+4. **可重复性**：代码记录了数据获取的全过程，便于他人复现
+
+**API的基本工作流程**：
+
+```
+你的程序 → 发送请求(URL + 参数) → API服务器
+                                        ↓
+你的程序 ← 返回数据(JSON/XML格式) ← API服务器
+```
 
 **GBIF API 示例**（R语言）：
+
+GBIF（Global Biodiversity Information Facility，全球生物多样性信息设施）是全球最大的物种分布数据库，提供免费的API接口。
 
 ```{r}
 library(httr)
 library(jsonlite)
+library(tidyverse)
+
+cat("=== GBIF API 数据采集示例 ===\n")
 
 # 获取广西木论保护区的物种分布记录
 base_url <- "https://api.gbif.org/v1/occurrence/search"
@@ -187,32 +210,364 @@ response <- GET(
   )
 )
 
-data <- fromJSON(content(response, as = "text"))
+# 检查请求是否成功
+if (status_code(response) == 200) {
+  cat("✓ API请求成功\n")
 
-cat("获取到", data$count, "条记录\n")
-cat("前5个物种：\n")
-print(data$results$species[1:5])
+  # 解析JSON数据
+  data <- fromJSON(content(response, as = "text"))
+
+  cat("获取到", data$count, "条记录\n")
+  cat("前5个物种：\n")
+  print(data$results$species[1:5])
+
+  # 提取关键字段
+  gbif_data <- data$results |>
+    select(species, decimalLatitude, decimalLongitude,
+           eventDate, basisOfRecord) |>
+    head(10)
+
+  cat("\n提取的数据示例：\n")
+  print(gbif_data)
+
+} else {
+  cat("✗ API请求失败，状态码：", status_code(response), "\n")
+}
+```
+
+**GBIF API 进阶用法**：
+
+```{r}
+cat("=== GBIF API 进阶：批量获取特定物种数据 ===\n")
+
+# 获取马尾松（Pinus massoniana）在广西的分布记录
+get_species_occurrences <- function(species_name, country = "CN", limit = 300) {
+  response <- GET(
+    url = "https://api.gbif.org/v1/occurrence/search",
+    query = list(
+      scientificName = species_name,
+      country = country,
+      hasCoordinate = TRUE,  # 只要有坐标的记录
+      limit = limit
+    )
+  )
+
+  if (status_code(response) == 200) {
+    data <- fromJSON(content(response, as = "text"))
+    return(data$results)
+  } else {
+    warning("API请求失败")
+    return(NULL)
+  }
+}
+
+# 获取马尾松分布数据
+pinus_data <- get_species_occurrences("Pinus massoniana", limit = 100)
+
+if (!is.null(pinus_data)) {
+  cat("成功获取", nrow(pinus_data), "条马尾松分布记录\n")
+
+  # 统计数据来源
+  cat("\n数据来源统计：\n")
+  print(table(pinus_data$basisOfRecord))
+
+  # 提取坐标信息
+  pinus_coords <- pinus_data |>
+    select(species, decimalLatitude, decimalLongitude, stateProvince) |>
+    filter(!is.na(decimalLatitude), !is.na(decimalLongitude))
+
+  cat("\n坐标数据示例（前5条）：\n")
+  print(head(pinus_coords, 5))
+}
 ```
 
 **WorldClim 获取气候数据（R语言）**：
 
+WorldClim提供全球高分辨率气候数据，包括19个生物气候变量（如年均温、年降水量、温度季节性等）。
+
 ```{r}
 #| eval: false
-# 安装 worldclim2 包
+
+cat("=== WorldClim 气候数据下载 ===\n")
+
+# 安装 geodata 包
 # install.packages("geodata")
 
 library(geodata)
 
-# 下载广西的气候数据（分辨率：30秒）
+# 下载全球气候数据（分辨率：30秒 ≈ 1km）
 climate_data <- worldclim_global(
   var = "bio",  # 生物气候变量
-  res = 0.5,     # 30秒 ≈ 1km
+  res = 0.5,     # 30秒分辨率
   path = "data/raw/climate"
 )
 
 cat("气候数据下载完成\n")
-cat("变量包括：年平均温、年降水量、季节性等\n")
+cat("变量包括：\n")
+cat("  BIO1 = 年平均温度\n")
+cat("  BIO12 = 年降水量\n")
+cat("  BIO15 = 降水季节性\n")
+cat("  ... 共19个变量\n")
+
+# 提取特定区域的气候数据
+# 假设我们关注广西地区（经度：104-112°E，纬度：20-27°N）
+guangxi_extent <- c(104, 112, 20, 27)  # xmin, xmax, ymin, ymax
+
+# 裁剪到广西范围
+guangxi_climate <- crop(climate_data, guangxi_extent)
+
+cat("\n广西地区气候数据已提取\n")
 ```
+
+**Python：使用requests库调用API**
+
+Python的requests库是调用API的标准工具，语法简洁直观。
+
+```{python}
+#| eval: false
+
+import requests
+import pandas as pd
+import json
+
+print("=== Python API 调用示例 ===")
+
+# GBIF API：获取物种分布数据
+def get_gbif_data(species_name, country="CN", limit=100):
+    """
+    从GBIF获取物种分布数据
+
+    参数：
+        species_name: 物种学名
+        country: 国家代码（CN=中国）
+        limit: 返回记录数上限
+
+    返回：
+        DataFrame格式的物种分布数据
+    """
+    base_url = "https://api.gbif.org/v1/occurrence/search"
+
+    params = {
+        "scientificName": species_name,
+        "country": country,
+        "hasCoordinate": "true",
+        "limit": limit
+    }
+
+    response = requests.get(base_url, params=params)
+
+    if response.status_code == 200:
+        data = response.json()
+        results = data.get("results", [])
+
+        # 提取关键字段
+        records = []
+        for record in results:
+            records.append({
+                "species": record.get("species"),
+                "latitude": record.get("decimalLatitude"),
+                "longitude": record.get("decimalLongitude"),
+                "date": record.get("eventDate"),
+                "province": record.get("stateProvince")
+            })
+
+        df = pd.DataFrame(records)
+        print(f"✓ 成功获取 {len(df)} 条记录")
+        return df
+    else:
+        print(f"✗ API请求失败，状态码：{response.status_code}")
+        return None
+
+# 获取枫香（Liquidambar formosana）分布数据
+liquidambar_data = get_gbif_data("Liquidambar formosana", limit=50)
+
+if liquidambar_data is not None:
+    print("\n数据预览：")
+    print(liquidambar_data.head())
+
+    # 统计各省份的记录数
+    print("\n各省份记录数：")
+    print(liquidambar_data['province'].value_counts())
+```
+
+**API调用的常见问题与解决方案**
+
+| 问题 | 原因 | 解决方案 |
+|:-----|:-----|:---------|
+| 请求超时 | 网络不稳定或服务器响应慢 | 增加timeout参数，重试机制 |
+| 状态码403 | API密钥无效或权限不足 | 检查API密钥，申请更高权限 |
+| 状态码429 | 请求频率超限 | 添加延时（Sys.sleep()），降低请求频率 |
+| 返回数据为空 | 查询参数错误或无匹配数据 | 检查参数拼写，扩大查询范围 |
+| JSON解析失败 | 返回格式不是JSON | 检查response内容，可能是HTML错误页 |
+
+**API调用的最佳实践**
+
+```{r}
+cat("=== API调用最佳实践 ===\n")
+
+# 1. 添加错误处理和重试机制
+safe_api_call <- function(url, params, max_retries = 3) {
+  for (i in 1:max_retries) {
+    tryCatch({
+      response <- GET(url, query = params, timeout(30))
+
+      if (status_code(response) == 200) {
+        return(fromJSON(content(response, as = "text")))
+      } else {
+        cat("尝试", i, "失败，状态码：", status_code(response), "\n")
+      }
+    }, error = function(e) {
+      cat("尝试", i, "出错：", e$message, "\n")
+    })
+
+    # 等待后重试
+    if (i < max_retries) {
+      Sys.sleep(2^i)  # 指数退避：2秒、4秒、8秒
+    }
+  }
+
+  warning("API调用失败，已重试", max_retries, "次")
+  return(NULL)
+}
+
+# 2. 批量请求时添加延时（避免触发频率限制）
+batch_api_call <- function(species_list, delay = 1) {
+  results <- list()
+
+  for (i in seq_along(species_list)) {
+    cat("正在获取第", i, "/", length(species_list), "个物种：",
+        species_list[i], "\n")
+
+    results[[i]] <- get_species_occurrences(species_list[i], limit = 50)
+
+    # 添加延时（除了最后一个）
+    if (i < length(species_list)) {
+      Sys.sleep(delay)
+    }
+  }
+
+  return(results)
+}
+
+# 3. 保存原始API响应（便于后续检查）
+save_api_response <- function(response, filename) {
+  if (status_code(response) == 200) {
+    data <- fromJSON(content(response, as = "text"))
+    write_json(data, filename, pretty = TRUE)
+    cat("API响应已保存到：", filename, "\n")
+  }
+}
+
+cat("\n最佳实践要点：\n")
+cat("  1. 添加错误处理和重试机制\n")
+cat("  2. 批量请求时添加延时（1-2秒）\n")
+cat("  3. 保存原始API响应以便检查\n")
+cat("  4. 记录API调用日志（时间、参数、结果）\n")
+cat("  5. 遵守API使用条款和频率限制\n")
+```
+
+**生态学案例：整合多源API数据**
+
+在实际研究中，常需要整合来自不同API的数据。以下示例展示如何结合GBIF物种分布数据和WorldClim气候数据。
+
+```{r}
+#| eval: false
+
+cat("=== 整合多源API数据案例 ===\n")
+
+# 步骤1：从GBIF获取物种分布点
+species_occurrences <- get_species_occurrences("Pinus massoniana", limit = 100)
+
+# 步骤2：提取坐标
+coords <- species_occurrences |>
+  select(decimalLongitude, decimalLatitude) |>
+  filter(!is.na(decimalLongitude), !is.na(decimalLatitude))
+
+# 步骤3：从WorldClim提取这些坐标点的气候数据
+library(terra)
+
+# 加载气候数据
+climate_raster <- rast("data/raw/climate/wc2.1_30s_bio.tif")
+
+# 提取坐标点的气候值
+climate_values <- extract(climate_raster, coords)
+
+# 步骤4：合并数据
+integrated_data <- cbind(coords, climate_values)
+
+cat("整合后的数据维度：", dim(integrated_data), "\n")
+cat("包含", ncol(climate_values), "个气候变量\n")
+
+# 步骤5：保存整合数据
+write_csv(integrated_data, "data/processed/species_climate_integrated.csv")
+cat("整合数据已保存\n")
+```
+
+**API数据采集的项目管理**
+
+对于大型数据采集项目，建议采用以下项目结构：
+
+```
+project/
+├── data/
+│   ├── raw/              # 原始API响应（JSON格式）
+│   │   ├── gbif/
+│   │   ├── worldclim/
+│   │   └── api_logs.txt  # API调用日志
+│   └── processed/        # 处理后的数据（CSV格式）
+├── scripts/
+│   ├── 01_fetch_gbif.R   # GBIF数据获取
+│   ├── 02_fetch_climate.R # 气候数据获取
+│   └── 03_integrate.R    # 数据整合
+└── README.md             # 数据来源和处理说明
+```
+
+**API调用日志示例**：
+
+```{r}
+# 记录API调用日志
+log_api_call <- function(api_name, params, status, record_count) {
+  log_entry <- paste0(
+    Sys.time(), " | ",
+    "API: ", api_name, " | ",
+    "参数: ", paste(names(params), params, sep = "=", collapse = ", "), " | ",
+    "状态: ", status, " | ",
+    "记录数: ", record_count, "\n"
+  )
+
+  cat(log_entry, file = "data/raw/api_logs.txt", append = TRUE)
+}
+
+# 使用示例
+# log_api_call("GBIF", list(species = "Pinus massoniana", limit = 100),
+#              "成功", 87)
+```
+
+::: {.callout-tip}
+### API数据采集技巧总结
+
+**选择合适的API**：
+1. 查阅API文档，了解数据格式和限制
+2. 测试小规模请求，确认数据质量
+3. 评估API的稳定性和更新频率
+
+**优化请求效率**：
+1. 使用批量请求接口（如果API支持）
+2. 缓存已获取的数据，避免重复请求
+3. 并行请求（注意频率限制）
+
+**数据质量控制**：
+1. 保存原始API响应，便于追溯
+2. 记录API调用日志（时间、参数、结果）
+3. 验证返回数据的完整性和准确性
+
+**遵守使用规范**：
+1. 阅读并遵守API使用条款
+2. 尊重频率限制（通常为每秒1-10次请求）
+3. 引用数据来源（如GBIF数据需引用DOI）
+:::
+
+**扩展记录**：2026-04-18 | 扩展者：Clawd | 目标字数：1500+
 
 ## 第四步：数据质量控制
 

@@ -774,92 +774,808 @@ cat("  - 物种按一定顺序消失（小种先消失，大种后消失）
 
 ### 群落相似性的层级分解
 
-群落间的Bray-Curtis差异可以分解为**周转（turnover）**和**嵌套（nestedness）**两个组分。这个分解对于理解群落差异的生态学机制非常重要。
+群落间的Beta多样性（如Bray-Curtis差异）可以进一步分解为两个生态学上有明确意义的组分：**周转（turnover）**和**嵌套（nestedness）**。这个分解对于理解群落差异的生态学机制非常重要，因为相同的Beta多样性值可能来自完全不同的生态过程。
 
-- **周转**：一个群落有而另一个群落没有的物种（物种替代）
-- **嵌套**：一个群落的物种是另一个群落的子集（物种丧失）
+**周转组分（Turnover component）**：物种替代，即一个群落有而另一个群落没有的物种。周转反映了环境筛选、生态位分化、扩散限制等过程。例如，山地不同海拔带的植物群落，低海拔的热带物种被高海拔的温带物种替代，这就是典型的周转。
 
-vegan的`betadisper()`可以用来检验群落格局：
+**嵌套组分（Nestedness component）**：物种丧失，即一个群落的物种是另一个群落的子集。嵌套反映了栖息地片段化、物种灭绝、选择性定殖等过程。例如，大岛屿的物种组成包含小岛屿的所有物种，小岛屿只是大岛屿的子集。
+
+**为什么要分解Beta多样性？**
+
+假设两对群落的Bray-Curtis差异都是0.6，但：
+- 第一对：群落A有物种1-5，群落B有物种6-10（完全周转，无共有种）
+- 第二对：群落A有物种1-10，群落B只有物种1-5（完全嵌套，B是A的子集）
+
+这两对群落的生态学意义完全不同，但传统的Beta多样性指数无法区分。分解Beta多样性可以揭示这种差异背后的生态过程。
+
+**Baselga框架：Beta多样性的加法分解**
+
+Baselga (2010, *Global Ecology and Biogeography*) 提出了Beta多样性的加法分解框架：
+
+$$\beta_{sor} = \beta_{sim} + \beta_{sne}$$
+
+其中：
+- $\beta_{sor}$：Sørensen差异（总Beta多样性）
+- $\beta_{sim}$：Simpson差异（周转组分）
+- $\beta_{sne}$：嵌套组分
+
+对于Jaccard差异，也有类似的分解：
+
+$$\beta_{jac} = \beta_{jtu} + \beta_{jne}$$
+
+**R实现：使用betapart包分解Beta多样性**
 
 ```{r}
-cat("=== 群落格局的多元方差分析 ===
-")
+library(betapart)
+library(tidyverse)
 
-comm_dist <- vegan::vegdist(spp_matrix, method = "bray")
+cat("=== Beta多样性的层级分解 ===\n")
 
-# 模拟分组变量
+# 使用之前的群落矩阵
+# 转换为presence-absence矩阵（betapart需要）
+comm_pa <- ifelse(comm_matrix > 0, 1, 0)
+
+# 计算Beta多样性的三个组分
+beta_core <- betapart::beta.pair(comm_pa, index.family = "sorensen")
+
+# 提取三个距离矩阵
+beta_sor <- beta_core$beta.sor  # 总Beta多样性（Sørensen）
+beta_sim <- beta_core$beta.sim  # 周转组分（Simpson）
+beta_sne <- beta_core$beta.sne  # 嵌套组分
+
+cat("  Beta多样性分解结果（前5对样点）：\n")
+beta_summary <- tibble(
+  pair = paste0("Plot_", sprintf("%02d", 1:5), " vs Plot_", sprintf("%02d", 2:6)),
+  total_beta = as.numeric(beta_sor)[1:5],
+  turnover = as.numeric(beta_sim)[1:5],
+  nestedness = as.numeric(beta_sne)[1:5]
+) |>
+  mutate(
+    turnover_pct = turnover / total_beta * 100,
+    nestedness_pct = nestedness / total_beta * 100
+  )
+
+print(beta_summary)
+
+cat("\n  生态学解读：\n")
+cat("  - total_beta = turnover + nestedness（加法分解）\n")
+cat("  - turnover_pct高：群落差异主要来自物种替代\n")
+cat("  - nestedness_pct高：群落差异主要来自物种丧失\n")
+
+# 计算整个数据集的平均组分
+mean_total <- mean(as.numeric(beta_sor))
+mean_turnover <- mean(as.numeric(beta_sim))
+mean_nestedness <- mean(as.numeric(beta_sne))
+
+cat("\n  整个数据集的平均Beta多样性组分：\n")
+cat("  - 总Beta多样性：", round(mean_total, 3), "\n")
+cat("  - 周转组分：", round(mean_turnover, 3),
+    "（占", round(mean_turnover/mean_total*100, 1), "%）\n")
+cat("  - 嵌套组分：", round(mean_nestedness, 3),
+    "（占", round(mean_nestedness/mean_total*100, 1), "%）\n")
+```
+
+**可视化Beta多样性组分**
+
+```{r}
+# 将距离矩阵转换为长格式数据框
+beta_long <- tibble(
+  pair_id = 1:length(beta_sor),
+  total_beta = as.numeric(beta_sor),
+  turnover = as.numeric(beta_sim),
+  nestedness = as.numeric(beta_sne)
+) |>
+  pivot_longer(cols = c(turnover, nestedness),
+               names_to = "component",
+               values_to = "value")
+
+# 堆叠柱状图
+p_beta_decomp <- ggplot(beta_long, aes(x = pair_id, y = value, fill = component)) +
+  geom_col(position = "stack", alpha = 0.8) +
+  scale_fill_manual(
+    values = c("turnover" = "steelblue", "nestedness" = "coral"),
+    labels = c("嵌套组分", "周转组分")
+  ) +
+  labs(
+    x = "样点对编号",
+    y = "Beta多样性",
+    fill = "组分",
+    title = "Beta多样性的周转-嵌套分解",
+    subtitle = "每个柱子代表一对样点的Beta多样性"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+print(p_beta_decomp)
+
+# 散点图：周转 vs 嵌套
+beta_scatter <- tibble(
+  turnover = as.numeric(beta_sim),
+  nestedness = as.numeric(beta_sne),
+  total_beta = as.numeric(beta_sor)
+)
+
+p_scatter <- ggplot(beta_scatter, aes(x = turnover, y = nestedness, color = total_beta)) +
+  geom_point(size = 2, alpha = 0.6) +
+  scale_color_viridis_c(name = "总Beta\n多样性") +
+  geom_abline(slope = -1, intercept = seq(0.2, 1, by = 0.2),
+              linetype = "dashed", alpha = 0.3) +
+  labs(
+    x = "周转组分",
+    y = "嵌套组分",
+    title = "Beta多样性组分的权衡关系",
+    subtitle = "虚线表示总Beta多样性的等值线"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+print(p_scatter)
+```
+
+**生态学案例：岛屿生物地理学中的Beta多样性分解**
+
+假设我们研究一个群岛系统，包含5个不同大小的岛屿。我们想知道：岛屿间的物种差异主要来自物种替代（不同岛屿有不同的物种组合）还是物种丧失（小岛屿是大岛屿的子集）？
+
+```{r}
+cat("=== 生态学案例：岛屿系统的Beta多样性分解 ===\n")
+
 set.seed(2027)
-group <- factor(rep(c("A", "B", "C"), length.out = nrow(spp_matrix)))
 
-bd <- vegan::betadisper(comm_dist, group)
-cat("  群落离散度检验（PERMDISP）：
-")
+# 模拟5个岛屿的物种组成
+# 岛屿1（最大）：20个物种
+# 岛屿2-5（逐渐变小）：物种数递减，且倾向于是大岛屿的子集
+island_comm <- matrix(0, nrow = 5, ncol = 25)
+rownames(island_comm) <- paste0("Island_", 1:5)
+colnames(island_comm) <- paste0("Species_", 1:25)
+
+# 岛屿1（最大）：有20个物种
+island_comm[1, 1:20] <- 1
+
+# 岛屿2：有15个物种，其中12个与岛屿1共有，3个独有
+island_comm[2, 1:12] <- 1
+island_comm[2, 21:23] <- 1
+
+# 岛屿3：有12个物种，其中10个与岛屿1共有，2个独有
+island_comm[3, 1:10] <- 1
+island_comm[3, 24:25] <- 1
+
+# 岛屿4：有8个物种，全部是岛屿1的子集（纯嵌套）
+island_comm[4, 1:8] <- 1
+
+# 岛屿5：有6个物种，全部是岛屿1的子集（纯嵌套）
+island_comm[5, 1:6] <- 1
+
+cat("  岛屿物种组成矩阵（前5个物种）：\n")
+print(island_comm[, 1:5])
+
+# 计算Beta多样性分解
+island_beta <- betapart::beta.pair(island_comm, index.family = "sorensen")
+
+# 提取岛屿1与其他岛屿的Beta多样性组分
+island_comparison <- tibble(
+  island_pair = c("Island_1 vs Island_2", "Island_1 vs Island_3",
+                  "Island_1 vs Island_4", "Island_1 vs Island_5"),
+  total_beta = as.numeric(island_beta$beta.sor)[c(1, 2, 3, 4)],
+  turnover = as.numeric(island_beta$beta.sim)[c(1, 2, 3, 4)],
+  nestedness = as.numeric(island_beta$beta.sne)[c(1, 2, 3, 4)]
+) |>
+  mutate(
+    turnover_pct = round(turnover / total_beta * 100, 1),
+    nestedness_pct = round(nestedness / total_beta * 100, 1)
+  )
+
+print(island_comparison)
+
+cat("\n  生态学解读：\n")
+cat("  - Island_4和Island_5的嵌套组分接近100%\n")
+cat("  - 说明小岛屿的物种完全是大岛屿的子集\n")
+cat("  - 符合岛屿生物地理学理论：小岛屿物种数少是因为灭绝率高\n")
+cat("  - Island_2和Island_3有一定周转组分\n")
+cat("  - 说明这些岛屿有部分独有物种，可能因为环境差异或扩散限制\n")
+
+# 可视化岛屿Beta多样性组分
+island_long <- island_comparison |>
+  select(island_pair, turnover, nestedness) |>
+  pivot_longer(cols = c(turnover, nestedness),
+               names_to = "component",
+               values_to = "value")
+
+ggplot(island_long, aes(x = island_pair, y = value, fill = component)) +
+  geom_col(position = "stack", alpha = 0.8) +
+  scale_fill_manual(
+    values = c("turnover" = "steelblue", "nestedness" = "coral"),
+    labels = c("嵌套组分", "周转组分")
+  ) +
+  labs(
+    x = "岛屿对比",
+    y = "Beta多样性",
+    fill = "组分",
+    title = "岛屿系统的Beta多样性分解",
+    subtitle = "小岛屿主要表现为嵌套格局"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    axis.text.x = element_text(angle = 45, hjust = 1),
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+```
+
+**多元方差分析：检验群落格局的组间差异**
+
+除了分解Beta多样性，我们还可以用`betadisper()`检验不同组之间的群落离散度是否有差异。这在比较不同处理、不同生境类型的群落格局时非常有用。
+
+```{r}
+cat("=== 群落格局的多元方差分析（PERMDISP）===\n")
+
+comm_dist <- vegan::vegdist(comm_matrix, method = "bray")
+
+# 模拟分组变量（如不同林分类型）
+set.seed(2027)
+forest_type <- factor(
+  sample(c("纯林", "混交林", "次生林"),
+         nrow(comm_matrix),
+         replace = TRUE)
+)
+
+# betadisper分析
+bd <- vegan::betadisper(comm_dist, forest_type)
+
+cat("  PERMDISP结果摘要：\n")
 print(summary(bd))
 
-cat("
-  生态学解读：
-")
-cat("  - 如果不同组的centroid距离显著不同，说明组间群落组成差异大
-")
-cat("  - 结合聚类分析或排序图，可以可视化群落的空间格局
-")
+cat("\n  方差齐性检验（Permutation test）：\n")
+bd_test <- permutest(bd, permutations = 999)
+print(bd_test)
+
+cat("\n  生态学解读：\n")
+cat("  - 如果p < 0.05，说明不同组的群落离散度显著不同\n")
+cat("  - 离散度大：组内样点的物种组成差异大（异质性高）\n")
+cat("  - 离散度小：组内样点的物种组成相似（同质性高）\n")
+
+# 可视化群落离散度
+bd_scores <- scores(bd)
+bd_df <- as_tibble(bd_scores, rownames = "site_id") |>
+  mutate(group = forest_type)
+
+ggplot(bd_df, aes(x = PCoA1, y = PCoA2, color = group)) +
+  geom_point(size = 3, alpha = 0.7) +
+  stat_ellipse(level = 0.95, linewidth = 1) +
+  labs(
+    x = "PCoA1",
+    y = "PCoA2",
+    color = "林分类型",
+    title = "群落格局的多元方差分析",
+    subtitle = "椭圆表示95%置信区间"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    legend.position = "bottom",
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+cat("\n  图形解读：\n")
+cat("  - 椭圆越大，组内群落异质性越高\n")
+cat("  - 椭圆中心距离远，组间群落差异大\n")
+cat("  - 结合PERMANOVA可以全面评估群落格局\n")
 ```
+
+**Beta多样性分解的应用场景**
+
+1. **保护生物学**：评估栖息地片段化对群落的影响。如果嵌套组分高，说明小片段主要是物种丧失；如果周转组分高，说明不同片段有不同的物种组合，都需要保护。
+
+2. **入侵生态学**：比较入侵前后的群落变化。周转组分增加说明入侵种替代了本地种；嵌套组分增加说明本地种丧失但入侵种未完全替代。
+
+3. **气候变化研究**：沿海拔或纬度梯度的群落变化。周转组分反映物种替代（生态位分化），嵌套组分反映物种丧失（环境筛选）。
+
+4. **恢复生态学**：评估恢复效果。如果恢复后的群落与参照群落的嵌套组分高，说明恢复群落是参照群落的简化版；如果周转组分高，说明恢复群落走向了不同的演替路径。
 
 ### 空间自相关与Moran特征
 
-群落数据通常存在空间自相关——距离近的样点往往更相似。这违反了传统统计检验的独立性假设。Moran特征向量地图（MEMs）可以捕捉不同尺度的空间结构。
+群落数据通常存在空间自相关（Spatial Autocorrelation）——距离近的样点往往更相似。这违反了传统统计检验的独立性假设，会导致假阳性率升高（Type I error）。理解和处理空间自相关是生态学数据分析的重要环节。
+
+**什么是空间自相关？**
+
+空间自相关是指一个变量在空间上的值不是随机分布的，而是呈现某种空间依赖性。Tobler地理学第一定律指出："Everything is related to everything else, but near things are more related than distant things"（万物皆相关，近者更相关）。
+
+在生态学中，空间自相关的来源包括：
+
+1. **环境梯度**：土壤、气候等环境因子在空间上连续变化，导致相邻样点的物种组成相似
+2. **扩散限制**：种子、孢子的扩散距离有限，导致相邻样点的物种组成相似
+3. **历史因素**：过去的干扰事件（如火灾、砍伐）在空间上呈斑块状分布
+4. **生物互作**：竞争、互利共生等生物互作在局部尺度上影响物种分布
+
+**Mantel检验：检测空间自相关的存在**
+
+Mantel检验是检验两个距离矩阵之间相关性的非参数方法。在生态学中，最常用的是检验群落相似性矩阵与地理距离矩阵的相关性。
 
 ```{r}
-cat("=== 空间自相关检验 ===
-")
+library(vegan)
+library(tidyverse)
 
+cat("=== Mantel检验：检测空间自相关 ===\n")
+
+# 使用之前的群落矩阵
 set.seed(2027)
 n <- nrow(comm_matrix)
-coords <- data.frame(
+
+# 生成空间坐标（模拟样点的地理位置）
+coords <- tibble(
+  site_id = rownames(comm_matrix),
   x = runif(n, 0, 100),
   y = runif(n, 0, 100)
 )
 
-geo_d <- dist(coords)
-comm_dist <- vegan::vegdist(spp_matrix, method = "bray")
-mantel_result <- vegan::mantel(comm_dist, geo_d, permutations = 999)
+# 计算地理距离矩阵
+geo_dist <- dist(coords[, c("x", "y")])
 
-cat("  Mantel检验：群落相似性 ~ 地理距离
-")
-cat("  - Mantel r =", round(mantel_result$statistic, 3), "
-")
-cat("  - p =", mantel_result$signif, "
-")
+# 计算群落相似性矩阵（Bray-Curtis距离）
+comm_dist <- vegan::vegdist(comm_matrix, method = "bray")
 
-cat("
-  生态学解读：
-")
-cat("  - 正的Mantel r表示距离衰减规律（距离越远，差异越大）
-")
-cat("  - 如果p < 0.05，说明群落格局存在显著空间结构
-")
-cat("  - 可能原因：环境梯度、扩散限制、历史因素
-")
+# Mantel检验
+mantel_result <- vegan::mantel(comm_dist, geo_dist, method = "pearson", permutations = 999)
+
+cat("  Mantel检验结果：\n")
+cat("  - Mantel r =", round(mantel_result$statistic, 4), "\n")
+cat("  - p值 =", mantel_result$signif, "\n")
+
+cat("\n  生态学解读：\n")
+if (mantel_result$statistic > 0 & mantel_result$signif < 0.05) {
+  cat("  - 显著正相关：存在距离衰减规律\n")
+  cat("  - 地理距离越远，群落相似性越低（差异越大）\n")
+  cat("  - 说明群落格局存在显著的空间结构\n")
+} else if (mantel_result$statistic < 0 & mantel_result$signif < 0.05) {
+  cat("  - 显著负相关：距离越远，群落反而更相似（罕见）\n")
+} else {
+  cat("  - 相关不显著：空间距离不能解释群落格局\n")
+  cat("  - 可能原因：环境因子比空间距离更重要\n")
+}
+
+# 可视化：群落相似性 vs 地理距离
+dist_comparison <- tibble(
+  geo_distance = as.numeric(geo_dist),
+  comm_dissimilarity = as.numeric(comm_dist)
+)
+
+p_mantel <- ggplot(dist_comparison, aes(x = geo_distance, y = comm_dissimilarity)) +
+  geom_point(alpha = 0.3, size = 1.5) +
+  geom_smooth(method = "loess", se = TRUE, color = "steelblue", linewidth = 1) +
+  labs(
+    x = "地理距离",
+    y = "群落差异（Bray-Curtis）",
+    title = "距离衰减关系",
+    subtitle = paste0("Mantel r = ", round(mantel_result$statistic, 3),
+                     ", p = ", round(mantel_result$signif, 3))
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+print(p_mantel)
+```
+
+**偏Mantel检验与变异分解**
+
+偏Mantel检验（Partial Mantel test）可以在控制第三个变量（如环境距离）后，检验两个距离矩阵的相关性。这对于区分"纯空间效应"和"环境驱动的空间格局"非常重要。
+
+```{r}
+cat("=== 偏Mantel检验：分离空间与环境效应 ===\n")
+
+# 模拟环境数据
+set.seed(2027)
+env_data_spatial <- tibble(
+  site_id = rownames(comm_matrix),
+  elevation = coords$y * 10 + rnorm(n, 0, 50),  # 海拔与y坐标相关
+  soil_pH = runif(n, 4.5, 7.5),
+  soil_moisture = runif(n, 0.1, 0.6)
+)
+
+# 计算环境距离矩阵（欧氏距离）
+env_dist <- dist(scale(env_data_spatial[, c("elevation", "soil_pH", "soil_moisture")]))
+
+# 偏Mantel检验：控制环境距离后，群落相似性与地理距离的相关性
+partial_mantel <- vegan::mantel.partial(comm_dist, geo_dist, env_dist,
+                                        method = "pearson", permutations = 999)
+
+cat("  偏Mantel检验结果：\n")
+cat("  - 偏相关系数 r =", round(partial_mantel$statistic, 4), "\n")
+cat("  - p值 =", partial_mantel$signif, "\n")
+
+cat("\n  生态学解读：\n")
+cat("  - 简单Mantel r =", round(mantel_result$statistic, 4), "\n")
+cat("  - 偏Mantel r =", round(partial_mantel$statistic, 4), "\n")
+if (abs(partial_mantel$statistic) < abs(mantel_result$statistic)) {
+  cat("  - 偏相关系数降低，说明部分空间格局由环境梯度驱动\n")
+  cat("  - 如果偏相关仍显著，说明存在纯空间过程（如扩散限制）\n")
+} else {
+  cat("  - 偏相关系数未降低，说明空间格局主要由纯空间过程驱动\n")
+}
+```
+
+**空间自相关分析的注意事项**
+
+1. **空间尺度的选择**：空间分析的结果依赖于研究的空间尺度。不同尺度可能揭示不同的生态过程。
+
+2. **因果推断的局限**：空间自相关分析只能揭示空间格局，不能直接推断因果关系。纯空间效应可能来自扩散限制，也可能来自未测量的空间结构化环境因子。
+
+3. **与其他方法结合**：空间分析应该与实验、观测、模型相结合，才能真正理解生态过程。
+
+4. **多重检验校正**：进行多个Mantel检验时需要注意多重检验问题，可以使用Bonferroni校正。
 ```
 
 ### 真实研究案例：桂西南喀斯特土壤孔隙与植物多样性
 
-以你的研究为例，马尾松混交林的土壤孔隙特征如何影响林下植物多样性？
+以桂西南喀斯特地区马尾松混交林为例，展示如何将本章学到的生态学数据分析方法应用到真实研究中。研究问题是：土壤孔隙特征如何影响林下植物多样性的空间格局？
 
-**数据**：
+**研究背景**：喀斯特地区土壤浅薄、石砾含量高，土壤孔隙结构对水分保持和养分循环至关重要。马尾松混交林是该地区重要的人工林类型，但不同林分的土壤孔隙特征差异很大。我们假设：土壤孔隙度越高、孔隙结构越优（毛管孔隙与非毛管孔隙比例合理），林下植物多样性越高。
 
-- 植物群落：15个30m×30m样地，每个样地调查林下草本层的物种组成
-- 土壤孔隙：每个样地5个采样点，测定容重、总孔隙度、毛管孔隙度、非毛管孔隙度
-- 土壤理化：有机碳、全氮、pH、全磷
+**数据采集**：
 
-**分析思路**：
+- **植物群落**：15个30m×30m样地，每个样地调查林下草本层的物种组成和多度
+- **土壤孔隙**：每个样地5个采样点，测定容重、总孔隙度、毛管孔隙度、非毛管孔隙度
+- **土壤理化**：有机碳、全氮、pH、全磷
+- **空间坐标**：每个样地的GPS坐标
 
-1. 土壤孔隙数据的预处理：缺失值填补、异常值检验
-2. 物种多度矩阵：Hellinger转化
-3. DCA排序：探索植物群落格局
-4. envfit叠加土壤孔隙因子
-5. RDA：量化土壤孔隙因子对群落变异的解释率
-6. Variation Partitioning：分解土壤因子和空间因子的贡献
+**模拟数据生成**
 
-关键问题是：土壤孔隙特征能否解释林下植物多样性的空间格局？如果能，哪些孔隙指标最重要？
+为了演示完整的分析流程，我们模拟一套符合喀斯特地区特征的数据：
+
+```{r}
+cat("=== 案例研究：土壤孔隙与植物多样性 ===\n")
+
+set.seed(2027)
+n_plots <- 15
+n_species <- 25
+
+# 1. 模拟空间坐标（15个样地在100km×100km区域内）
+spatial_coords <- tibble(
+  plot_id = paste0("Plot_", sprintf("%02d", 1:n_plots)),
+  x = runif(n_plots, 0, 100),
+  y = runif(n_plots, 0, 100)
+)
+
+# 2. 模拟土壤孔隙数据（基于真实喀斯特土壤特征）
+soil_data <- tibble(
+  plot_id = spatial_coords$plot_id,
+
+  # 容重（g/cm³）：喀斯特土壤容重通常较高（1.2-1.6）
+  bulk_density = rnorm(n_plots, mean = 1.35, sd = 0.15),
+
+  # 总孔隙度（%）：喀斯特土壤孔隙度中等（40-60%）
+  total_porosity = rnorm(n_plots, mean = 50, sd = 8),
+
+  # 毛管孔隙度（%）：保水孔隙
+  capillary_porosity = rnorm(n_plots, mean = 35, sd = 6),
+
+  # 非毛管孔隙度（%）：通气孔隙
+  non_capillary_porosity = rnorm(n_plots, mean = 15, sd = 4),
+
+  # 土壤有机碳（g/kg）
+  SOC = rnorm(n_plots, mean = 25, sd = 8),
+
+  # 全氮（g/kg）
+  TN = rnorm(n_plots, mean = 2.0, sd = 0.5),
+
+  # pH
+  pH = rnorm(n_plots, mean = 6.5, sd = 0.8),
+
+  # 全磷（g/kg）
+  TP = rnorm(n_plots, mean = 0.6, sd = 0.2)
+) |>
+  mutate(
+    # 确保孔隙度的逻辑关系：总孔隙度 = 毛管 + 非毛管
+    total_porosity = capillary_porosity + non_capillary_porosity,
+
+    # 确保数值合理
+    across(where(is.numeric), ~ pmax(.x, 0))
+  )
+
+cat("  土壤孔隙数据（前5个样地）：\n")
+print(soil_data[1:5, ])
+
+# 3. 模拟植物群落数据（物种多度受土壤孔隙影响）
+# 假设：总孔隙度越高，物种多样性越高
+comm_data <- matrix(0, nrow = n_plots, ncol = n_species)
+rownames(comm_data) <- soil_data$plot_id
+colnames(comm_data) <- paste0("Species_", sprintf("%02d", 1:n_species))
+
+for (i in 1:n_plots) {
+  # 物种丰富度受总孔隙度正向影响
+  richness_potential <- soil_data$total_porosity[i] / 10
+
+  # 每个物种的出现概率
+  for (j in 1:n_species) {
+    # 不同物种对土壤孔隙的偏好不同
+    species_optimum <- runif(1, 40, 60)
+    species_tolerance <- runif(1, 5, 15)
+
+    # 高斯响应曲线
+    prob <- exp(-((soil_data$total_porosity[i] - species_optimum)^2) /
+                (2 * species_tolerance^2))
+
+    # 生成多度
+    if (runif(1) < prob * 0.6) {
+      comm_data[i, j] <- rpois(1, lambda = richness_potential * prob * 5)
+    }
+  }
+}
+
+cat("\n  植物群落矩阵（前5个样地，前5个物种）：\n")
+print(comm_data[1:5, 1:5])
+
+cat("\n  每个样地的物种丰富度：\n")
+richness <- rowSums(comm_data > 0)
+print(richness)
+```
+
+**步骤1：数据预处理与探索性分析**
+
+```{r}
+cat("=== 步骤1：数据预处理 ===\n")
+
+# 检查缺失值
+cat("  土壤数据缺失值检查：\n")
+cat("  - 缺失值数量：", sum(is.na(soil_data)), "\n")
+
+# 检查异常值（使用箱线图法）
+soil_numeric <- soil_data |> select(where(is.numeric))
+outliers <- sapply(soil_numeric, function(x) {
+  Q1 <- quantile(x, 0.25, na.rm = TRUE)
+  Q3 <- quantile(x, 0.75, na.rm = TRUE)
+  IQR <- Q3 - Q1
+  sum(x < (Q1 - 1.5 * IQR) | x > (Q3 + 1.5 * IQR), na.rm = TRUE)
+})
+
+cat("\n  异常值检测（1.5×IQR法则）：\n")
+print(outliers)
+
+# Hellinger转化（适合物种数据的RDA分析）
+comm_hellinger <- vegan::decostand(comm_data, method = "hellinger")
+
+cat("\n  Hellinger转化完成\n")
+cat("  - 原始矩阵：", nrow(comm_data), "样地 ×", ncol(comm_data), "物种\n")
+cat("  - 转化后矩阵：", nrow(comm_hellinger), "样地 ×", ncol(comm_hellinger), "物种\n")
+```
+
+**步骤2：Alpha多样性与土壤孔隙的关系**
+
+```{r}
+cat("=== 步骤2：Alpha多样性分析 ===\n")
+
+# 计算Alpha多样性指数
+alpha_div_case <- tibble(
+  plot_id = rownames(comm_data),
+  richness = vegan::specnumber(comm_data),
+  shannon = vegan::diversity(comm_data, index = "shannon"),
+  simpson = vegan::diversity(comm_data, index = "simpson")
+)
+
+# 合并土壤数据
+analysis_data <- alpha_div_case |>
+  left_join(soil_data, by = "plot_id")
+
+cat("  Alpha多样性与土壤孔隙数据：\n")
+print(analysis_data[1:5, c("plot_id", "richness", "shannon", "total_porosity")])
+
+# 相关性分析：物种丰富度 vs 总孔隙度
+cor_test <- cor.test(analysis_data$richness, analysis_data$total_porosity)
+
+cat("\n  物种丰富度 vs 总孔隙度：\n")
+cat("  - Pearson r =", round(cor_test$estimate, 3), "\n")
+cat("  - p值 =", round(cor_test$p.value, 4), "\n")
+
+# 可视化
+p_alpha_porosity <- ggplot(analysis_data,
+                           aes(x = total_porosity, y = richness)) +
+  geom_point(size = 3, alpha = 0.7, color = "steelblue") +
+  geom_smooth(method = "lm", se = TRUE, color = "coral", linewidth = 1) +
+  labs(
+    x = "总孔隙度（%）",
+    y = "物种丰富度",
+    title = "土壤孔隙度与植物多样性的关系",
+    subtitle = paste0("r = ", round(cor_test$estimate, 3),
+                     ", p = ", round(cor_test$p.value, 3))
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+print(p_alpha_porosity)
+
+cat("\n  生态学解读：\n")
+if (cor_test$p.value < 0.05) {
+  cat("  - 总孔隙度与物种丰富度显著正相关\n")
+  cat("  - 土壤孔隙度越高，林下植物多样性越高\n")
+  cat("  - 可能机制：孔隙度高→水分保持好→生境异质性高→物种共存\n")
+} else {
+  cat("  - 相关性不显著，可能需要考虑其他因子\n")
+}
+```
+
+**步骤3：DCA排序探索群落格局**
+
+```{r}
+cat("=== 步骤3：DCA排序分析 ===\n")
+
+# DCA排序
+dca_case <- vegan::decorana(comm_data)
+
+cat("  DCA排序结果：\n")
+print(summary(dca_case))
+
+# 提取样地得分
+dca_scores_case <- vegan::scores(dca_case, display = "sites", choices = 1:2) |>
+  as_tibble(rownames = "plot_id") |>
+  left_join(soil_data, by = "plot_id")
+
+# 可视化DCA排序图
+p_dca_case <- ggplot(dca_scores_case, aes(x = DCA1, y = DCA2,
+                                          color = total_porosity)) +
+  geom_point(size = 4, alpha = 0.8) +
+  scale_color_viridis_c(name = "总孔隙度\n（%）") +
+  geom_text_repel(aes(label = plot_id), size = 2.5, max.overlaps = 15) +
+  labs(
+    title = "DCA排序图：植物群落格局",
+    subtitle = "颜色表示土壤总孔隙度",
+    x = "DCA1",
+    y = "DCA2"
+  ) +
+  theme_minimal(base_size = 12) +
+  theme(
+    plot.title = element_text(face = "bold", hjust = 0.5),
+    plot.subtitle = element_text(hjust = 0.5)
+  )
+
+print(p_dca_case)
+
+cat("\n  生态学解读：\n")
+cat("  - DCA1轴代表主要的群落梯度\n")
+cat("  - 颜色梯度显示土壤孔隙度与群落格局的关联\n")
+cat("  - 如果颜色呈现明显梯度，说明土壤孔隙度是重要驱动因子\n")
+```
+
+**步骤4：envfit叠加土壤因子**
+
+```{r}
+cat("=== 步骤4：envfit环境因子叠加 ===\n")
+
+# 选择土壤孔隙相关变量
+env_vars <- soil_data |>
+  select(bulk_density, total_porosity, capillary_porosity,
+         non_capillary_porosity, SOC, pH)
+
+# envfit分析
+env_fit_case <- vegan::envfit(dca_case, env_vars, choices = 1:2,
+                              permutations = 999)
+
+cat("  envfit结果：\n")
+print(env_fit_case)
+
+cat("\n  显著性环境因子（p < 0.05）：\n")
+sig_vars <- env_fit_case$vectors$pvals < 0.05
+cat("  -", paste(names(sig_vars)[sig_vars], collapse = ", "), "\n")
+
+cat("\n  生态学解读：\n")
+cat("  - r²值表示该因子对排序图的拟合度\n")
+cat("  - p < 0.05表示该因子显著关联到群落格局\n")
+cat("  - 箭头方向表示该因子的梯度方向\n")
+```
+
+**步骤5：RDA约束排序**
+
+```{r}
+cat("=== 步骤5：RDA约束排序 ===\n")
+
+# RDA分析（使用Hellinger转化后的群落数据）
+rda_case <- vegan::rda(comm_hellinger ~ total_porosity + capillary_porosity +
+                       non_capillary_porosity + SOC + pH,
+                       data = soil_data)
+
+cat("  RDA结果摘要：\n")
+print(summary(rda_case))
+
+# 提取关键统计量
+rda_summary <- summary(rda_case)
+constrained_var <- rda_summary$cont$importance[2, 1]  # 约束轴解释的变异比例
+
+cat("\n  关键统计量：\n")
+cat("  - 土壤因子解释的变异比例：", round(constrained_var * 100, 2), "%\n")
+
+# 环境因子的显著性检验
+anova_rda <- anova(rda_case, by = "terms", permutations = 999)
+
+cat("\n  各土壤因子的显著性检验：\n")
+print(anova_rda)
+
+cat("\n  生态学解读：\n")
+cat("  - 土壤因子共解释了", round(constrained_var * 100, 1),
+    "%的群落变异\n")
+cat("  - 显著因子（p < 0.05）是驱动群落格局的关键土壤属性\n")
+```
+
+**步骤6：变异分解**
+
+```{r}
+cat("=== 步骤6：变异分解（Variation Partitioning）===\n")
+
+# 准备空间变量（PCNM）
+# 注意：完整的PCNM分析需要adespatial包，这里简化为坐标的多项式
+spatial_vars <- spatial_coords |>
+  mutate(
+    x2 = x^2,
+    y2 = y^2,
+    xy = x * y
+  ) |>
+  select(x, y, x2, y2, xy)
+
+# 变异分解：土壤因子 vs 空间因子
+varpart_result <- vegan::varpart(
+  comm_hellinger,
+  ~ total_porosity + capillary_porosity + SOC + pH,  # 土壤因子
+  ~ x + y + x2 + y2 + xy,  # 空间因子
+  data = cbind(soil_data, spatial_vars)
+)
+
+cat("  变异分解结果：\n")
+print(varpart_result)
+
+cat("\n  生态学解读：\n")
+cat("  - [a]：纯土壤因子解释的变异\n")
+cat("  - [b]：土壤与空间共同解释的变异\n")
+cat("  - [c]：纯空间因子解释的变异\n")
+cat("  - [d]：残余变异（未解释）\n")
+
+# 可视化变异分解
+plot(varpart_result, digits = 2, bg = c("steelblue", "coral"))
+title("变异分解：土壤 vs 空间")
+```
+
+**研究结论与生态学意义**
+
+```{r}
+cat("=== 研究结论 ===\n")
+
+cat("\n  主要发现：\n")
+cat("  1. 土壤总孔隙度与林下植物多样性显著正相关\n")
+cat("  2. 土壤孔隙因子解释了约", round(constrained_var * 100, 1),
+    "%的群落变异\n")
+cat("  3. 毛管孔隙度和非毛管孔隙度对群落格局有不同影响\n")
+cat("  4. 空间因子也有一定贡献，说明扩散限制或未测量的空间结构化因子存在\n")
+
+cat("\n  生态学意义：\n")
+cat("  - 喀斯特地区土壤孔隙结构是林下植物多样性的重要驱动因子\n")
+cat("  - 改善土壤孔隙度（如增加有机质、减少践踏）可能提高植物多样性\n")
+cat("  - 马尾松混交林经营应关注土壤孔隙保护\n")
+
+cat("\n  研究局限与展望：\n")
+cat("  - 样本量较小（15个样地），需要更大尺度验证\n")
+cat("  - 未考虑林冠结构、微地形等其他因子\n")
+cat("  - 因果关系需要实验验证（如土壤改良实验）\n")
+```
+
+**完整分析流程总结**
+
+这个案例展示了生态学数据分析的完整流程：
+
+1. **数据准备**：清洗、转化、标准化
+2. **探索性分析**：Alpha多样性、相关性分析
+3. **间接梯度分析**：DCA排序揭示群落格局
+4. **环境因子叠加**：envfit识别关键驱动因子
+5. **直接梯度分析**：RDA量化解释力
+6. **变异分解**：区分土壤、空间、残余变异
+
+每一步都有明确的生态学问题和统计方法，最终回答"土壤孔隙如何影响植物多样性"这个核心问题。这套流程可以推广到其他生态学研究中。
 

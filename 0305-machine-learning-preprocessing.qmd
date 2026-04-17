@@ -33,7 +33,7 @@ R实操：
 train_min <- min(train_data$organic_matter)
 train_max <- max(train_data$organic_matter)
 train_norm <- (train_data$organic_matter - train_min) / (train_max - train_min)
-```
+```r
 
 ### 1.3 Z-score标准化
 
@@ -48,6 +48,40 @@ $$x_{standardized} = \frac{x - \bar{x}}{s}$$
 train_z <- scale(train_data$organic_matter)
 # scale()默认就是Z-score：(x-mean)/sd
 ```
+
+
+
+### 1.3.1 Python sklearn 版本：标准化 vs 归一化
+
+对应的 R 版本见上方。sklearn 提供了统一的 Scaler 接口：
+
+```python
+#| label: ml-scaling-sklearn
+#| fig-cap: "sklearn 标准化与归一化对比"
+
+from sklearn.preprocessing import StandardScaler, MinMaxScaler
+import numpy as np
+
+# X: features matrix (ph, moisture, temperature, organic_matter)
+X = df[['ph', 'moisture', 'temperature', 'organic_matter']].values
+
+# Standardization (Z-score): mean=0, std=1
+scaler_std = StandardScaler()
+X_std = scaler_std.fit_transform(X)
+
+# Min-Max normalization: range [0,1]
+scaler_mm = MinMaxScaler()
+X_mm = scaler_mm.fit_transform(X)
+
+print(f"Standardized mean: {X_std.mean(axis=0).round(4)}")
+print(f"Standardized std: {X_std.std(axis=0).round(4)}")
+```
+
+**sklearn tips**:
+- `StandardScaler`: fit on train only, transform both train and test
+- `MinMaxScaler`: same principle, maps to [0,1]
+- `RobustScaler`: uses median/IQR, robust to outliers
+
 
 ### 1.4 何时用哪个
 
@@ -69,7 +103,7 @@ all_min <- min(c(train_data$x, test_data$x))
 all_max <- max(c(train_data$x, test_data$x))
 train_norm <- (train_data$x - all_min) / (all_max - all_min)
 test_norm <- (test_data$x - all_min) / (all_max - all_min)
-```
+```r
 
 这样做的问题：你用测试集的信息（它的min/max）来预处理训练集。这叫**数据泄露**——测试集"偷看"了训练集的数据。
 
@@ -94,7 +128,7 @@ test_scaled <- predict(preProc, test_data[, features])
 ```r
 # 均值填充
 train_data$soil_moisture[is.na(train_data$soil_moisture)] <- mean(train_data$soil_moisture, na.rm = TRUE)
-```
+```r
 
 但这样做有两个问题：
 1. **扭曲分布**：所有缺失值都填成同一个值，方差被低估
@@ -124,6 +158,39 @@ KNNImpute的优点：
 
 **k怎么选**：k太小容易过拟合（噪声影响大），k太大会平滑掉局部结构。通常k=5到k=10是常用值，可以用交叉验证选最优k。
 
+
+
+### 2.2.1 Python sklearn 版本：缺失值处理
+
+对应的 R 版本见上方。sklearn 提供了灵活的插补方法：
+
+```python
+#| label: ml-imputation-sklearn
+#| fig-cap: "sklearn 缺失值处理对比"
+
+import numpy as np
+import pandas as pd
+from sklearn.impute import SimpleImputer, KNNImputer
+
+# Load data (assumes df has columns: ph, moisture, temperature)
+# df = pd.read_csv("data/processed/soil_data.csv")
+
+# Method 1: Mean imputation
+imputer_mean = SimpleImputer(strategy='mean')
+X_imputed_mean = imputer_mean.fit_transform(df[['ph', 'moisture', 'temperature']])
+
+# Method 2: KNN imputation (more accurate but slower)
+imputer_knn = KNNImputer(n_neighbors=5)
+X_imputed_knn = imputer_knn.fit_transform(df[['ph', 'moisture', 'temperature']])
+print(f"Missing values after KNN imputation: {np.isnan(X_imputed_knn).sum()}")
+```
+
+**sklearn tips**:
+- `SimpleImputer`: supports mean, median, most_frequent, constant
+- `KNNImputer`: uses Euclidean distance by default, data should be numeric
+- Always fit imputer on train only, then transform test
+
+
 ### 2.3 多重插补（MICE）
 
 有时候缺失比例较高（5-20%），或者缺失机制是MAR（ Missing at Random，缺失与观测值有关），这时候需要更复杂的方法。
@@ -141,7 +208,7 @@ imp <- mice(train_data, m = 3, method = 'pmm', seed = 123)
 # 'cart' = 分类回归树，适合混合类型数据
 train_complete <- complete(imp)
 # 每个完整数据集分别分析，再pool结果
-```
+```r
 
 生态学场景示例：野外观测中，某些样点的土壤含水量因传感器故障缺失。这类数据通常与海拔、植被盖度、降雨量有关，可以用MICE有效插补。
 
@@ -203,7 +270,7 @@ library(pROC)
 roc_obj <- roc(test_labels, pred_probs)
 plot(roc_obj)
 auc(roc_obj)
-```
+```r
 
 ### 3.3 下采样与上采样
 
@@ -225,7 +292,7 @@ train_balanced <- SMOTE(class ~ ., data = train_data,
                         k = 5,                # K近邻数
                         perc.over = 100,     # 少数类翻倍（100%增加）
                         perc.under = 200)    # 多数类保留2倍少数类
-```
+```r
 
 SMOTE的变种很多：
 - **ADASYN**：自适应生成，聚焦于更难学习的少数类样本
@@ -233,6 +300,38 @@ SMOTE的变种很多：
 - **SMOTE-NC**：处理有分类变量的数据
 
 **实战经验**：SMOTE通常比下采样效果好，但不是万能的。如果多数类样本本身就很少（<500），下采样可能会严重丢失信息。两种方法都可以试，用交叉验证比较。
+
+
+
+### 3.3.1 Python sklearn 版本：编码分类变量
+
+对应的 R 版本见上方。sklearn 的编码器比 R 更灵活：
+
+```python
+#| label: ml-encoding-sklearn
+#| fig-cap: "sklearn 分类变量编码"
+
+from sklearn.preprocessing import OneHotEncoder, LabelEncoder
+
+# Suppose forest_type column has values: broadleaf, conifer, mixed
+# df = pd.read_csv("data/forest_survey.csv")
+
+# Method 1: One-hot encoding (for unordered categories like forest type)
+encoder = OneHotEncoder(sparse_output=False, handle_unknown='ignore')
+X_onehot = encoder.fit_transform(df[['forest_type']])
+print(f"One-hot shape: {X_onehot.shape}")
+
+# Method 2: Label encoding (for ordered categories like quality grade)
+le = LabelEncoder()
+y_encoded = le.fit_transform(df['quality_grade'])
+print(f"Label mapping: {dict(zip(le.classes_, range(len(le.classes_))))}")
+```
+
+**sklearn tips**:
+- `OneHotEncoder`: handle_unknown='ignore' for categories in test not seen in train
+- `LabelEncoder`: only for target variable, not features
+- For ordered categories, use `OrdinalEncoder` with categories=['low','medium','high']
+
 
 ### 3.4 代价敏感学习
 
@@ -255,7 +354,7 @@ model <- train(class ~ ., data = train_data,
                preProcess = c("knnImpute", "center", "scale"),
                trControl = ctrl,
                metric = "ROC")
-```
+```r
 
 ### 3.5 生态学案例：濒危物种分布预测
 
@@ -321,12 +420,43 @@ model <- train(SOC ~ ., data = train_data,
                trControl = ctrl)
 print(model)
 # 输出：各折的RMSE/R-squared，以及平均值
-```
+```r
 
 **5折 vs 10折**：
 - 10折更稳定（更多训练数据每次），但计算成本高
 - 5折在大数据集（n>1000）上足够好用
 - 小样本（n<100）建议用10折甚至留一法
+
+
+
+### 4.2.1 Python sklearn 版本：训练/测试划分
+
+对应的 R 版本见上方。sklearn 的 `train_test_split` 简洁强大：
+
+```python
+#| label: ml-split-sklearn
+#| fig-cap: "sklearn 数据集划分"
+
+from sklearn.model_selection import train_test_split
+
+X = df[['ph', 'moisture', 'temperature', 'organic_matter']].values
+y = df['biomass'].values
+
+# Split: 80% train, 20% test, stratified to preserve class ratio
+X_train, X_test, y_train, y_test = train_test_split(
+    X, y,
+    test_size=0.2,
+    random_state=42,        # reproducibility
+    stratify=df['forest_type']  # stratified sampling
+)
+print(f"Train: {X_train.shape[0]} samples, Test: {X_test.shape[0]} samples")
+```
+
+**sklearn tips**:
+- `stratify`: essential for imbalanced classification
+- `random_state`: set for reproducibility
+- For time series: use TimeSeriesSplit, never random split
+
 
 ### 4.3 分层K折
 
@@ -354,7 +484,7 @@ model <- train(SOC ~ ., data = train_data,
                method = "lm",
                trControl = ctrl)
 # 适合小样本场景（n < 30）
-```
+```r
 
 优点：每次几乎用了全部数据训练，结果最接近真实泛化能力。
 缺点：计算成本极高（n次训练），且结果方差大。
@@ -407,7 +537,7 @@ ctrl <- trainControl(method = "cv", number = 5,
 model <- train(SOC ~ ., data = train_data,
                method = "rf",
                trControl = ctrl)
-```
+```r
 
 ## 5 特征选择实战
 
@@ -445,7 +575,7 @@ correlations <- cor(train_features, train_labels)
 selected <- rownames(as.data.frame(correlations))[
   abs(correlations[,1]) > 0.1
 ]
-```
+```r
 
 过滤法简单快速，适合作为初步筛选，但要注意：**相关低不等于没作用**——在多元模型中与其他特征组合后可能很重要。
 
@@ -502,7 +632,7 @@ plot(lasso_model)
 best_lambda <- lasso_model$lambda.min
 coef(lasso_model, s = best_lambda)
 # 系数为0的特征就是不重要的
-```
+```r
 
 Lasso特别适合**高维数据**（特征数>样本数），如基因组学、转录组、遥感数据。在生态学中，当你有几十个环境因子时，Lasso可以帮你筛选最重要的几个。
 
@@ -584,7 +714,7 @@ colMeans(is.na(train_data)) * 100  # 各变量缺失比例
 ggplot(train_data, aes(x = SOC)) + 
   geom_histogram(bins = 20) +
   theme_minimal()
-```
+```r
 
 **Step 2：处理缺失值**
 ```r
@@ -605,7 +735,7 @@ train_scaled[, num_idx] <- predict(preProc, train_imputed[, num_idx])
 # 方差过滤
 nzv <- nearZeroVar(train_scaled, saveMetrics = TRUE)
 features_to_use <- rownames(nzv)[!nzv$nzv]
-```
+```r
 
 **Step 4：处理不平衡（假设某些SOC级别样本少）**
 ```r
@@ -630,7 +760,70 @@ model <- train(SOC_class ~ ., data = train_balanced,
 # 最终在独立测试集上评估
 pred <- predict(model, test_scaled)
 confusionMatrix(pred, test_scaled$SOC_class)
+```r
+
+
+
+### 7.1.1 Python sklearn 版本：Pipeline 完整示例
+
+对应的 R 版本见上方。sklearn Pipeline 一条命令搞定所有预处理：
+
+```python
+#| label: ml-pipeline-sklearn
+#| fig-cap: "sklearn Pipeline 完整示例"
+
+from sklearn.pipeline import Pipeline
+from sklearn.preprocessing import StandardScaler, OneHotEncoder
+from sklearn.compose import ColumnTransformer
+from sklearn.impute import SimpleImputer
+from sklearn.ensemble import RandomForestRegressor
+from sklearn.model_selection import cross_val_score
+
+# Define feature groups
+numeric_features = ['ph', 'moisture', 'temperature', 'organic_matter']
+categorical_features = ['forest_type', 'soil_type']
+
+# Numeric transformer: impute then scale
+numeric_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='median')),
+    ('scaler', StandardScaler())
+])
+
+# Categorical transformer: impute then one-hot
+categorical_transformer = Pipeline(steps=[
+    ('imputer', SimpleImputer(strategy='most_frequent')),
+    ('onehot', OneHotEncoder(handle_unknown='ignore'))
+])
+
+# Combine preprocessors
+preprocessor = ColumnTransformer(
+    transformers=[
+        ('num', numeric_transformer, numeric_features),
+        ('cat', categorical_transformer, categorical_features)
+    ])
+
+# Full pipeline: preprocess + random forest
+pipeline = Pipeline(steps=[
+    ('preprocessor', preprocessor),
+    ('regressor', RandomForestRegressor(n_estimators=100, random_state=42))
+])
+
+# Train (one command does everything)
+pipeline.fit(X_train, y_train)
+score = pipeline.score(X_test, y_test)
+print(f"Model R2: {score:.4f}")
+
+# Cross-validation
+cv_scores = cross_val_score(pipeline, X_train, y_train, cv=5, scoring='r2')
+print(f"CV R2 (mean+/-std): {cv_scores.mean():.4f} +/- {cv_scores.std():.4f}")
 ```
+
+**Pipeline advantages**:
+- **No data leakage**: all params fit on train only
+- **Clean code**: one object for preprocess + model
+- **Easy tuning**: GridSearchCV can tune preprocess + model together
+- **Production ready**: save with joblib, loads and runs same preprocessing
+
 
 ### 7.2 常见预处理Pipeline组合
 

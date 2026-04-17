@@ -928,43 +928,733 @@ p_pie + p_bar
 
 ### 自定义主题
 
+ggplot2 提供了多个内置主题（`theme_gray()`、`theme_bw()`、`theme_minimal()` 等），但科研论文通常需要更精细的控制。自定义主题可以确保所有图表风格统一，符合期刊要求。
+
+**为什么需要自定义主题？**
+
+1. **期刊要求**：不同期刊对图表格式有不同要求（字体大小、网格线、背景色等）
+2. **风格统一**：论文中所有图表应保持一致的视觉风格
+3. **可复用性**：定义一次主题，应用到所有图表，避免重复代码
+4. **品牌识别**：实验室或课题组可以建立统一的视觉识别系统
+
+**ggplot2 主题系统的层级结构**
+
+ggplot2 的主题系统采用继承机制，可以基于现有主题进行修改：
+
+```
+theme_gray()（默认）
+  ├─ theme_bw()（黑白主题）
+  ├─ theme_minimal()（极简主题）
+  ├─ theme_classic()（经典主题，无网格线）
+  └─ theme_void()（空白主题）
+```
+
+**创建自定义主题的步骤**
+
 ```{r}
-theme_paper <- function(base_size = 12) {
+cat("=== 自定义主题示例 ===\n")
+
+# 步骤1：基于现有主题创建
+theme_paper <- function(base_size = 12, base_family = "") {
+  theme_bw(base_size = base_size, base_family = base_family) +
+  theme(
+    # 网格线设置
+    panel.grid.minor = element_blank(),  # 移除次要网格线
+    panel.grid.major = element_line(color = "grey92", linewidth = 0.3),  # 主网格线浅灰色
+
+    # 背景设置
+    panel.background = element_rect(fill = "white", color = NA),
+    plot.background = element_rect(fill = "white", color = NA),
+
+    # 分面标签设置
+    strip.background = element_rect(fill = "grey95", color = NA),
+    strip.text = element_text(face = "bold", size = base_size),
+
+    # 图例设置
+    legend.background = element_rect(fill = "white", color = NA),
+    legend.key = element_rect(fill = "white", color = NA),
+    legend.position = "right",
+    legend.title = element_text(face = "bold", size = base_size),
+    legend.text = element_text(size = base_size - 1),
+
+    # 标题和轴标签设置
+    plot.title = element_text(face = "bold", size = base_size + 2, hjust = 0),
+    plot.subtitle = element_text(size = base_size, hjust = 0, color = "grey30"),
+    axis.title = element_text(size = base_size, face = "bold"),
+    axis.text = element_text(size = base_size - 1, color = "black"),
+
+    # 边距设置
+    plot.margin = margin(t = 10, r = 10, b = 10, l = 10, unit = "pt")
+  )
+}
+
+cat("  自定义主题已创建\n")
+```
+
+**对比不同主题的效果**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.8
+
+p_base <- ggplot(ecology, aes(x = soil_ph, y = species_richness, color = land_use)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "土壤 pH", y = "物种丰富度", color = "土地利用")
+
+p1 <- p_base + theme_gray() + labs(title = "theme_gray()（默认）")
+p2 <- p_base + theme_bw() + labs(title = "theme_bw()（黑白）")
+p3 <- p_base + theme_minimal() + labs(title = "theme_minimal()（极简）")
+p4 <- p_base + theme_paper() + labs(title = "theme_paper()（自定义）")
+
+(p1 + p2) / (p3 + p4)
+```
+
+**主题元素详解**
+
+ggplot2 主题由四类元素组成：
+
+| 元素类型 | 函数 | 用途 | 示例 |
+|:--------|:-----|:-----|:-----|
+| 文本 | `element_text()` | 标题、轴标签、图例文字 | `element_text(size = 12, face = "bold")` |
+| 线条 | `element_line()` | 网格线、轴线、边框 | `element_line(color = "grey", linewidth = 0.5)` |
+| 矩形 | `element_rect()` | 背景、图例框、分面标签 | `element_rect(fill = "white", color = NA)` |
+| 空白 | `element_blank()` | 移除元素 | `element_blank()` |
+
+**常用主题参数速查表**
+
+```{r}
+cat("=== 主题参数速查 ===\n")
+
+theme_params <- tibble(
+  类别 = c("标题", "标题", "轴", "轴", "图例", "图例", "网格", "网格", "背景", "分面"),
+  参数 = c("plot.title", "plot.subtitle", "axis.title", "axis.text",
+          "legend.title", "legend.text", "panel.grid.major", "panel.grid.minor",
+          "panel.background", "strip.background"),
+  说明 = c("主标题", "副标题", "轴标签", "轴刻度文字",
+          "图例标题", "图例文字", "主网格线", "次网格线",
+          "面板背景", "分面标签背景")
+)
+
+print(theme_params)
+```
+
+**创建期刊特定主题**
+
+不同期刊对图表格式有不同要求。以下是几个常见期刊的主题示例：
+
+```{r}
+# Nature 风格主题
+theme_nature <- function(base_size = 8) {
+  theme_classic(base_size = base_size) +
+  theme(
+    axis.line = element_line(linewidth = 0.5, color = "black"),
+    axis.ticks = element_line(linewidth = 0.5, color = "black"),
+    axis.text = element_text(size = base_size, color = "black"),
+    axis.title = element_text(size = base_size, face = "bold"),
+    legend.key.size = unit(0.3, "cm"),
+    legend.text = element_text(size = base_size - 1),
+    plot.title = element_text(size = base_size + 1, face = "bold")
+  )
+}
+
+# Science 风格主题
+theme_science <- function(base_size = 9) {
   theme_bw(base_size = base_size) +
   theme(
+    panel.border = element_rect(linewidth = 0.8, color = "black"),
+    panel.grid = element_blank(),
+    axis.text = element_text(size = base_size, color = "black"),
+    axis.title = element_text(size = base_size, face = "bold"),
+    legend.background = element_blank(),
+    legend.key = element_blank(),
+    strip.background = element_rect(fill = "grey90", color = "black")
+  )
+}
+
+# PLOS 风格主题
+theme_plos <- function(base_size = 10) {
+  theme_minimal(base_size = base_size) +
+  theme(
     panel.grid.minor = element_blank(),
-    panel.grid.major = element_line(color = "grey92"),
+    panel.grid.major = element_line(color = "grey85", linewidth = 0.3),
+    axis.line = element_line(linewidth = 0.5, color = "black"),
+    axis.ticks = element_line(linewidth = 0.5, color = "black"),
+    legend.position = "top",
+    plot.title = element_text(size = base_size + 2, face = "bold", hjust = 0)
+  )
+}
+
+cat("  期刊特定主题已创建：theme_nature(), theme_science(), theme_plos()\n")
+```
+
+**对比期刊主题效果**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.6
+
+p_nature <- p_base + theme_nature() + labs(title = "Nature 风格")
+p_science <- p_base + theme_science() + labs(title = "Science 风格")
+p_plos <- p_base + theme_plos() + labs(title = "PLOS 风格")
+
+p_nature / p_science / p_plos
+```
+
+**全局主题设置**
+
+如果希望整个 R 会话中的所有图表都使用自定义主题，可以用 `theme_set()`：
+
+```{r}
+# 设置全局主题
+theme_set(theme_paper(base_size = 12))
+
+cat("  全局主题已设置为 theme_paper()\n")
+cat("  后续所有 ggplot2 图表将自动应用此主题\n")
+
+# 测试全局主题
+ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "", y = "有机碳 (g/kg)", title = "全局主题测试") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+```
+
+**主题保存与复用**
+
+将自定义主题保存为 R 脚本，方便在不同项目中复用：
+
+```{r}
+#| eval: false
+
+# 保存主题到文件
+cat('
+# 自定义 ggplot2 主题
+# 作者：[你的名字]
+# 日期：', Sys.Date(), '
+
+theme_paper <- function(base_size = 12, base_family = "") {
+  theme_bw(base_size = base_size, base_family = base_family) +
+  theme(
+    panel.grid.minor = element_blank(),
+    panel.grid.major = element_line(color = "grey92", linewidth = 0.3),
     strip.background = element_rect(fill = "grey95", color = NA),
     legend.background = element_rect(fill = "white", color = NA),
     plot.title = element_text(face = "bold", size = base_size + 2),
-    axis.title = element_text(size = base_size),
+    axis.title = element_text(size = base_size, face = "bold"),
     axis.text = element_text(size = base_size - 1)
   )
 }
+', file = "R/theme_paper.R")
+
+# 在其他项目中使用
+source("R/theme_paper.R")
+theme_set(theme_paper())
+```
+
+::: {.callout-tip}
+### 主题设计最佳实践
+
+1. **字体大小**：基础字号 10-12pt，标题比正文大 2pt
+2. **网格线**：科研图表通常保留主网格线，移除次网格线
+3. **背景色**：白色背景最适合打印和发表
+4. **图例位置**：根据图表内容调整（`"right"`, `"top"`, `"bottom"`, `"none"`）
+5. **边距**：适当的边距让图表不显得拥挤（`plot.margin`）
+6. **一致性**：同一论文中所有图表使用相同主题
+
+### 常见问题
+
+**Q: 如何修改单个图表的主题而不影响全局？**
+
+A: 在 `ggplot()` 后添加 `+ theme_xxx()`，会覆盖全局设置。
+
+**Q: 如何在自定义主题中使用中文字体？**
+
+A: 设置 `base_family` 参数，如 `theme_paper(base_family = "SimSun")`（需要系统安装该字体）。
+
+**Q: 主题设置不生效怎么办？**
+
+A: 确保 `theme()` 在 `theme_xxx()` 之后调用，后者会覆盖前者的设置。
+:::
+
+**生态学案例：统一论文图表风格**
+
+假设你正在撰写一篇关于喀斯特森林土壤碳氮循环的论文，需要绘制多个图表。使用自定义主题可以确保所有图表风格统一：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
+
+# 图1：散点图
+fig1 <- ggplot(ecology, aes(x = elevation, y = organic_carbon, color = land_use)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(x = "海拔 (m)", y = "有机碳 (g/kg)", color = "土地利用",
+       title = "图1：海拔与有机碳的关系") +
+  scale_color_brewer(palette = "Set2")
+
+# 图2：箱线图
+fig2 <- ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "", y = "物种丰富度", title = "图2：不同土地利用类型的物种丰富度") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+fig1 + fig2
+
+cat("\n  两幅图表自动应用了相同的主题风格\n")
+cat("  字体大小、网格线、背景色等完全一致\n")
 ```
 
 ### 多面板组合图
+
+科研论文中常需要将多个相关图表组合成一个复合图（multi-panel figure），以节省版面并便于对比。patchwork 包提供了简洁优雅的图表组合语法，是 ggplot2 生态系统中最强大的组合工具。
+
+**为什么需要多面板组合图？**
+
+1. **节省版面**：期刊通常限制图表数量，组合图可以在一个图号下展示多个子图
+2. **便于对比**：相关图表放在一起，读者可以直接对比
+3. **逻辑清晰**：按逻辑顺序排列子图，讲述完整的数据故事
+4. **符合规范**：多数期刊要求复合图使用 (a)、(b)、(c) 等标签
+
+**patchwork 基础语法**
+
+patchwork 使用直观的运算符组合图表：
+
+| 运算符 | 功能 | 示例 |
+|:------|:-----|:-----|
+| `+` | 并排放置 | `p1 + p2` |
+| `/` | 上下堆叠 | `p1 / p2` |
+| `\|` | 并排放置（同 `+`） | `p1 \| p2` |
+| `()` | 分组 | `(p1 + p2) / p3` |
+
+```{r}
+cat("=== patchwork 基础组合 ===\n")
+
+# 创建三个示例图表
+p_scatter <- ggplot(ecology, aes(x = elevation, y = species_richness)) +
+  geom_point(aes(color = land_use), alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", color = "black", linewidth = 0.8, se = FALSE) +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用") +
+  scale_color_brewer(palette = "Set2")
+
+p_box <- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(x = "", y = "有机碳 (g/kg)") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+p_density <- ggplot(ecology, aes(x = soil_ph, fill = land_use)) +
+  geom_density(alpha = 0.5) +
+  labs(x = "土壤 pH", y = "密度", fill = "土地利用") +
+  scale_fill_brewer(palette = "Set2")
+
+cat("  已创建三个示例图表\n")
+```
+
+**水平组合（并排）**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.4
+
+p_scatter + p_box
+
+cat("  使用 + 运算符将两个图表并排放置\n")
+```
+
+**垂直组合（上下堆叠）**
+
+```{r}
+#| fig-width: 6
+#| fig-asp: 1.2
+
+p_scatter / p_box
+
+cat("  使用 / 运算符将两个图表上下堆叠\n")
+```
+
+**复杂布局（嵌套组合）**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.8
+
+(p_scatter + p_box) / p_density
+
+cat("  使用括号分组：上方两个图并排，下方一个图占满\n")
+```
+
+**控制子图比例**
+
+使用 `plot_layout()` 精确控制子图的宽度和高度比例：
 
 ```{r}
 #| fig-width: 10
 #| fig-asp: 0.5
 
-p_scatter <- ggplot(ecology, aes(x = elevation, y = species_richness)) +
-  geom_point(aes(color = land_use), alpha = 0.6) +
-  geom_smooth(method = "lm", color = "black", linewidth = 0.8) +
-  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用") +
-  theme_paper()
+p_scatter + p_box +
+  plot_layout(widths = c(2, 1))  # 左图宽度是右图的2倍
 
-p_box <- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +
-  geom_boxplot(alpha = 0.7) +
-  labs(x = "", y = "有机碳 (g/kg)", title = "不同土地利用类型") +
-  scale_fill_brewer(palette = "Set2") +
-  theme_paper() +
-  theme(legend.position = "none")
+cat("  左图宽度是右图的2倍\n")
+```
+
+```{r}
+#| fig-width: 6
+#| fig-asp: 1.2
+
+p_scatter / p_box +
+  plot_layout(heights = c(2, 1))  # 上图高度是下图的2倍
+
+cat("  上图高度是下图的2倍\n")
+```
+
+**添加子图标签**
+
+科研论文要求复合图的每个子图都有标签（通常是 a、b、c 或 A、B、C）：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
 
 p_scatter + p_box +
-  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") +
-  plot_layout(widths = c(1.5, 1))
+  plot_annotation(
+    tag_levels = "a",           # 使用小写字母
+    tag_prefix = "(",           # 标签前缀
+    tag_suffix = ")"            # 标签后缀
+  )
+
+cat("  自动添加 (a)、(b) 标签\n")
+```
+
+**自定义标签样式**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
+
+p_scatter + p_box +
+  plot_annotation(
+    tag_levels = "A",           # 使用大写字母
+    tag_prefix = "",
+    tag_suffix = "."
+  ) &
+  theme(plot.tag = element_text(size = 14, face = "bold"))
+
+cat("  使用大写字母标签 A.、B.\n")
+```
+
+**添加总标题和说明**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.6
+
+p_scatter + p_box +
+  plot_annotation(
+    title = "喀斯特地区土壤-植物关系",
+    subtitle = "基于 100 个样点的调查数据",
+    caption = "数据来源：Li et al. (2017)",
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+  )
+
+cat("  添加了总标题、副标题和数据来源说明\n")
+```
+
+**复杂网格布局**
+
+使用 `plot_layout(design = ...)` 创建自定义网格布局：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.8
+
+# 定义布局：A 占据左侧两行，B 和 C 占据右侧上下
+layout <- "
+  AAB
+  AAC
+"
+
+p_scatter + p_box + p_density +
+  plot_layout(design = layout) +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
+cat("  自定义网格布局：左侧大图，右侧两个小图\n")
+```
+
+**更复杂的布局示例**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 1
+
+# 创建第四个图表
+p_violin <- ggplot(ecology, aes(x = land_use, y = species_richness, fill = land_use)) +
+  geom_violin(alpha = 0.6) +
+  geom_boxplot(width = 0.15, fill = "white", alpha = 0.8) +
+  labs(x = "", y = "物种丰富度") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+# 定义 2×2 布局，但 A 占据两列
+layout_2x2 <- "
+  AAB
+  CCD
+"
+
+p_scatter + p_box + p_density + p_violin +
+  plot_layout(design = layout_2x2) +
+  plot_annotation(
+    title = "喀斯特森林生态系统综合分析",
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+  )
+
+cat("  2×2 布局，其中 (a) 占据两列\n")
+```
+
+**统一图例**
+
+当多个子图使用相同的分组变量时，可以提取并统一图例：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
+
+p1 <- ggplot(ecology, aes(x = elevation, y = species_richness, color = land_use)) +
+  geom_point(alpha = 0.6) +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用") +
+  scale_color_brewer(palette = "Set2")
+
+p2 <- ggplot(ecology, aes(x = soil_ph, y = organic_carbon, color = land_use)) +
+  geom_point(alpha = 0.6) +
+  labs(x = "土壤 pH", y = "有机碳 (g/kg)", color = "土地利用") +
+  scale_color_brewer(palette = "Set2")
+
+# 方法1：移除子图图例，在右侧统一显示
+p1 + p2 +
+  plot_layout(guides = "collect") +  # 收集并统一图例
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
+cat("  统一图例显示在右侧\n")
+```
+
+**嵌套组合（组合的组合）**
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.8
+
+# 先组合左侧两个图
+left_panel <- p_scatter / p_box
+
+# 再组合右侧两个图
+right_panel <- p_density / p_violin
+
+# 最后将左右两个面板并排
+left_panel | right_panel +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
+cat("  嵌套组合：先分别组合左右面板，再并排\n")
+```
+
+**插入空白占位符**
+
+使用 `plot_spacer()` 在布局中插入空白：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
+
+p_scatter + plot_spacer() + p_box +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
+cat("  中间插入空白占位符\n")
+```
+
+**对齐坐标轴**
+
+当子图的坐标轴范围不同时，可以强制对齐：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
+
+p1_aligned <- ggplot(ecology, aes(x = elevation, y = species_richness)) +
+  geom_point(alpha = 0.6, color = "steelblue") +
+  labs(x = "海拔 (m)", y = "物种丰富度") +
+  coord_cartesian(ylim = c(0, 30))  # 固定 y 轴范围
+
+p2_aligned <- ggplot(ecology, aes(x = soil_ph, y = species_richness)) +
+  geom_point(alpha = 0.6, color = "coral") +
+  labs(x = "土壤 pH", y = "物种丰富度") +
+  coord_cartesian(ylim = c(0, 30))  # 固定 y 轴范围
+
+p1_aligned + p2_aligned +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")")
+
+cat("  两个子图的 y 轴范围对齐\n")
+```
+
+**应用统一主题**
+
+使用 `&` 运算符将主题应用到所有子图：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 0.5
+
+p_scatter + p_box +
+  plot_annotation(tag_levels = "a", tag_prefix = "(", tag_suffix = ")") &
+  theme_minimal(base_size = 12) &
+  theme(
+    plot.tag = element_text(size = 14, face = "bold"),
+    legend.position = "bottom"
+  )
+
+cat("  使用 & 运算符将主题应用到所有子图\n")
+```
+
+**生态学案例：完整的论文图表**
+
+模拟一个真实的论文图表，展示喀斯特森林土壤-植物关系的多个方面：
+
+```{r}
+#| fig-width: 10
+#| fig-asp: 1
+
+# (a) 海拔梯度上的物种丰富度
+fig_a <- ggplot(ecology, aes(x = elevation, y = species_richness, color = land_use)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  labs(x = "海拔 (m)", y = "物种丰富度", color = "土地利用") +
+  scale_color_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+# (b) 不同土地利用类型的有机碳
+fig_b <- ggplot(ecology, aes(x = land_use, y = organic_carbon, fill = land_use)) +
+  geom_violin(alpha = 0.6, trim = FALSE) +
+  geom_boxplot(width = 0.15, fill = "white", alpha = 0.8) +
+  labs(x = "", y = "有机碳 (g/kg)") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "none", axis.text.x = element_text(angle = 45, hjust = 1))
+
+# (c) 土壤 pH 分布
+fig_c <- ggplot(ecology, aes(x = soil_ph, fill = land_use)) +
+  geom_density(alpha = 0.5) +
+  labs(x = "土壤 pH", y = "密度", fill = "土地利用") +
+  scale_fill_brewer(palette = "Set2") +
+  theme(legend.position = "bottom")
+
+# (d) 物种丰富度与有机碳的关系
+fig_d <- ggplot(ecology, aes(x = organic_carbon, y = species_richness, color = land_use)) +
+  geom_point(alpha = 0.6, size = 2) +
+  geom_smooth(method = "lm", se = FALSE, linewidth = 0.8) +
+  labs(x = "有机碳 (g/kg)", y = "物种丰富度", color = "土地利用") +
+  scale_color_brewer(palette = "Set2") +
+  theme(legend.position = "none")
+
+# 组合成 2×2 布局
+(fig_a + fig_b) / (fig_c + fig_d) +
+  plot_annotation(
+    title = "图1. 喀斯特森林土壤-植物关系的多维度分析",
+    subtitle = "基于 100 个样点的野外调查数据（2022-2023）",
+    caption = "数据来源：Li et al. (2017) 参数范围模拟",
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+  ) &
+  theme_minimal(base_size = 11) &
+  theme(
+    plot.tag = element_text(size = 14, face = "bold"),
+    plot.tag.position = c(0.02, 0.98)
+  )
+
+cat("\n  完整的论文级复合图：\n")
+cat("  - 2×2 布局，四个子图\n")
+cat("  - 统一的配色方案（ColorBrewer Set2）\n")
+cat("  - 标准的子图标签 (a)-(d)\n")
+cat("  - 总标题、副标题和数据来源\n")
+cat("  - 统一的主题风格\n")
+```
+
+::: {.callout-tip}
+### 多面板组合图最佳实践
+
+**布局设计**：
+1. **逻辑顺序**：按照论文叙述逻辑排列子图（从左到右、从上到下）
+2. **视觉平衡**：避免某个子图过大或过小，保持视觉平衡
+3. **对齐原则**：相同类型的子图应对齐坐标轴
+4. **留白适当**：子图之间保持适当间距，不要过于拥挤
+
+**标签规范**：
+1. **小写字母**：多数期刊要求使用 (a)、(b)、(c)
+2. **位置一致**：所有子图标签位置一致（通常左上角）
+3. **字体加粗**：标签字体应加粗以便识别
+4. **大小适中**：标签字号略大于正文（14pt 左右）
+
+**图例处理**：
+1. **统一图例**：相同分组变量的子图共用一个图例
+2. **位置合理**：图例放在不遮挡数据的位置（通常右侧或底部）
+3. **简洁明了**：图例标签简短清晰
+
+**导出设置**：
+1. **分辨率**：≥ 300 dpi（TIFF 格式 ≥ 600 dpi）
+2. **尺寸**：根据期刊要求设置（通常单栏 8.5 cm，双栏 17.5 cm）
+3. **格式**：PDF（矢量图）或 TIFF（位图）
+4. **文件命名**：使用描述性名称（如 `fig1_soil_plant_relationship.pdf`）
+
+### 常见问题
+
+**Q: 如何调整子图之间的间距？**
+
+A: 使用 `plot_layout(widths = ..., heights = ...)` 或在 `theme()` 中设置 `plot.margin`。
+
+**Q: 子图的图例大小不一致怎么办？**
+
+A: 使用 `plot_layout(guides = "collect")` 统一图例，或在每个子图中用 `theme(legend.key.size = ...)` 统一大小。
+
+**Q: 如何在组合图中插入表格？**
+
+A: 使用 `gridExtra::tableGrob()` 将表格转换为 grob 对象，然后用 `wrap_elements()` 包装后组合。
+
+**Q: 组合图导出后标签位置不对？**
+
+A: 检查 `plot.tag.position` 设置，确保使用相对坐标（0-1 之间）而非绝对坐标。
+:::
+
+**保存组合图**
+
+```{r}
+#| eval: false
+
+# 创建组合图
+p_final <- (fig_a + fig_b) / (fig_c + fig_d) +
+  plot_annotation(
+    title = "图1. 喀斯特森林土壤-植物关系",
+    tag_levels = "a",
+    tag_prefix = "(",
+    tag_suffix = ")"
+  )
+
+# 保存为 PDF（推荐）
+ggsave("output/figures/fig1_combined.pdf",
+       plot = p_final,
+       width = 10,
+       height = 10,
+       dpi = 300)
+
+# 保存为 PNG
+ggsave("output/figures/fig1_combined.png",
+       plot = p_final,
+       width = 10,
+       height = 10,
+       dpi = 300)
+
+cat("  组合图已保存到 output/figures/\n")
 ```
 
 ### 导出高质量图片
