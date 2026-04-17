@@ -46,12 +46,13 @@ jobs:
           echo "QUARTO_PYTHON=$CONDA/envs/data-driven-reproducible-study/bin/python" >> $GITHUB_ENV
           conda info
 
-      # 安装 Quarto CLI
+      # 安装 Quarto CLI（直接下载，跳过 action 避免超时）
       - name: Set up Quarto
-        uses: quarto-dev/quarto-actions/setup@v2
-        with:
-          tinytex: true
-          version: "1.6.0"
+        run: |
+          QUARTO_VERSION="1.4.312"
+          curl -sL "https://github.com/quarto-dev/quarto/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-macos.tar.gz" | tar -xzf -
+          echo "$(pwd)/quarto-${QUARTO_VERSION}/bin" >> $GITHUB_PATH
+          quarto --version
 
       # 构建 Quarto Book
       - name: Build Quarto Book
