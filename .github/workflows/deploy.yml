@@ -46,7 +46,6 @@ jobs:
         run: |
           echo "CONDA_DEFAULT_ENV=data-driven-reproducible-study" >> $GITHUB_ENV
           echo "QUARTO_PYTHON=$CONDA/envs/data-driven-reproducible-study/bin/python" >> $GITHUB_ENV
-          conda info
 
       # 用 brew 安装 Quarto（最可靠）
       - name: Set up Quarto
@@ -54,16 +53,17 @@ jobs:
           brew install --cask quarto
           quarto --version
 
-      # 构建 Quarto Book
+      # 构建 Quarto Book（输出到 docs/ 目录）
       - name: Build Quarto Book
-        uses: quarto-dev/quarto-actions/render@v2
-        with:
-          to: html
+        run: |
+          quarto render
 
-      # 部署到 gh-pages 分支
-      - name: Publish to GitHub Pages
-        uses: quarto-dev/quarto-actions/publish@v2
+      # 部署到 gh-pages 分支（绕过 quarto publish，用标准 GitHub Pages action）
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
         with:
-          target: gh-pages
-        env:
-          QUARTO_PUB_AUTH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
+          publish_branch: gh-pages
+          user_name: "github-actions[bot]"
+          user_email: "github-actions[bot]@users.noreply.github.com"
