@@ -46,20 +46,10 @@ jobs:
           echo "QUARTO_PYTHON=$CONDA/envs/data-driven-reproducible-study/bin/python" >> $GITHUB_ENV
           conda info
 
-      # 直接下载 Quarto CLI（macOS arm64，需要对应架构）
+      # 用 brew 安装 Quarto（最可靠）
       - name: Set up Quarto
         run: |
-          QUARTO_VERSION="1.4.312"
-          # 检测 CPU 架构
-          if [ "$(uname -m)" = "arm64" ]; then
-            ARCH="macos-arm64"
-          else
-            ARCH="macos"
-          fi
-          URL="https://github.com/quarto-dev/quarto/releases/download/v${QUARTO_VERSION}/quarto-${QUARTO_VERSION}-${ARCH}.tar.gz"
-          echo "Downloading Quarto ${QUARTO_VERSION} for ${ARCH}..."
-          curl -sL "$URL" | tar -xzf -
-          echo "$(pwd)/quarto-${QUARTO_VERSION}/bin" >> $GITHUB_PATH
+          brew install --cask quarto
           quarto --version
 
       # 构建 Quarto Book
