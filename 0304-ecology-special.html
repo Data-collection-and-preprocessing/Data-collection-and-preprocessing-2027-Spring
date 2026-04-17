@@ -700,36 +700,87 @@ window.Quarto = {
 </section>
 <section id="群落相似性的层级分解" class="level3" data-number="21.6.3">
 <h3 data-number="21.6.3" class="anchored" data-anchor-id="群落相似性的层级分解"><span class="header-section-number">21.6.3</span> 群落相似性的层级分解</h3>
-<p>群落间的Bray-Curtis差异可以分解为<strong>周转（turnover）</strong>和<strong>嵌套（nestedness）</strong>两个组分。这个分解对于理解群落差异的生态学机制非常重要。</p>
-<ul>
-<li><strong>周转</strong>：一个群落有而另一个群落没有的物种（物种替代）</li>
-<li><strong>嵌套</strong>：一个群落的物种是另一个群落的子集（物种丧失）</li>
-</ul>
-<p>vegan的<code>betadisper()</code>可以用来检验群落格局：</p>
+<p>群落间的Beta多样性（如Bray-Curtis差异）可以进一步分解为两个生态学上有明确意义的组分：<strong>周转（turnover）</strong>和<strong>嵌套（nestedness）</strong>。这个分解对于理解群落差异的生态学机制非常重要，因为相同的Beta多样性值可能来自完全不同的生态过程。</p>
+<p><strong>周转组分（Turnover component）</strong>：物种替代，即一个群落有而另一个群落没有的物种。周转反映了环境筛选、生态位分化、扩散限制等过程。例如，山地不同海拔带的植物群落，低海拔的热带物种被高海拔的温带物种替代，这就是典型的周转。</p>
+<p><strong>嵌套组分（Nestedness component）</strong>：物种丧失，即一个群落的物种是另一个群落的子集。嵌套反映了栖息地片段化、物种灭绝、选择性定殖等过程。例如，大岛屿的物种组成包含小岛屿的所有物种，小岛屿只是大岛屿的子集。</p>
+<p><strong>为什么要分解Beta多样性？</strong></p>
+<p>假设两对群落的Bray-Curtis差异都是0.6，但： - 第一对：群落A有物种1-5，群落B有物种6-10（完全周转，无共有种） - 第二对：群落A有物种1-10，群落B只有物种1-5（完全嵌套，B是A的子集）</p>
+<p>这两对群落的生态学意义完全不同，但传统的Beta多样性指数无法区分。分解Beta多样性可以揭示这种差异背后的生态过程。</p>
+<p><strong>Baselga框架：Beta多样性的加法分解</strong></p>
+<p>Baselga (2010, <em>Global Ecology and Biogeography</em>) 提出了Beta多样性的加法分解框架：</p>
+<p><span class="math display">\[\beta_{sor} = \beta_{sim} + \beta_{sne}\]</span></p>
+<p>其中： - <span class="math inline">\(\beta_{sor}\)</span>：Sørensen差异（总Beta多样性） - <span class="math inline">\(\beta_{sim}\)</span>：Simpson差异（周转组分） - <span class="math inline">\(\beta_{sne}\)</span>：嵌套组分</p>
+<p>对于Jaccard差异，也有类似的分解：</p>
+<p><span class="math display">\[\beta_{jac} = \beta_{jtu} + \beta_{jne}\]</span></p>
+<p><strong>R实现：使用betapart包分解Beta多样性</strong></p>
+<p><strong>可视化Beta多样性组分</strong></p>
+<p><strong>生态学案例：岛屿生物地理学中的Beta多样性分解</strong></p>
+<p>假设我们研究一个群岛系统，包含5个不同大小的岛屿。我们想知道：岛屿间的物种差异主要来自物种替代（不同岛屿有不同的物种组合）还是物种丧失（小岛屿是大岛屿的子集）？</p>
+<p><strong>多元方差分析：检验群落格局的组间差异</strong></p>
+<p>除了分解Beta多样性，我们还可以用<code>betadisper()</code>检验不同组之间的群落离散度是否有差异。这在比较不同处理、不同生境类型的群落格局时非常有用。</p>
+<p><strong>Beta多样性分解的应用场景</strong></p>
+<ol type="1">
+<li><p><strong>保护生物学</strong>：评估栖息地片段化对群落的影响。如果嵌套组分高，说明小片段主要是物种丧失；如果周转组分高，说明不同片段有不同的物种组合，都需要保护。</p></li>
+<li><p><strong>入侵生态学</strong>：比较入侵前后的群落变化。周转组分增加说明入侵种替代了本地种；嵌套组分增加说明本地种丧失但入侵种未完全替代。</p></li>
+<li><p><strong>气候变化研究</strong>：沿海拔或纬度梯度的群落变化。周转组分反映物种替代（生态位分化），嵌套组分反映物种丧失（环境筛选）。</p></li>
+<li><p><strong>恢复生态学</strong>：评估恢复效果。如果恢复后的群落与参照群落的嵌套组分高，说明恢复群落是参照群落的简化版；如果周转组分高，说明恢复群落走向了不同的演替路径。</p></li>
+</ol>
 </section>
 <section id="空间自相关与moran特征" class="level3" data-number="21.6.4">
 <h3 data-number="21.6.4" class="anchored" data-anchor-id="空间自相关与moran特征"><span class="header-section-number">21.6.4</span> 空间自相关与Moran特征</h3>
-<p>群落数据通常存在空间自相关——距离近的样点往往更相似。这违反了传统统计检验的独立性假设。Moran特征向量地图（MEMs）可以捕捉不同尺度的空间结构。</p>
+<p>群落数据通常存在空间自相关（Spatial Autocorrelation）——距离近的样点往往更相似。这违反了传统统计检验的独立性假设，会导致假阳性率升高（Type I error）。理解和处理空间自相关是生态学数据分析的重要环节。</p>
+<p><strong>什么是空间自相关？</strong></p>
+<p>空间自相关是指一个变量在空间上的值不是随机分布的，而是呈现某种空间依赖性。Tobler地理学第一定律指出：“Everything is related to everything else, but near things are more related than distant things”（万物皆相关，近者更相关）。</p>
+<p>在生态学中，空间自相关的来源包括：</p>
+<ol type="1">
+<li><strong>环境梯度</strong>：土壤、气候等环境因子在空间上连续变化，导致相邻样点的物种组成相似</li>
+<li><strong>扩散限制</strong>：种子、孢子的扩散距离有限，导致相邻样点的物种组成相似</li>
+<li><strong>历史因素</strong>：过去的干扰事件（如火灾、砍伐）在空间上呈斑块状分布</li>
+<li><strong>生物互作</strong>：竞争、互利共生等生物互作在局部尺度上影响物种分布</li>
+</ol>
+<p><strong>Mantel检验：检测空间自相关的存在</strong></p>
+<p>Mantel检验是检验两个距离矩阵之间相关性的非参数方法。在生态学中，最常用的是检验群落相似性矩阵与地理距离矩阵的相关性。</p>
+<p><strong>偏Mantel检验与变异分解</strong></p>
+<p>偏Mantel检验（Partial Mantel test）可以在控制第三个变量（如环境距离）后，检验两个距离矩阵的相关性。这对于区分”纯空间效应”和”环境驱动的空间格局”非常重要。</p>
+<p><strong>空间自相关分析的注意事项</strong></p>
+<ol type="1">
+<li><p><strong>空间尺度的选择</strong>：空间分析的结果依赖于研究的空间尺度。不同尺度可能揭示不同的生态过程。</p></li>
+<li><p><strong>因果推断的局限</strong>：空间自相关分析只能揭示空间格局，不能直接推断因果关系。纯空间效应可能来自扩散限制，也可能来自未测量的空间结构化环境因子。</p></li>
+<li><p><strong>与其他方法结合</strong>：空间分析应该与实验、观测、模型相结合，才能真正理解生态过程。</p></li>
+<li><p><strong>多重检验校正</strong>：进行多个Mantel检验时需要注意多重检验问题，可以使用Bonferroni校正。 ```</p></li>
+</ol>
 </section>
 <section id="真实研究案例桂西南喀斯特土壤孔隙与植物多样性" class="level3" data-number="21.6.5">
 <h3 data-number="21.6.5" class="anchored" data-anchor-id="真实研究案例桂西南喀斯特土壤孔隙与植物多样性"><span class="header-section-number">21.6.5</span> 真实研究案例：桂西南喀斯特土壤孔隙与植物多样性</h3>
-<p>以你的研究为例，马尾松混交林的土壤孔隙特征如何影响林下植物多样性？</p>
-<p><strong>数据</strong>：</p>
+<p>以桂西南喀斯特地区马尾松混交林为例，展示如何将本章学到的生态学数据分析方法应用到真实研究中。研究问题是：土壤孔隙特征如何影响林下植物多样性的空间格局？</p>
+<p><strong>研究背景</strong>：喀斯特地区土壤浅薄、石砾含量高，土壤孔隙结构对水分保持和养分循环至关重要。马尾松混交林是该地区重要的人工林类型，但不同林分的土壤孔隙特征差异很大。我们假设：土壤孔隙度越高、孔隙结构越优（毛管孔隙与非毛管孔隙比例合理），林下植物多样性越高。</p>
+<p><strong>数据采集</strong>：</p>
 <ul>
-<li>植物群落：15个30m×30m样地，每个样地调查林下草本层的物种组成</li>
-<li>土壤孔隙：每个样地5个采样点，测定容重、总孔隙度、毛管孔隙度、非毛管孔隙度</li>
-<li>土壤理化：有机碳、全氮、pH、全磷</li>
+<li><strong>植物群落</strong>：15个30m×30m样地，每个样地调查林下草本层的物种组成和多度</li>
+<li><strong>土壤孔隙</strong>：每个样地5个采样点，测定容重、总孔隙度、毛管孔隙度、非毛管孔隙度</li>
+<li><strong>土壤理化</strong>：有机碳、全氮、pH、全磷</li>
+<li><strong>空间坐标</strong>：每个样地的GPS坐标</li>
 </ul>
-<p><strong>分析思路</strong>：</p>
+<p><strong>模拟数据生成</strong></p>
+<p>为了演示完整的分析流程，我们模拟一套符合喀斯特地区特征的数据：</p>
+<p><strong>步骤1：数据预处理与探索性分析</strong></p>
+<p><strong>步骤2：Alpha多样性与土壤孔隙的关系</strong></p>
+<p><strong>步骤3：DCA排序探索群落格局</strong></p>
+<p><strong>步骤4：envfit叠加土壤因子</strong></p>
+<p><strong>步骤5：RDA约束排序</strong></p>
+<p><strong>步骤6：变异分解</strong></p>
+<p><strong>研究结论与生态学意义</strong></p>
+<p><strong>完整分析流程总结</strong></p>
+<p>这个案例展示了生态学数据分析的完整流程：</p>
 <ol type="1">
-<li>土壤孔隙数据的预处理：缺失值填补、异常值检验</li>
-<li>物种多度矩阵：Hellinger转化</li>
-<li>DCA排序：探索植物群落格局</li>
-<li>envfit叠加土壤孔隙因子</li>
-<li>RDA：量化土壤孔隙因子对群落变异的解释率</li>
-<li>Variation Partitioning：分解土壤因子和空间因子的贡献</li>
+<li><strong>数据准备</strong>：清洗、转化、标准化</li>
+<li><strong>探索性分析</strong>：Alpha多样性、相关性分析</li>
+<li><strong>间接梯度分析</strong>：DCA排序揭示群落格局</li>
+<li><strong>环境因子叠加</strong>：envfit识别关键驱动因子</li>
+<li><strong>直接梯度分析</strong>：RDA量化解释力</li>
+<li><strong>变异分解</strong>：区分土壤、空间、残余变异</li>
 </ol>
-<p>关键问题是：土壤孔隙特征能否解释林下植物多样性的空间格局？如果能，哪些孔隙指标最重要？</p>
+<p>每一步都有明确的生态学问题和统计方法，最终回答”土壤孔隙如何影响植物多样性”这个核心问题。这套流程可以推广到其他生态学研究中。</p>
 
 
 </section>

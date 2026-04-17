@@ -1189,12 +1189,204 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <h2 data-number="23.8" class="anchored" data-anchor-id="科研论文级图表"><span class="header-section-number">23.8</span> 科研论文级图表</h2>
 <section id="自定义主题" class="level3" data-number="23.8.1">
 <h3 data-number="23.8.1" class="anchored" data-anchor-id="自定义主题"><span class="header-section-number">23.8.1</span> 自定义主题</h3>
+<p>ggplot2 提供了多个内置主题（<code>theme_gray()</code>、<code>theme_bw()</code>、<code>theme_minimal()</code> 等），但科研论文通常需要更精细的控制。自定义主题可以确保所有图表风格统一，符合期刊要求。</p>
+<p><strong>为什么需要自定义主题？</strong></p>
+<ol type="1">
+<li><strong>期刊要求</strong>：不同期刊对图表格式有不同要求（字体大小、网格线、背景色等）</li>
+<li><strong>风格统一</strong>：论文中所有图表应保持一致的视觉风格</li>
+<li><strong>可复用性</strong>：定义一次主题，应用到所有图表，避免重复代码</li>
+<li><strong>品牌识别</strong>：实验室或课题组可以建立统一的视觉识别系统</li>
+</ol>
+<p><strong>ggplot2 主题系统的层级结构</strong></p>
+<p>ggplot2 的主题系统采用继承机制，可以基于现有主题进行修改：</p>
+<pre><code>theme_gray()（默认）
+  ├─ theme_bw()（黑白主题）
+  ├─ theme_minimal()（极简主题）
+  ├─ theme_classic()（经典主题，无网格线）
+  └─ theme_void()（空白主题）</code></pre>
+<p><strong>创建自定义主题的步骤</strong></p>
+<p><strong>对比不同主题的效果</strong></p>
+<p><strong>主题元素详解</strong></p>
+<p>ggplot2 主题由四类元素组成：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 22%">
+<col style="width: 22%">
+<col style="width: 22%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">元素类型</th>
+<th style="text-align: left;">函数</th>
+<th style="text-align: left;">用途</th>
+<th style="text-align: left;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">文本</td>
+<td style="text-align: left;"><code>element_text()</code></td>
+<td style="text-align: left;">标题、轴标签、图例文字</td>
+<td style="text-align: left;"><code>element_text(size = 12, face = "bold")</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">线条</td>
+<td style="text-align: left;"><code>element_line()</code></td>
+<td style="text-align: left;">网格线、轴线、边框</td>
+<td style="text-align: left;"><code>element_line(color = "grey", linewidth = 0.5)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">矩形</td>
+<td style="text-align: left;"><code>element_rect()</code></td>
+<td style="text-align: left;">背景、图例框、分面标签</td>
+<td style="text-align: left;"><code>element_rect(fill = "white", color = NA)</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">空白</td>
+<td style="text-align: left;"><code>element_blank()</code></td>
+<td style="text-align: left;">移除元素</td>
+<td style="text-align: left;"><code>element_blank()</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>常用主题参数速查表</strong></p>
+<p><strong>创建期刊特定主题</strong></p>
+<p>不同期刊对图表格式有不同要求。以下是几个常见期刊的主题示例：</p>
+<p><strong>对比期刊主题效果</strong></p>
+<p><strong>全局主题设置</strong></p>
+<p>如果希望整个 R 会话中的所有图表都使用自定义主题，可以用 <code>theme_set()</code>：</p>
+<p><strong>主题保存与复用</strong></p>
+<p>将自定义主题保存为 R 脚本，方便在不同项目中复用：</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>主题设计最佳实践
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>字体大小</strong>：基础字号 10-12pt，标题比正文大 2pt</li>
+<li><strong>网格线</strong>：科研图表通常保留主网格线，移除次网格线</li>
+<li><strong>背景色</strong>：白色背景最适合打印和发表</li>
+<li><strong>图例位置</strong>：根据图表内容调整（<code>"right"</code>, <code>"top"</code>, <code>"bottom"</code>, <code>"none"</code>）</li>
+<li><strong>边距</strong>：适当的边距让图表不显得拥挤（<code>plot.margin</code>）</li>
+<li><strong>一致性</strong>：同一论文中所有图表使用相同主题</li>
+</ol>
+<section id="常见问题" class="level3" data-number="23.8.2">
+<h3 data-number="23.8.2" class="anchored" data-anchor-id="常见问题"><span class="header-section-number">23.8.2</span> 常见问题</h3>
+<p><strong>Q: 如何修改单个图表的主题而不影响全局？</strong></p>
+<p>A: 在 <code>ggplot()</code> 后添加 <code>+ theme_xxx()</code>，会覆盖全局设置。</p>
+<p><strong>Q: 如何在自定义主题中使用中文字体？</strong></p>
+<p>A: 设置 <code>base_family</code> 参数，如 <code>theme_paper(base_family = "SimSun")</code>（需要系统安装该字体）。</p>
+<p><strong>Q: 主题设置不生效怎么办？</strong></p>
+<p>A: 确保 <code>theme()</code> 在 <code>theme_xxx()</code> 之后调用，后者会覆盖前者的设置。</p>
 </section>
-<section id="多面板组合图" class="level3" data-number="23.8.2">
-<h3 data-number="23.8.2" class="anchored" data-anchor-id="多面板组合图"><span class="header-section-number">23.8.2</span> 多面板组合图</h3>
+</div>
+</div>
+<p><strong>生态学案例：统一论文图表风格</strong></p>
+<p>假设你正在撰写一篇关于喀斯特森林土壤碳氮循环的论文，需要绘制多个图表。使用自定义主题可以确保所有图表风格统一：</p>
 </section>
-<section id="导出高质量图片" class="level3" data-number="23.8.3">
-<h3 data-number="23.8.3" class="anchored" data-anchor-id="导出高质量图片"><span class="header-section-number">23.8.3</span> 导出高质量图片</h3>
+<section id="多面板组合图" class="level3" data-number="23.8.3">
+<h3 data-number="23.8.3" class="anchored" data-anchor-id="多面板组合图"><span class="header-section-number">23.8.3</span> 多面板组合图</h3>
+<p>科研论文中常需要将多个相关图表组合成一个复合图（multi-panel figure），以节省版面并便于对比。patchwork 包提供了简洁优雅的图表组合语法，是 ggplot2 生态系统中最强大的组合工具。</p>
+<p><strong>为什么需要多面板组合图？</strong></p>
+<ol type="1">
+<li><strong>节省版面</strong>：期刊通常限制图表数量，组合图可以在一个图号下展示多个子图</li>
+<li><strong>便于对比</strong>：相关图表放在一起，读者可以直接对比</li>
+<li><strong>逻辑清晰</strong>：按逻辑顺序排列子图，讲述完整的数据故事</li>
+<li><strong>符合规范</strong>：多数期刊要求复合图使用 (a)、(b)、(c) 等标签</li>
+</ol>
+<p><strong>patchwork 基础语法</strong></p>
+<p>patchwork 使用直观的运算符组合图表：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">运算符</th>
+<th style="text-align: left;">功能</th>
+<th style="text-align: left;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>+</code></td>
+<td style="text-align: left;">并排放置</td>
+<td style="text-align: left;"><code>p1 + p2</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>/</code></td>
+<td style="text-align: left;">上下堆叠</td>
+<td style="text-align: left;"><code>p1 / p2</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>\|</code></td>
+<td style="text-align: left;">并排放置（同 <code>+</code>）</td>
+<td style="text-align: left;"><code>p1 \| p2</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>()</code></td>
+<td style="text-align: left;">分组</td>
+<td style="text-align: left;"><code>(p1 + p2) / p3</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>水平组合（并排）</strong></p>
+<p><strong>垂直组合（上下堆叠）</strong></p>
+<p><strong>复杂布局（嵌套组合）</strong></p>
+<p><strong>控制子图比例</strong></p>
+<p>使用 <code>plot_layout()</code> 精确控制子图的宽度和高度比例：</p>
+<p><strong>添加子图标签</strong></p>
+<p>科研论文要求复合图的每个子图都有标签（通常是 a、b、c 或 A、B、C）：</p>
+<p><strong>自定义标签样式</strong></p>
+<p><strong>添加总标题和说明</strong></p>
+<p><strong>复杂网格布局</strong></p>
+<p>使用 <code>plot_layout(design = ...)</code> 创建自定义网格布局：</p>
+<p><strong>更复杂的布局示例</strong></p>
+<p><strong>统一图例</strong></p>
+<p>当多个子图使用相同的分组变量时，可以提取并统一图例：</p>
+<p><strong>嵌套组合（组合的组合）</strong></p>
+<p><strong>插入空白占位符</strong></p>
+<p>使用 <code>plot_spacer()</code> 在布局中插入空白：</p>
+<p><strong>对齐坐标轴</strong></p>
+<p>当子图的坐标轴范围不同时，可以强制对齐：</p>
+<p><strong>应用统一主题</strong></p>
+<p>使用 <code>&amp;</code> 运算符将主题应用到所有子图：</p>
+<p><strong>生态学案例：完整的论文图表</strong></p>
+<p>模拟一个真实的论文图表，展示喀斯特森林土壤-植物关系的多个方面：</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>多面板组合图最佳实践
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>布局设计</strong>： 1. <strong>逻辑顺序</strong>：按照论文叙述逻辑排列子图（从左到右、从上到下） 2. <strong>视觉平衡</strong>：避免某个子图过大或过小，保持视觉平衡 3. <strong>对齐原则</strong>：相同类型的子图应对齐坐标轴 4. <strong>留白适当</strong>：子图之间保持适当间距，不要过于拥挤</p>
+<p><strong>标签规范</strong>： 1. <strong>小写字母</strong>：多数期刊要求使用 (a)、(b)、(c) 2. <strong>位置一致</strong>：所有子图标签位置一致（通常左上角） 3. <strong>字体加粗</strong>：标签字体应加粗以便识别 4. <strong>大小适中</strong>：标签字号略大于正文（14pt 左右）</p>
+<p><strong>图例处理</strong>： 1. <strong>统一图例</strong>：相同分组变量的子图共用一个图例 2. <strong>位置合理</strong>：图例放在不遮挡数据的位置（通常右侧或底部） 3. <strong>简洁明了</strong>：图例标签简短清晰</p>
+<p><strong>导出设置</strong>： 1. <strong>分辨率</strong>：≥ 300 dpi（TIFF 格式 ≥ 600 dpi） 2. <strong>尺寸</strong>：根据期刊要求设置（通常单栏 8.5 cm，双栏 17.5 cm） 3. <strong>格式</strong>：PDF（矢量图）或 TIFF（位图） 4. <strong>文件命名</strong>：使用描述性名称（如 <code>fig1_soil_plant_relationship.pdf</code>）</p>
+<section id="常见问题-1" class="level3" data-number="23.8.4">
+<h3 data-number="23.8.4" class="anchored" data-anchor-id="常见问题-1"><span class="header-section-number">23.8.4</span> 常见问题</h3>
+<p><strong>Q: 如何调整子图之间的间距？</strong></p>
+<p>A: 使用 <code>plot_layout(widths = ..., heights = ...)</code> 或在 <code>theme()</code> 中设置 <code>plot.margin</code>。</p>
+<p><strong>Q: 子图的图例大小不一致怎么办？</strong></p>
+<p>A: 使用 <code>plot_layout(guides = "collect")</code> 统一图例，或在每个子图中用 <code>theme(legend.key.size = ...)</code> 统一大小。</p>
+<p><strong>Q: 如何在组合图中插入表格？</strong></p>
+<p>A: 使用 <code>gridExtra::tableGrob()</code> 将表格转换为 grob 对象，然后用 <code>wrap_elements()</code> 包装后组合。</p>
+<p><strong>Q: 组合图导出后标签位置不对？</strong></p>
+<p>A: 检查 <code>plot.tag.position</code> 设置，确保使用相对坐标（0-1 之间）而非绝对坐标。</p>
+</section>
+</div>
+</div>
+<p><strong>保存组合图</strong></p>
+</section>
+<section id="导出高质量图片" class="level3" data-number="23.8.5">
+<h3 data-number="23.8.5" class="anchored" data-anchor-id="导出高质量图片"><span class="header-section-number">23.8.5</span> 导出高质量图片</h3>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">

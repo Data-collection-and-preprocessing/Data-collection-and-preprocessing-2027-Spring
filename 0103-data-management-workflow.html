@@ -432,6 +432,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#研究工作流总览" id="toc-研究工作流总览" class="nav-link" data-scroll-target="#研究工作流总览"><span class="header-section-number">5.7</span> 研究工作流总览</a></li>
   <li><a href="#工具链概览" id="toc-工具链概览" class="nav-link" data-scroll-target="#工具链概览"><span class="header-section-number">5.8</span> 工具链概览</a></li>
   <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">5.9</span> 课后练习</a></li>
+  <li><a href="#完整项目工作流positron-renv-git-quarto" id="toc-完整项目工作流positron-renv-git-quarto" class="nav-link" data-scroll-target="#完整项目工作流positron-renv-git-quarto"><span class="header-section-number">5.10</span> 完整项目工作流：Positron + renv + Git + Quarto</a>
+  <ul class="collapse">
+  <li><a href="#here-包路径管理" id="toc-here-包路径管理" class="nav-link" data-scroll-target="#here-包路径管理"><span class="header-section-number">5.10.1</span> here 包：路径管理</a></li>
+  <li><a href="#renv三命令工作流" id="toc-renv三命令工作流" class="nav-link" data-scroll-target="#renv三命令工作流"><span class="header-section-number">5.10.2</span> renv：三命令工作流</a></li>
+  <li><a href="#git五条基本命令" id="toc-git五条基本命令" class="nav-link" data-scroll-target="#git五条基本命令"><span class="header-section-number">5.10.3</span> Git：五条基本命令</a></li>
+  <li><a href="#quartoyaml-头部示例" id="toc-quartoyaml-头部示例" class="nav-link" data-scroll-target="#quartoyaml-头部示例"><span class="header-section-number">5.10.4</span> Quarto：YAML 头部示例</a></li>
+  <li><a href="#一键初始化脚本" id="toc-一键初始化脚本" class="nav-link" data-scroll-target="#一键初始化脚本"><span class="header-section-number">5.10.5</span> 一键初始化脚本</a></li>
+  <li><a href="#完整项目目录结构" id="toc-完整项目目录结构" class="nav-link" data-scroll-target="#完整项目目录结构"><span class="header-section-number">5.10.6</span> 完整项目目录结构</a></li>
+  </ul></li>
   </ul></li>
   </ul>
 </nav>
@@ -1086,8 +1095,199 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <li>为你的一个数据文件编写 README 元数据文档，包含变量名、类型、单位和缺失值编码。</li>
 <li>评估你当前的数据备份情况：是否满足 3-2-1 原则？如果不满足，制定改进方案。</li>
 </ol>
+</section>
+<section id="完整项目工作流positron-renv-git-quarto" class="level2" data-number="5.10">
+<h2 data-number="5.10" class="anchored" data-anchor-id="完整项目工作流positron-renv-git-quarto"><span class="header-section-number">5.10</span> 完整项目工作流：Positron + renv + Git + Quarto</h2>
+<p>前面我们讨论了数据管理的原则和项目文件的组织方式。本节将把这些原则落实到一套完整的工具链上，介绍如何用 <strong>Positron + renv + Git + Quarto</strong> 构建一个可重复的科研工作流。</p>
+<p>这套工作流解决四个核心问题：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">问题</th>
+<th style="text-align: left;">工具</th>
+<th style="text-align: left;">解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">换台电脑就跑不了（路径写死）</td>
+<td style="text-align: left;"><strong>Positron 项目管理 + here 包</strong></td>
+<td style="text-align: left;">项目根目录定位，跨环境路径一致</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">包更新后结果悄悄变了</td>
+<td style="text-align: left;"><strong>renv</strong></td>
+<td style="text-align: left;"><code>renv.lock</code> 锁定包版本，<code>restore()</code> 还原环境</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">不知道上周代码和这周区别</td>
+<td style="text-align: left;"><strong>Git</strong></td>
+<td style="text-align: left;">版本历史、提交记录、随时回滚</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">分析完还要手动搬数字进报告</td>
+<td style="text-align: left;"><strong>Quarto</strong></td>
+<td style="text-align: left;">代码与文字同文件，数据更新自动渲染</td>
+</tr>
+</tbody>
+</table>
+<section id="here-包路径管理" class="level3" data-number="5.10.1">
+<h3 data-number="5.10.1" class="anchored" data-anchor-id="here-包路径管理"><span class="header-section-number">5.10.1</span> here 包：路径管理</h3>
+<p>永远不要用 <code>setwd()</code>，用 <code>here()</code> 代替。<code>here()</code> 从项目根目录开始拼路径，不管在哪台电脑都能跑通。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(here)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取原始数据</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"raw"</span>, <span class="st">"patient_data.csv"</span>))</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存清洗后的数据</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(df_clean, <span class="fu">here</span>(<span class="st">"data"</span>, <span class="st">"processed"</span>, <span class="st">"patient_clean.csv"</span>))</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 导出图表</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="fu">ggsave</span>(<span class="fu">here</span>(<span class="st">"outputs"</span>, <span class="st">"figures"</span>, <span class="st">"kmcurve.tiff"</span>), <span class="at">dpi =</span> <span class="dv">300</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="renv三命令工作流" class="level3" data-number="5.10.2">
+<h3 data-number="5.10.2" class="anchored" data-anchor-id="renv三命令工作流"><span class="header-section-number">5.10.2</span> renv：三命令工作流</h3>
+<p><code>renv</code> 包管理项目的 R 包依赖，三个命令走天下：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化：扫描项目用到的所有包，生成 renv.lock</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 更新记录：每次安装/更新包后运行，锁定版本</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">snapshot</span>()</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 还原环境：新电脑或别人拿到项目后，一键还原所有包版本</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">restore</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>必须提交到 Git</strong>：<code>renv.lock</code> <strong>不需要提交</strong>：<code>renv/library/</code>（加入 <code>.gitignore</code>）</p>
+</section>
+<section id="git五条基本命令" class="level3" data-number="5.10.3">
+<h3 data-number="5.10.3" class="anchored" data-anchor-id="git五条基本命令"><span class="header-section-number">5.10.3</span> Git：五条基本命令</h3>
+<p>科研场景最常用的 5 个命令：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看当前改动</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 把指定文件加入暂存区</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add scripts/01_clean.R</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 提交（信息要写具体！）</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"完成数据清洗：统一日期格式，处理缺失值"</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看历史记录</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 回到某个历史版本</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout abc1234</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>提交信息规范</strong>：<code>"完成[步骤]：[具体动作]"</code>——不要写 “update” 或 “修改”。</p>
+</section>
+<section id="quartoyaml-头部示例" class="level3" data-number="5.10.4">
+<h3 data-number="5.10.4" class="anchored" data-anchor-id="quartoyaml-头部示例"><span class="header-section-number">5.10.4</span> Quarto：YAML 头部示例</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode yaml code-with-copy"><code class="sourceCode yaml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">title</span><span class="kw">:</span><span class="at"> </span><span class="st">"土壤孔隙与碳储量分析报告"</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">author</span><span class="kw">:</span><span class="at"> </span><span class="st">"刘华清"</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">date</span><span class="kw">:</span><span class="at"> today</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="fu">format</span><span class="kw">:</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">html</span><span class="kw">:</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">toc</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="at">    </span><span class="fu">code-fold</span><span class="kw">:</span><span class="at"> </span><span class="ch">true</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">pdf</span><span class="kw">:</span><span class="at"> default</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="fu">execute</span><span class="kw">:</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">echo</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="at">  </span><span class="fu">warning</span><span class="kw">:</span><span class="at"> </span><span class="ch">false</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="pp">---</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>渲染后所有数字和图表自动生成，修改数据后重新渲染即可更新报告。</p>
+</section>
+<section id="一键初始化脚本" class="level3" data-number="5.10.5">
+<h3 data-number="5.10.5" class="anchored" data-anchor-id="一键初始化脚本"><span class="header-section-number">5.10.5</span> 一键初始化脚本</h3>
+<p>以下脚本可在 30 秒内搭建完整的项目框架：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装必要的包</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"renv"</span>)) <span class="fu">install.packages</span>(<span class="st">"renv"</span>)</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"here"</span>)) <span class="fu">install.packages</span>(<span class="st">"here"</span>)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (<span class="sc">!</span><span class="fu">require</span>(<span class="st">"usethis"</span>)) <span class="fu">install.packages</span>(<span class="st">"usethis"</span>)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化 renv</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>renv<span class="sc">::</span><span class="fu">init</span>()</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建目录结构</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>dirs <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/raw"</span>,</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/processed"</span>,</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"scripts"</span>,</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"reports"</span>,</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/figures"</span>,</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"outputs/tables"</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a><span class="fu">sapply</span>(dirs, dir.create, <span class="at">recursive =</span> <span class="cn">TRUE</span>, <span class="at">showWarnings =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建 .gitignore</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">c</span>(</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/raw/"</span>,</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"data/processed/"</span>,</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>  <span class="st">"renv/library/"</span>,</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>  <span class="st">".Rhistory"</span>,</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>  <span class="st">".RData"</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>), <span class="st">".gitignore"</span>)</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建 README</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a><span class="fu">writeLines</span>(<span class="fu">c</span>(</span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>  <span class="st">"# 项目名称"</span>,</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>  <span class="st">""</span>,</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>  <span class="st">"## 运行说明"</span>,</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>  <span class="st">"1. 在 Positron 里打开项目"</span>,</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>  <span class="st">"2. 运行 renv::restore() 还原包环境"</span>,</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>  <span class="st">"3. 按顺序运行 scripts/ 下的脚本"</span>,</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>  <span class="st">"4. 运行 quarto render reports/analysis_report.qmd 生成报告"</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>), <span class="st">"README.md"</span>)</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化 Git</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>usethis<span class="sc">::</span><span class="fu">use_git</span>()</span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a><span class="fu">message</span>(<span class="st">"项目结构初始化完成！"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="完整项目目录结构" class="level3" data-number="5.10.6">
+<h3 data-number="5.10.6" class="anchored" data-anchor-id="完整项目目录结构"><span class="header-section-number">5.10.6</span> 完整项目目录结构</h3>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">my-project/</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> data/</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── raw/</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   │   ├── tree_survey.csv</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   │   └── soil_samples.csv</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── processed/</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>       ├── tree_clean.csv</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>       └── soil_clean.csv</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> scripts/</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── 01_clean.R</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── 02_explore.R</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── 03_model.R</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── 04_visualize.R</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> reports/</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── analysis_report.qmd</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> outputs/</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   ├── figures/</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   │   └── fig1-richness.png</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>   └── tables/</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a><span class="ex">│</span>       └── table1_summary.csv</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> renv.lock</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a><span class="ex">├──</span> .gitignore</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a><span class="ex">└──</span> README.md</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>关键原则</strong>： - <code>data/raw/</code> 里的数据永远不动——任何清洗都在脚本里完成 - 脚本按 <code>01_</code>、<code>02_</code>、<code>03_</code> 顺序编号，打开项目就知道先跑哪个 - <code>renv.lock</code> 必须提交 Git，保证环境可复现</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+Note
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>本节整合自微信公众号「R语言AI编程」（2026-04-16），原文链接：https://mp.weixin.qq.com/s/K10crFiAW1IHjKhbYYqhSA</p>
+</div>
+</div>
 
 
+</section>
 </section>
 </section>
 

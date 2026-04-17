@@ -397,7 +397,7 @@ window.Quarto = {
   <li><a href="#统计模型-statistical-models" id="toc-统计模型-statistical-models" class="nav-link" data-scroll-target="#统计模型-statistical-models"><span class="header-section-number">12.3.1</span> 1. 统计模型 (Statistical Models)</a></li>
   <li><a href="#机理模型-process-based-models" id="toc-机理模型-process-based-models" class="nav-link" data-scroll-target="#机理模型-process-based-models"><span class="header-section-number">12.3.2</span> 2. 机理模型 (Process-based Models)</a></li>
   <li><a href="#个体为本模型-agent-based-models-abm" id="toc-个体为本模型-agent-based-models-abm" class="nav-link" data-scroll-target="#个体为本模型-agent-based-models-abm"><span class="header-section-number">12.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</a></li>
-  <li><a href="#地球系统模型-earth-system-models" id="toc-地球系统模型-earth-system-models" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models)</a></li>
+  <li><a href="#地球系统模型-earth-system-models-esms" id="toc-地球系统模型-earth-system-models-esms" class="nav-link" data-scroll-target="#地球系统模型-earth-system-models-esms"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models, ESMs)</a></li>
   </ul></li>
   <li><a href="#模型数据的生成流程" id="toc-模型数据的生成流程" class="nav-link" data-scroll-target="#模型数据的生成流程"><span class="header-section-number">12.4</span> 模型数据的生成流程</a></li>
   <li><a href="#模型数据的验证与不确定性" id="toc-模型数据的验证与不确定性" class="nav-link" data-scroll-target="#模型数据的验证与不确定性"><span class="header-section-number">12.5</span> 模型数据的验证与不确定性</a></li>
@@ -492,19 +492,165 @@ window.Quarto = {
 <h2 data-number="12.3" class="anchored" data-anchor-id="主要的生态学模型类型"><span class="header-section-number">12.3</span> 主要的生态学模型类型</h2>
 <section id="统计模型-statistical-models" class="level3" data-number="12.3.1">
 <h3 data-number="12.3.1" class="anchored" data-anchor-id="统计模型-statistical-models"><span class="header-section-number">12.3.1</span> 1. 统计模型 (Statistical Models)</h3>
-<p>利用统计学方法（如线性回归、广义线性模型、机器学习）寻找变量间的数学关系。</p>
-<ul>
-<li><strong>特点</strong>：侧重于相关性，对历史数据依赖性强。</li>
-<li><strong>应用</strong>：物种分布模型（SDMs），预测物种在未来气候条件下的潜在栖息地。</li>
-</ul>
+<p>统计模型是生态学研究中应用最广泛的建模方法，其核心思想是通过数学函数描述响应变量（如物种丰富度、生物量）与解释变量（如温度、降水、土壤养分）之间的统计关系。与机理模型不同，统计模型不需要明确的生态学过程假设，而是让数据”自己说话”，从观测模式中提取规律。</p>
+<p><strong>统计模型的核心特征</strong></p>
+<ol type="1">
+<li><strong>数据驱动</strong>：模型结构和参数完全由观测数据决定，而非先验的生态学理论</li>
+<li><strong>相关性导向</strong>：揭示变量间的统计关联，但不直接推断因果关系</li>
+<li><strong>预测优先</strong>：侧重于提高预测精度，而非解释生态学机制</li>
+<li><strong>灵活性高</strong>：可以处理复杂的非线性关系和高维数据</li>
+</ol>
+<p><strong>常用的统计模型类型</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 18%">
+<col style="width: 27%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">模型类型</th>
+<th style="text-align: left;">适用场景</th>
+<th style="text-align: left;">R函数</th>
+<th style="text-align: left;">典型应用</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">线性回归 (LM)</td>
+<td style="text-align: left;">连续响应变量，线性关系</td>
+<td style="text-align: left;"><code>lm()</code></td>
+<td style="text-align: left;">树高-胸径关系</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">广义线性模型 (GLM)</td>
+<td style="text-align: left;">非正态响应变量（二项、泊松）</td>
+<td style="text-align: left;"><code>glm()</code></td>
+<td style="text-align: left;">物种存在/缺失预测</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">广义可加模型 (GAM)</td>
+<td style="text-align: left;">非线性关系，平滑曲线</td>
+<td style="text-align: left;"><code>mgcv::gam()</code></td>
+<td style="text-align: left;">物种丰富度沿环境梯度变化</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">混合效应模型 (LMM/GLMM)</td>
+<td style="text-align: left;">嵌套数据，随机效应</td>
+<td style="text-align: left;"><code>lme4::lmer()</code></td>
+<td style="text-align: left;">多地点重复测量</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">随机森林 (RF)</td>
+<td style="text-align: left;">高维数据，复杂交互</td>
+<td style="text-align: left;"><code>randomForest::randomForest()</code></td>
+<td style="text-align: left;">物种分布预测</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">梯度提升树 (GBM)</td>
+<td style="text-align: left;">非线性关系，特征重要性</td>
+<td style="text-align: left;"><code>gbm::gbm()</code></td>
+<td style="text-align: left;">生态系统服务评估</td>
+</tr>
+</tbody>
+</table>
+<p><strong>生态学案例：预测土壤有机碳含量</strong></p>
+<p>某研究团队在广西喀斯特地区采集了150个土壤样品，测量了土壤有机碳（SOC）含量及相关环境因子（海拔、坡度、植被类型、年均温、年降水）。目标是建立统计模型预测未采样区域的SOC含量。</p>
+<p><strong>模型1：线性回归（LM）</strong></p>
+<p>最简单的统计模型，假设SOC与环境因子呈线性关系。</p>
+<p><strong>模型2：广义可加模型（GAM）</strong></p>
+<p>GAM允许非线性关系，使用平滑函数拟合复杂曲线。</p>
+<p><strong>模型3：随机森林（RF）</strong></p>
+<p>随机森林是集成学习方法，通过构建多棵决策树并平均预测结果来提高精度。</p>
+<p><strong>模型比较与选择</strong></p>
+<p><strong>统计模型的优势与局限</strong></p>
+<p><strong>优势</strong>： 1. <strong>实施简单</strong>：R中有成熟的函数库，无需编写复杂代码 2. <strong>预测精度高</strong>：特别是机器学习方法（RF、GBM），在复杂数据上表现优异 3. <strong>数据需求相对较小</strong>：相比机理模型，不需要详细的过程参数 4. <strong>可处理高维数据</strong>：能够同时考虑数十个甚至数百个解释变量</p>
+<p><strong>局限</strong>： 1. <strong>外推能力弱</strong>：只能在训练数据的范围内可靠预测，超出范围的预测不可靠 2. <strong>缺乏机制解释</strong>：只能告诉你”是什么”（相关性），不能告诉你”为什么”（因果机制） 3. <strong>对数据质量敏感</strong>：如果训练数据存在系统性偏差，模型会继承这些偏差 4. <strong>过拟合风险</strong>：复杂模型（如深度学习）容易过度拟合训练数据，泛化能力差</p>
+<p><strong>何时使用统计模型</strong></p>
+<p>统计模型最适合以下场景： - 主要目标是预测而非解释机制 - 有充足的观测数据（通常需要样本量 &gt; 10 × 变量数） - 预测范围在训练数据的环境条件范围内 - 需要快速建模和迭代（如物种分布模型的初步筛选）</p>
+<p>对于需要理解生态学过程、预测未来气候情景或评估管理措施效果的研究，应该考虑使用机理模型或统计-机理混合模型。</p>
 </section>
 <section id="机理模型-process-based-models" class="level3" data-number="12.3.2">
 <h3 data-number="12.3.2" class="anchored" data-anchor-id="机理模型-process-based-models"><span class="header-section-number">12.3.2</span> 2. 机理模型 (Process-based Models)</h3>
-<p>基于对生态系统内在机制（如光合作用、养分循环、能量流动）的理解，用微分方程或规则来描述系统。</p>
-<ul>
-<li><strong>特点</strong>：具有较强的生物学解释力，能够预测超出历史经验范围的情景。</li>
-<li><strong>应用</strong>：植被动态模型（DGVMs），模拟全球植被对大气CO₂浓度升高的响应。</li>
-</ul>
+<p>机理模型（也称过程模型或机制模型）是基于对生态系统内在机制的理解而构建的数学模型。与统计模型的”黑箱”方法不同，机理模型明确描述生态过程的物理、化学和生物学机制，如光合作用、呼吸作用、养分循环、水分运移等。这类模型的核心优势在于其强大的外推能力——能够预测超出历史观测范围的情景，如未来气候变化或极端干扰事件的生态响应。</p>
+<p><strong>机理模型的核心特征</strong></p>
+<ol type="1">
+<li><strong>过程显式</strong>：模型中的每个方程都对应一个具体的生态学过程，参数具有明确的生物学意义</li>
+<li><strong>因果推断</strong>：通过模拟因果链条（如CO₂浓度 → 光合速率 → 生物量积累），揭示”为什么”而非仅仅”是什么”</li>
+<li><strong>外推能力强</strong>：只要过程机制不变，模型可以预测新的环境条件下的系统响应</li>
+<li><strong>理论驱动</strong>：模型结构基于生态学理论（如Michaelis-Menten动力学、Monod方程），而非纯粹的数据拟合</li>
+</ol>
+<p><strong>机理模型的层次结构</strong></p>
+<p>机理模型可以按照复杂度和空间尺度分为多个层次：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+<col style="width: 20%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">模型类型</th>
+<th style="text-align: left;">空间尺度</th>
+<th style="text-align: left;">时间尺度</th>
+<th style="text-align: left;">典型应用</th>
+<th style="text-align: left;">代表模型</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">叶片尺度模型</td>
+<td style="text-align: left;">叶片</td>
+<td style="text-align: left;">秒-分钟</td>
+<td style="text-align: left;">光合作用、蒸腾</td>
+<td style="text-align: left;">Farquhar模型</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">个体尺度模型</td>
+<td style="text-align: left;">单株植物</td>
+<td style="text-align: left;">天-年</td>
+<td style="text-align: left;">树木生长、资源分配</td>
+<td style="text-align: left;">JABOWA, SORTIE</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">生态系统模型</td>
+<td style="text-align: left;">样地-景观</td>
+<td style="text-align: left;">年-十年</td>
+<td style="text-align: left;">碳氮循环、生产力</td>
+<td style="text-align: left;">CENTURY, Biome-BGC</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">全球植被模型</td>
+<td style="text-align: left;">全球</td>
+<td style="text-align: left;">十年-百年</td>
+<td style="text-align: left;">气候变化响应</td>
+<td style="text-align: left;">LPJ, CLM</td>
+</tr>
+</tbody>
+</table>
+<p><strong>生态学案例：CENTURY模型模拟土壤碳动态</strong></p>
+<p>CENTURY是最经典的生态系统碳氮循环模型之一，广泛应用于农田、草地和森林生态系统的长期动态模拟。模型将土壤有机质分为三个库（活性库、慢性库、惰性库），每个库有不同的分解速率，受温度、水分和土壤质地调控。</p>
+<p>下面我们用R实现一个简化版的CENTURY模型，模拟100年间土壤有机碳的动态变化。</p>
+<p><strong>情景分析：气候变暖对土壤碳储量的影响</strong></p>
+<p>机理模型的一大优势是可以进行情景分析。下面模拟三种气候情景：当前气候（18°C）、温暖气候（+2°C）、极端气候（+4°C）。</p>
+<p><strong>机理模型的参数化挑战</strong></p>
+<p>机理模型的最大挑战是参数化（parameterization）。一个复杂的生态系统模型可能包含数十甚至上百个参数，如何确定这些参数的值是关键问题。</p>
+<p>常用的参数化方法：</p>
+<ol type="1">
+<li><strong>文献综述</strong>：从已发表的研究中获取参数值（如光合作用的Vcmax、Jmax）</li>
+<li><strong>实验测定</strong>：通过控制实验直接测量参数（如土壤有机质分解速率）</li>
+<li><strong>模型校准</strong>：使用优化算法（如贝叶斯校准、MCMC）调整参数使模型输出与观测数据匹配</li>
+<li><strong>敏感性分析</strong>：识别对模型输出影响最大的关键参数，优先精确化这些参数</li>
+</ol>
+<p><strong>机理模型的优势与局限</strong></p>
+<p><strong>优势</strong>： 1. <strong>外推能力强</strong>：可以预测未来气候、新的管理措施等超出历史经验的情景 2. <strong>机制解释清晰</strong>：每个参数和方程都有明确的生物学意义，便于理解和交流 3. <strong>理论整合</strong>：将分散的生态学知识整合到统一框架中 4. <strong>情景分析</strong>：可以系统评估不同干预措施的长期效果</p>
+<p><strong>局限</strong>： 1. <strong>参数化困难</strong>：需要大量实验数据来确定参数，某些参数难以直接测量 2. <strong>计算成本高</strong>：复杂模型（如全球植被模型）需要超级计算机运行 3. <strong>模型不确定性</strong>：参数不确定性、结构不确定性会传播到预测结果 4. <strong>过度简化风险</strong>：为了数学可处理性，可能忽略某些重要过程</p>
+<p><strong>何时使用机理模型</strong></p>
+<p>机理模型最适合以下场景： - 需要预测未来或极端情景（如气候变化、土地利用变化） - 研究目标是理解生态学机制而非仅仅预测 - 需要评估管理措施的长期效果（如碳汇造林、施肥策略） - 有充足的过程参数数据或可以通过实验获取</p>
+<p>对于纯粹的预测任务或数据驱动的探索性分析，统计模型可能更高效。最佳实践是将统计模型和机理模型结合使用：用统计模型快速筛选关键因子，用机理模型深入理解因果机制。</p>
 </section>
 <section id="个体为本模型-agent-based-models-abm" class="level3" data-number="12.3.3">
 <h3 data-number="12.3.3" class="anchored" data-anchor-id="个体为本模型-agent-based-models-abm"><span class="header-section-number">12.3.3</span> 3. 个体为本模型 (Agent-Based Models, ABM)</h3>
@@ -574,13 +720,102 @@ window.Quarto = {
 <p><strong>生态学案例</strong>：某研究团队用 ABM 模拟了马尾松林中松材线虫病的传播过程。模型中每棵树是一个个体，具有健康状态、树龄和空间位置属性。媒介昆虫（松墨天牛）在树木间移动并传播病原体。模拟结果显示，即使只有 5% 的树木被感染，疾病也会在 10 年内扩散到整个林分，但如果及时清除病树并设置隔离带,可以有效控制传播。这一结果为森林病虫害防控提供了科学依据。</p>
 <p><strong>扩展记录</strong>: 2026-04-11 | 扩展者：Clawd | 目标字数：800+</p>
 </section>
-<section id="地球系统模型-earth-system-models" class="level3" data-number="12.3.4">
-<h3 data-number="12.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models)</h3>
-<p>集成大气、海洋、陆地生态系统的超大规模数值模拟系统。</p>
+<section id="地球系统模型-earth-system-models-esms" class="level3" data-number="12.3.4">
+<h3 data-number="12.3.4" class="anchored" data-anchor-id="地球系统模型-earth-system-models-esms"><span class="header-section-number">12.3.4</span> 4. 地球系统模型 (Earth System Models, ESMs)</h3>
+<p>地球系统模型是当代气候科学和全球变化研究中最复杂、最综合的建模工具。与传统的气候模型（仅模拟大气和海洋）不同，ESMs将大气、海洋、陆地、冰冻圈和生物圈作为一个耦合系统来模拟，能够捕捉不同圈层之间的复杂反馈关系。这类模型是IPCC（政府间气候变化专门委员会）气候变化评估报告的核心工具，为全球气候政策提供科学依据。</p>
+<p><strong>地球系统模型的核心组成</strong></p>
+<p>一个完整的ESM通常包含以下子模型：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 19%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">子模型</th>
+<th style="text-align: left;">模拟内容</th>
+<th style="text-align: left;">关键过程</th>
+<th style="text-align: left;">典型分辨率</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">大气模型</td>
+<td style="text-align: left;">大气环流、温度、降水</td>
+<td style="text-align: left;">辐射传输、对流、云物理</td>
+<td style="text-align: left;">1-2° × 1-2°</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">海洋模型</td>
+<td style="text-align: left;">海洋环流、温度、盐度</td>
+<td style="text-align: left;">热盐环流、混合层动力学</td>
+<td style="text-align: left;">1° × 1°</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">陆面模型</td>
+<td style="text-align: left;">植被、土壤、水文</td>
+<td style="text-align: left;">光合作用、蒸散、径流</td>
+<td style="text-align: left;">0.5-2°</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">海冰模型</td>
+<td style="text-align: left;">海冰覆盖、厚度</td>
+<td style="text-align: left;">冰的生长、融化、漂移</td>
+<td style="text-align: left;">1° × 1°</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">碳循环模型</td>
+<td style="text-align: left;">碳通量、碳库</td>
+<td style="text-align: left;">光合、呼吸、分解</td>
+<td style="text-align: left;">与陆面模型耦合</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">氮循环模型</td>
+<td style="text-align: left;">氮通量、氮限制</td>
+<td style="text-align: left;">固氮、硝化、反硝化</td>
+<td style="text-align: left;">与陆面模型耦合</td>
+</tr>
+</tbody>
+</table>
+<p><strong>关键的反馈机制</strong></p>
+<p>ESMs的核心价值在于能够模拟地球系统中的正反馈和负反馈：</p>
+<ol type="1">
+<li><p><strong>冰-反照率反馈（正反馈）</strong>：气温升高 → 冰雪融化 → 地表反照率降低 → 吸收更多太阳辐射 → 气温进一步升高</p></li>
+<li><p><strong>水汽反馈（正反馈）</strong>：气温升高 → 大气持水能力增强 → 水汽（温室气体）增加 → 气温进一步升高</p></li>
+<li><p><strong>陆地碳循环反馈（不确定）</strong>：气温升高 → 土壤呼吸加速 → CO₂释放增加 → 气温进一步升高（正反馈）；但同时，CO₂浓度升高 → 光合作用增强 → 碳吸收增加（负反馈）</p></li>
+<li><p><strong>云反馈（最大不确定性）</strong>：气温升高对云的影响复杂，低云增加会冷却地表（负反馈），高云增加会保温（正反馈）</p></li>
+</ol>
+<p><strong>生态学案例：CMIP6模型预测21世纪植被变化</strong></p>
+<p>CMIP6（第六次耦合模式比较计划）是目前最先进的ESM集合，包含来自全球40多个研究机构的100多个模型。下面我们用R模拟一个简化的ESM输出，展示如何分析和可视化全球植被对气候变化的响应。</p>
+<p><strong>ESM的不确定性来源</strong></p>
+<p>尽管ESMs是目前最先进的工具，但其预测仍存在显著不确定性：</p>
+<ol type="1">
+<li><p><strong>参数不确定性</strong>：模型中的物理、化学和生物学参数（如云的辐射特性、土壤碳分解速率）存在测量误差</p></li>
+<li><p><strong>结构不确定性</strong>：不同模型对同一过程的数学描述不同（如云的参数化方案），导致预测结果差异</p></li>
+<li><p><strong>情景不确定性</strong>：未来的社会经济发展路径（如碳排放轨迹）无法精确预知</p></li>
+<li><p><strong>初始条件不确定性</strong>：海洋深层温度、土壤碳库等初始状态的观测数据有限</p></li>
+</ol>
+<p><strong>ESM在生态学研究中的应用</strong></p>
+<ol type="1">
+<li><p><strong>气候变化影响评估</strong>：预测未来气候条件下的植被分布、物种灭绝风险、生态系统服务变化</p></li>
+<li><p><strong>碳循环研究</strong>：量化陆地和海洋碳汇的未来变化，评估不同减排路径的效果</p></li>
+<li><p><strong>极端事件分析</strong>：模拟热浪、干旱、洪水等极端气候事件的频率和强度变化</p></li>
+<li><p><strong>政策评估</strong>：评估不同气候政策（如碳税、造林）对全球气候和生态系统的影响</p></li>
+</ol>
+<p><strong>ESM的优势与局限</strong></p>
+<p><strong>优势</strong>： 1. <strong>全球尺度整合</strong>：唯一能够模拟全球尺度气候-生态系统耦合的工具 2. <strong>长期预测</strong>：可以模拟数十年到数百年的气候和生态系统变化 3. <strong>情景分析</strong>：可以系统比较不同排放路径、政策措施的效果 4. <strong>反馈机制</strong>：能够捕捉不同圈层之间的复杂反馈</p>
+<p><strong>局限</strong>： 1. <strong>计算成本极高</strong>：一次百年模拟需要数周到数月的超级计算机时间 2. <strong>空间分辨率粗</strong>：通常为1-2°（约100-200公里），无法捕捉局地过程 3. <strong>不确定性大</strong>：不同模型的预测可能相差数倍 4. <strong>验证困难</strong>：无法用观测数据验证未来预测，只能验证历史模拟</p>
+<p><strong>何时使用ESM数据</strong></p>
+<p>生态学研究者通常不会自己运行ESM（需要超级计算机），而是使用公开的ESM输出数据：</p>
 <ul>
-<li><strong>特点</strong>：处理全球尺度的复杂反馈关系。</li>
-<li><strong>应用</strong>：IPCC气候变化评估报告中的生态系统响应预测。</li>
+<li><strong>CMIP数据库</strong>：https://esgf-node.llnl.gov/projects/cmip6/</li>
+<li><strong>WorldClim未来气候数据</strong>：https://www.worldclim.org/data/cmip6/cmip6_clim2.5m.html</li>
+<li><strong>ISIMIP影响模型数据</strong>：https://www.isimip.org/</li>
 </ul>
+<p>这些数据可以用于： - 物种分布模型的未来气候情景 - 生态系统模型的气候驱动数据 - 气候变化脆弱性评估</p>
+<p>对于区域尺度的生态学研究，通常需要对ESM输出进行降尺度（downscaling）处理，以获得更高的空间分辨率。</p>
 </section>
 </section>
 <section id="模型数据的生成流程" class="level2" data-number="12.4">

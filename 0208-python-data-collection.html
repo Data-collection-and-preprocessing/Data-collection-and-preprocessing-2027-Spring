@@ -419,7 +419,10 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
   <li><a href="#什么是-api" id="toc-什么是-api" class="nav-link" data-scroll-target="#什么是-api"><span class="header-section-number">17.4.1</span> 什么是 API？</a></li>
   <li><a href="#实践一从-gbif-api-获取物种分布数据" id="toc-实践一从-gbif-api-获取物种分布数据" class="nav-link" data-scroll-target="#实践一从-gbif-api-获取物种分布数据"><span class="header-section-number">17.4.2</span> 实践一：从 GBIF API 获取物种分布数据</a></li>
   <li><a href="#实践二从-open-meteo-api-获取气候数据" id="toc-实践二从-open-meteo-api-获取气候数据" class="nav-link" data-scroll-target="#实践二从-open-meteo-api-获取气候数据"><span class="header-section-number">17.4.3</span> 实践二：从 Open-Meteo API 获取气候数据</a></li>
-  <li><a href="#处理分页获取大量数据" id="toc-处理分页获取大量数据" class="nav-link" data-scroll-target="#处理分页获取大量数据"><span class="header-section-number">17.4.4</span> 处理分页：获取大量数据</a></li>
+  <li><a href="#实践三从-iucn-red-list-api-查询物种保护等级" id="toc-实践三从-iucn-red-list-api-查询物种保护等级" class="nav-link" data-scroll-target="#实践三从-iucn-red-list-api-查询物种保护等级"><span class="header-section-number">17.4.4</span> 实践三：从 IUCN Red List API 查询物种保护等级</a></li>
+  <li><a href="#实践四从-gbif-中国节点获取生物观测数据" id="toc-实践四从-gbif-中国节点获取生物观测数据" class="nav-link" data-scroll-target="#实践四从-gbif-中国节点获取生物观测数据"><span class="header-section-number">17.4.5</span> 实践四：从 GBIF 中国节点获取生物观测数据</a></li>
+  <li><a href="#实践五爬取中国植物志物种数据" id="toc-实践五爬取中国植物志物种数据" class="nav-link" data-scroll-target="#实践五爬取中国植物志物种数据"><span class="header-section-number">17.4.6</span> 实践五：爬取中国植物志物种数据</a></li>
+  <li><a href="#处理分页获取大量数据" id="toc-处理分页获取大量数据" class="nav-link" data-scroll-target="#处理分页获取大量数据"><span class="header-section-number">17.4.7</span> 处理分页：获取大量数据</a></li>
   </ul></li>
   <li><a href="#sec-save-data" id="toc-sec-save-data" class="nav-link" data-scroll-target="#sec-save-data"><span class="header-section-number">17.5</span> 数据保存：CSV 与 JSON</a>
   <ul class="collapse">
@@ -830,58 +833,308 @@ Important
 <span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>).<span class="bu">round</span>(<span class="dv">1</span>)</span>
 <span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(monthly)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="实践三从-iucn-red-list-api-查询物种保护等级" class="level3" data-number="17.4.4">
+<h3 data-number="17.4.4" class="anchored" data-anchor-id="实践三从-iucn-red-list-api-查询物种保护等级"><span class="header-section-number">17.4.4</span> 实践三：从 IUCN Red List API 查询物种保护等级</h3>
+<p><a href="https://www.iucnredlist.org">IUCN 红色名录</a>是全球最具权威的物种灭绝风险评估数据库。每个物种都有一个保护等级——从 “NE”（未评估）到 “EW”（野外灭绝）再到 “EX”（灭绝），其中 CR、EN、VU 分别代表”极危”、“濒危”和”易危”。通过 IUCN REST API，研究人员可以批量查询物种的保护等级和威胁因素，为生物多样性评估提供关键数据。</p>
+<p>以下示例查询大熊猫（<em>Ailuropoda melanoleuca</em>，物种 ID：7124）的保护信息：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-iucn-red-list</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "通过 IUCN Red List API 获取大熊猫的保护等级与威胁因素"</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># IUCN Red List API 免费 Token 注册：https://www.iucnredlist.org/auth</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 注意：以下使用演示 Token，实际使用请替换为你的 Token</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>IUCN_TOKEN <span class="op">=</span> <span class="st">"YOUR_IUCN_API_TOKEN"</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 查询大熊猫（Ailuropoda melanoleuca，ID=7124）的物种信息</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>species_id <span class="op">=</span> <span class="dv">7124</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="ss">f"https://apiv3.iucnredlist.org/api/v3/species/id/</span><span class="sc">{</span>species_id<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {<span class="st">"Token"</span>: IUCN_TOKEN}</span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, headers<span class="op">=</span>headers, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 解析 JSON 响应</span></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> response.json()</span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取关键信息</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> data.get(<span class="st">"result"</span>):</span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    species_info <span class="op">=</span> data[<span class="st">"result"</span>][<span class="dv">0</span>]</span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"学名: </span><span class="sc">{</span>species_info<span class="sc">.</span>get(<span class="st">'scientific_name'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"中文名: </span><span class="sc">{</span>species_info<span class="sc">.</span>get(<span class="st">'common_name'</span>, {})<span class="sc">.</span>get(<span class="st">'chinese'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"保护等级: </span><span class="sc">{</span>species_info<span class="sc">.</span>get(<span class="st">'category'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># CR/EN/VU/NT/LC 等</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"种群趋势: </span><span class="sc">{</span>species_info<span class="sc">.</span>get(<span class="st">'population_trend'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># 增长/稳定/下降</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 提取栖息地信息</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a>    habitats <span class="op">=</span> species_info.get(<span class="st">"habitats"</span>, [])</span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> habitats:</span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">主要栖息地："</span>)</span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> h <span class="kw">in</span> habitats[:<span class="dv">3</span>]:  <span class="co"># 取前3个</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  - </span><span class="sc">{</span>h<span class="sc">.</span>get(<span class="st">'habitat'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span>h<span class="sc">.</span>get(<span class="st">'season'</span>, <span class="st">'全年'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 提取主要威胁因素</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    threats <span class="op">=</span> species_info.get(<span class="st">"threats"</span>, [])</span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> threats:</span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">主要威胁因素："</span>)</span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> t <span class="kw">in</span> threats[:<span class="dv">3</span>]:  <span class="co"># 取前3个</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="ss">f"  - </span><span class="sc">{</span>t<span class="sc">.</span>get(<span class="st">'title'</span>, <span class="st">'未知'</span>)<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"未找到该物种的信息，请检查 Token 是否有效"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>输出示例：</p>
+<pre><code>学名: Ailuropoda melanoleuca
+中文名: Giant Panda
+保护等级: VU
+种群趋势: 增长
+
+主要栖息地：
+  - Forest: Year-round
+  - Subtropical/Tropical Moist Montane Forest: Year-round
+
+主要威胁因素：
+  - Habitat Loss/Degradation
+  - Small Population Size</code></pre>
+</section>
+<section id="实践四从-gbif-中国节点获取生物观测数据" class="level3" data-number="17.4.5">
+<h3 data-number="17.4.5" class="anchored" data-anchor-id="实践四从-gbif-中国节点获取生物观测数据"><span class="header-section-number">17.4.5</span> 实践四：从 GBIF 中国节点获取生物观测数据</h3>
+<p>GBIF（全球生物多样性信息网络）在多个国家设有国家节点，提供更精准的区域数据服务。中国节点（<a href="https://www.gbif.org/api/country/CN">https://www.gbif.org/api/country/CN</a>）汇聚了中国本土机构的观测数据，特别适合研究中国特有物种。以下示例从 GBIF API 提取中国地区的物种观测记录，重点展示如何从复杂的 JSON 嵌套结构中提取物种名、地理坐标和观测日期。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-gbif-china-observation</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "从 GBIF API 提取中国地区物种观测数据并整理为结构化表格"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># GBIF API：中国地区的物种搜索</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># country=CN 限定为中国，limit=50 每次最多返回50条</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/occurrence/search"</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>params <span class="op">=</span> {</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">"country"</span>: <span class="st">"CN"</span>,       <span class="co"># 限定为中国</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"limit"</span>: <span class="dv">50</span>,           <span class="co"># 每次返回50条</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">"hasCoordinate"</span>: <span class="va">True</span>, <span class="co"># 只返回有坐标的记录</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">"mediaType"</span>: <span class="st">"StillImage"</span>  <span class="co"># 只返回有照片的记录</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>response.raise_for_status()</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>data <span class="op">=</span> response.json()</span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"中国地区共有 </span><span class="sc">{</span>data[<span class="st">'count'</span>]<span class="sc">:,}</span><span class="ss"> 条有坐标的物种观测记录"</span>)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"本次查询返回 </span><span class="sc">{</span><span class="bu">len</span>(data[<span class="st">'results'</span>])<span class="sc">}</span><span class="ss"> 条"</span>)</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 从嵌套的 JSON 结构中提取关键字段</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a>records <span class="op">=</span> []</span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> r <span class="kw">in</span> data[<span class="st">"results"</span>]:</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>    record <span class="op">=</span> {</span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 物种信息</span></span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a>        <span class="st">"学名"</span>: r.get(<span class="st">"species"</span>, <span class="st">""</span>),</span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">"中文名"</span>: r.get(<span class="st">"vernacularName"</span>, <span class="st">""</span>),</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 地理信息</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">"纬度"</span>: r.get(<span class="st">"decimalLatitude"</span>),</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>        <span class="st">"经度"</span>: r.get(<span class="st">"decimalLongitude"</span>),</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>        <span class="st">"国家"</span>: r.get(<span class="st">"country"</span>, <span class="st">""</span>),</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>        <span class="st">"省份"</span>: r.get(<span class="st">"stateProvince"</span>, <span class="st">""</span>),</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 时间信息</span></span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">"观测日期"</span>: r.get(<span class="st">"eventDate"</span>, <span class="st">""</span>),</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">"年份"</span>: r.get(<span class="st">"year"</span>, <span class="st">""</span>),</span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 数据质量</span></span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">"数据集"</span>: r.get(<span class="st">"datasetName"</span>, <span class="st">""</span>),</span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">"坐标精度"</span>: r.get(<span class="st">"coordinateAccuracy"</span>, <span class="st">""</span>),</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 分类信息</span></span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>        <span class="st">"纲"</span>: r.get(<span class="st">"class"</span>, <span class="st">""</span>),</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">"目"</span>: r.get(<span class="st">"order"</span>, <span class="st">""</span>),</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>        <span class="st">"科"</span>: r.get(<span class="st">"family"</span>, <span class="st">""</span>),</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>    records.append(record)</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-49"><a href="#cb16-49" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(records)</span>
+<span id="cb16-50"><a href="#cb16-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-51"><a href="#cb16-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据概况</span></span>
+<span id="cb16-52"><a href="#cb16-52" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">数据包含 </span><span class="sc">{</span>df[<span class="st">'学名'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> 个不同物种"</span>)</span>
+<span id="cb16-53"><a href="#cb16-53" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"涵盖 </span><span class="sc">{</span>df[<span class="st">'省份'</span>]<span class="sc">.</span>nunique()<span class="sc">}</span><span class="ss"> 个省份"</span>)</span>
+<span id="cb16-54"><a href="#cb16-54" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">物种多样性 Top 5（按观测记录数）："</span>)</span>
+<span id="cb16-55"><a href="#cb16-55" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[<span class="st">'学名'</span>].value_counts().head())</span>
+<span id="cb16-56"><a href="#cb16-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-57"><a href="#cb16-57" aria-hidden="true" tabindex="-1"></a><span class="co"># 展示部分数据</span></span>
+<span id="cb16-58"><a href="#cb16-58" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">前5条记录："</span>)</span>
+<span id="cb16-59"><a href="#cb16-59" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(df[[<span class="st">"学名"</span>, <span class="st">"中文名"</span>, <span class="st">"省份"</span>, <span class="st">"观测日期"</span>]].head())</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>输出示例：</p>
+<pre><code>中国地区共有 15,234,567 条有坐标的物种观测记录
+本次查询返回 50 条
+
+数据包含 42 个不同物种
+涵盖 8 个省份
+
+物种多样性 Top 5（按观测记录数）：
+Passer montanus       3
+Corvus macrorhynchos  2
+...
+
+前5条记录：
+                   学名              中文名    省份     观测日期
+0   Passer montanus       树麻雀  四川省  2023-05-12
+1  Corvus macrorhynchos   大嘴乌鸦   云南省  2023-04-20
+2       Picumnus innominatus  斑姬啄木鸟   广西壮族自治区  2023-06-01</code></pre>
+</section>
+<section id="实践五爬取中国植物志物种数据" class="level3" data-number="17.4.6">
+<h3 data-number="17.4.6" class="anchored" data-anchor-id="实践五爬取中国植物志物种数据"><span class="header-section-number">17.4.6</span> 实践五：爬取中国植物志物种数据</h3>
+<p><a href="http://www.iplant.cn/frps/">中国植物志</a>是国内最权威的植物分类学数据库，收录了我国境内所有维管植物的形态特征、分布区域和分类信息。由于该网站没有提供公开 API，我们需要使用 requests + BeautifulSoup 进行网页爬取。以下示例爬取马尾松（<em>Pinus massoniana</em>）的详细页面，提取学名、别名、形态特征和分布区域等信息。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">#| label: fig-china-flora-scraper</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co">#| fig-cap: "使用 BeautifulSoup 爬取中国植物志马尾松页面并提取结构化信息"</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> bs4 <span class="im">import</span> BeautifulSoup</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 中国植物志 - 马尾松页面</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>url <span class="op">=</span> <span class="st">"http://www.iplant.cn/frps/ast/Pinus%20massoniana"</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>headers <span class="op">=</span> {</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">"User-Agent"</span>: <span class="st">"EcologyResearchBot/1.0 (university-course-project; contact: your_email@gxu.edu.cn)"</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 发送请求（设置超时，添加延时）</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(url, headers<span class="op">=</span>headers, timeout<span class="op">=</span><span class="dv">15</span>)</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>response.raise_for_status()</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>response.encoding <span class="op">=</span> <span class="st">"utf-8"</span>  <span class="co"># 指定编码，避免中文乱码</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 解析 HTML</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>soup <span class="op">=</span> BeautifulSoup(response.text, <span class="st">"html.parser"</span>)</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># ========== 提取学名信息 ==========</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="co"># 页面中学名通常在标题区域或特定的 &lt;b&gt; 标签中</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>title_tag <span class="op">=</span> soup.find(<span class="st">"h3"</span>, class_<span class="op">=</span><span class="st">"botit"</span>)  <span class="co"># 常见结构</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> title_tag:</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>    scientific_name <span class="op">=</span> title_tag.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 备选方案：查找包含拉丁名的 &lt;i&gt; 标签</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    latin_tags <span class="op">=</span> soup.find_all(<span class="st">"i"</span>)</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>    scientific_name <span class="op">=</span> latin_tags[<span class="dv">0</span>].get_text(strip<span class="op">=</span><span class="va">True</span>) <span class="cf">if</span> latin_tags <span class="cf">else</span> <span class="st">"未知"</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"学名: </span><span class="sc">{</span>scientific_name<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a><span class="co"># ========== 提取形态特征 ==========</span></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co"># 中国植物志中形态特征通常在 id="description" 或 class="jianjie" 的区域</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>desc_section <span class="op">=</span> soup.find(<span class="st">"div"</span>, <span class="bu">id</span><span class="op">=</span><span class="st">"description"</span>)</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="kw">not</span> desc_section:</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>    desc_section <span class="op">=</span> soup.find(<span class="st">"div"</span>, class_<span class="op">=</span><span class="st">"description"</span>)</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> desc_section:</span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 提取所有段落文本</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>    paragraphs <span class="op">=</span> desc_section.find_all(<span class="st">"p"</span>)</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    description_text <span class="op">=</span> <span class="st">"</span><span class="ch">\n</span><span class="st">"</span>.join([p.get_text(strip<span class="op">=</span><span class="va">True</span>) <span class="cf">for</span> p <span class="kw">in</span> paragraphs <span class="cf">if</span> p.get_text(strip<span class="op">=</span><span class="va">True</span>)])</span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>    description_text <span class="op">=</span> <span class="st">"未找到形态特征描述"</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">形态特征：</span><span class="ch">\n</span><span class="sc">{</span>description_text[:<span class="dv">500</span>]<span class="sc">}</span><span class="ss">"</span>)  <span class="co"># 只显示前500字</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="co"># ========== 提取分布区域 ==========</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="co"># 分布信息可能在特定的 &lt;li&gt; 标签或 class="distribution" 的区域</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a>dist_tags <span class="op">=</span> soup.find_all(<span class="st">"li"</span>)</span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a>distribution <span class="op">=</span> []</span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> tag <span class="kw">in</span> dist_tags:</span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> tag.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"分布"</span> <span class="kw">in</span> text <span class="kw">or</span> <span class="st">"生于"</span> <span class="kw">in</span> text <span class="kw">or</span> <span class="st">"产于"</span> <span class="kw">in</span> text:</span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>        distribution.append(text)</span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> distribution:</span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">分布区域：</span><span class="sc">{</span><span class="st">' | '</span><span class="sc">.</span>join(distribution[:<span class="dv">5</span>])<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="cf">else</span>:</span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="st">"</span><span class="ch">\n</span><span class="st">分布区域：未找到"</span>)</span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a><span class="co"># ========== 提取别名/异名 ==========</span></span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>aliases <span class="op">=</span> []</span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> p <span class="kw">in</span> soup.find_all(<span class="st">"p"</span>):</span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a>    text <span class="op">=</span> p.get_text(strip<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">"别名"</span> <span class="kw">in</span> text <span class="kw">or</span> <span class="st">"又名"</span> <span class="kw">in</span> text:</span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a>        aliases.append(text)</span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> aliases:</span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">别名：</span><span class="sc">{</span>aliases[<span class="dv">0</span>]<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a><span class="co"># 礼貌延时：不要过于频繁地请求</span></span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a>time.sleep(<span class="dv">2</span>)</span>
+<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a><span class="co"># ========== 整理为结构化字典 ==========</span></span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a>plant_info <span class="op">=</span> {</span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a>    <span class="st">"学名"</span>: scientific_name,</span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a>    <span class="st">"形态特征"</span>: description_text[:<span class="dv">1000</span>],</span>
+<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a>    <span class="st">"分布"</span>: distribution[:<span class="dv">5</span>],</span>
+<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a>    <span class="st">"别名"</span>: aliases[<span class="dv">0</span>] <span class="cf">if</span> aliases <span class="cf">else</span> <span class="st">"无"</span></span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">已提取的植物信息："</span>)</span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> key, value <span class="kw">in</span> plant_info.items():</span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  </span><span class="sc">{</span>key<span class="sc">}</span><span class="ss">: </span><span class="sc">{</span><span class="bu">str</span>(value)[:<span class="dv">100</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>输出示例：</p>
+<pre><code>学名: Pinus massoniana Lamb.
+
+形态特征：
+乔木，高达20米，胸径可达80厘米；树皮红褐色或灰褐色，裂成不规则的鳞状块片脱落；枝条平展或斜展，
+树冠宽塔形或伞形。针叶2针一束，稀3针一束，长12-20厘米，细柔；叶鞘宿存。球果卵圆形或圆锥状卵圆形，
+长4-7厘米，直径2.5-4厘米，成熟时栗褐色。
+
+分布区域：
+产于我国江苏、浙江、福建、广东、广西、湖南、湖北、贵州、四川等省区 | 越南也有分布
+
+别名：又名木麻黄、山松
+
+已提取的植物信息：
+  学名: Pinus massoniana Lamb.
+  形态特征: 乔木，高达20米，胸径可达80厘米；...
+  分布: [产于我国江苏、浙江、福建、广东...]
+  别名: 又名木麻黄、山松</code></pre>
 <div class="callout callout-style-default callout-note callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
 <i class="callout-icon"></i>
 </div>
 <div class="callout-title-container flex-fill">
-<span class="screen-reader-only">Note</span>关于 API Key
+<span class="screen-reader-only">Note</span>关于网页爬取的法律和伦理提醒
 </div>
 </div>
 <div class="callout-body-container callout-body">
-<p>许多 API 需要注册账号并获取 <strong>API Key</strong>（密钥）才能使用。API Key 是你的身份凭证，不要将其公开分享或上传到 GitHub。Open-Meteo 和 GBIF 的基础查询不需要 API Key，因此非常适合课堂练习。</p>
+<p>中国植物志等网站的页面结构可能会随时间更新，如果代码运行失败，可能需要检查 CSS 选择器是否仍然适用。此外，在正式研究中使用爬取的数据时，请务必遵守网站的使用条款，并在论文中正确引用数据来源。</p>
 </div>
 </div>
 </section>
-<section id="处理分页获取大量数据" class="level3" data-number="17.4.4">
-<h3 data-number="17.4.4" class="anchored" data-anchor-id="处理分页获取大量数据"><span class="header-section-number">17.4.4</span> 处理分页：获取大量数据</h3>
+<section id="处理分页获取大量数据" class="level3" data-number="17.4.7">
+<h3 data-number="17.4.7" class="anchored" data-anchor-id="处理分页获取大量数据"><span class="header-section-number">17.4.7</span> 处理分页：获取大量数据</h3>
 <p>大多数 API 会限制单次返回的数据量（如 GBIF 每次最多返回 300 条）。要获取全部数据，需要使用<strong>分页（Pagination）</strong>机制：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>all_records <span class="op">=</span> []</span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>offset <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>limit <span class="op">=</span> <span class="dv">300</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="va">True</span>:</span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> {</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"taxonKey"</span>: taxon_key,</span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"country"</span>: <span class="st">"CN"</span>,</span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"limit"</span>: limit,</span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"offset"</span>: offset,</span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"hasCoordinate"</span>: <span class="va">True</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    }</span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
-<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> data.get(<span class="st">"results"</span>, [])</span>
-<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> results:</span>
-<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span>  <span class="co"># 没有更多数据了</span></span>
-<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a>    all_records.extend(results)</span>
-<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">+=</span> limit</span>
-<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"已获取 </span><span class="sc">{</span><span class="bu">len</span>(all_records)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span>data[<span class="st">'count'</span>]<span class="sc">}</span><span class="ss"> 条记录"</span>)</span>
-<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 礼貌延时：每次请求间隔 1 秒，避免给服务器造成压力</span></span>
-<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
-<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 安全限制：最多获取 1000 条（课堂练习用）</span></span>
-<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(all_records) <span class="op">&gt;=</span> <span class="dv">1000</span>:</span>
-<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
-<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"共获取 </span><span class="sc">{</span><span class="bu">len</span>(all_records)<span class="sc">}</span><span class="ss"> 条记录"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>all_records <span class="op">=</span> []</span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>offset <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>limit <span class="op">=</span> <span class="dv">300</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="cf">while</span> <span class="va">True</span>:</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    params <span class="op">=</span> {</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">"taxonKey"</span>: taxon_key,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">"country"</span>: <span class="st">"CN"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">"limit"</span>: limit,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">"offset"</span>: offset,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">"hasCoordinate"</span>: <span class="va">True</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(occurrence_url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>    results <span class="op">=</span> data.get(<span class="st">"results"</span>, [])</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> results:</span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span>  <span class="co"># 没有更多数据了</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    all_records.extend(results)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">+=</span> limit</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"已获取 </span><span class="sc">{</span><span class="bu">len</span>(all_records)<span class="sc">}</span><span class="ss"> / </span><span class="sc">{</span>data[<span class="st">'count'</span>]<span class="sc">}</span><span class="ss"> 条记录"</span>)</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 礼貌延时：每次请求间隔 1 秒，避免给服务器造成压力</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    time.sleep(<span class="dv">1</span>)</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 安全限制：最多获取 1000 条（课堂练习用）</span></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="bu">len</span>(all_records) <span class="op">&gt;=</span> <span class="dv">1000</span>:</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">break</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"共获取 </span><span class="sc">{</span><span class="bu">len</span>(all_records)<span class="sc">}</span><span class="ss"> 条记录"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 </section>
 <section id="sec-save-data" class="level2" data-number="17.5">
@@ -890,9 +1143,9 @@ Important
 <section id="保存为-csv" class="level3" data-number="17.5.1">
 <h3 data-number="17.5.1" class="anchored" data-anchor-id="保存为-csv"><span class="header-section-number">17.5.1</span> 保存为 CSV</h3>
 <p>CSV（Comma-Separated Values）是表格数据最通用的格式，可以直接用 Excel 或 R 打开：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将 DataFrame 保存为 CSV</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"gbif_egretta_garzetta_cn.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"数据已保存为 CSV 文件"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将 DataFrame 保存为 CSV</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"gbif_egretta_garzetta_cn.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"数据已保存为 CSV 文件"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <div class="callout callout-style-default callout-tip callout-titled">
 <div class="callout-header d-flex align-content-center">
 <div class="callout-icon-container">
@@ -950,23 +1203,23 @@ Important
 <p><strong>为什么 Excel 打开 UTF-8 会乱码？</strong></p>
 <p>Excel 在打开 CSV 文件时，默认使用系统编码（中文 Windows 是 GBK）。当文件是 UTF-8 编码时，Excel 会错误地用 GBK 解析，导致中文显示为乱码。<code>utf-8-sig</code> 在文件开头添加了 BOM（Byte Order Mark）标记，告诉 Excel”这是 UTF-8 文件”，从而正确显示中文。</p>
 <p><strong>实战示例</strong>：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 错误示例：Excel 打开会乱码</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 正确示例：Excel 可正常打开</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果只在 Python/R 中使用，utf-8 即可</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data_for_analysis.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 错误示例：Excel 打开会乱码</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 正确示例：Excel 可正常打开</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果只在 Python/R 中使用，utf-8 即可</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"data_for_analysis.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>读取文件时的编码问题</strong>：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取时指定编码（避免 UnicodeDecodeError）</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果不确定编码，可以尝试自动检测</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> chardet</span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"data.csv"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
-<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> chardet.detect(f.read())</span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"检测到的编码: </span><span class="sc">{</span>result[<span class="st">'encoding'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取时指定编码（避免 UnicodeDecodeError）</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.read_csv(<span class="st">"data.csv"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果不确定编码，可以尝试自动检测</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> chardet</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"data.csv"</span>, <span class="st">"rb"</span>) <span class="im">as</span> f:</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    result <span class="op">=</span> chardet.detect(f.read())</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"检测到的编码: </span><span class="sc">{</span>result[<span class="st">'encoding'</span>]<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p><strong>生态学案例</strong>：某研究团队从中国植物志网站下载了物种名录 CSV 文件，用 Excel 打开后发现所有中文都是乱码。原因是网站导出的文件使用 UTF-8 编码，而 Excel 默认用 GBK 解析。解决方案是用 Python 重新保存为 <code>utf-8-sig</code> 编码，或在 Excel 中通过”数据 → 从文本/CSV”手动指定 UTF-8 编码导入。</p>
 <p><strong>最佳实践</strong>：</p>
 <ol type="1">
@@ -982,13 +1235,13 @@ Important
 <section id="保存为-json" class="level3" data-number="17.5.2">
 <h3 data-number="17.5.2" class="anchored" data-anchor-id="保存为-json"><span class="header-section-number">17.5.2</span> 保存为 JSON</h3>
 <p>JSON（JavaScript Object Notation）适合保存嵌套结构的数据，如 API 返回的原始响应：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存原始 API 响应</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"gbif_raw_response.json"</span>, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    json.dump(data, f, ensure_ascii<span class="op">=</span><span class="va">False</span>, indent<span class="op">=</span><span class="dv">2</span>)</span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"原始数据已保存为 JSON 文件"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> json</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 保存原始 API 响应</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> <span class="bu">open</span>(<span class="st">"gbif_raw_response.json"</span>, <span class="st">"w"</span>, encoding<span class="op">=</span><span class="st">"utf-8"</span>) <span class="im">as</span> f:</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>    json.dump(data, f, ensure_ascii<span class="op">=</span><span class="va">False</span>, indent<span class="op">=</span><span class="dv">2</span>)</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="st">"原始数据已保存为 JSON 文件"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="csv-与-json-的选择" class="level3" data-number="17.5.3">
 <h3 data-number="17.5.3" class="anchored" data-anchor-id="csv-与-json-的选择"><span class="header-section-number">17.5.3</span> CSV 与 JSON 的选择</h3>
@@ -1041,9 +1294,9 @@ Important
 <section id="robots.txt-协议" class="level3" data-number="17.6.1">
 <h3 data-number="17.6.1" class="anchored" data-anchor-id="robots.txt-协议"><span class="header-section-number">17.6.1</span> robots.txt 协议</h3>
 <p><code>robots.txt</code> 是网站根目录下的一个文本文件，它告诉爬虫哪些页面可以访问、哪些不可以。在采集任何网站之前，你应该先检查它的 robots.txt：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看 GBIF 的 robots.txt</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">"https://www.gbif.org/robots.txt"</span>, timeout<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看 GBIF 的 robots.txt</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>response <span class="op">=</span> requests.get(<span class="st">"https://www.gbif.org/robots.txt"</span>, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(response.text)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 <p>一个典型的 robots.txt 文件内容如下：</p>
 <pre><code>User-agent: *
 Disallow: /admin/
@@ -1079,79 +1332,79 @@ Warning
 <section id="sec-full-example" class="level2" data-number="17.7">
 <h2 data-number="17.7" class="anchored" data-anchor-id="sec-full-example"><span class="header-section-number">17.7</span> 完整案例：构建物种分布数据集</h2>
 <p>下面我们将前面学到的知识串联起来，完成一个完整的数据采集任务：从 GBIF 获取广西壮族自治区三种常见鸟类的分布记录，并保存为 CSV 文件。</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_taxon_key(species_name):</span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""通过物种学名查询 GBIF taxonKey"""</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/species/match"</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(url, params<span class="op">=</span>{<span class="st">"name"</span>: species_name}, timeout<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    response.raise_for_status()</span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data.get(<span class="st">"usageKey"</span>)</span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_occurrences(taxon_key, country<span class="op">=</span><span class="st">"CN"</span>, max_records<span class="op">=</span><span class="dv">100</span>):</span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""获取指定物种的分布记录"""</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/occurrence/search"</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>    all_records <span class="op">=</span> []</span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">=</span> <span class="dv">0</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">len</span>(all_records) <span class="op">&lt;</span> max_records:</span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        params <span class="op">=</span> {</span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">"taxonKey"</span>: taxon_key,</span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"country"</span>: country,</span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"hasCoordinate"</span>: <span class="va">True</span>,</span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"limit"</span>: <span class="bu">min</span>(<span class="dv">100</span>, max_records <span class="op">-</span> <span class="bu">len</span>(all_records)),</span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">"offset"</span>: offset</span>
-<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>        }</span>
-<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        response.raise_for_status()</span>
-<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> response.json().get(<span class="st">"results"</span>, [])</span>
-<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> results:</span>
-<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
-<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>        all_records.extend(results)</span>
-<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>        offset <span class="op">+=</span> <span class="bu">len</span>(results)</span>
-<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.5</span>)  <span class="co"># 礼貌延时</span></span>
-<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> all_records</span>
-<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 目标物种列表</span></span>
-<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>species_list <span class="op">=</span> [</span>
-<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Egretta garzetta"</span>,       <span class="co"># 白鹭</span></span>
-<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nycticorax nycticorax"</span>,  <span class="co"># 夜鹭</span></span>
-<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ardeola bacchus"</span>         <span class="co"># 池鹭</span></span>
-<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a>]</span>
-<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量采集</span></span>
-<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>all_data <span class="op">=</span> []</span>
-<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> species <span class="kw">in</span> species_list:</span>
-<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"正在查询: </span><span class="sc">{</span>species<span class="sc">}</span><span class="ss">"</span>)</span>
-<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> get_taxon_key(species)</span>
-<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> key <span class="kw">is</span> <span class="va">None</span>:</span>
-<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  未找到 </span><span class="sc">{</span>species<span class="sc">}</span><span class="ss"> 的分类信息，跳过"</span>)</span>
-<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
-<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>    records <span class="op">=</span> get_occurrences(key, max_records<span class="op">=</span><span class="dv">50</span>)</span>
-<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  获取到 </span><span class="sc">{</span><span class="bu">len</span>(records)<span class="sc">}</span><span class="ss"> 条记录"</span>)</span>
-<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> records:</span>
-<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>        all_data.append({</span>
-<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a>            <span class="st">"species"</span>: r.get(<span class="st">"species"</span>, <span class="st">""</span>),</span>
-<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>            <span class="st">"latitude"</span>: r.get(<span class="st">"decimalLatitude"</span>),</span>
-<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>            <span class="st">"longitude"</span>: r.get(<span class="st">"decimalLongitude"</span>),</span>
-<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a>            <span class="st">"event_date"</span>: r.get(<span class="st">"eventDate"</span>, <span class="st">""</span>),</span>
-<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>            <span class="st">"locality"</span>: r.get(<span class="st">"locality"</span>, <span class="st">""</span>),</span>
-<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">"dataset"</span>: r.get(<span class="st">"datasetName"</span>, <span class="st">""</span>)</span>
-<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a>        })</span>
-<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 整理并保存</span></span>
-<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(all_data)</span>
-<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"guangxi_birds_gbif.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
-<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">采集完成！共 </span><span class="sc">{</span><span class="bu">len</span>(df)<span class="sc">}</span><span class="ss"> 条记录，已保存至 guangxi_birds_gbif.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> requests</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> pandas <span class="im">as</span> pd</span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> time</span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_taxon_key(species_name):</span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""通过物种学名查询 GBIF taxonKey"""</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/species/match"</span></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(url, params<span class="op">=</span>{<span class="st">"name"</span>: species_name}, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a>    response.raise_for_status()</span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> data.get(<span class="st">"usageKey"</span>)</span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-13"><a href="#cb27-13" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_occurrences(taxon_key, country<span class="op">=</span><span class="st">"CN"</span>, max_records<span class="op">=</span><span class="dv">100</span>):</span>
+<span id="cb27-14"><a href="#cb27-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""获取指定物种的分布记录"""</span></span>
+<span id="cb27-15"><a href="#cb27-15" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> <span class="st">"https://api.gbif.org/v1/occurrence/search"</span></span>
+<span id="cb27-16"><a href="#cb27-16" aria-hidden="true" tabindex="-1"></a>    all_records <span class="op">=</span> []</span>
+<span id="cb27-17"><a href="#cb27-17" aria-hidden="true" tabindex="-1"></a>    offset <span class="op">=</span> <span class="dv">0</span></span>
+<span id="cb27-18"><a href="#cb27-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-19"><a href="#cb27-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="bu">len</span>(all_records) <span class="op">&lt;</span> max_records:</span>
+<span id="cb27-20"><a href="#cb27-20" aria-hidden="true" tabindex="-1"></a>        params <span class="op">=</span> {</span>
+<span id="cb27-21"><a href="#cb27-21" aria-hidden="true" tabindex="-1"></a>            <span class="st">"taxonKey"</span>: taxon_key,</span>
+<span id="cb27-22"><a href="#cb27-22" aria-hidden="true" tabindex="-1"></a>            <span class="st">"country"</span>: country,</span>
+<span id="cb27-23"><a href="#cb27-23" aria-hidden="true" tabindex="-1"></a>            <span class="st">"hasCoordinate"</span>: <span class="va">True</span>,</span>
+<span id="cb27-24"><a href="#cb27-24" aria-hidden="true" tabindex="-1"></a>            <span class="st">"limit"</span>: <span class="bu">min</span>(<span class="dv">100</span>, max_records <span class="op">-</span> <span class="bu">len</span>(all_records)),</span>
+<span id="cb27-25"><a href="#cb27-25" aria-hidden="true" tabindex="-1"></a>            <span class="st">"offset"</span>: offset</span>
+<span id="cb27-26"><a href="#cb27-26" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb27-27"><a href="#cb27-27" aria-hidden="true" tabindex="-1"></a>        response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb27-28"><a href="#cb27-28" aria-hidden="true" tabindex="-1"></a>        response.raise_for_status()</span>
+<span id="cb27-29"><a href="#cb27-29" aria-hidden="true" tabindex="-1"></a>        results <span class="op">=</span> response.json().get(<span class="st">"results"</span>, [])</span>
+<span id="cb27-30"><a href="#cb27-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-31"><a href="#cb27-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="kw">not</span> results:</span>
+<span id="cb27-32"><a href="#cb27-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span></span>
+<span id="cb27-33"><a href="#cb27-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-34"><a href="#cb27-34" aria-hidden="true" tabindex="-1"></a>        all_records.extend(results)</span>
+<span id="cb27-35"><a href="#cb27-35" aria-hidden="true" tabindex="-1"></a>        offset <span class="op">+=</span> <span class="bu">len</span>(results)</span>
+<span id="cb27-36"><a href="#cb27-36" aria-hidden="true" tabindex="-1"></a>        time.sleep(<span class="fl">0.5</span>)  <span class="co"># 礼貌延时</span></span>
+<span id="cb27-37"><a href="#cb27-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-38"><a href="#cb27-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> all_records</span>
+<span id="cb27-39"><a href="#cb27-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-40"><a href="#cb27-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 目标物种列表</span></span>
+<span id="cb27-41"><a href="#cb27-41" aria-hidden="true" tabindex="-1"></a>species_list <span class="op">=</span> [</span>
+<span id="cb27-42"><a href="#cb27-42" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Egretta garzetta"</span>,       <span class="co"># 白鹭</span></span>
+<span id="cb27-43"><a href="#cb27-43" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Nycticorax nycticorax"</span>,  <span class="co"># 夜鹭</span></span>
+<span id="cb27-44"><a href="#cb27-44" aria-hidden="true" tabindex="-1"></a>    <span class="st">"Ardeola bacchus"</span>         <span class="co"># 池鹭</span></span>
+<span id="cb27-45"><a href="#cb27-45" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb27-46"><a href="#cb27-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-47"><a href="#cb27-47" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量采集</span></span>
+<span id="cb27-48"><a href="#cb27-48" aria-hidden="true" tabindex="-1"></a>all_data <span class="op">=</span> []</span>
+<span id="cb27-49"><a href="#cb27-49" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> species <span class="kw">in</span> species_list:</span>
+<span id="cb27-50"><a href="#cb27-50" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"正在查询: </span><span class="sc">{</span>species<span class="sc">}</span><span class="ss">"</span>)</span>
+<span id="cb27-51"><a href="#cb27-51" aria-hidden="true" tabindex="-1"></a>    key <span class="op">=</span> get_taxon_key(species)</span>
+<span id="cb27-52"><a href="#cb27-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-53"><a href="#cb27-53" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> key <span class="kw">is</span> <span class="va">None</span>:</span>
+<span id="cb27-54"><a href="#cb27-54" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f"  未找到 </span><span class="sc">{</span>species<span class="sc">}</span><span class="ss"> 的分类信息，跳过"</span>)</span>
+<span id="cb27-55"><a href="#cb27-55" aria-hidden="true" tabindex="-1"></a>        <span class="cf">continue</span></span>
+<span id="cb27-56"><a href="#cb27-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-57"><a href="#cb27-57" aria-hidden="true" tabindex="-1"></a>    records <span class="op">=</span> get_occurrences(key, max_records<span class="op">=</span><span class="dv">50</span>)</span>
+<span id="cb27-58"><a href="#cb27-58" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"  获取到 </span><span class="sc">{</span><span class="bu">len</span>(records)<span class="sc">}</span><span class="ss"> 条记录"</span>)</span>
+<span id="cb27-59"><a href="#cb27-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-60"><a href="#cb27-60" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> r <span class="kw">in</span> records:</span>
+<span id="cb27-61"><a href="#cb27-61" aria-hidden="true" tabindex="-1"></a>        all_data.append({</span>
+<span id="cb27-62"><a href="#cb27-62" aria-hidden="true" tabindex="-1"></a>            <span class="st">"species"</span>: r.get(<span class="st">"species"</span>, <span class="st">""</span>),</span>
+<span id="cb27-63"><a href="#cb27-63" aria-hidden="true" tabindex="-1"></a>            <span class="st">"latitude"</span>: r.get(<span class="st">"decimalLatitude"</span>),</span>
+<span id="cb27-64"><a href="#cb27-64" aria-hidden="true" tabindex="-1"></a>            <span class="st">"longitude"</span>: r.get(<span class="st">"decimalLongitude"</span>),</span>
+<span id="cb27-65"><a href="#cb27-65" aria-hidden="true" tabindex="-1"></a>            <span class="st">"event_date"</span>: r.get(<span class="st">"eventDate"</span>, <span class="st">""</span>),</span>
+<span id="cb27-66"><a href="#cb27-66" aria-hidden="true" tabindex="-1"></a>            <span class="st">"locality"</span>: r.get(<span class="st">"locality"</span>, <span class="st">""</span>),</span>
+<span id="cb27-67"><a href="#cb27-67" aria-hidden="true" tabindex="-1"></a>            <span class="st">"dataset"</span>: r.get(<span class="st">"datasetName"</span>, <span class="st">""</span>)</span>
+<span id="cb27-68"><a href="#cb27-68" aria-hidden="true" tabindex="-1"></a>        })</span>
+<span id="cb27-69"><a href="#cb27-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-70"><a href="#cb27-70" aria-hidden="true" tabindex="-1"></a><span class="co"># 整理并保存</span></span>
+<span id="cb27-71"><a href="#cb27-71" aria-hidden="true" tabindex="-1"></a>df <span class="op">=</span> pd.DataFrame(all_data)</span>
+<span id="cb27-72"><a href="#cb27-72" aria-hidden="true" tabindex="-1"></a>df.to_csv(<span class="st">"guangxi_birds_gbif.csv"</span>, index<span class="op">=</span><span class="va">False</span>, encoding<span class="op">=</span><span class="st">"utf-8-sig"</span>)</span>
+<span id="cb27-73"><a href="#cb27-73" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f"</span><span class="ch">\n</span><span class="ss">采集完成！共 </span><span class="sc">{</span><span class="bu">len</span>(df)<span class="sc">}</span><span class="ss"> 条记录，已保存至 guangxi_birds_gbif.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </section>
 <section id="课后练习" class="level2" data-number="17.8">
 <h2 data-number="17.8" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">17.8</span> 课后练习</h2>
@@ -1195,12 +1448,12 @@ Warning
 </div>
 <div class="callout-body-container callout-body">
 <p>处理网络请求异常的基本模式：</p>
-<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    response.raise_for_status()  <span class="co"># 如果状态码不是 200，抛出异常</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> requests.exceptions.RequestException <span class="im">as</span> e:</span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"请求失败: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="cf">try</span>:</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    response <span class="op">=</span> requests.get(url, params<span class="op">=</span>params, timeout<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    response.raise_for_status()  <span class="co"># 如果状态码不是 200，抛出异常</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    data <span class="op">=</span> response.json()</span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="cf">except</span> requests.exceptions.RequestException <span class="im">as</span> e:</span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f"请求失败: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
 </div>
 </div>
 

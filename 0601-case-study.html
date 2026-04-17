@@ -736,9 +736,93 @@ ul.task-list li input[type="checkbox"] {
 </section>
 <section id="api-编程采集" class="level3" data-number="25.4.3">
 <h3 data-number="25.4.3" class="anchored" data-anchor-id="api-编程采集"><span class="header-section-number">25.4.3</span> 3.3 API 编程采集</h3>
-<p>对于需要大规模自动化采集的场景，可以使用 API：</p>
+<p>对于需要大规模自动化采集的场景，API（Application Programming Interface，应用程序接口）是最高效的数据获取方式。API允许程序直接与数据库通信，无需手动下载，适合批量获取物种分布、气候数据、遥感影像等。</p>
+<p><strong>什么是API？</strong></p>
+<p>API是数据提供方开放的”数据接口”，就像餐厅的点餐系统——你不需要进入厨房，只需要通过菜单（API文档）告诉服务员（API服务器）你要什么，服务员就会把菜（数据）端给你。</p>
+<p><strong>API的优势</strong>： 1. <strong>自动化</strong>：编写一次代码，可以重复运行获取最新数据 2. <strong>批量获取</strong>：一次请求可以获取成千上万条记录 3. <strong>实时更新</strong>：数据库更新后，API立即返回最新数据 4. <strong>可重复性</strong>：代码记录了数据获取的全过程，便于他人复现</p>
+<p><strong>API的基本工作流程</strong>：</p>
+<pre><code>你的程序 → 发送请求(URL + 参数) → API服务器
+                                        ↓
+你的程序 ← 返回数据(JSON/XML格式) ← API服务器</code></pre>
 <p><strong>GBIF API 示例</strong>（R语言）：</p>
+<p>GBIF（Global Biodiversity Information Facility，全球生物多样性信息设施）是全球最大的物种分布数据库，提供免费的API接口。</p>
+<p><strong>GBIF API 进阶用法</strong>：</p>
 <p><strong>WorldClim 获取气候数据（R语言）</strong>：</p>
+<p>WorldClim提供全球高分辨率气候数据，包括19个生物气候变量（如年均温、年降水量、温度季节性等）。</p>
+<p><strong>Python：使用requests库调用API</strong></p>
+<p>Python的requests库是调用API的标准工具，语法简洁直观。</p>
+<p><strong>API调用的常见问题与解决方案</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">问题</th>
+<th style="text-align: left;">原因</th>
+<th style="text-align: left;">解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">请求超时</td>
+<td style="text-align: left;">网络不稳定或服务器响应慢</td>
+<td style="text-align: left;">增加timeout参数，重试机制</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">状态码403</td>
+<td style="text-align: left;">API密钥无效或权限不足</td>
+<td style="text-align: left;">检查API密钥，申请更高权限</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">状态码429</td>
+<td style="text-align: left;">请求频率超限</td>
+<td style="text-align: left;">添加延时（Sys.sleep()），降低请求频率</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">返回数据为空</td>
+<td style="text-align: left;">查询参数错误或无匹配数据</td>
+<td style="text-align: left;">检查参数拼写，扩大查询范围</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">JSON解析失败</td>
+<td style="text-align: left;">返回格式不是JSON</td>
+<td style="text-align: left;">检查response内容，可能是HTML错误页</td>
+</tr>
+</tbody>
+</table>
+<p><strong>API调用的最佳实践</strong></p>
+<p><strong>生态学案例：整合多源API数据</strong></p>
+<p>在实际研究中，常需要整合来自不同API的数据。以下示例展示如何结合GBIF物种分布数据和WorldClim气候数据。</p>
+<p><strong>API数据采集的项目管理</strong></p>
+<p>对于大型数据采集项目，建议采用以下项目结构：</p>
+<pre><code>project/
+├── data/
+│   ├── raw/              # 原始API响应（JSON格式）
+│   │   ├── gbif/
+│   │   ├── worldclim/
+│   │   └── api_logs.txt  # API调用日志
+│   └── processed/        # 处理后的数据（CSV格式）
+├── scripts/
+│   ├── 01_fetch_gbif.R   # GBIF数据获取
+│   ├── 02_fetch_climate.R # 气候数据获取
+│   └── 03_integrate.R    # 数据整合
+└── README.md             # 数据来源和处理说明</code></pre>
+<p><strong>API调用日志示例</strong>：</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>API数据采集技巧总结
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>选择合适的API</strong>： 1. 查阅API文档，了解数据格式和限制 2. 测试小规模请求，确认数据质量 3. 评估API的稳定性和更新频率</p>
+<p><strong>优化请求效率</strong>： 1. 使用批量请求接口（如果API支持） 2. 缓存已获取的数据，避免重复请求 3. 并行请求（注意频率限制）</p>
+<p><strong>数据质量控制</strong>： 1. 保存原始API响应，便于追溯 2. 记录API调用日志（时间、参数、结果） 3. 验证返回数据的完整性和准确性</p>
+<p><strong>遵守使用规范</strong>： 1. 阅读并遵守API使用条款 2. 尊重频率限制（通常为每秒1-10次请求） 3. 引用数据来源（如GBIF数据需引用DOI）</p>
+</div>
+</div>
+<p><strong>扩展记录</strong>：2026-04-18 | 扩展者：Clawd | 目标字数：1500+</p>
 </section>
 </section>
 <section id="第四步数据质量控制" class="level2" data-number="25.5">
