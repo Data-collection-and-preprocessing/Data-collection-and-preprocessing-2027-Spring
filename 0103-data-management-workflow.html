@@ -1,0 +1,1516 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>4&nbsp; 数据管理与研究工作流 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0104-environment-setup.html" rel="next">
+<link href="./0102-what-is-data-preprocessing.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0103-data-management-workflow.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#数据管理与研究工作流" id="toc-数据管理与研究工作流" class="nav-link active" data-scroll-target="#数据管理与研究工作流"><span class="header-section-number">5</span> 数据管理与研究工作流</a>
+  <ul class="collapse">
+  <li><a href="#可重复性危机为什么数据管理如此重要" id="toc-可重复性危机为什么数据管理如此重要" class="nav-link" data-scroll-target="#可重复性危机为什么数据管理如此重要"><span class="header-section-number">5.1</span> 可重复性危机：为什么数据管理如此重要</a>
+  <ul class="collapse">
+  <li><a href="#什么是可重复性" id="toc-什么是可重复性" class="nav-link" data-scroll-target="#什么是可重复性"><span class="header-section-number">5.1.1</span> 什么是可重复性？</a></li>
+  <li><a href="#可重复性危机的根源" id="toc-可重复性危机的根源" class="nav-link" data-scroll-target="#可重复性危机的根源"><span class="header-section-number">5.1.2</span> 可重复性危机的根源</a></li>
+  </ul></li>
+  <li><a href="#fair-原则数据管理的国际标准" id="toc-fair-原则数据管理的国际标准" class="nav-link" data-scroll-target="#fair-原则数据管理的国际标准"><span class="header-section-number">5.2</span> FAIR 原则：数据管理的国际标准</a>
+  <ul class="collapse">
+  <li><a href="#findable可发现" id="toc-findable可发现" class="nav-link" data-scroll-target="#findable可发现"><span class="header-section-number">5.2.1</span> Findable（可发现）</a></li>
+  <li><a href="#accessible可访问" id="toc-accessible可访问" class="nav-link" data-scroll-target="#accessible可访问"><span class="header-section-number">5.2.2</span> Accessible（可访问）</a></li>
+  <li><a href="#interoperable可互操作" id="toc-interoperable可互操作" class="nav-link" data-scroll-target="#interoperable可互操作"><span class="header-section-number">5.2.3</span> Interoperable（可互操作）</a></li>
+  <li><a href="#reusable可重用" id="toc-reusable可重用" class="nav-link" data-scroll-target="#reusable可重用"><span class="header-section-number">5.2.4</span> Reusable（可重用）</a></li>
+  </ul></li>
+  <li><a href="#数据管理计划" id="toc-数据管理计划" class="nav-link" data-scroll-target="#数据管理计划"><span class="header-section-number">5.3</span> 数据管理计划</a>
+  <ul class="collapse">
+  <li><a href="#为什么需要-dmp" id="toc-为什么需要-dmp" class="nav-link" data-scroll-target="#为什么需要-dmp"><span class="header-section-number">5.3.1</span> 为什么需要 DMP？</a></li>
+  <li><a href="#dmp-的核心内容" id="toc-dmp-的核心内容" class="nav-link" data-scroll-target="#dmp-的核心内容"><span class="header-section-number">5.3.2</span> DMP 的核心内容</a></li>
+  <li><a href="#生态学-dmp-示例" id="toc-生态学-dmp-示例" class="nav-link" data-scroll-target="#生态学-dmp-示例"><span class="header-section-number">5.3.3</span> 生态学 DMP 示例</a></li>
+  </ul></li>
+  <li><a href="#研究项目的文件组织" id="toc-研究项目的文件组织" class="nav-link" data-scroll-target="#研究项目的文件组织"><span class="header-section-number">5.4</span> 研究项目的文件组织</a>
+  <ul class="collapse">
+  <li><a href="#推荐的项目结构" id="toc-推荐的项目结构" class="nav-link" data-scroll-target="#推荐的项目结构"><span class="header-section-number">5.4.1</span> 推荐的项目结构</a></li>
+  <li><a href="#文件组织的核心原则" id="toc-文件组织的核心原则" class="nav-link" data-scroll-target="#文件组织的核心原则"><span class="header-section-number">5.4.2</span> 文件组织的核心原则</a></li>
+  <li><a href="#文件命名规范" id="toc-文件命名规范" class="nav-link" data-scroll-target="#文件命名规范"><span class="header-section-number">5.4.3</span> 文件命名规范</a></li>
+  </ul></li>
+  <li><a href="#元数据数据的身份证" id="toc-元数据数据的身份证" class="nav-link" data-scroll-target="#元数据数据的身份证"><span class="header-section-number">5.5</span> 元数据：数据的”身份证”</a>
+  <ul class="collapse">
+  <li><a href="#元数据应该记录什么" id="toc-元数据应该记录什么" class="nav-link" data-scroll-target="#元数据应该记录什么"><span class="header-section-number">5.5.1</span> 元数据应该记录什么？</a></li>
+  <li><a href="#用-readme-记录元数据" id="toc-用-readme-记录元数据" class="nav-link" data-scroll-target="#用-readme-记录元数据"><span class="header-section-number">5.5.2</span> 用 README 记录元数据</a></li>
+  </ul></li>
+  <li><a href="#数据存储与备份" id="toc-数据存储与备份" class="nav-link" data-scroll-target="#数据存储与备份"><span class="header-section-number">5.6</span> 数据存储与备份</a>
+  <ul class="collapse">
+  <li><a href="#备份原则" id="toc-备份原则" class="nav-link" data-scroll-target="#备份原则"><span class="header-section-number">5.6.1</span> 3-2-1 备份原则</a></li>
+  <li><a href="#数据存储格式选择" id="toc-数据存储格式选择" class="nav-link" data-scroll-target="#数据存储格式选择"><span class="header-section-number">5.6.2</span> 数据存储格式选择</a></li>
+  </ul></li>
+  <li><a href="#研究工作流总览" id="toc-研究工作流总览" class="nav-link" data-scroll-target="#研究工作流总览"><span class="header-section-number">5.7</span> 研究工作流总览</a></li>
+  <li><a href="#工具链概览" id="toc-工具链概览" class="nav-link" data-scroll-target="#工具链概览"><span class="header-section-number">5.8</span> 工具链概览</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">5.9</span> 课后练习</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0103-data-management-workflow.html"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="数据管理与研究工作流" class="level1" data-number="5">
+<h1 data-number="5"><span class="header-section-number">5</span> 数据管理与研究工作流</h1>
+<p>前两章我们了解了数据采集和数据预处理的基本概念。但在动手搭建环境、编写代码之前，还有一个关键问题需要回答：<strong>你打算如何管理你的数据？</strong></p>
+<p>很多研究生的数据管理方式是这样的：实验数据存在 U 盘里，分析脚本散落在桌面上，文件名叫 <code>data_final_v3_真的最终版.xlsx</code>，三个月后自己都看不懂当初做了什么。这不是个例——2016 年 <em>Nature</em> 的一项调查显示，超过 70% 的研究者无法复现其他科学家的实验，超过 50% 甚至无法复现自己的实验（Baker, 2016, <em>Nature</em>, 533: 452–454, DOI: 10.1038/533452a）。</p>
+<p>数据管理不是”锦上添花”的额外工作，而是科学研究的基础设施。本章将介绍数据管理的核心原则和研究工作流的组织方法，为后续的环境搭建和实操章节打下基础。</p>
+<section id="可重复性危机为什么数据管理如此重要" class="level2" data-number="5.1">
+<h2 data-number="5.1" class="anchored" data-anchor-id="可重复性危机为什么数据管理如此重要"><span class="header-section-number">5.1</span> 可重复性危机：为什么数据管理如此重要</h2>
+<section id="什么是可重复性" class="level3" data-number="5.1.1">
+<h3 data-number="5.1.1" class="anchored" data-anchor-id="什么是可重复性"><span class="header-section-number">5.1.1</span> 什么是可重复性？</h3>
+<p>可重复性（Reproducibility）是科学研究的基石，指的是：给定相同的数据和代码，其他研究者能够得到相同的结果。与之相关的概念还有可复现性（Replicability）——独立收集新数据，使用相同方法，能够得到一致的结论。</p>
+<pre><code>可重复性（Reproducibility）：相同数据 + 相同代码 → 相同结果
+可复现性（Replicability）：新数据 + 相同方法 → 一致结论</code></pre>
+</section>
+<section id="可重复性危机的根源" class="level3" data-number="5.1.2">
+<h3 data-number="5.1.2" class="anchored" data-anchor-id="可重复性危机的根源"><span class="header-section-number">5.1.2</span> 可重复性危机的根源</h3>
+<p>2015 年，开放科学协作组织（Open Science Collaboration）在 <em>Science</em> 上发表了一项里程碑式的研究（Open Science Collaboration, 2015, <em>Science</em>, 349: aac4716, DOI: 10.1126/science.aac4716），尝试复现 100 项心理学研究，结果只有 36% 的研究获得了统计显著的复现结果。这一发现引发了跨学科的”可重复性危机”讨论。</p>
+<p>在生态学领域，Archmiller 等人（2020）对 <em>Ecology Letters</em> 和 <em>Journal of Applied Ecology</em> 上的论文进行了可重复性评估（Archmiller et al., 2020, <em>PLOS ONE</em>, 15: e0200303, DOI: 10.1371/journal.pone.0200303），发现大量论文缺乏足够的数据和代码共享，导致结果难以复现。</p>
+<p>可重复性失败的常见原因包括：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">原因</th>
+<th style="text-align: left;">具体表现</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">数据不可获取</td>
+<td style="text-align: left;">原始数据未公开，或存储在已失效的链接中</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">代码缺失</td>
+<td style="text-align: left;">分析过程未用代码记录，或代码未随论文发布</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">环境不可复现</td>
+<td style="text-align: left;">软件版本、包版本未记录，换台电脑就跑不通</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">方法描述不充分</td>
+<td style="text-align: left;">论文中的方法部分省略了关键细节</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">手动操作</td>
+<td style="text-align: left;">在 Excel 中手动删除异常值、手动调整图表</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>可重复性不是可选项
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在现代科学研究中，越来越多的期刊要求作者在投稿时提交数据和代码。例如，<em>Nature</em> 自 2016 年起要求所有论文的数据必须”可获取”（Data Availability Statement），<em>PLOS ONE</em> 要求数据存储在公共仓库中。不具备可重复性的研究，发表的门槛正在越来越高。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="fair-原则数据管理的国际标准" class="level2" data-number="5.2">
+<h2 data-number="5.2" class="anchored" data-anchor-id="fair-原则数据管理的国际标准"><span class="header-section-number">5.2</span> FAIR 原则：数据管理的国际标准</h2>
+<p>2016 年，Wilkinson 等人在 <em>Scientific Data</em> 上提出了 FAIR 原则（Wilkinson et al., 2016, <em>Scientific Data</em>, 3: 160018, DOI: 10.1038/sdata.2016.18），为科学数据管理提供了一套被广泛接受的指导框架。FAIR 是四个英文单词的首字母缩写：</p>
+<section id="findable可发现" class="level3" data-number="5.2.1">
+<h3 data-number="5.2.1" class="anchored" data-anchor-id="findable可发现"><span class="header-section-number">5.2.1</span> Findable（可发现）</h3>
+<p>数据应该容易被人和机器找到。</p>
+<ul>
+<li>为数据分配全局唯一的持久标识符（如 DOI）</li>
+<li>用丰富的元数据描述数据内容</li>
+<li>将元数据注册到可搜索的资源中</li>
+</ul>
+<p><strong>生态学实例</strong>：将物种调查数据上传到 GBIF（全球生物多样性信息网络），系统会自动分配 DOI，其他研究者可以通过物种名、地理位置等条件检索到你的数据。</p>
+</section>
+<section id="accessible可访问" class="level3" data-number="5.2.2">
+<h3 data-number="5.2.2" class="anchored" data-anchor-id="accessible可访问"><span class="header-section-number">5.2.2</span> Accessible（可访问）</h3>
+<p>数据应该能够通过标准化的协议获取。</p>
+<ul>
+<li>元数据可通过标准化通信协议（如 HTTP）访问</li>
+<li>协议是开放、免费的</li>
+<li>即使数据本身不再可用，元数据仍应保持可访问</li>
+</ul>
+<p><strong>生态学实例</strong>：将数据存储在 Dryad 或 Zenodo 等公共数据仓库中，而不是个人网站或实验室服务器上。公共仓库提供长期存储保障和标准化的访问接口。</p>
+</section>
+<section id="interoperable可互操作" class="level3" data-number="5.2.3">
+<h3 data-number="5.2.3" class="anchored" data-anchor-id="interoperable可互操作"><span class="header-section-number">5.2.3</span> Interoperable（可互操作）</h3>
+<p>数据应该能够与其他数据集整合使用。</p>
+<ul>
+<li>使用通用的、开放的数据格式（如 CSV、JSON）</li>
+<li>使用领域公认的术语和本体（Ontology）</li>
+<li>包含对其他数据的引用关系</li>
+</ul>
+<p><strong>生态学实例</strong>：记录物种名称时使用国际公认的分类系统（如 GBIF Backbone Taxonomy），而不是自创的缩写代码。这样你的数据才能与全球其他研究者的数据对接。</p>
+</section>
+<section id="reusable可重用" class="level3" data-number="5.2.4">
+<h3 data-number="5.2.4" class="anchored" data-anchor-id="reusable可重用"><span class="header-section-number">5.2.4</span> Reusable（可重用）</h3>
+<p>数据应该能够被未来的研究者重复使用。</p>
+<ul>
+<li>附带详细的元数据描述（采集方法、质量控制、使用限制）</li>
+<li>使用明确的数据使用许可协议（如 CC BY 4.0）</li>
+<li>符合领域相关的社区标准</li>
+</ul>
+<p><strong>生态学实例</strong>：在数据集中附带一份 README 文件，说明每个变量的含义、单位、测量方法、缺失值编码规则，以及数据的使用许可。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>FAIR 不等于 Open
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>FAIR 原则强调的是数据的”可管理性”，而不是要求所有数据都必须公开。涉及濒危物种精确位置、患者隐私等敏感数据，可以在元数据中说明访问限制条件，同时仍然满足 FAIR 原则。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="数据管理计划" class="level2" data-number="5.3">
+<h2 data-number="5.3" class="anchored" data-anchor-id="数据管理计划"><span class="header-section-number">5.3</span> 数据管理计划</h2>
+<p>数据管理计划（Data Management Plan, DMP）是在研究开始之前制定的文档，描述你将如何收集、组织、存储和共享数据。越来越多的基金资助机构要求申请者在项目申请书中提交 DMP。</p>
+<section id="为什么需要-dmp" class="level3" data-number="5.3.1">
+<h3 data-number="5.3.1" class="anchored" data-anchor-id="为什么需要-dmp"><span class="header-section-number">5.3.1</span> 为什么需要 DMP？</h3>
+<ul>
+<li><strong>避免事后补救</strong>：提前规划比事后整理高效得多</li>
+<li><strong>满足资助要求</strong>：国家自然科学基金、欧盟 Horizon Europe 等均要求提交 DMP</li>
+<li><strong>促进团队协作</strong>：统一数据格式和命名规范，减少沟通成本</li>
+<li><strong>保护数据安全</strong>：明确备份策略和访问权限</li>
+</ul>
+</section>
+<section id="dmp-的核心内容" class="level3" data-number="5.3.2">
+<h3 data-number="5.3.2" class="anchored" data-anchor-id="dmp-的核心内容"><span class="header-section-number">5.3.2</span> DMP 的核心内容</h3>
+<p>一份完整的 DMP 通常包含以下要素：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">要素</th>
+<th style="text-align: left;">需要回答的问题</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">数据描述</td>
+<td style="text-align: left;">将产生哪些类型的数据？预计数据量多大？</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据格式</td>
+<td style="text-align: left;">使用什么文件格式？是否为开放格式？</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">元数据标准</td>
+<td style="text-align: left;">如何描述数据？使用哪种元数据标准？</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据存储</td>
+<td style="text-align: left;">数据存储在哪里？如何备份？</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据共享</td>
+<td style="text-align: left;">数据是否公开？何时公开？使用什么许可协议？</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据保存</td>
+<td style="text-align: left;">项目结束后数据保存多久？存放在哪个仓库？</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">责任分工</td>
+<td style="text-align: left;">谁负责数据管理？谁有权访问数据？</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">伦理与合规</td>
+<td style="text-align: left;">是否涉及敏感数据？是否需要伦理审查？</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="生态学-dmp-示例" class="level3" data-number="5.3.3">
+<h3 data-number="5.3.3" class="anchored" data-anchor-id="生态学-dmp-示例"><span class="header-section-number">5.3.3</span> 生态学 DMP 示例</h3>
+<p>以下是一个完整的生态学研究数据管理计划（DMP）示例，以”马尾松混交林土壤孔隙与碳储量关系研究”为案例，逐步说明DMP各部分的撰写方法。</p>
+<p><strong>1. 项目基本信息</strong></p>
+<p>项目名称：马尾松–红椎混交林土壤孔隙结构与有机碳储量关系研究。资助来源：广西大学青年教师基础研究基金（2026年）。项目负责人：刘华清。执行时间：2026年6月—2027年5月。数据管理者：刘华清（负责数据的日常维护和备份）。</p>
+<p><strong>2. 数据描述</strong></p>
+<p>本研究将产生以下四类数据：</p>
+<p>土壤物理性质数据——包括土壤容重（g/cm³）、总孔隙度（%）、毛管孔隙度（%）、非毛管孔隙度（%）、含水量（%）。每个样点测定3个重复，共20个样点×3个土层（0-10cm、10-20cm、20-40cm）= 180个样品。原始记录使用纸质表格，数字化后存入CSV文件。</p>
+<p>土壤化学性质数据——包括有机碳含量（g/kg）、全氮（g/kg）、C/N比、pH值。每个样品测定2个技术重复，最终取平均值。预计约180条记录。</p>
+<p>植被调查数据——包括树种组成、胸径（DBH, cm）、树高（m）、枝下高（m）、郁闭度。每木检尺法记录所有胸径≥5cm的树木，预计约500条记录。</p>
+<p>空间数据——包括20个样点的GPS坐标（精度±2m）、样方分布图（CAD格式转换为GeoJSON）、DEM数据（30m分辨率，从SRTM获取）。</p>
+<p><strong>3. 数据格式与标准</strong></p>
+<p>所有表格数据使用UTF-8编码的CSV格式存储，避免使用Excel的.xlsx格式作为长期存储格式（Excel格式存在版本兼容性问题，且不便于Git追踪变更）。变量命名统一采用snake_case格式（如<code>soil_bulk_density</code>、<code>species_dbh</code>）。数值型变量保留3位有效数字，坐标保留6位小数（≈0.1m精度）。空间数据采用GeoJSON格式存储矢量数据，GeoTIFF格式存储栅格数据。</p>
+<p><strong>4. 元数据标准</strong></p>
+<p>使用EML（Ecological Metadata Language）标准描述数据集，确保数据的机器可读性。元数据文档包括：变量定义（变量名、数据类型、单位、数据来源）、数据采集方法（采样时间、采样人员、仪器型号）、质量控制程序（异常值判定标准、重复测量允差）、坐标系说明（WGS84坐标系，EPSG:4326）。</p>
+<p><strong>5. 存储与备份策略</strong></p>
+<p>原始数据存储在实验室NAS服务器（192.168.1.100/data）上，每日增量备份到外接硬盘（2TB WD Blue），每周同步到OneDrive云盘。Git仓库托管在GitHub私有仓库中，分析脚本自动同步。任何人修改数据前必须通过Pull Request审核，确保修改可追溯。</p>
+<p><strong>6. 数据共享与再使用政策</strong></p>
+<p>论文发表后，将数据上传至Dryad数据仓库，使用CC BY 4.0许可协议。代码同步公开在GitHub仓库中，采用MIT许可协议。本数据集允许在注明来源的前提下自由使用，包括教学、学术研究等非商业用途。</p>
+<p><strong>7. 数据保存期限</strong></p>
+<p>数据在Dryad上永久保存。GitHub仓库保持公开访问。纸质原始记录表扫描后存入实验室档案柜，保存期限不少于10年。</p>
+<p><strong>8. 伦理与安全考量</strong></p>
+<p>本研究不涉及人类受试者或受保护物种，数据中不包含个人隐私信息。样点精确坐标在公开数据中降采样至100m精度，防止研究成果被滥用于破坏活动。</p>
+<p><strong>生态学案例</strong></p>
+<p>某生态学实验室曾因服务器硬盘损坏丢失了5年的野外观测数据，导致多名研究生的论文被迫延期。这个教训让他们建立了”3-2-1备份原则”：数据至少3份副本，存储在2种不同介质上，其中1份异地保存。现在该实验室的所有项目都强制要求在申请时就提交DMP，数据管理员每季度检查一次备份完整性。<strong>数据安全不是事后补救，而是研究设计的一部分</strong>。</p>
+<p><strong>扩展记录</strong>: 2026-04-10 | 扩展者：Clawd | 目标字数：800+</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>DMP 工具推荐
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong><a href="https://dmptool.org/">DMPTool</a></strong>：美国加州数字图书馆开发的免费 DMP 编写工具，提供多种基金模板</li>
+<li><strong><a href="https://dmponline.dcc.ac.uk/">DMPonline</a></strong>：英国数字管理中心开发的 DMP 工具</li>
+<li><strong><a href="https://www.escience.org.cn/">国家科技资源共享服务平台</a></strong>：国内科学数据管理相关资源</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="研究项目的文件组织" class="level2" data-number="5.4">
+<h2 data-number="5.4" class="anchored" data-anchor-id="研究项目的文件组织"><span class="header-section-number">5.4</span> 研究项目的文件组织</h2>
+<p>良好的文件组织是数据管理的第一步。一个结构清晰的项目文件夹，能让你（和你的合作者）在任何时候都能快速找到需要的文件。</p>
+<section id="推荐的项目结构" class="level3" data-number="5.4.1">
+<h3 data-number="5.4.1" class="anchored" data-anchor-id="推荐的项目结构"><span class="header-section-number">5.4.1</span> 推荐的项目结构</h3>
+<p>科研项目的文件组织需要在灵活性和规范性之间取得平衡。一个设计良好的项目结构应当具备以下特征：（1）目录层次清晰，任何人都能快速定位文件；（2）数据流向明确，从原始数据到最终结果的路径可追溯；（3）便于版本控制，避免将大文件或临时文件纳入 Git 管理；（4）支持协作，团队成员能够无障碍地理解和运行项目代码。</p>
+<p>下面展示的项目结构参考了 Wilson et al.&nbsp;(2017) 提出的”科研计算良好实践”（Good Enough Practices in Scientific Computing, <em>PLOS Computational Biology</em>, DOI: 10.1371/journal.pcbi.1005510）以及 British Ecological Society 的数据管理指南（2018），已在多个生态学研究项目中验证其有效性。</p>
+<pre><code>my-ecology-project/
+├── README.md                # 项目说明：目的、方法、运行指南
+├── LICENSE                  # 数据和代码的使用许可
+├── .gitignore               # Git 忽略规则
+│
+├── data/
+│   ├── raw/                 # 原始数据（只读，绝不修改）
+│   │   ├── tree_survey_2027.csv
+│   │   ├── soil_samples_2027.csv
+│   │   └── README.md        # 数据说明：来源、变量定义、单位
+│   └── processed/           # 清洗后的数据
+│       ├── tree_clean.csv
+│       └── soil_clean.csv
+│
+├── scripts/                 # 分析脚本（按执行顺序编号）
+│   ├── 01-data-cleaning.R
+│   ├── 02-exploratory-analysis.R
+│   ├── 03-statistical-models.R
+│   └── 04-figures.R
+│
+├── output/                  # 脚本生成的输出（可重建）
+│   ├── figures/
+│   │   ├── fig1-species-richness.png
+│   │   └── fig2-soil-carbon.png
+│   └── tables/
+│       └── table1-summary-stats.csv
+│
+├── docs/                    # 文档和报告
+│   ├── manuscript.qmd
+│   └── supplementary.qmd
+│
+└── renv.lock                # R 包版本锁定文件</code></pre>
+<p><strong>目录功能说明</strong>：</p>
+<ul>
+<li><p><strong>data/raw/</strong>：存放未经任何处理的原始数据文件。这些文件应当被视为”只读档案”，任何清洗、筛选、转换操作都不应直接修改原始文件。建议在此目录下添加 <code>README.md</code> 文件，记录数据来源、采集时间、变量定义、测量单位等元数据信息。</p></li>
+<li><p><strong>data/processed/</strong>：存放经过清洗、标准化处理后的数据。这些文件是分析脚本的直接输入，应当具有一致的格式和命名规范。如果数据清洗过程复杂，建议在此目录下也添加说明文档，记录主要的处理步骤。</p></li>
+<li><p><strong>scripts/</strong>：存放所有数据分析脚本。脚本文件名应以数字前缀标记执行顺序（如 <code>01-</code>、<code>02-</code>），确保分析流程的可重复性。每个脚本应当专注于单一任务（如数据清洗、统计建模、图表生成），避免将所有代码堆积在一个文件中。</p></li>
+<li><p><strong>output/</strong>：存放脚本生成的所有输出文件，包括图表、表格、模型结果等。这些文件应当是”可重建的”，即删除后可以通过重新运行脚本完全恢复。因此，<code>output/</code> 目录通常不纳入版本控制（在 <code>.gitignore</code> 中排除）。</p></li>
+<li><p><strong>docs/</strong>：存放项目文档、研究报告、论文手稿等。使用 Quarto 或 R Markdown 编写的文档可以直接引用 <code>output/</code> 目录中的图表和表格，实现文档与分析代码的无缝衔接。</p></li>
+<li><p><strong>renv.lock</strong>：记录项目所依赖的 R 包及其版本号。使用 <code>renv</code> 包管理依赖关系，可以确保项目在不同计算机或不同时间点运行时，使用相同版本的 R 包，避免因包更新导致的结果不一致。</p></li>
+</ul>
+<p><strong>注意事项</strong>：</p>
+<ol type="1">
+<li><p><strong>避免中文路径和文件名</strong>：虽然现代操作系统支持中文路径，但在跨平台协作或使用某些命令行工具时可能出现编码问题。建议使用英文命名，用下划线或连字符分隔单词（如 <code>soil_carbon_data.csv</code>）。</p></li>
+<li><p><strong>不要在项目根目录堆积文件</strong>：所有数据、脚本、输出文件都应归入相应的子目录，保持根目录简洁。根目录只应包含 <code>README.md</code>、<code>LICENSE</code>、<code>.gitignore</code> 等项目级配置文件。</p></li>
+<li><p><strong>定期清理临时文件</strong>：分析过程中产生的临时文件（如 <code>.Rhistory</code>、<code>.RData</code>、<code>~$*.xlsx</code> 等）应及时删除或添加到 <code>.gitignore</code> 中，避免污染项目目录。</p></li>
+</ol>
+</section>
+<section id="文件组织的核心原则" class="level3" data-number="5.4.2">
+<h3 data-number="5.4.2" class="anchored" data-anchor-id="文件组织的核心原则"><span class="header-section-number">5.4.2</span> 文件组织的核心原则</h3>
+<p><strong>原则一：原始数据只读</strong></p>
+<p><code>data/raw/</code> 目录中的文件一旦放入，就永远不要修改。所有的数据清洗和转换都通过脚本完成，结果保存到 <code>data/processed/</code>。这样做的好处是：</p>
+<ul>
+<li>随时可以从原始数据重新开始</li>
+<li>清洗过程完全可追溯</li>
+<li>不会因为误操作丢失原始数据</li>
+</ul>
+<p><strong>原则二：脚本按顺序编号</strong></p>
+<p>用数字前缀标记脚本的执行顺序（<code>01-</code>、<code>02-</code>、<code>03-</code>……），让任何人都能按顺序运行脚本，从原始数据一步步得到最终结果。</p>
+<p><strong>原则三：输出可重建</strong></p>
+<p><code>output/</code> 目录中的所有文件（图表、表格、报告）都应该能通过运行脚本重新生成。如果你删除整个 <code>output/</code> 文件夹，运行一遍脚本就能全部恢复。</p>
+<p><strong>原则四：有 README</strong></p>
+<p>项目根目录和 <code>data/raw/</code> 目录都应该有 README 文件，说明项目目的、数据来源、变量定义、运行方法等关键信息。README 是项目的”使用说明书”。</p>
+</section>
+<section id="文件命名规范" class="level3" data-number="5.4.3">
+<h3 data-number="5.4.3" class="anchored" data-anchor-id="文件命名规范"><span class="header-section-number">5.4.3</span> 文件命名规范</h3>
+<p>好的文件名应该是自描述的、机器友好的、排序友好的：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 33%">
+<col style="width: 33%">
+<col style="width: 33%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">规则</th>
+<th style="text-align: left;">好的命名</th>
+<th style="text-align: left;">差的命名</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">使用小写字母和连字符</td>
+<td style="text-align: left;"><code>soil-carbon-analysis.R</code></td>
+<td style="text-align: left;"><code>Soil Carbon Analysis.R</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">包含日期时用 ISO 格式</td>
+<td style="text-align: left;"><code>survey-2027-03-15.csv</code></td>
+<td style="text-align: left;"><code>survey-3月15日.csv</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">用数字前缀控制排序</td>
+<td style="text-align: left;"><code>01-clean.R</code>, <code>02-analyze.R</code></td>
+<td style="text-align: left;"><code>clean.R</code>, <code>analyze.R</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">避免空格和特殊字符</td>
+<td style="text-align: left;"><code>tree-height-data.csv</code></td>
+<td style="text-align: left;"><code>tree height data (final).csv</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">名称反映内容</td>
+<td style="text-align: left;"><code>species-richness-by-plot.png</code></td>
+<td style="text-align: left;"><code>figure1.png</code></td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>避免中文文件名
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在编程环境中，中文文件名经常导致编码问题（尤其是 Windows 系统）。建议所有数据文件、脚本文件、项目文件夹都使用英文命名。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="元数据数据的身份证" class="level2" data-number="5.5">
+<h2 data-number="5.5" class="anchored" data-anchor-id="元数据数据的身份证"><span class="header-section-number">5.5</span> 元数据：数据的”身份证”</h2>
+<p>元数据（Metadata）是”描述数据的数据”。如果数据是一本书的正文，元数据就是书的封面、目录和版权页。没有元数据的数据集，就像一堆没有标签的试管——三个月后连你自己都不知道里面装的是什么。</p>
+<section id="元数据应该记录什么" class="level3" data-number="5.5.1">
+<h3 data-number="5.5.1" class="anchored" data-anchor-id="元数据应该记录什么"><span class="header-section-number">5.5.1</span> 元数据应该记录什么？</h3>
+<p>对于生态学研究数据，元数据至少应包含以下信息：</p>
+<p><strong>数据集层面：</strong></p>
+<ul>
+<li>数据集名称和描述</li>
+<li>创建者和联系方式</li>
+<li>创建日期和更新日期</li>
+<li>地理范围和时间范围</li>
+<li>使用许可协议</li>
+<li>引用方式</li>
+</ul>
+<p><strong>变量层面：</strong></p>
+<ul>
+<li>变量名称和描述</li>
+<li>数据类型（数值、分类、日期）</li>
+<li>单位</li>
+<li>取值范围或允许值列表</li>
+<li>缺失值编码（如 <code>NA</code>、<code>-9999</code>、空白）</li>
+<li>测量方法或仪器</li>
+</ul>
+</section>
+<section id="用-readme-记录元数据" class="level3" data-number="5.5.2">
+<h3 data-number="5.5.2" class="anchored" data-anchor-id="用-readme-记录元数据"><span class="header-section-number">5.5.2</span> 用 README 记录元数据</h3>
+<p>最简单的元数据记录方式是在 <code>data/raw/</code> 目录下创建一个 README.md 文件：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 数据说明</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">## tree_survey_2027.csv</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>亚热带常绿阔叶林样方调查数据，采集于广西弄岗国家级自然保护区。</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**采集时间**：2027年3月1日至3月15日</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**采集方法**：20m × 20m 样方，记录胸径 ≥ 5cm 的所有个体</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**坐标系**：WGS 84 (EPSG:4326)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 变量名 <span class="pp">|</span> 描述 <span class="pp">|</span> 类型 <span class="pp">|</span> 单位 <span class="pp">|</span> 备注 <span class="pp">|</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="pp">|:---|:---|:---|:---|:---|</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> plot_id <span class="pp">|</span> 样方编号 <span class="pp">|</span> 文本 <span class="pp">|</span> — <span class="pp">|</span> 格式：P001-P050 <span class="pp">|</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> species <span class="pp">|</span> 物种拉丁名 <span class="pp">|</span> 文本 <span class="pp">|</span> — <span class="pp">|</span> 依据《中国植物志》 <span class="pp">|</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> dbh <span class="pp">|</span> 胸径 <span class="pp">|</span> 数值 <span class="pp">|</span> cm <span class="pp">|</span> 1.3m 处测量 <span class="pp">|</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> height <span class="pp">|</span> 树高 <span class="pp">|</span> 数值 <span class="pp">|</span> m <span class="pp">|</span> 激光测高仪 <span class="pp">|</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> latitude <span class="pp">|</span> 纬度 <span class="pp">|</span> 数值 <span class="pp">|</span> 度 <span class="pp">|</span> WGS 84 <span class="pp">|</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> longitude <span class="pp">|</span> 经度 <span class="pp">|</span> 数值 <span class="pp">|</span> 度 <span class="pp">|</span> WGS 84 <span class="pp">|</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> date <span class="pp">|</span> 调查日期 <span class="pp">|</span> 日期 <span class="pp">|</span> — <span class="pp">|</span> ISO 8601 格式 <span class="pp">|</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> observer <span class="pp">|</span> 调查人 <span class="pp">|</span> 文本 <span class="pp">|</span> — <span class="pp">|</span> — <span class="pp">|</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**缺失值编码**：NA</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>**已知问题**：P023 样方因暴雨中断，仅完成部分调查</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>元数据标准
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>对于需要正式发布的数据集，建议使用领域标准的元数据格式：</p>
+<ul>
+<li><strong>EML（Ecological Metadata Language）</strong>：生态学领域最常用的元数据标准，被 LTER、DataONE 等平台采用</li>
+<li><strong>Dublin Core</strong>：通用的元数据标准，适用于各类数字资源</li>
+<li><strong>Darwin Core</strong>：生物多样性数据的元数据标准，被 GBIF 采用</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="数据存储与备份" class="level2" data-number="5.6">
+<h2 data-number="5.6" class="anchored" data-anchor-id="数据存储与备份"><span class="header-section-number">5.6</span> 数据存储与备份</h2>
+<section id="备份原则" class="level3" data-number="5.6.1">
+<h3 data-number="5.6.1" class="anchored" data-anchor-id="备份原则"><span class="header-section-number">5.6.1</span> 3-2-1 备份原则</h3>
+<p>数据备份的黄金法则是 <strong>3-2-1 原则</strong>：</p>
+<ul>
+<li><strong>3</strong> 份副本（1 份原件 + 2 份备份）</li>
+<li><strong>2</strong> 种不同的存储介质（如硬盘 + 云端）</li>
+<li><strong>1</strong> 份异地备份（防止火灾、盗窃等物理灾难）</li>
+</ul>
+<p>对于研究生来说，一个可行的备份方案是：</p>
+<pre><code>原件：实验室电脑硬盘
+备份1：学校云盘（如坚果云、学校 OneDrive）
+备份2：GitHub 私有仓库（代码和小型数据）</code></pre>
+</section>
+<section id="数据存储格式选择" class="level3" data-number="5.6.2">
+<h3 data-number="5.6.2" class="anchored" data-anchor-id="数据存储格式选择"><span class="header-section-number">5.6.2</span> 数据存储格式选择</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">格式</th>
+<th style="text-align: left;">优点</th>
+<th style="text-align: left;">缺点</th>
+<th style="text-align: left;">推荐用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">CSV</td>
+<td style="text-align: left;">通用、纯文本、任何软件可读</td>
+<td style="text-align: left;">不支持多工作表、无格式信息</td>
+<td style="text-align: left;">表格数据的首选长期存储格式</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">TSV</td>
+<td style="text-align: left;">同 CSV，适合含逗号的数据</td>
+<td style="text-align: left;">同 CSV</td>
+<td style="text-align: left;">含逗号文本的表格数据</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Excel (.xlsx)</td>
+<td style="text-align: left;">支持多工作表、格式丰富</td>
+<td style="text-align: left;">专有格式、易引入隐藏错误</td>
+<td style="text-align: left;">数据录入阶段，不推荐长期存储</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">JSON</td>
+<td style="text-align: left;">支持嵌套结构、Web 友好</td>
+<td style="text-align: left;">不适合大型表格数据</td>
+<td style="text-align: left;">API 数据、配置文件</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">GeoTIFF</td>
+<td style="text-align: left;">地理空间栅格数据标准格式</td>
+<td style="text-align: left;">文件较大</td>
+<td style="text-align: left;">遥感影像、DEM</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Shapefile</td>
+<td style="text-align: left;">GIS 矢量数据通用格式</td>
+<td style="text-align: left;">多文件组成、字段名限制</td>
+<td style="text-align: left;">矢量空间数据</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>Excel 的隐藏陷阱
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>Excel 会”好心”地自动转换数据格式，这在生态学中造成过严重问题。例如：</p>
+<ul>
+<li>基因名 <code>MARCH1</code> 被自动转换为日期 <code>3月1日</code>（Ziemann et al., 2016, <em>Genome Biology</em>, 17: 177, DOI: 10.1186/s13059-016-1044-7）</li>
+<li>物种编号 <code>1E3</code> 被解释为科学计数法 <code>1000</code></li>
+<li>前导零被自动删除：<code>007</code> 变成 <code>7</code></li>
+</ul>
+<p>建议：用 Excel 录入数据后，尽快导出为 CSV 格式，后续分析全部基于 CSV 文件进行。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="研究工作流总览" class="level2" data-number="5.7">
+<h2 data-number="5.7" class="anchored" data-anchor-id="研究工作流总览"><span class="header-section-number">5.7</span> 研究工作流总览</h2>
+<p>将前面讨论的所有要素串联起来，一个完整的数据驱动研究工作流如下：</p>
+<pre><code>1. 研究设计
+   ├── 明确研究问题和假设
+   ├── 设计采样方案
+   └── 编写数据管理计划（DMP）
+         ↓
+2. 环境搭建                          → 详见 0104
+   ├── 安装 R/RStudio/Python/Git
+   ├── 创建项目文件夹结构
+   └── 初始化 Git 仓库
+         ↓
+3. 数据采集                          → 详见第三单元
+   ├── 野外调查 / 实验 / 下载公共数据
+   ├── 记录元数据
+   └── 原始数据存入 data/raw/（只读）
+         ↓
+4. 数据预处理                        → 详见第四单元
+   ├── 数据检查与清洗
+   ├── 特征工程
+   ├── 质量评估
+   └── 清洗后数据存入 data/processed/
+         ↓
+5. 探索性分析与可视化                → 详见第五单元
+   ├── 描述性统计
+   ├── 数据可视化
+   └── 初步模式识别
+         ↓
+6. 统计建模与结果解读
+   ├── 选择合适的统计方法
+   ├── 模型拟合与诊断
+   └── 结果可视化
+         ↓
+7. 报告与共享
+   ├── 撰写可重复的分析报告（Quarto）
+   ├── 数据上传至公共仓库
+   └── 代码公开在 GitHub 上</code></pre>
+<p>这个工作流的核心思想是：<strong>每一步都用代码记录，每一步都可以重新运行，每一步都有据可查。</strong></p>
+</section>
+<section id="工具链概览" class="level2" data-number="5.8">
+<h2 data-number="5.8" class="anchored" data-anchor-id="工具链概览"><span class="header-section-number">5.8</span> 工具链概览</h2>
+<p>本课程将使用以下工具链来支撑上述工作流。这些工具将在后续章节中逐一介绍：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">环节</th>
+<th style="text-align: left;">工具</th>
+<th style="text-align: left;">章节</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">编程与分析</td>
+<td style="text-align: left;">R + RStudio</td>
+<td style="text-align: left;">0104, 0105, 0106</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">版本控制</td>
+<td style="text-align: left;">Git + GitHub</td>
+<td style="text-align: left;">0104, 0107</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据采集（网络）</td>
+<td style="text-align: left;">Python + requests</td>
+<td style="text-align: left;">0208</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">文档与报告</td>
+<td style="text-align: left;">Quarto</td>
+<td style="text-align: left;">0104</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据可视化</td>
+<td style="text-align: left;">ggplot2</td>
+<td style="text-align: left;">0501</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">包管理与环境锁定</td>
+<td style="text-align: left;">renv</td>
+<td style="text-align: left;">0104</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>为什么选择这套工具链？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>R</strong>：生态学领域最主流的统计分析语言，拥有丰富的生态学专用包（vegan、ape、lme4 等）</li>
+<li><strong>Git</strong>：学术界和工业界通用的版本控制标准</li>
+<li><strong>Quarto</strong>：R Markdown 的下一代替代品，支持 R、Python、Julia 多语言</li>
+<li><strong>CSV + 纯文本</strong>：开放格式，不依赖特定软件，50 年后依然可读</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="课后练习" class="level2" data-number="5.9">
+<h2 data-number="5.9" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">5.9</span> 课后练习</h2>
+<ol type="1">
+<li>阅读 FAIR 原则的原始论文摘要（Wilkinson et al., 2016），用自己的话解释 FAIR 四个字母分别代表什么。</li>
+<li>为你当前的研究课题草拟一份简化版数据管理计划，至少包含：数据描述、文件格式、存储方案、共享计划四个部分。</li>
+<li>检查你现有的项目文件夹结构，对照本章推荐的结构，列出需要改进的地方。</li>
+<li>为你的一个数据文件编写 README 元数据文档，包含变量名、类型、单位和缺失值编码。</li>
+<li>评估你当前的数据备份情况：是否满足 3-2-1 原则？如果不满足，制定改进方案。</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0102-what-is-data-preprocessing.html" class="pagination-link" aria-label="什么是数据预处理">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0104-environment-setup.html" class="pagination-link" aria-label="研究环境搭建">
+        <span class="nav-page-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

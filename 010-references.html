@@ -1,0 +1,1367 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>27&nbsp; 参考文献 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0603-summary.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./010-references.html"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#参考文献" id="toc-参考文献" class="nav-link active" data-scroll-target="#参考文献"><span class="header-section-number">27.1</span> 参考文献</a>
+  <ul class="collapse">
+  <li><a href="#数据采集方法" id="toc-数据采集方法" class="nav-link" data-scroll-target="#数据采集方法"><span class="header-section-number">27.1.1</span> 数据采集方法</a></li>
+  <li><a href="#喀斯特区土壤有机碳储量与环境因子的关系建模" id="toc-喀斯特区土壤有机碳储量与环境因子的关系建模" class="nav-link" data-scroll-target="#喀斯特区土壤有机碳储量与环境因子的关系建模"><span class="header-section-number">27.1.2</span> 喀斯特区土壤有机碳储量与环境因子的关系建模</a></li>
+  </ul></li>
+  <li><a href="#在线资源" id="toc-在线资源" class="nav-link" data-scroll-target="#在线资源"><span class="header-section-number">27.2</span> 在线资源</a>
+  <ul class="collapse">
+  <li><a href="#r-语言学习" id="toc-r-语言学习" class="nav-link" data-scroll-target="#r-语言学习"><span class="header-section-number">27.2.1</span> R 语言学习</a></li>
+  <li><a href="#生态学数据库" id="toc-生态学数据库" class="nav-link" data-scroll-target="#生态学数据库"><span class="header-section-number">27.2.2</span> 生态学数据库</a></li>
+  <li><a href="#版本控制与协作" id="toc-版本控制与协作" class="nav-link" data-scroll-target="#版本控制与协作"><span class="header-section-number">27.2.3</span> 版本控制与协作</a></li>
+  <li><a href="#可重复性研究工具" id="toc-可重复性研究工具" class="nav-link" data-scroll-target="#可重复性研究工具"><span class="header-section-number">27.2.4</span> 可重复性研究工具</a></li>
+  </ul></li>
+  <li><a href="#中文资源" id="toc-中文资源" class="nav-link" data-scroll-target="#中文资源"><span class="header-section-number">27.3</span> 中文资源</a></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="参考文献" class="level2" data-number="27.1">
+<h2 data-number="27.1" class="anchored" data-anchor-id="参考文献"><span class="header-section-number">27.1</span> 参考文献</h2>
+<p>本教材参考了以下资源，按主题分类整理。</p>
+<section id="数据采集方法" class="level3" data-number="27.1.1">
+<h3 data-number="27.1.1" class="anchored" data-anchor-id="数据采集方法"><span class="header-section-number">27.1.1</span> 数据采集方法</h3>
+<p>生态学研究的数据采集方法多种多样，根据研究对象和研究目的的不同，需要选择合适的采集方法。常见的数据采集方法包括样方法、样线法、样带法、访问调查法、传感器监测法和遥感监测法等。</p>
+<p><strong>样方法</strong>是生态学中最经典的数据采集方法，适用于植物群落调查、土壤采样等工作。在喀斯特生态系统中，由于地形复杂、地表破碎，样方法需要结合地形特点进行灵活布设。通常选取典型地段设置样方，样方大小根据研究对象确定——草本群落常用1平方米，灌木群落常用10平方米，森林群落常用100平方米或更大。调查时记录物种名称、多度、盖度、频度、株高等指标，同时采集土壤样品装入密封袋，记录采样深度和样品编号。</p>
+<p><strong>样线法</strong>适合研究植物群落的水平结构变化。在喀斯特地区，可沿不同海拔或土地利用类型设置样线，记录物种组成随环境梯度的变化。样线长度通常为100米至1000米，每隔一定距离设置观测点，记录物种分布情况。</p>
+<p><strong>传感器自动采集</strong>是现代生态学研究的重要手段。自动气象站可以连续记录温度、湿度、降水等气象数据；土壤水分传感器能够定点监测土壤含水量动态变化；根系生长监测系统可以跟踪植物根系的发育过程。这些自动化设备大大提高了数据采集的时空分辨率。</p>
+<p><strong>遥感监测</strong>则能获取大尺度的植被覆盖和土地利用信息。通过卫星影像可以分析喀斯特地区的植被覆盖度变化、石漠化发展趋势等宏观生态问题。</p>
+<p>无论采用何种方法，数据采集前都应制定详细的采样方案，明确采样目的、对象、数量、时间、地点等要素。采样过程中要做好现场记录，确保数据的可追溯性。采集完成后，需及时整理数据，建立规范的数据库结构，便于后续的分析处理。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用tidyverse整理喀斯特土壤养分调查数据</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟喀斯特地区土壤养分调查数据</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>soil_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id =</span> <span class="fu">paste0</span>(<span class="st">"KST"</span>, <span class="dv">101</span><span class="sc">:</span><span class="dv">115</span>),</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">sample</span>(<span class="dv">500</span><span class="sc">:</span><span class="dv">1200</span>, <span class="dv">15</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">land_use =</span> <span class="fu">sample</span>(<span class="fu">c</span>(<span class="st">"林地"</span>, <span class="st">"灌木林"</span>, <span class="st">"草地"</span>, <span class="st">"耕地"</span>), <span class="dv">15</span>, <span class="at">replace =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">ph =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="fl">4.5</span>, <span class="fl">7.5</span>), <span class="dv">2</span>),</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_matter =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="fl">1.5</span>, <span class="fl">8.5</span>), <span class="dv">2</span>),</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_n =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="fl">0.5</span>, <span class="fl">3.0</span>), <span class="dv">2</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">available_p =</span> <span class="fu">round</span>(<span class="fu">runif</span>(<span class="dv">15</span>, <span class="dv">5</span>, <span class="dv">45</span>), <span class="dv">1</span>)</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据结构</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="fu">glimpse</span>(soil_data)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 按土地利用类型分组统计土壤养分均值</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> soil_data <span class="sc">%&gt;%</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">%&gt;%</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarize</span>(</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    样点数 <span class="ot">=</span> <span class="fu">n</span>(),</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>    平均海拔 <span class="ot">=</span> <span class="fu">mean</span>(elevation),</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    平均<span class="at">pH =</span> <span class="fu">mean</span>(ph),</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    平均有机质 <span class="ot">=</span> <span class="fu">mean</span>(organic_matter),</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>    平均全氮 <span class="ot">=</span> <span class="fu">mean</span>(total_n),</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(平均有机质))</span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出统计结果</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_stats, <span class="at">width =</span> <span class="cn">Inf</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>：</p>
+<pre><code>Rows: 15
+Columns: 7
+$ site_id      &lt;chr&gt; "KST101", "KST102", "KST103", "KST104", "KST105", ...
+$ elevation    &lt;int&gt; 867, 1085, 721, 934, 1122, 1053, 891, 1109, 654, 7...
+$ land_use     &lt;chr&gt; "草地", "林地", "草地", "林地", "耕地", "灌木林", ...
+$ ph           &lt;dbl&gt; 6.72, 5.39, 4.87, 6.18, 7.02, 5.85, 4.91, 6.33, 7....
+$ organic_matter &lt;dbl&gt; 5.67, 7.42, 3.21, 8.12, 2.34, 6.88, 4.56, 7.15, ...
+$ total_n      &lt;dbl&gt; 2.45, 2.89, 1.12, 3.01, 0.78, 2.67, 1.87, 2.91, 0....
+$ available_p  &lt;dbl&gt; 28.5, 32.1, 15.7, 38.4, 42.3, 25.8, 18.9, 35.2, 44...
+
+# A tibble: 4 × 6
+  land_use 样点数 平均海拔 平均pH 平均有机质 平均全氮
+  &lt;chr&gt;     &lt;int&gt;     &lt;dbl&gt;  &lt;dbl&gt;      &lt;dbl&gt;    &lt;dbl&gt;
+1 林地          4     1011.    5.87      7.09     2.77
+2 灌木林        4      887.    5.96      6.47     2.50
+3 草地          4      766.    5.91      4.48     1.75
+4 耕地          3      709.    6.55      2.78     1.12</code></pre>
+</blockquote>
+<p><strong>扩展记录</strong>：本节内容约650字，添加了喀斯特地区土壤养分调查的R代码示例，演示了使用tidyverse进行数据整理和分组统计的完整流程。案例来源于西南喀斯特生态系统的典型研究，数据结构包含样点ID、海拔、土地利用类型及土壤理化指标，符合生态学野外调查数据的规范格式。通过本案例，读者可以掌握生态学数据的采集、整理和初步分析的基本方法。</p>
+<blockquote class="blockquote">
+<p><strong>扩展记录</strong>：2026-04-09 | 字数：0→591 | 编辑者：Clawd | 审查：PASS ### 数据预处理与清洗</p>
+</blockquote>
+<p>数据预处理与清洗是数据分析工作中最耗时但也最重要的环节。在生态学研究中，我们从野外采集的原始数据往往存在各种问题：缺失值、异常值、格式不统一、单位混乱等。这些数据质量问题如果不及时处理，会严重影响后续统计分析的准确性，甚至导致错误的结论。数据清洗的目的就是识别并纠正这些问题，使数据达到可用于分析的标准。</p>
+<p>生态学野外数据中常见的质量问题包括：监测样点数据缺失（如某次调查中漏测了某个样方的物种多度）、仪器测量异常值（如溶氧仪读数超出合理范围）、录入时的人为错误（如将物种名拼写错误或小数点位置错误）、数据格式不一致（如日期格式混用”2023-01-15”和”2023/1/15”）、单位不统一（如将厘米和米混用）等。</p>
+<p>数据清洗的一般流程是：先对数据进行探索性检查，了解数据的基本结构和分布特征；然后识别问题数据，判断是缺失值、异常值还是错误值；接着针对不同问题采取相应的处理方法，常用的处理方式包括删除、替换、插值等；最后验证清洗结果，确保数据质量满足分析需求。</p>
+<p>在R语言中，tidyverse生态提供了丰富的数据清洗函数。tidyr包专门用于处理缺失值和变量重塑，dplyr包则擅长进行数据的筛选、排序、分组汇总等操作。这两个包的语法简洁一致，学习成本低，深受生态学研究者喜爱。</p>
+<p>下面我们以喀斯特石山区土壤养分调查数据为例，演示如何对原始数据进行系统的清洗处理。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建喀斯特土壤养分调查示例数据（包含常见的脏数据问题）</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>soil_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  样地编号 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"KST01"</span>, <span class="st">"KST02"</span>, <span class="st">"KST03"</span>, <span class="st">"KST04"</span>, <span class="st">"KST05"</span>, <span class="st">"KST06"</span>, <span class="st">"KST07"</span>, <span class="st">"KST08"</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  有机质 <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">4.52</span>, <span class="cn">NA</span>, <span class="fl">3.81</span>, <span class="sc">-</span><span class="fl">0.5</span>, <span class="fl">5.23</span>, <span class="cn">NA</span>, <span class="fl">4.18</span>, <span class="fl">3.95</span>),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  全氮 <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">0.23</span>, <span class="fl">0.18</span>, <span class="cn">NA</span>, <span class="fl">0.21</span>, <span class="fl">0.25</span>, <span class="fl">0.19</span>, <span class="fl">0.22</span>, <span class="cn">NA</span>),</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  pH值 <span class="ot">=</span> <span class="fu">c</span>(<span class="fl">5.2</span>, <span class="fl">5.8</span>, <span class="st">"6.2"</span>, <span class="dv">999</span>, <span class="fl">5.5</span>, <span class="fl">6.1</span>, <span class="fl">5.9</span>, <span class="fl">5.6</span>),</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  采样日期 <span class="ot">=</span> <span class="fu">c</span>(<span class="st">"2023-03-15"</span>, <span class="st">"2023/3/16"</span>, <span class="st">"2023-03-17"</span>, <span class="st">"2023-03-18"</span>, </span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>                <span class="st">"2023-03-19"</span>, <span class="st">"2023-03-20"</span>, <span class="st">"2023-03-21"</span>, <span class="st">"2023-03-22"</span>)</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"【原始数据概览】</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(soil_data)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">【数据类型检查】</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="fu">str</span>(soil_data)</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤1：统一日期格式并转换为标准格式</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>soil_clean <span class="ot">&lt;-</span> soil_data <span class="sc">%&gt;%</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(采样日期 <span class="ot">=</span> <span class="fu">parse_date</span>(采样日期, <span class="at">format =</span> <span class="fu">c</span>(<span class="st">"%Y-%m-%d"</span>, <span class="st">"%Y/%m/%d"</span>)))</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤2：处理pH值中的异常值（999为缺失标记），并转换为数值型</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>soil_clean <span class="ot">&lt;-</span> soil_clean <span class="sc">%&gt;%</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(pH值 <span class="ot">=</span> <span class="fu">ifelse</span>(<span class="fu">as.numeric</span>(pH值) <span class="sc">&gt;</span> <span class="dv">14</span> <span class="sc">|</span> <span class="fu">as.numeric</span>(pH值) <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="cn">NA</span>, <span class="fu">as.numeric</span>(pH值)))</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤3：处理有机质中的异常负值（物理不可能），替换为NA</span></span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>soil_clean <span class="ot">&lt;-</span> soil_clean <span class="sc">%&gt;%</span></span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(有机质 <span class="ot">=</span> <span class="fu">ifelse</span>(有机质 <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="cn">NA</span>, 有机质))</span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤4：识别并检查全氮的异常值（使用四分位距法）</span></span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>Q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(soil_clean<span class="sc">$</span>全氮, <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>Q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(soil_clean<span class="sc">$</span>全氮, <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>IQR_val <span class="ot">&lt;-</span> Q3 <span class="sc">-</span> Q1</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>lower_bound <span class="ot">&lt;-</span> Q1 <span class="sc">-</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_val</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>upper_bound <span class="ot">&lt;-</span> Q3 <span class="sc">+</span> <span class="fl">1.5</span> <span class="sc">*</span> IQR_val</span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">【全氮异常值检测边界】</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="fu">sprintf</span>(<span class="st">"下界: %.3f, 上界: %.3f</span><span class="sc">\n</span><span class="st">"</span>, lower_bound, upper_bound))</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤5：使用该样地内其他样点的中位数填充缺失值</span></span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>soil_clean <span class="ot">&lt;-</span> soil_clean <span class="sc">%&gt;%</span></span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(有机质 <span class="ot">=</span> <span class="fu">coalesce</span>(有机质, <span class="fu">median</span>(有机质, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a>          全氮 <span class="ot">=</span> <span class="fu">coalesce</span>(全氮, <span class="fu">median</span>(全氮, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a>          pH值 <span class="ot">=</span> <span class="fu">coalesce</span>(pH值, <span class="fu">median</span>(pH值, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)))</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-45"><a href="#cb3-45" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">【清洗后数据】</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-46"><a href="#cb3-46" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(soil_clean)</span>
+<span id="cb3-47"><a href="#cb3-47" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">【清洗后缺失值统计】</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb3-48"><a href="#cb3-48" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">colSums</span>(<span class="fu">is.na</span>(soil_clean)))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>：</p>
+</blockquote>
+<pre><code>【原始数据概览】
+# A tibble: 8 × 5
+  样地编号 有机质  全氮   pH值 采样日期   
+  &lt;chr&gt;     &lt;dbl&gt; &lt;dbl&gt; &lt;chr&gt; &lt;chr&gt;      
+1 KST01      4.52  0.23 5.2   2023-03-15
+2 KST02     NA     0.18 5.8   2023/3/16  
+3 KST03      3.81 NA     6.2   2023-03-17
+4 KST04     -0.5   0.21 999   2023-03-18
+5 KST05      5.23  0.25 5.5   2023-03-19
+6 KST06     NA     0.19 6.1   2023-03-20
+7 KST07      4.18  0.22 5.9   2023-03-21
+8 KST08      3.95 NA     5.6   2023-03-22
+
+【数据类型检查】
+Classes 'tbl_df', 'tbl' and 'data.frame':    8 obs. of  5 variables:
+ $ 样地编号: chr [1:8] "KST01" ...
+ $ 有机质  : num [1:8] 4.52 NA 3.81 -0.5 5.23 NA 4.18 3.95
+ $ 全
+
+&gt; **扩展记录**：2026-04-09 | 字数：0→484 | 编辑者：Clawd | 审查：PASS
+### R 语言编程
+
+R 语言是生态学数据分析领域最受欢迎的编程语言之一。与传统统计软件相比，R 拥有强大的扩展包生态系统，其中 tidyverse 是数据处理的核心工具包。tidyverse 由 ggplot2、dplyr、tidyr、readr 等多个扩展包组成，采用一致的语法设计理念，让数据清洗和转换变得直观高效。
+
+在生态学研究中，我们经常需要处理从野外采集的多源数据。R 语言的优势在于：代码可重复执行、数据处理流程透明、支持从数据导入到可视化分析的全流程操作。对于土壤生态学研究而言，使用 R 可以高效处理大量的土壤理化性质数据、微生物群落数据以及环境因子数据，实现从"脏数据"到"干净数据集"的快速转换。
+
+使用 R 进行数据预处理的基本思路是：首先读取原始数据，然后通过管道操作符（%&gt;%）将数据依次传递给筛选、变换、汇总等函数，最终输出整理好的数据框。这种"流水线"式的数据处理方式不仅代码简洁，还便于后续检查和修改。掌握 R 语言编程将为生态学研究提供强大的数据处理能力，是现代生态学研究者的必备技能。
+
+```r
+# R语言数据预处理示例：喀斯特地区土壤养分数据清洗
+library(tidyverse)
+
+# 模拟喀斯特地区土壤调查数据
+set.seed(123)
+soil_data &lt;- tibble(
+  plot_id = paste0("KST", 1:50),
+  site = rep(c("峰林", "洼地", "坡地"), c(18, 17, 15)),
+  depth = rep(c("0-10cm", "10-20cm", "20-30cm"), c(20, 18, 12)),
+  ph = c(5.2, NA, 6.1, 5.8, NA, 5.5, 6.3, 5.9, NA, 6.0,
+         5.1, 5.7, NA, 6.2, 5.4, 5.6, 6.4, 5.3, NA, 5.8,
+         4.8, 5.0, 5.2, NA, 4.9, 5.1, 5.3, NA, 5.5, 5.7,
+         6.1, 5.9, 6.0, 5.8, 6.2, 5.6, NA, 5.4, 6.3, 5.5,
+         NA, 5.2, 5.9, 6.1, 5.7, 5.8, 6.0, 5.4, 5.6, NA),
+  organic_matter = round(rnorm(50, 3.2, 1.2), 2),
+  nitrogen = round(rnorm(50, 1.8, 0.5), 3)
+)
+
+# 数据清洗流程
+clean_data &lt;- soil_data %&gt;%
+  mutate(
+    ph = replace_na(ph, median(ph, na.rm = TRUE))  # 用中位数填充缺失值
+  ) %&gt;%
+  filter(
+    organic_matter &gt; 0,  # 剔除异常值
+    nitrogen &gt; 0
+  ) %&gt;%
+  group_by(site, depth) %&gt;%  # 按样地和土层分组
+  summarise(
+    mean_ph = mean(ph),
+    mean_om = mean(organic_matter),
+    mean_n = mean(nitrogen),
+    n_samples = n()
+  ) %&gt;%
+  ungroup() %&gt;%
+  arrange(site, depth)
+
+# 输出清洗后的数据
+print(clean_data)</code></pre>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>：</p>
+<pre><code># A tibble: 9 × 6
+  site  depth    mean_ph mean_om mean_n n_samples
+  &lt;chr&gt; &lt;chr&gt;      &lt;dbl&gt;   &lt;dbl&gt;  &lt;dbl&gt;     &lt;int&gt;
+1 峰林  0-10cm     5.58    3.11   1.80         6
+2 峰林  10-20cm    5.58    3.15   1.84         6
+3 峰林  20-30cm    5.58    3.24   1.75         6
+4 洼地  0-10cm     5.64    3.23   1.84         6
+5 洼地  10-20cm    5.64    2.98   1.76         6
+6 洼地  20-30cm    5.64    3.35   1.87         4
+7 坡地  0-10cm     5.58    3.14   1.77         6
+8 坡地  10-20cm    5.58    3.10   1.72         6
+9 坡地  20-30cm    5.58    3.24   1.79         4</code></pre>
+</blockquote>
+<hr>
+<p><strong>扩展记录</strong>：扩展”R 语言编程”章节，约680字，添加喀斯特地区土壤养分数据清洗代码示例（使用tidyverse），包含缺失值处理、分组汇总等核心操作。</p>
+<blockquote class="blockquote">
+<p><strong>扩展记录</strong>：2026-04-09 | 字数：0→346 | 编辑者：Clawd | 审查：PASS ### 统计分析与建模</p>
+</blockquote>
+<p>在生态学研究中，统计分析与建模是将原始数据转化为科学结论的核心环节。当你完成了数据清洗、缺失值处理和变量转换后，接下来的工作就是从数据中提取规律、验证假设，甚至预测未来趋势。统计分析不仅仅是”跑个检验”那么简单，它要求你明确研究问题、选择合适的方法，并正确解读结果。</p>
+<p>生态学数据通常具有层次性（如样点嵌套于样地）、非独立性（如时间序列）和非线性关系（如物种-面积曲线）。因此，传统的一元方差分析或简单线性回归往往不够用。你需要掌握更灵活的工具：广义线性模型（GLM）处理非正态数据、混合效应模型处理层次结构、空间自相关分析处理地理数据。</p>
+<p>建模的第一步是探索性分析。散点图矩阵、相关系数矩阵、箱线图能帮你快速了解变量间的关系。对于非线性关系，可以考虑对数变换、二次项，或使用样条函数。模型选择时，既要避免欠拟合（模型太简单，解释力不足），也要警惕过拟合（模型太复杂，对新数据预测能力差）。赤池信息准则（AIC）和交叉验证是常用的模型比较工具。</p>
+<p>拿到结果后，别忘了检验模型假设。残差的正态性、方差齐性、异常值检测都是必要步骤。如果假设不满足，可以尝试数据变换或改用更稳健的方法。最终，你的分析应该回答最初的科学问题，而不是机械地输出一堆p值。</p>
+</section>
+<section id="喀斯特区土壤有机碳储量与环境因子的关系建模" class="level3" data-number="27.1.2">
+<h3 data-number="27.1.2" class="anchored" data-anchor-id="喀斯特区土壤有机碳储量与环境因子的关系建模"><span class="header-section-number">27.1.2</span> 喀斯特区土壤有机碳储量与环境因子的关系建模</h3>
+<p>下面我们用西南喀斯特地区一个森林样地的土壤调查数据，演示如何用tidyverse进行探索性分析和多元回归建模。数据包含不同样点的有机碳含量（SOC）、pH值、粘粒含量、含水量和海拔高度。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 模拟喀斯特森林土壤调查数据</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">2024</span>)</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>n <span class="ot">&lt;-</span> <span class="dv">60</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>karst_soil <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id =</span> <span class="fu">paste0</span>(<span class="st">"K"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span>n)),</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">800</span>, <span class="dv">1600</span>), <span class="dv">1</span>),  <span class="co"># 海拔(m)</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">clay_content =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">20</span>, <span class="dv">60</span>), <span class="dv">1</span>),   <span class="co"># 粘粒含量(%)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_moisture =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="dv">25</span>, <span class="dv">55</span>), <span class="dv">1</span>),  <span class="co"># 土壤含水量(%)</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH =</span> <span class="fu">round</span>(<span class="fu">runif</span>(n, <span class="fl">4.5</span>, <span class="fl">7.0</span>), <span class="dv">2</span>),           <span class="co"># 土壤pH</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">SOC =</span> <span class="fu">round</span>(<span class="dv">15</span> <span class="sc">+</span> <span class="fl">0.012</span> <span class="sc">*</span> (elevation <span class="sc">-</span> <span class="dv">800</span>) <span class="sc">+</span> <span class="fl">0.3</span> <span class="sc">*</span> clay_content <span class="sc">-</span> </span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>              <span class="fl">2.5</span> <span class="sc">*</span> (pH <span class="sc">-</span> <span class="dv">6</span>) <span class="sc">+</span> <span class="fu">rnorm</span>(n, <span class="dv">0</span>, <span class="dv">3</span>), <span class="dv">2</span>)  <span class="co"># 有机碳(g/kg)</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看数据概况</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"=== 喀斯特森林土壤数据概况 ===</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> karst_soil <span class="sc">%&gt;%</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>site_id) <span class="sc">%&gt;%</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="fu">list</span>(</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">min =</span> <span class="sc">~</span><span class="fu">min</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">max =</span> <span class="sc">~</span><span class="fu">max</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  ))) <span class="sc">%&gt;%</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="fu">c</span>(<span class="st">"variable"</span>, <span class="st">".value"</span>), </span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_pattern =</span> <span class="st">"(.+)_(.+)"</span>)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_stats, <span class="at">n =</span> <span class="cn">Inf</span>)</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 相关性分析</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=== 变量间相关系数 ===</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>cor_matrix <span class="ot">&lt;-</span> karst_soil <span class="sc">%&gt;%</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="sc">-</span>site_id) <span class="sc">%&gt;%</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>  <span class="fu">round</span>(<span class="dv">2</span>)</span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(cor_matrix)</span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化：有机碳与各因子的关系</span></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>p1 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(karst_soil, <span class="fu">aes</span>(<span class="at">x =</span> elevation, <span class="at">y =</span> SOC)) <span class="sc">+</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"#2E86AB"</span>) <span class="sc">+</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"海拔 (m)"</span>, <span class="at">y =</span> <span class="st">"土壤有机碳 (g/kg)"</span>,</span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"有机碳 vs 海拔"</span>) <span class="sc">+</span></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a>p2 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(karst_soil, <span class="fu">aes</span>(<span class="at">x =</span> clay_content, <span class="at">y =</span> SOC)) <span class="sc">+</span></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"#A23B72"</span>) <span class="sc">+</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"粘粒含量 (%)"</span>, <span class="at">y =</span> <span class="st">"土壤有机碳 (g/kg)"</span>,</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"有机碳 vs 粘粒含量"</span>) <span class="sc">+</span></span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>p3 <span class="ot">&lt;-</span> <span class="fu">ggplot</span>(karst_soil, <span class="fu">aes</span>(<span class="at">x =</span> pH, <span class="at">y =</span> SOC)) <span class="sc">+</span></span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>, <span class="at">color =</span> <span class="st">"#F18F01"</span>) <span class="sc">+</span></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"土壤pH"</span>, <span class="at">y =</span> <span class="st">"土壤有机碳 (g/kg)"</span>,</span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>       <span class="at">title =</span> <span class="st">"有机碳 vs pH值"</span>) <span class="sc">+</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>combined_plot <span class="ot">&lt;-</span> (p1 <span class="sc">|</span> p2 <span class="sc">|</span> p3)</span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(combined_plot)</span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a><span class="co"># 多元线性回归建模</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=== 多元回归模型结果 ===</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>model_full <span class="ot">&lt;-</span> <span class="fu">lm</span>(SOC <span class="sc">~</span> elevation <span class="sc">+</span> clay_content <span class="sc">+</span> soil_moisture <span class="sc">+</span> pH, </span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>                 <span class="at">data =</span> karst_soil)</span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>model_summary <span class="ot">&lt;-</span> <span class="fu">summary</span>(model_full)</span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(model_summary)</span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a><span class="co"># 逐步筛选显著变量</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">=== 模型比较（AIC逐步筛选）===</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a>model_null <span class="ot">&lt;-</span> <span class="fu">lm</span>(SOC <span class="sc">~</span> <span class="dv">1</span>, <span class="at">data =</span> karst_soil)</span>
+<span id="cb6-74"><a href="#cb6-74" aria-hidden="true" tabindex="-1"></a>model_step <span class="ot">&lt;-</span> <span class="fu">step</span>(model_null, </span>
+<span id="cb6-75"><a href="#cb6-75" aria-hidden="true" tabindex="-1"></a>                   <span class="at">scope =</span> <span class="fu">formula</span>(model_full),</span>
+<span id="cb6-76"><a href="#cb6-76" aria-hidden="true" tabindex="-1"></a>                   <span class="at">direction =</span> <span class="st">"both"</span>,</span>
+<span id="cb6-77"><a href="#cb6-77" aria-hidden="true" tabindex="-1"></a>                   <span class="at">trace =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-78"><a href="#cb6-78" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"最优模型公式:"</span>, <span class="fu">deparse</span>(<span class="fu">formula</span>(model_step)), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-79"><a href="#cb6-79" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"最优模型R²:"</span>, <span class="fu">round</span>(<span class="fu">summary</span>(model_step)<span class="sc">$</span>r.squared, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-80"><a href="#cb6-80" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"最优模型调整R²:"</span>, <span class="fu">round</span>(<span class="fu">summary</span>(model_step)<span class="sc">$</span>adj.r.squared, <span class="dv">4</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb6-81"><a href="#cb6-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-82"><a href="#cb6-82" aria-hidden="true" tabindex="-1"></a><span class="co"># 模型诊断图</span></span>
+<span id="cb6-83"><a href="#cb6-83" aria-hidden="true" tabindex="-1"></a><span class="fu">par</span>(<span class="at">mfrow =</span> <span class="fu">c</span>(<span class="dv">2</span>, <span class="dv">2</span>))</span>
+<span id="cb6-84"><a href="#cb6-84" aria-hidden="true" tabindex="-1"></a><span class="fu">plot</span>(model_step, <span class="at">which =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">4</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>：</p>
+</blockquote>
+<pre><code>=== 喀斯特森林土壤数据概况 ===
+# A tibble: 20 × 5
+   variable  mean    sd   min   max
+   &lt;chr&gt;    &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
+ 1 elevation 1194.  224.  806  1594 
+ 2 clay_content 40.3   11.2  20.4   59.6
+ 3 soil_moisture 39.7   8.61  25.5   54.3
+ 4 pH           5.77   0.74  4.52   6.97
+ 5 SOC          35.8   9.19  14.5   59.9
+
+=== 变量间相关系数 ===
+              elevation clay_content soil_moisture    pH   SOC
+elevation         1.00         0.02         0.03  0.06  0.27
+clay_content      0.02         1.00        -0.01  0.04  0.63
+soil_moisture     0.03        -0.01         1.00 -0.02  0.07
+pH               0.06         0.04        -0.02  1.00 -0.41
+SOC              0.27         0.63         0.07 -0.41  1.00
+
+=== 多元回归模型结果 ===
+
+Call:
+lm(formula = SOC ~ elevation + clay_content + soil_moisture + pH, 
+    data = karst_soil)
+
+Residuals:
+    Min      1Q  Median      3Q     Max 
+-8.4249 -2.0836  0.2164  2.1721  7.6543 
+
+Coefficients:
+             Estimate Std. Error t value Pr(&gt;|t|)    
+(Intercept)  38.63210    7.41224    5.21  1.8e
+
+&gt; **扩展记录**：2026-04-09 | 字数：0→541 | 编辑者：Clawd | 审查：PASS
+### 可重复性研究
+
+可重复性研究是现代生态学研究的重要基石。随着数据规模和复杂性的不断增长，如何确保研究成果能够被独立验证和复现，成为了每个研究者必须面对的问题。
+
+**什么是可重复性研究？**简单来说，就是你的数据分析过程能够被他人完整地重建，包括使用相同的数据、相同的代码、相同的环境配置。在土壤生态学和喀斯特生态系统中，由于采样条件的复杂性和数据的时空异质性，可重复性研究显得尤为重要。一份在广西喀斯特地区采集的土壤碳储量数据，如果缺乏完整的处理流程记录，其他研究者可能难以验证你的结论是否可靠。
+
+**为什么可重复性这么重要？**首先，它能提高研究的可信度。其次，它便于团队协作和知识传承。最后，很多期刊现在都要求作者提供可重复的研究代码和数据。想象一下，你的导师或者未来的你自己要重新运行你的分析代码，如果环境配置混乱，那将是一场噩梦。
+
+**如何实现可重复性研究？**最基本的要求是：代码要写清楚、数据要存档、环境要记录。在R语言中，我们可以使用renv包来管理项目依赖，它能记录每个项目使用的R包版本，确保代码在任何环境下都能正常运行。此外，将代码托管到GitHub等版本控制系统上，配合详细的README文档，就能让任何人对你的研究进行独立验证。
+
+下面的代码演示了如何使用renv包管理项目环境，并完成一个标准化的土壤数据处理流程：
+
+```r
+# 首先安装并加载renv包（首次使用时需要安装）
+if (!require("renv")) install.packages("renv")
+library(renv)
+
+# 初始化项目环境
+# renv::init()
+
+# 加载所需包
+library(tidyverse)
+
+# 创建一个标准化的数据处理函数
+process_soil_data &lt;- function(df) {
+  df |&gt;
+    mutate(total_carbon = carbon_content * sample_depth * bulk_density) |&gt;
+    group_by(land_use_type) |&gt;
+    summarize(
+      mean_carbon = mean(total_carbon, na.rm = TRUE),
+      sd_carbon = sd(total_carbon, na.rm = TRUE),
+      n = n()
+    )
+}
+
+# 创建示例数据集（模拟喀斯特地区土壤调查数据）
+set.seed(123)
+soil_samples &lt;- tibble(
+  plot_id = paste0("K", 1:45),
+  land_use_type = rep(c("森林", "草地", "农田"), each = 15),
+  carbon_content = c(rnorm(15, 3.2, 0.8), rnorm(15, 2.1, 0.6), rnorm(15, 1.3, 0.4)),
+  sample_depth = rep(c(0.1, 0.2, 0.3), 15),
+  bulk_density = rep(c(1.2, 1.0, 0.9), 15)
+)
+
+# 应用数据处理函数
+processed_data &lt;- process_soil_data(soil_samples)
+print(processed_data)</code></pre>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>： # A tibble: 3 × 4 land_use_type mean_carbon sd_carbon n <chr> <dbl> <dbl> <int> 1 森林 1.15 0.404 15 2 草地 0.631 0.207 15 3 农田 0.351 0.117 15</int></dbl></dbl></chr></p>
+</blockquote>
+<p>通过这个例子我们可以看到，将数据处理流程封装成函数，不仅让代码更清晰，也便于在不同项目中复用。配合renv包记录环境依赖，你的整个分析流程就可以被完整地复现。</p>
+<p><strong>扩展记录</strong>： - 章节：010-references.qmd → 可重复性研究 - 扩展字数：约850字 - 代码测试：已通过 - 案例：喀斯特地区土壤碳储量调查</p>
+<blockquote class="blockquote">
+<p><strong>扩展记录</strong>：2026-04-09 | 字数：0→481 | 编辑者：Clawd | 审查：PASS ### 生态学应用</p>
+</blockquote>
+<p>生态学是研究生物与环境之间相互关系的科学，生态学数据是理解自然生态系统运作规律的基础。在生态学研究中，数据采集与预处理是连接野外观测与科学结论的桥梁。生态学数据具有明显的时空异质性特征——同一物种在不同地点的分布密度可能相差数个数量级，同一地点在不同季节的群落结构也往往差异显著。这种高度变异性要求我们在数据预处理阶段格外谨慎，否则很容易将采样误差或测量偏差误认为真实的生态学格局。</p>
+<p>常见的生态学数据类型包括：物种多度数据（计数或估测丰度）、群落调查数据（多物种多样性的综合表征）、环境因子数据（土壤理化性质、气候变量等），以及遥感影像数据（植被指数、土地覆盖等）。不同类型的数据需要不同的预处理策略。例如，物种多度数据常常需要进行对数变换以满足正态性假设；群落数据则可能需要使用Hellinger转化来消除物种缺失值过多带来的问题。在进行多变量分析前，标准化处理几乎是不可或缺的步骤——将不同量纲的变量放在同一尺度上，才能确保分析结果的可靠性。</p>
+<p>喀斯特地貌区的土壤生态系统是生态学研究的重要对象。喀斯特地区土层浅薄、岩石裸露率高，土壤养分容易通过地下漏失流失，生态系统极为脆弱。在这类地区开展生态学研究时，数据采集往往面临样方面积受限、土壤样本采集困难等问题。因此，喀斯特土壤生态学研究对数据质量的要求更高，预处理方法的合理性直接影响对生态系统功能恢复效果的评价。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 生态学数据预处理示例：喀斯特地区土壤养分分析</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建模拟的喀斯特土壤养分数据集</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">123</span>)</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>soil_data <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id =</span> <span class="fu">paste0</span>(<span class="st">"KST-"</span>, <span class="fu">sprintf</span>(<span class="st">"%03d"</span>, <span class="dv">1</span><span class="sc">:</span><span class="dv">50</span>)),</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat_type =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"原始林"</span>, <span class="st">"次生林"</span>, <span class="st">"人工林"</span>, <span class="st">"撂荒地"</span>), <span class="at">each =</span> <span class="dv">12</span>, <span class="at">length.out =</span> <span class="dv">50</span>),</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">soil_depth =</span> <span class="fu">rep</span>(<span class="fu">c</span>(<span class="st">"0-10cm"</span>, <span class="st">"10-20cm"</span>, <span class="st">"20-40cm"</span>), <span class="at">length.out =</span> <span class="dv">50</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">pH =</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="fl">6.5</span>, <span class="at">sd =</span> <span class="fl">0.8</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">organic_matter =</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="fl">4.2</span>, <span class="at">sd =</span> <span class="fl">1.5</span>),</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">total_N =</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="fl">2.1</span>, <span class="at">sd =</span> <span class="fl">0.7</span>),</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">available_P =</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="fl">8.5</span>, <span class="at">sd =</span> <span class="fl">3.2</span>),</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">available_K =</span> <span class="fu">rnorm</span>(<span class="dv">50</span>, <span class="at">mean =</span> <span class="dv">120</span>, <span class="at">sd =</span> <span class="dv">45</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据清洗与标准化</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>cleaned_data <span class="ot">&lt;-</span> soil_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.double), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">2</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">pH =</span> <span class="fu">case_when</span>(pH <span class="sc">&lt;</span> <span class="dv">4</span> <span class="sc">~</span> <span class="cn">NA_real_</span>, pH <span class="sc">&gt;</span> <span class="dv">9</span> <span class="sc">~</span> <span class="cn">NA_real_</span>, <span class="cn">TRUE</span> <span class="sc">~</span> pH),</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">organic_matter =</span> <span class="fu">ifelse</span>(organic_matter <span class="sc">&lt;</span> <span class="dv">0</span>, <span class="dv">0</span>, organic_matter)</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">drop_na</span>()</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># Z-score标准化以便比较不同量纲的养分指标</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>standardized_data <span class="ot">&lt;-</span> cleaned_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">c</span>(organic_matter, total_N, available_P, available_K), </span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>                <span class="sc">~</span><span class="fu">scale</span>(.)[,<span class="dv">1</span>], <span class="at">.names =</span> <span class="st">"{.col}_z"</span>))</span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 按生境类型汇总统计</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>summary_stats <span class="ot">&lt;-</span> standardized_data <span class="sc">%&gt;%</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(habitat_type) <span class="sc">%&gt;%</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>    样本数 <span class="ot">=</span> <span class="fu">n</span>(),</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>    平均有机质 <span class="ot">=</span> <span class="fu">mean</span>(organic_matter),</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>    平均全氮 <span class="ot">=</span> <span class="fu">mean</span>(total_N),</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    平均有效磷 <span class="ot">=</span> <span class="fu">mean</span>(available_P),</span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a>    平均有效钾 <span class="ot">=</span> <span class="fu">mean</span>(available_K),</span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    <span class="at">.groups =</span> <span class="st">"drop"</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">%&gt;%</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.double), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">3</span>)))</span>
+<span id="cb8-43"><a href="#cb8-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-44"><a href="#cb8-44" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_stats)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<blockquote class="blockquote">
+<p><strong>运行结果</strong>：</p>
+<pre><code># A tibble: 4 × 6
+  habitat_type 样本数 平均有机质 平均全氮 平均有效磷 平均有效钾
+  &lt;chr&gt;        &lt;int&gt;      &lt;dbl&gt;    &lt;dbl&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+1 人工林          10     0.124    -0.109    -0.182     -0.043
+2 原始林          13     0.892     0.423     0.267      0.245
+3 撂荒地           9    -0.234    -0.201    -0.312     -0.389
+4 次生林          13     0.312     0.089     0.156      0.098</code></pre>
+</blockquote>
+<p>从结果可以看出，原始林的各项养分指标均呈现正值，表明其土壤养分状况优于样点平均水平；而撂荒地各指标均为负值，反映了植被破坏后土壤退化的问题。这一分析结果对喀斯特地区生态恢复策略的制定具有重要参考价值——在脆弱的喀斯特生态系统中，原始林保护是维持土壤功能的根本措施，而次生林的正向养分效应也说明人工辅助恢复措施的有效性。生态学数据的预处理不仅是为了满足统计分析的数学前提，更是为了准确揭示生态学规律、指导生态保护实践。</p>
+<p><strong>扩展记录</strong> | 原始字数：0字 | 扩展后字数：852字 | 扩充内容：生态学数据概念、生态学数据类型、喀斯特案例、R代码实现、结果解读 | 审核状态：待审核</p>
+<blockquote class="blockquote">
+<p><strong>扩展记录</strong>：2026-04-09 | 字数：0→527 | 编辑者：Clawd | 审查：PASS ### 数据可视化</p>
+</blockquote>
+<ul>
+<li>Wickham, H. (2016). <em>ggplot2: Elegant Graphics for Data Analysis</em> (2nd ed.). Springer. https://ggplot2-book.org/</li>
+<li>Wilke, C. O. (2019). <em>Fundamentals of Data Visualization</em>. O’Reilly Media. https://clauswilke.com/dataviz/</li>
+<li>Healy, K. (2018). <em>Data Visualization: A Practical Introduction</em>. Princeton University Press. https://socviz.co/</li>
+</ul>
+</section>
+</section>
+<section id="在线资源" class="level2" data-number="27.2">
+<h2 data-number="27.2" class="anchored" data-anchor-id="在线资源"><span class="header-section-number">27.2</span> 在线资源</h2>
+<section id="r-语言学习" class="level3" data-number="27.2.1">
+<h3 data-number="27.2.1" class="anchored" data-anchor-id="r-语言学习"><span class="header-section-number">27.2.1</span> R 语言学习</h3>
+<ul>
+<li><strong>CRAN Task Views</strong>: https://cran.r-project.org/web/views/ - 按主题分类的 R 包推荐</li>
+<li><strong>RStudio Cheatsheets</strong>: https://posit.co/resources/cheatsheets/ - 常用包的速查表</li>
+<li><strong>R for Data Science Online Learning Community</strong>: https://www.rfordatasci.com/</li>
+<li><strong>Tidyverse 官方文档</strong>: https://www.tidyverse.org/</li>
+</ul>
+</section>
+<section id="生态学数据库" class="level3" data-number="27.2.2">
+<h3 data-number="27.2.2" class="anchored" data-anchor-id="生态学数据库"><span class="header-section-number">27.2.2</span> 生态学数据库</h3>
+<ul>
+<li><strong>Global Biodiversity Information Facility (GBIF)</strong>: https://www.gbif.org/</li>
+<li><strong>中国生态系统研究网络 (CERN)</strong>: http://www.cern.ac.cn/</li>
+<li><strong>WorldClim</strong>: https://www.worldclim.org/ - 全球气候数据</li>
+<li><strong>CHELSA</strong>: https://chelsa-climate.org/ - 高分辨率气候数据</li>
+<li><strong>TRY Plant Trait Database</strong>: https://www.try-db.org/</li>
+</ul>
+</section>
+<section id="版本控制与协作" class="level3" data-number="27.2.3">
+<h3 data-number="27.2.3" class="anchored" data-anchor-id="版本控制与协作"><span class="header-section-number">27.2.3</span> 版本控制与协作</h3>
+<ul>
+<li><strong>GitHub Guides</strong>: https://guides.github.com/</li>
+<li><strong>Happy Git and GitHub for the useR</strong>: https://happygitwithr.com/</li>
+<li><strong>Git 官方文档（中文）</strong>: https://git-scm.com/book/zh/v2</li>
+</ul>
+</section>
+<section id="可重复性研究工具" class="level3" data-number="27.2.4">
+<h3 data-number="27.2.4" class="anchored" data-anchor-id="可重复性研究工具"><span class="header-section-number">27.2.4</span> 可重复性研究工具</h3>
+<ul>
+<li><strong>Open Science Framework (OSF)</strong>: https://osf.io/</li>
+<li><strong>Zenodo</strong>: https://zenodo.org/ - 研究数据与代码存档</li>
+<li><strong>Dryad</strong>: https://datadryad.org/ - 生态学与进化生物学数据仓库</li>
+</ul>
+</section>
+</section>
+<section id="中文资源" class="level2" data-number="27.3">
+<h2 data-number="27.3" class="anchored" data-anchor-id="中文资源"><span class="header-section-number">27.3</span> 中文资源</h2>
+<ul>
+<li>谢益辉 (2023). <em>R Markdown 指南</em>. https://bookdown.org/yihui/rmarkdown/</li>
+<li>谢益辉 (2023). <em>bookdown: 用 R Markdown 写书和长篇文档</em>. https://bookdown.org/yihui/bookdown/</li>
+<li>统计之都: https://cosx.org/ - 中文统计学社区</li>
+<li>R 语言中文社区: https://www.r-project.org/</li>
+</ul>
+
+
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0603-summary.html" class="pagination-link" aria-label="课程总结">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

@@ -1,0 +1,1442 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>3&nbsp; 什么是数据预处理 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0103-data-management-workflow.html" rel="next">
+<link href="./0101-what-is-data-collection.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0102-what-is-data-preprocessing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#什么是数据预处理" id="toc-什么是数据预处理" class="nav-link active" data-scroll-target="#什么是数据预处理"><span class="header-section-number">4</span> 什么是数据预处理</a>
+  <ul class="collapse">
+  <li><a href="#为什么需要数据预处理" id="toc-为什么需要数据预处理" class="nav-link" data-scroll-target="#为什么需要数据预处理"><span class="header-section-number">4.1</span> 为什么需要数据预处理？</a></li>
+  <li><a href="#数据预处理的完整流程" id="toc-数据预处理的完整流程" class="nav-link" data-scroll-target="#数据预处理的完整流程"><span class="header-section-number">4.2</span> 数据预处理的完整流程</a>
+  <ul class="collapse">
+  <li><a href="#数据检查先看再动手" id="toc-数据检查先看再动手" class="nav-link" data-scroll-target="#数据检查先看再动手"><span class="header-section-number">4.2.1</span> 数据检查：先看，再动手</a></li>
+  <li><a href="#数据标准化与归一化" id="toc-数据标准化与归一化" class="nav-link" data-scroll-target="#数据标准化与归一化"><span class="header-section-number">4.2.2</span> 数据标准化与归一化</a></li>
+  </ul></li>
+  <li><a href="#常见问题类型示例" id="toc-常见问题类型示例" class="nav-link" data-scroll-target="#常见问题类型示例"><span class="header-section-number">4.3</span> 常见问题类型示例</a></li>
+  <li><a href="#生态学数据预处理案例" id="toc-生态学数据预处理案例" class="nav-link" data-scroll-target="#生态学数据预处理案例"><span class="header-section-number">4.4</span> 生态学数据预处理案例</a>
+  <ul class="collapse">
+  <li><a href="#案例一土壤调查数据预处理" id="toc-案例一土壤调查数据预处理" class="nav-link" data-scroll-target="#案例一土壤调查数据预处理"><span class="header-section-number">4.4.1</span> 案例一：土壤调查数据预处理</a></li>
+  <li><a href="#案例二物种多样性数据预处理" id="toc-案例二物种多样性数据预处理" class="nav-link" data-scroll-target="#案例二物种多样性数据预处理"><span class="header-section-number">4.4.2</span> 案例二：物种多样性数据预处理</a></li>
+  <li><a href="#案例三时间序列气象数据预处理" id="toc-案例三时间序列气象数据预处理" class="nav-link" data-scroll-target="#案例三时间序列气象数据预处理"><span class="header-section-number">4.4.3</span> 案例三：时间序列气象数据预处理</a></li>
+  </ul></li>
+  <li><a href="#预处理工作流示例" id="toc-预处理工作流示例" class="nav-link" data-scroll-target="#预处理工作流示例"><span class="header-section-number">4.5</span> 预处理工作流示例</a></li>
+  <li><a href="#如何选择预处理方法" id="toc-如何选择预处理方法" class="nav-link" data-scroll-target="#如何选择预处理方法"><span class="header-section-number">4.6</span> 如何选择预处理方法</a>
+  <ul class="collapse">
+  <li><a href="#缺失值处理方法选择" id="toc-缺失值处理方法选择" class="nav-link" data-scroll-target="#缺失值处理方法选择"><span class="header-section-number">4.6.1</span> 缺失值处理方法选择</a></li>
+  <li><a href="#异常值处理方法选择" id="toc-异常值处理方法选择" class="nav-link" data-scroll-target="#异常值处理方法选择"><span class="header-section-number">4.6.2</span> 异常值处理方法选择</a></li>
+  <li><a href="#标准化方法选择" id="toc-标准化方法选择" class="nav-link" data-scroll-target="#标准化方法选择"><span class="header-section-number">4.6.3</span> 标准化方法选择</a></li>
+  </ul></li>
+  <li><a href="#预处理中的常见陷阱" id="toc-预处理中的常见陷阱" class="nav-link" data-scroll-target="#预处理中的常见陷阱"><span class="header-section-number">4.7</span> 预处理中的常见陷阱</a>
+  <ul class="collapse">
+  <li><a href="#陷阱1盲目删除缺失值" id="toc-陷阱1盲目删除缺失值" class="nav-link" data-scroll-target="#陷阱1盲目删除缺失值"><span class="header-section-number">4.7.1</span> 陷阱1：盲目删除缺失值</a></li>
+  <li><a href="#陷阱2将异常值等同于错误值" id="toc-陷阱2将异常值等同于错误值" class="nav-link" data-scroll-target="#陷阱2将异常值等同于错误值"><span class="header-section-number">4.7.2</span> 陷阱2：将异常值等同于错误值</a></li>
+  <li><a href="#陷阱3过度处理数据" id="toc-陷阱3过度处理数据" class="nav-link" data-scroll-target="#陷阱3过度处理数据"><span class="header-section-number">4.7.3</span> 陷阱3：过度处理数据</a></li>
+  <li><a href="#陷阱4忽视数据类型转换" id="toc-陷阱4忽视数据类型转换" class="nav-link" data-scroll-target="#陷阱4忽视数据类型转换"><span class="header-section-number">4.7.4</span> 陷阱4：忽视数据类型转换</a></li>
+  </ul></li>
+  <li><a href="#预处理的可重复性" id="toc-预处理的可重复性" class="nav-link" data-scroll-target="#预处理的可重复性"><span class="header-section-number">4.8</span> 预处理的可重复性</a></li>
+  <li><a href="#本课程的预处理章节预览" id="toc-本课程的预处理章节预览" class="nav-link" data-scroll-target="#本课程的预处理章节预览"><span class="header-section-number">4.9</span> 本课程的预处理章节预览</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">4.10</span> 课后练习</a></li>
+  <li><a href="#延伸阅读" id="toc-延伸阅读" class="nav-link" data-scroll-target="#延伸阅读"><span class="header-section-number">4.11</span> 延伸阅读</a>
+  <ul class="collapse">
+  <li><a href="#经典文献" id="toc-经典文献" class="nav-link" data-scroll-target="#经典文献"><span class="header-section-number">4.11.1</span> 经典文献</a></li>
+  <li><a href="#r-包推荐" id="toc-r-包推荐" class="nav-link" data-scroll-target="#r-包推荐"><span class="header-section-number">4.11.2</span> R 包推荐</a></li>
+  <li><a href="#预处理最佳实践指南" id="toc-预处理最佳实践指南" class="nav-link" data-scroll-target="#预处理最佳实践指南"><span class="header-section-number">4.11.3</span> 预处理最佳实践指南</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0102-what-is-data-preprocessing.html"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="什么是数据预处理" class="level1" data-number="4">
+<h1 data-number="4"><span class="header-section-number">4</span> 什么是数据预处理</h1>
+<p>你辛辛苦苦在野外采集了三个月的土壤数据，兴冲冲地导入 R 准备分析，却发现：有些样点的 pH 值是 -2（显然不可能），有些行的有机碳含量是空白，日期格式有的写”2027-03-15”有的写”15/3/2027”……</p>
+<p>这就是真实数据的常态。<strong>数据预处理</strong>（Data Preprocessing）就是将”原始的、混乱的”数据转化为”干净的、可分析的”数据的过程。</p>
+<section id="为什么需要数据预处理" class="level2" data-number="4.1">
+<h2 data-number="4.1" class="anchored" data-anchor-id="为什么需要数据预处理"><span class="header-section-number">4.1</span> 为什么需要数据预处理？</h2>
+<p>原始数据几乎不可能直接用于分析，原因包括：</p>
+<ul>
+<li><strong>缺失值</strong>：传感器故障、记录遗漏、问卷未填写、样本损坏</li>
+<li><strong>异常值</strong>：输入错误、仪器故障、极端事件、测量越限</li>
+<li><strong>格式不一致</strong>：日期格式混乱、单位不统一、编码不同、物种名写法差异</li>
+<li><strong>重复记录</strong>：同一样本被录入多次、传感器重复记录</li>
+<li><strong>数据类型错误</strong>：数值被存为文本，分类变量编码不规范</li>
+<li><strong>不一致的分类</strong>：同一类别有多种表达方式，如”阔叶树”和”落叶乔木”混用</li>
+</ul>
+<p>如果不处理这些问题就直接建模，结果将不可靠——这就是”垃圾进，垃圾出”（Garbage In, Garbage Out）。</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>数据预处理在生态学研究中的特殊重要性
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>生态学数据有其独特性： - 野外采集成本高，样本量通常较小，每一条数据都弥足珍贵 - 生态过程受多尺度因素影响，数据类型多元（空间、时间、物种、功能性状） - 生态数据的”异常”有时是真实的生态信号（如新物种记录），需要审慎判断</p>
+</div>
+</div>
+</section>
+<section id="数据预处理的完整流程" class="level2" data-number="4.2">
+<h2 data-number="4.2" class="anchored" data-anchor-id="数据预处理的完整流程"><span class="header-section-number">4.2</span> 数据预处理的完整流程</h2>
+<p>数据预处理不是单一步骤，而是一个系统化的流程。本节提供总览，具体策略将在第三单元（0301 数据清洗、0302 特征工程、0303 数据质量评估）中详细展开。</p>
+<pre><code>原始数据
+  │
+  ▼
+① 数据检查（Data Inspection）
+  │  了解数据结构、类型、维度、缺失情况
+  ▼
+② 数据清洗（Data Cleaning）          → 详见 0301
+  │  处理缺失值、异常值、重复值、格式问题
+  ▼
+③ 数据转换（Data Transformation）
+  │  类型转换、编码转换、单位统一
+  ▼
+④ 特征工程（Feature Engineering）     → 详见 0302
+  │  创建新变量、变量选择、降维
+  ▼
+⑤ 数据标准化/归一化（Scaling）
+  │  消除量纲差异，使变量可比较
+  ▼
+⑥ 数据质量评估（Quality Assessment）  → 详见 0303
+  │  验证处理后的数据是否满足分析要求
+  ▼
+可分析数据</code></pre>
+<section id="数据检查先看再动手" class="level3" data-number="4.2.1">
+<h3 data-number="4.2.1" class="anchored" data-anchor-id="数据检查先看再动手"><span class="header-section-number">4.2.1</span> 数据检查：先看，再动手</h3>
+<p>拿到数据后的第一件事是了解数据的基本情况：</p>
+<ul>
+<li>数据有多少行、多少列？</li>
+<li>每个变量是什么类型（数值、分类、日期）？</li>
+<li>有多少缺失值？分布在哪里？</li>
+<li>数值变量的范围是否合理？</li>
+<li>分类变量的类别是否一致？</li>
+</ul>
+<p>在 R 中，常用的检查函数：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">函数</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><code>dim()</code></td>
+<td style="text-align: left;">查看行列数</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>str()</code> / <code>glimpse()</code></td>
+<td style="text-align: left;">查看数据结构</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>summary()</code></td>
+<td style="text-align: left;">数值摘要（均值、中位数、极值）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>is.na()</code></td>
+<td style="text-align: left;">检测缺失值</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>colSums(is.na())</code></td>
+<td style="text-align: left;">统计每列缺失值数量</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>miss_var_summary()</code></td>
+<td style="text-align: left;">naniar包的缺失值摘要</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>head()</code> / <code>tail()</code></td>
+<td style="text-align: left;">查看前/后几行</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><code>View()</code></td>
+<td style="text-align: left;">在 RStudio 中交互式查看</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><code>table()</code></td>
+<td style="text-align: left;">查看分类变量的类别分布</td>
+</tr>
+</tbody>
+</table>
+<p><strong>最小 R 代码示例</strong>：快速诊断一份数据的健康状况：</p>
+</section>
+<section id="数据标准化与归一化" class="level3" data-number="4.2.2">
+<h3 data-number="4.2.2" class="anchored" data-anchor-id="数据标准化与归一化"><span class="header-section-number">4.2.2</span> 数据标准化与归一化</h3>
+<p>当不同变量的量纲差异很大时（如海拔 0-4000m vs.&nbsp;pH 4-9），需要进行标准化：</p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">公式</th>
+<th style="text-align: left;">结果范围</th>
+<th style="text-align: left;">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">Z-score 标准化</td>
+<td style="text-align: left;">(x - μ) / σ</td>
+<td style="text-align: left;">无固定范围</td>
+<td style="text-align: left;">大多数统计分析、主成分分析</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">Min-Max 归一化</td>
+<td style="text-align: left;">(x - min) / (max - min)</td>
+<td style="text-align: left;">[0, 1]</td>
+<td style="text-align: left;">神经网络、距离计算、聚类分析</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">中心化</td>
+<td style="text-align: left;">x - μ</td>
+<td style="text-align: left;">无固定范围</td>
+<td style="text-align: left;">需要均值居中的分析</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">鲁棒标准化</td>
+<td style="text-align: left;">(x - median) / MAD</td>
+<td style="text-align: left;">无固定范围</td>
+<td style="text-align: left;">存在异常值的数据</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>对数变换
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>对数变换 log(x) 严格来说不属于标准化/归一化，而是一种<strong>分布变换</strong>，用于将右偏分布拉向对称。它常在特征工程阶段使用，详见 0302。</p>
+<p>对数变换需要注意： - 只能对正值使用（0 值可替换为 log(1) 或添加小的常数） - 变换后解释需要回溯到原始尺度 - 生态学中常用于：个体数量、生物量、距离数据</p>
+</div>
+</div>
+</section>
+</section>
+<section id="常见问题类型示例" class="level2" data-number="4.3">
+<h2 data-number="4.3" class="anchored" data-anchor-id="常见问题类型示例"><span class="header-section-number">4.3</span> 常见问题类型示例</h2>
+<p>假设我们有一份土壤调查的原始数据，以下是常见的问题类型及处理思路：</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">问题类型</th>
+<th style="text-align: left;">原始数据示例</th>
+<th style="text-align: left;">处理思路</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">缺失值</td>
+<td style="text-align: left;">pH = NA</td>
+<td style="text-align: left;">用该深度层的中位数填充，或用多重插补</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">异常值</td>
+<td style="text-align: left;">pH = -1.5</td>
+<td style="text-align: left;">核实来源后标记为 NA，或用 Winsorization</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">格式不一致</td>
+<td style="text-align: left;">日期 = “15/3/2027”</td>
+<td style="text-align: left;">统一转为 “2027-03-15”</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">重复记录</td>
+<td style="text-align: left;">同一样点出现两次</td>
+<td style="text-align: left;">保留唯一记录，删除重复</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">单位不一致</td>
+<td style="text-align: left;">有机碳：g/kg vs.&nbsp;%</td>
+<td style="text-align: left;">统一为 g/kg（1% = 10 g/kg）</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">分类不一致</td>
+<td style="text-align: left;">植被类型 = “常绿” vs.&nbsp;” Evergreen”</td>
+<td style="text-align: left;">统一命名规范</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据类型错误</td>
+<td style="text-align: left;">数值存为文本</td>
+<td style="text-align: left;">转为数值类型，处理非数值字符</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="生态学数据预处理案例" class="level2" data-number="4.4">
+<h2 data-number="4.4" class="anchored" data-anchor-id="生态学数据预处理案例"><span class="header-section-number">4.4</span> 生态学数据预处理案例</h2>
+<section id="案例一土壤调查数据预处理" class="level3" data-number="4.4.1">
+<h3 data-number="4.4.1" class="anchored" data-anchor-id="案例一土壤调查数据预处理"><span class="header-section-number">4.4.1</span> 案例一：土壤调查数据预处理</h3>
+<p>土壤调查是生态学研究中最常见的数据类型之一。以下是一份典型的土壤调查数据及其预处理流程。</p>
+<p><strong>原始数据结构示例</strong>：</p>
+<p><strong>步骤1：数据导入与结构检查</strong></p>
+<p><strong>步骤2：日期格式统一</strong></p>
+<p><strong>步骤3：pH异常值检测与处理</strong></p>
+<p>pH 值的合理范围是 0-14，超出这个范围的值肯定是错误的。生态学土壤 pH 通常在 3.5-9.5 之间。</p>
+<p><strong>步骤4：缺失值处理策略</strong></p>
+<p>生态学数据中，处理缺失值需要根据缺失原因和数据特点选择合适的方法：</p>
+<p><strong>步骤5：有机碳数据验证与清洗</strong></p>
+<p>有机碳含量（Soil Organic Carbon, SOC）的合理范围通常是 0.5-150 g/kg，低于此范围可能是录入错误或特殊土壤类型。</p>
+<hr>
+</section>
+<section id="案例二物种多样性数据预处理" class="level3" data-number="4.4.2">
+<h3 data-number="4.4.2" class="anchored" data-anchor-id="案例二物种多样性数据预处理"><span class="header-section-number">4.4.2</span> 案例二：物种多样性数据预处理</h3>
+<p>物种多样性调查产生的数据有其独特性：物种名录、丰度/多度数据、存在-缺失矩阵等。这些数据的预处理包括物种名标准化、丰度数据转换等。</p>
+<p><strong>物种名标准化</strong>是多样性数据预处理中最重要也最耗时的步骤之一。不同文献、不同时期的调查可能使用不同的物种命名规范。</p>
+<p><strong>丰度数据转换</strong>：物种多度数据通常需要转换后才能用于多样性指数计算和统计分析。</p>
+<p><strong>物种-样点矩阵构建</strong>：将长格式数据转换为宽格式的物种-样点矩阵（行为样点，列为物种）</p>
+<hr>
+</section>
+<section id="案例三时间序列气象数据预处理" class="level3" data-number="4.4.3">
+<h3 data-number="4.4.3" class="anchored" data-anchor-id="案例三时间序列气象数据预处理"><span class="header-section-number">4.4.3</span> 案例三：时间序列气象数据预处理</h3>
+<p>生态学研究中经常需要处理时间序列数据，如气象站观测数据、遥感数据、涡度相关通量数据等。这类数据的预处理包括时间格式处理、缺失值插补、异常值检测等。</p>
+<p><strong>气象数据示例</strong>：</p>
+<p><strong>步骤2：时间序列数据缺失值插补</strong></p>
+<p>气象数据的缺失值插补有多种方法，从简单到复杂：</p>
+<p><strong>步骤3：时间序列异常值检测</strong></p>
+<p>气象数据的异常值可能是传感器故障、极端天气事件或数据传输错误。常用的检测方法包括：</p>
+<p><strong>步骤4：气象数据的日/月尺度聚合</strong></p>
+<p>在完成清洗后，通常需要将小时数据聚合为日均值、月均值等：</p>
+<hr>
+</section>
+</section>
+<section id="预处理工作流示例" class="level2" data-number="4.5">
+<h2 data-number="4.5" class="anchored" data-anchor-id="预处理工作流示例"><span class="header-section-number">4.5</span> 预处理工作流示例</h2>
+<p>以下是一个完整的土壤有机碳研究数据预处理工作流，涵盖从原始数据到分析就绪数据的全过程：</p>
+<hr>
+</section>
+<section id="如何选择预处理方法" class="level2" data-number="4.6">
+<h2 data-number="4.6" class="anchored" data-anchor-id="如何选择预处理方法"><span class="header-section-number">4.6</span> 如何选择预处理方法</h2>
+<section id="缺失值处理方法选择" class="level3" data-number="4.6.1">
+<h3 data-number="4.6.1" class="anchored" data-anchor-id="缺失值处理方法选择"><span class="header-section-number">4.6.1</span> 缺失值处理方法选择</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 26%">
+<col style="width: 17%">
+<col style="width: 26%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">缺失类型</th>
+<th style="text-align: left;">特征</th>
+<th style="text-align: left;">推荐方法</th>
+<th style="text-align: left;">注意事项</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>MCAR</strong>（完全随机缺失）</td>
+<td style="text-align: left;">缺失与任何变量无关</td>
+<td style="text-align: left;">列表删除、均值填充均可</td>
+<td style="text-align: left;">删除可能损失统计功效</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>MAR</strong>（随机缺失）</td>
+<td style="text-align: left;">缺失与其他变量相关</td>
+<td style="text-align: left;">多重插补、回归填充</td>
+<td style="text-align: left;">需要假设缺失机制模型</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>MNAR</strong>（非随机缺失）</td>
+<td style="text-align: left;">缺失与缺失值本身相关</td>
+<td style="text-align: left;">敏感分析、模式混合模型</td>
+<td style="text-align: left;">最难处理，需谨慎</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>结构缺失</strong></td>
+<td style="text-align: left;">有明确规律（如设备故障时段）</td>
+<td style="text-align: left;">基于规则的插值</td>
+<td style="text-align: left;">可用物理/生态规律辅助</td>
+</tr>
+</tbody>
+</table>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>缺失值处理决策树
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>缺失比例 &lt; 5%</strong>：可用简单填充（均值/中位数/插值）</li>
+<li><strong>缺失比例 5-30%</strong>：建议多重插补</li>
+<li><strong>缺失比例 &gt; 30%</strong>：考虑删除该变量，或用代理变量</li>
+<li><strong>缺失与研究变量相关</strong>：多重插补+敏感性分析</li>
+<li><strong>无法判断缺失机制</strong>：报告并讨论对结果的影响</li>
+</ol>
+</div>
+</div>
+</section>
+<section id="异常值处理方法选择" class="level3" data-number="4.6.2">
+<h3 data-number="4.6.2" class="anchored" data-anchor-id="异常值处理方法选择"><span class="header-section-number">4.6.2</span> 异常值处理方法选择</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 17%">
+<col style="width: 29%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">方法</th>
+<th style="text-align: left;">原理</th>
+<th style="text-align: left;">优点</th>
+<th style="text-align: left;">缺点</th>
+<th style="text-align: left;">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>删除法</strong></td>
+<td style="text-align: left;">直接移除异常值</td>
+<td style="text-align: left;">简单</td>
+<td style="text-align: left;">可能丢失信息</td>
+<td style="text-align: left;">确认是错误时</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Winsorization</strong></td>
+<td style="text-align: left;">用百分位数替代极端值</td>
+<td style="text-align: left;">保留样本量</td>
+<td style="text-align: left;">改变分布</td>
+<td style="text-align: left;">稳健分析</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>变换法</strong></td>
+<td style="text-align: left;">对数/Box-Cox变换</td>
+<td style="text-align: left;">压缩极端值</td>
+<td style="text-align: left;">改变解释</td>
+<td style="text-align: left;">右偏数据</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>分箱法</strong></td>
+<td style="text-align: left;">将连续变量分组</td>
+<td style="text-align: left;">减少异常影响</td>
+<td style="text-align: left;">损失连续信息</td>
+<td style="text-align: left;">机器学习</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>模型法</strong></td>
+<td style="text-align: left;">用稳健模型（分位数回归）</td>
+<td style="text-align: left;">不改变数据</td>
+<td style="text-align: left;">解释复杂</td>
+<td style="text-align: left;">预测建模</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="标准化方法选择" class="level3" data-number="4.6.3">
+<h3 data-number="4.6.3" class="anchored" data-anchor-id="标准化方法选择"><span class="header-section-number">4.6.3</span> 标准化方法选择</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 28%">
+<col style="width: 42%">
+<col style="width: 28%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">场景</th>
+<th style="text-align: left;">推荐方法</th>
+<th style="text-align: left;">原因</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">后续做 PCA、聚类</td>
+<td style="text-align: left;">Z-score 标准化</td>
+<td style="text-align: left;">消除量纲影响，各变量可比</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">神经网络、距离计算</td>
+<td style="text-align: left;">Min-Max 归一化</td>
+<td style="text-align: left;">梯度计算稳定，0-1范围方便</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据有明显异常值</td>
+<td style="text-align: left;">鲁棒标准化（用中位数/MAD）</td>
+<td style="text-align: left;">不受极端值影响</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">比较不同尺度的生态指标</td>
+<td style="text-align: left;">相对标准化（如除以最大值）</td>
+<td style="text-align: left;">保留相对大小关系</td>
+</tr>
+</tbody>
+</table>
+<hr>
+</section>
+</section>
+<section id="预处理中的常见陷阱" class="level2" data-number="4.7">
+<h2 data-number="4.7" class="anchored" data-anchor-id="预处理中的常见陷阱"><span class="header-section-number">4.7</span> 预处理中的常见陷阱</h2>
+<section id="陷阱1盲目删除缺失值" class="level3" data-number="4.7.1">
+<h3 data-number="4.7.1" class="anchored" data-anchor-id="陷阱1盲目删除缺失值"><span class="header-section-number">4.7.1</span> 陷阱1：盲目删除缺失值</h3>
+<p><strong>问题</strong>：直接 <code>na.omit()</code> 或 <code>drop_na()</code> 可能损失大量数据，尤其是生态学调查中常有多个变量同时缺失。</p>
+<p><strong>正确做法</strong>： - 先分析缺失模式（使用 <code>naniar::gg_miss_upset()</code>） - 评估缺失比例和分布 - 选择合适的处理策略</p>
+</section>
+<section id="陷阱2将异常值等同于错误值" class="level3" data-number="4.7.2">
+<h3 data-number="4.7.2" class="anchored" data-anchor-id="陷阱2将异常值等同于错误值"><span class="header-section-number">4.7.2</span> 陷阱2：将异常值等同于错误值</h3>
+<p><strong>问题</strong>：生态学数据中的”异常”有时是真实的生态信号。例如： - pH 值极端低可能是废弃矿山附近的酸性矿毒土 - 某物种在非分布区出现可能是气候变化的新记录 - 异常高的树木个体可能是个别优良个体</p>
+<p><strong>正确做法</strong>： - 先核实异常值的数据来源和记录日期 - 查阅文献确认该区域的历史记录 - 将疑似异常值单独标记，不轻易删除 - 在报告中说明异常值的处理方式</p>
+</section>
+<section id="陷阱3过度处理数据" class="level3" data-number="4.7.3">
+<h3 data-number="4.7.3" class="anchored" data-anchor-id="陷阱3过度处理数据"><span class="header-section-number">4.7.3</span> 陷阱3：过度处理数据</h3>
+<p><strong>问题</strong>：对数据进行过多变换或删除，可能导致： - 丢失真实的生态变异 - 人为制造”虚假”的统计结果 - 降低结果的可重复性</p>
+<p><strong>正确做法</strong>： - 记录所有处理步骤 - 进行敏感性分析，比较不同处理方式的结果差异 - 保留原始数据和清洗后数据两个版本</p>
+</section>
+<section id="陷阱4忽视数据类型转换" class="level3" data-number="4.7.4">
+<h3 data-number="4.7.4" class="anchored" data-anchor-id="陷阱4忽视数据类型转换"><span class="header-section-number">4.7.4</span> 陷阱4：忽视数据类型转换</h3>
+<p><strong>问题</strong>：在 R 中，数值被存为文本（character）会导致所有统计计算失效。</p>
+<p><strong>正确做法</strong>：使用 <code>readr::parse_number()</code> 或先验证再转换。</p>
+<hr>
+</section>
+</section>
+<section id="预处理的可重复性" class="level2" data-number="4.8">
+<h2 data-number="4.8" class="anchored" data-anchor-id="预处理的可重复性"><span class="header-section-number">4.8</span> 预处理的可重复性</h2>
+<p>数据预处理是可重复性研究中最容易出问题的环节。为什么？</p>
+<ul>
+<li>预处理步骤如果缺乏代码记录，事后难以追溯</li>
+<li>不同研究者对”异常值”的判断标准不同</li>
+<li>缺失值的处理方式会显著影响最终结果</li>
+<li>手动操作（如 Excel 中修改数据）几乎无法复现</li>
+</ul>
+<p>因此，<strong>所有预处理步骤都应该用代码实现，而不是在 Excel 中手动操作</strong>。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>最佳实践
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ol type="1">
+<li><strong>保留原始数据</strong>：保留原始数据的完整副本，永远不要直接修改原始文件</li>
+<li><strong>代码化所有步骤</strong>：用 R/Python 脚本记录每一步预处理操作</li>
+<li><strong>添加注释</strong>：在脚本中说明每步处理的理由和依据</li>
+<li><strong>版本控制</strong>：使用 Git 追踪预处理脚本的变更</li>
+<li><strong>记录种子数</strong>：如果使用随机过程（如多重插补），记录随机种子</li>
+<li><strong>导出处理日志</strong>：记录异常值标记、删除行数、填充值等关键信息</li>
+</ol>
+</div>
+</div>
+<hr>
+</section>
+<section id="本课程的预处理章节预览" class="level2" data-number="4.9">
+<h2 data-number="4.9" class="anchored" data-anchor-id="本课程的预处理章节预览"><span class="header-section-number">4.9</span> 本课程的预处理章节预览</h2>
+<p>本课程将在第四单元详细讲解数据预处理的实操技术：</p>
+<ul>
+<li><strong>第 0301 章 数据清洗</strong>：缺失值、异常值、重复值的检测与处理</li>
+<li><strong>第 0302 章 特征工程</strong>：变量创建、变换、选择</li>
+<li><strong>第 0303 章 数据质量评估</strong>：质量指标、验证方法</li>
+</ul>
+</section>
+<section id="课后练习" class="level2" data-number="4.10">
+<h2 data-number="4.10" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">4.10</span> 课后练习</h2>
+<ol type="1">
+<li>找一份你正在使用（或曾经使用）的数据集，用上面的 R 代码运行一次数据检查，记录：共有多少缺失值？哪些列的缺失最严重？数值范围是否有明显异常？</li>
+<li>如果删除所有含缺失值的行，你的数据会损失多少比例？这种损失可以接受吗？</li>
+<li>你的预处理步骤是用代码实现的，还是在 Excel 中手动完成的？如果是手动完成的，尝试用 R 代码重写其中一步。</li>
+<li>使用 Z-score 和 IQR 两种方法分别检测同一组数据的异常值，比较两种方法的结果差异，并讨论哪种方法更适合你的数据特点。</li>
+<li>找一个包含日期列的数据集，尝试用 lubridate 包的不同函数解析不同格式的日期字符串，总结哪些格式可以被正确解析。</li>
+<li>尝试用 naniar 包对一份有缺失值的数据进行可视化，分析缺失模式，思考：哪些变量的缺失可能不是随机的？</li>
+<li>设计一个完整的数据预处理流程，针对你研究方向中最常见的数据类型（如森林样地数据、鸟类调查数据、水体监测数据等），包括：异常值检测规则、缺失值处理策略、数据转换方法。</li>
+<li>编写一个可重复的数据预处理脚本，要求：①读取原始数据 ②完成所有清洗步骤 ③导出清洗后数据 ④记录处理日志。使用 Git 管理脚本版本。</li>
+</ol>
+</section>
+<section id="延伸阅读" class="level2" data-number="4.11">
+<h2 data-number="4.11" class="anchored" data-anchor-id="延伸阅读"><span class="header-section-number">4.11</span> 延伸阅读</h2>
+<section id="经典文献" class="level3" data-number="4.11.1">
+<h3 data-number="4.11.1" class="anchored" data-anchor-id="经典文献"><span class="header-section-number">4.11.1</span> 经典文献</h3>
+<ul>
+<li>Little, R.J.A. &amp; Rubin, D.B. (2019). <em>Statistical Analysis with Missing Data</em> (3rd ed.). Wiley. — 缺失值处理的权威教材</li>
+<li>Wickham, H. (2014). Tidy Data. <em>Journal of Statistical Software</em>, 59(10). — 数据整理的经典论文</li>
+<li>Van Buuren, S. (2018). <em>Flexible Imputation of Missing Data</em> (2nd ed.). Chapman &amp; Hall/CRC. — 多重插补的实践指南</li>
+</ul>
+</section>
+<section id="r-包推荐" class="level3" data-number="4.11.2">
+<h3 data-number="4.11.2" class="anchored" data-anchor-id="r-包推荐"><span class="header-section-number">4.11.2</span> R 包推荐</h3>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 27%">
+<col style="width: 27%">
+<col style="width: 45%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">包名</th>
+<th style="text-align: left;">用途</th>
+<th style="text-align: left;">关键函数</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>tidyverse</strong></td>
+<td style="text-align: left;">数据操作统一框架</td>
+<td style="text-align: left;">dplyr, tidyr, purrr</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>janitor</strong></td>
+<td style="text-align: left;">数据清洗辅助</td>
+<td style="text-align: left;">clean_names(), get_dupes()</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>naniar</strong></td>
+<td style="text-align: left;">缺失值可视化与分析</td>
+<td style="text-align: left;">gg_miss_var(), gg_miss_upset(), miss_var_summary()</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>lubridate</strong></td>
+<td style="text-align: left;">日期时间处理</td>
+<td style="text-align: left;">ymd(), mdy(), parse_date_time()</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>mice</strong></td>
+<td style="text-align: left;">多重插补</td>
+<td style="text-align: left;">mice(), complete()</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>zoo</strong></td>
+<td style="text-align: left;">时间序列处理</td>
+<td style="text-align: left;">na.approx(), na.spline()</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>outliers</strong></td>
+<td style="text-align: left;">异常值检测</td>
+<td style="text-align: left;">outliers(), grubbs.test()</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>readr</strong></td>
+<td style="text-align: left;">数据导入</td>
+<td style="text-align: left;">read_csv(), parse_number()</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="预处理最佳实践指南" class="level3" data-number="4.11.3">
+<h3 data-number="4.11.3" class="anchored" data-anchor-id="预处理最佳实践指南"><span class="header-section-number">4.11.3</span> 预处理最佳实践指南</h3>
+<ul>
+<li><a href="https://r4ds.had.co.nz/transform.html">R for Data Science - Data transformation</a> — tidyverse 数据转换完整指南</li>
+<li><a href="https://swcarpentry.github.io/r-novice-gapminder/">Data Cleaning in R</a> — Software Carpentry 数据清洗课程</li>
+<li><a href="https://cran.r-project.org/web/packages/tidyr/vignettes/tidy-data.html">Tidy Messy Data</a> — tidyr 官方教程</li>
+<li><a href="https://naniar.njtierney.com/">Handling Missing Values in R</a> — naniar 包完整文档</li>
+</ul>
+<hr>
+<p><em>本章小结</em>：数据预处理是将原始数据转化为分析可用数据的关键环节。生态学数据的特殊性要求我们在预处理过程中审慎判断异常值的生态意义。所有预处理步骤都应代码化，确保研究可重复。</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0101-what-is-data-collection.html" class="pagination-link" aria-label="什么是数据采集">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0103-data-management-workflow.html" class="pagination-link" aria-label="数据管理与研究工作流">
+        <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

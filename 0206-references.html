@@ -1,0 +1,1657 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>14&nbsp; 参考文献管理与学术资源 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0207-meta-analysis-intro.html" rel="next">
+<link href="./0205-public-data.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0206-references.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#参考文献管理与学术资源" id="toc-参考文献管理与学术资源" class="nav-link active" data-scroll-target="#参考文献管理与学术资源"><span class="header-section-number">15</span> 参考文献管理与学术资源</a>
+  <ul class="collapse">
+  <li><a href="#为什么要专门学文献管理" id="toc-为什么要专门学文献管理" class="nav-link" data-scroll-target="#为什么要专门学文献管理"><span class="header-section-number">15.1</span> 为什么要专门学文献管理？</a>
+  <ul class="collapse">
+  <li><a href="#文献管理不是选修课" id="toc-文献管理不是选修课" class="nav-link" data-scroll-target="#文献管理不是选修课"><span class="header-section-number">15.1.1</span> 文献管理不是选修课</a></li>
+  <li><a href="#文献管理能力直接决定写作效率" id="toc-文献管理能力直接决定写作效率" class="nav-link" data-scroll-target="#文献管理能力直接决定写作效率"><span class="header-section-number">15.1.2</span> 文献管理能力直接决定写作效率</a></li>
+  <li><a href="#文献管理也是科研诚信的一部分" id="toc-文献管理也是科研诚信的一部分" class="nav-link" data-scroll-target="#文献管理也是科研诚信的一部分"><span class="header-section-number">15.1.3</span> 文献管理也是科研诚信的一部分</a></li>
+  </ul></li>
+  <li><a href="#学术文献的分类与来源" id="toc-学术文献的分类与来源" class="nav-link" data-scroll-target="#学术文献的分类与来源"><span class="header-section-number">15.2</span> 学术文献的分类与来源</a>
+  <ul class="collapse">
+  <li><a href="#你需要管理哪些类型的文献" id="toc-你需要管理哪些类型的文献" class="nav-link" data-scroll-target="#你需要管理哪些类型的文献"><span class="header-section-number">15.2.1</span> 你需要管理哪些类型的文献？</a></li>
+  <li><a href="#生态学研究常用的数据库" id="toc-生态学研究常用的数据库" class="nav-link" data-scroll-target="#生态学研究常用的数据库"><span class="header-section-number">15.2.2</span> 生态学研究常用的数据库</a></li>
+  </ul></li>
+  <li><a href="#zotero你的第一选择" id="toc-zotero你的第一选择" class="nav-link" data-scroll-target="#zotero你的第一选择"><span class="header-section-number">15.3</span> Zotero：你的第一选择</a>
+  <ul class="collapse">
+  <li><a href="#为什么选-zotero" id="toc-为什么选-zotero" class="nav-link" data-scroll-target="#为什么选-zotero"><span class="header-section-number">15.3.1</span> 为什么选 Zotero？</a></li>
+  <li><a href="#安装-zotero" id="toc-安装-zotero" class="nav-link" data-scroll-target="#安装-zotero"><span class="header-section-number">15.3.2</span> 安装 Zotero</a></li>
+  <li><a href="#zotero-快速上手" id="toc-zotero-快速上手" class="nav-link" data-scroll-target="#zotero-快速上手"><span class="header-section-number">15.3.3</span> Zotero 快速上手</a></li>
+  <li><a href="#zotero-的进阶功能" id="toc-zotero-的进阶功能" class="nav-link" data-scroll-target="#zotero-的进阶功能"><span class="header-section-number">15.3.4</span> Zotero 的进阶功能</a></li>
+  </ul></li>
+  <li><a href="#r-中的文献引用" id="toc-r-中的文献引用" class="nav-link" data-scroll-target="#r-中的文献引用"><span class="header-section-number">15.4</span> R 中的文献引用</a>
+  <ul class="collapse">
+  <li><a href="#citation-函数r-的内置引用" id="toc-citation-函数r-的内置引用" class="nav-link" data-scroll-target="#citation-函数r-的内置引用"><span class="header-section-number">15.4.1</span> citation() 函数：R 的内置引用</a></li>
+  <li><a href="#refmanager-包程序化文献管理" id="toc-refmanager-包程序化文献管理" class="nav-link" data-scroll-target="#refmanager-包程序化文献管理"><span class="header-section-number">15.4.2</span> RefManageR 包：程序化文献管理</a></li>
+  <li><a href="#citr-包rstudio-中的引用插入" id="toc-citr-包rstudio-中的引用插入" class="nav-link" data-scroll-target="#citr-包rstudio-中的引用插入"><span class="header-section-number">15.4.3</span> citr 包：RStudio 中的引用插入</a></li>
+  </ul></li>
+  <li><a href="#引用格式gbt-7714-与-apa" id="toc-引用格式gbt-7714-与-apa" class="nav-link" data-scroll-target="#引用格式gbt-7714-与-apa"><span class="header-section-number">15.5</span> 引用格式：GB/T 7714 与 APA</a>
+  <ul class="collapse">
+  <li><a href="#生态学领域常用的引用格式" id="toc-生态学领域常用的引用格式" class="nav-link" data-scroll-target="#生态学领域常用的引用格式"><span class="header-section-number">15.5.1</span> 生态学领域常用的引用格式</a></li>
+  <li><a href="#gbt-7714-2015-格式详解" id="toc-gbt-7714-2015-格式详解" class="nav-link" data-scroll-target="#gbt-7714-2015-格式详解"><span class="header-section-number">15.5.2</span> GB/T 7714-2015 格式详解</a></li>
+  <li><a href="#apa-格式详解第七版" id="toc-apa-格式详解第七版" class="nav-link" data-scroll-target="#apa-格式详解第七版"><span class="header-section-number">15.5.3</span> APA 格式详解（第七版）</a></li>
+  <li><a href="#zotero-中的引用格式转换" id="toc-zotero-中的引用格式转换" class="nav-link" data-scroll-target="#zotero-中的引用格式转换"><span class="header-section-number">15.5.4</span> Zotero 中的引用格式转换</a></li>
+  </ul></li>
+  <li><a href="#如何高效检索学术文献" id="toc-如何高效检索学术文献" class="nav-link" data-scroll-target="#如何高效检索学术文献"><span class="header-section-number">15.6</span> 如何高效检索学术文献</a>
+  <ul class="collapse">
+  <li><a href="#google-scholar-的高级检索技巧" id="toc-google-scholar-的高级检索技巧" class="nav-link" data-scroll-target="#google-scholar-的高级检索技巧"><span class="header-section-number">15.6.1</span> Google Scholar 的高级检索技巧</a></li>
+  <li><a href="#中文学术资源检索" id="toc-中文学术资源检索" class="nav-link" data-scroll-target="#中文学术资源检索"><span class="header-section-number">15.6.2</span> 中文学术资源检索</a></li>
+  <li><a href="#文献筛选的金字塔原则" id="toc-文献筛选的金字塔原则" class="nav-link" data-scroll-target="#文献筛选的金字塔原则"><span class="header-section-number">15.6.3</span> 文献筛选的”金字塔”原则</a></li>
+  </ul></li>
+  <li><a href="#如何有效阅读学术文献" id="toc-如何有效阅读学术文献" class="nav-link" data-scroll-target="#如何有效阅读学术文献"><span class="header-section-number">15.7</span> 如何有效阅读学术文献</a>
+  <ul class="collapse">
+  <li><a href="#泛读-vs-精读不同的文献不同的读法" id="toc-泛读-vs-精读不同的文献不同的读法" class="nav-link" data-scroll-target="#泛读-vs-精读不同的文献不同的读法"><span class="header-section-number">15.7.1</span> 泛读 vs 精读：不同的文献不同的读法</a></li>
+  <li><a href="#生态学文献的阅读框架" id="toc-生态学文献的阅读框架" class="nav-link" data-scroll-target="#生态学文献的阅读框架"><span class="header-section-number">15.7.2</span> 生态学文献的阅读框架</a></li>
+  <li><a href="#文献笔记方法" id="toc-文献笔记方法" class="nav-link" data-scroll-target="#文献笔记方法"><span class="header-section-number">15.7.3</span> 文献笔记方法</a></li>
+  </ul></li>
+  <li><a href="#引用检查与学术诚信" id="toc-引用检查与学术诚信" class="nav-link" data-scroll-target="#引用检查与学术诚信"><span class="header-section-number">15.8</span> 引用检查与学术诚信</a>
+  <ul class="collapse">
+  <li><a href="#常见引用错误" id="toc-常见引用错误" class="nav-link" data-scroll-target="#常见引用错误"><span class="header-section-number">15.8.1</span> 常见引用错误</a></li>
+  <li><a href="#学术诚信的基本原则" id="toc-学术诚信的基本原则" class="nav-link" data-scroll-target="#学术诚信的基本原则"><span class="header-section-number">15.8.2</span> 学术诚信的基本原则</a></li>
+  </ul></li>
+  <li><a href="#生态学重要期刊与学术资源" id="toc-生态学重要期刊与学术资源" class="nav-link" data-scroll-target="#生态学重要期刊与学术资源"><span class="header-section-number">15.9</span> 生态学重要期刊与学术资源</a>
+  <ul class="collapse">
+  <li><a href="#高影响力生态学期刊" id="toc-高影响力生态学期刊" class="nav-link" data-scroll-target="#高影响力生态学期刊"><span class="header-section-number">15.9.1</span> 高影响力生态学期刊</a></li>
+  <li><a href="#生态学重要数据库" id="toc-生态学重要数据库" class="nav-link" data-scroll-target="#生态学重要数据库"><span class="header-section-number">15.9.2</span> 生态学重要数据库</a></li>
+  </ul></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">15.10</span> 课后练习</a>
+  <ul class="collapse">
+  <li><a href="#基础题" id="toc-基础题" class="nav-link" data-scroll-target="#基础题"><span class="header-section-number">15.10.1</span> 基础题</a></li>
+  <li><a href="#应用题" id="toc-应用题" class="nav-link" data-scroll-target="#应用题"><span class="header-section-number">15.10.2</span> 应用题</a></li>
+  <li><a href="#思考题" id="toc-思考题" class="nav-link" data-scroll-target="#思考题"><span class="header-section-number">15.10.3</span> 思考题</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0201-data-collection-method.html">第三单元：数据采集方法</a></li><li class="breadcrumb-item"><a href="./0206-references.html"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="参考文献管理与学术资源" class="level1" data-number="15">
+<h1 data-number="15"><span class="header-section-number">15</span> 参考文献管理与学术资源</h1>
+<p>你知道吗，大多数研究生在写第一篇论文时，最头疼的问题不是”怎么写”，而是”参考文献怎么管理”。每次改格式都要手动调半天，引用编号对不上，投稿时发现引用格式完全错误……这些都是因为没有建立系统的文献管理能力。</p>
+<p>这一章的目标很简单：<strong>让你从第一天开始就把文献管理做好</strong>，从安装工具到写第一篇综述，手把手带你走一遍。</p>
+<section id="为什么要专门学文献管理" class="level2" data-number="15.1">
+<h2 data-number="15.1" class="anchored" data-anchor-id="为什么要专门学文献管理"><span class="header-section-number">15.1</span> 为什么要专门学文献管理？</h2>
+<section id="文献管理不是选修课" class="level3" data-number="15.1.1">
+<h3 data-number="15.1.1" class="anchored" data-anchor-id="文献管理不是选修课"><span class="header-section-number">15.1.1</span> 文献管理不是选修课</h3>
+<p>很多同学觉得”写完论文再整理参考文献”就行了。但现实是：</p>
+<ul>
+<li>硕士论文通常需要 50-150 篇参考文献</li>
+<li>博士论文通常需要 200-500 篇参考文献</li>
+<li>每篇论文从写作到发表，平均要修改 5-8 轮，每轮都可能调整引用顺序</li>
+</ul>
+<p>如果你在写作过程中没有系统管理文献，每次调整引用顺序就意味着手动改几十处。这种低效的工作方式会消耗大量时间和精力。</p>
+</section>
+<section id="文献管理能力直接决定写作效率" class="level3" data-number="15.1.2">
+<h3 data-number="15.1.2" class="anchored" data-anchor-id="文献管理能力直接决定写作效率"><span class="header-section-number">15.1.2</span> 文献管理能力直接决定写作效率</h3>
+<p>一个好的文献管理系统能让你：</p>
+<ul>
+<li><strong>5 秒内找到任何一篇读过的文献</strong>——不管是一年前还是上周的</li>
+<li><strong>一键生成正确格式的参考文献</strong>——不用手动调格式</li>
+<li><strong>在写作时自动插入引用</strong>——不用翻找参考文献列表</li>
+<li><strong>追踪你读过的文献</strong>——三个月后还记得某句话在哪篇文献里</li>
+</ul>
+<p>反之，一个糟糕的文献管理方式会让你：</p>
+<ul>
+<li>复制粘贴PDF路径到文档里，时间长了根本不知道哪篇是哪篇</li>
+<li>用 <code>文献1</code>、<code>文献2</code> 这种方式标注，写完自己都看不懂</li>
+<li>写完论文后发现引用格式和期刊要求不一致，要花两天重新调整</li>
+</ul>
+</section>
+<section id="文献管理也是科研诚信的一部分" class="level3" data-number="15.1.3">
+<h3 data-number="15.1.3" class="anchored" data-anchor-id="文献管理也是科研诚信的一部分"><span class="header-section-number">15.1.3</span> 文献管理也是科研诚信的一部分</h3>
+<p>规范的文献引用是科研诚信的基本要求。引用不当可能导致：</p>
+<ul>
+<li><strong>抄袭嫌疑</strong>：没有正确引用他人观点，即使不是故意复制</li>
+<li><strong>学术声誉受损</strong>：引用错误或遗漏会影响论文质量评价</li>
+<li><strong>撤稿风险</strong>：有些期刊会因为引用问题要求撤稿</li>
+</ul>
+<p>好消息是，建立文献管理能力不需要很长时间。一个周末就能完成基础配置，之后受益三年。</p>
+</section>
+</section>
+<section id="学术文献的分类与来源" class="level2" data-number="15.2">
+<h2 data-number="15.2" class="anchored" data-anchor-id="学术文献的分类与来源"><span class="header-section-number">15.2</span> 学术文献的分类与来源</h2>
+<section id="你需要管理哪些类型的文献" class="level3" data-number="15.2.1">
+<h3 data-number="15.2.1" class="anchored" data-anchor-id="你需要管理哪些类型的文献"><span class="header-section-number">15.2.1</span> 你需要管理哪些类型的文献？</h3>
+<p>作为生态学研究生，你的文献库通常包含以下几类：</p>
+<p><strong>期刊论文（Journal Articles）</strong> 最核心的文献类型。包括原创研究论文（research article）、综述（review）、方法论文（method paper）等。在生态学领域，主要发表在 <em>Ecology</em>、<em>Journal of Ecology</em>、<em>Ecology Letters</em>、<em>Ecology Applications</em>、<em>Functional Ecology</em> 等期刊上。</p>
+<p><strong>专著（Books）</strong> 教科书和专著适合建立系统性知识框架。生态学经典专著包括 <em>Ecology</em>（Begon, Townsend, Harper）、<em>Fundamentals of Ecology</em>（Odum）、<em>Statistical Ecology</em>（Ludwig, Reynolds）等。</p>
+<p><strong>专著章节（Book Chapters）</strong> 编辑书籍中的章节通常聚焦某个具体主题，适合深入了解特定方法或理论。</p>
+<p><strong>学位论文（Theses and Dissertations）</strong> 硕博士学位论文是重要的信息来源，尤其是方法细节和工作量描述往往比期刊论文更详细。国内学位论文可在知网和万方获取。</p>
+<p><strong>预印本（Preprints）</strong> 预印本是尚未经过同行评审的工作。在生态学领域，Biorxiv 是最常用的预印本平台。预印本的优势是可以快速获取最新研究进展，但需要注意其结论尚未经过评审验证。</p>
+<p><strong>灰色文献（Grey Literature）</strong> 政府报告、技术文档、机构报告等。这类文献在生态系统评估、环境政策研究中很重要，但引用格式往往不标准。</p>
+</section>
+<section id="生态学研究常用的数据库" class="level3" data-number="15.2.2">
+<h3 data-number="15.2.2" class="anchored" data-anchor-id="生态学研究常用的数据库"><span class="header-section-number">15.2.2</span> 生态学研究常用的数据库</h3>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">数据库</th>
+<th style="text-align: left;">覆盖范围</th>
+<th style="text-align: left;">适用场景</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><strong>Web of Science</strong></td>
+<td style="text-align: left;">核心期刊引文索引</td>
+<td style="text-align: left;">检索高影响力期刊</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Scopus</strong></td>
+<td style="text-align: left;">综合性学术引文数据库</td>
+<td style="text-align: left;">跨学科检索</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Google Scholar</strong></td>
+<td style="text-align: left;">最全面的学术搜索</td>
+<td style="text-align: left;">日常检索、追踪引用</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>CNKI（知网）</strong></td>
+<td style="text-align: left;">中文期刊、学位论文</td>
+<td style="text-align: left;">中文学术资源</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>Wanfang（万方）</strong></td>
+<td style="text-align: left;">中文科技期刊、学位论文</td>
+<td style="text-align: left;">中文学术资源</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>ScienceDirect</strong></td>
+<td style="text-align: left;">Elsevier期刊全文</td>
+<td style="text-align: left;">获取全文PDF</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><strong>SpringerLink</strong></td>
+<td style="text-align: left;">Springer期刊全文</td>
+<td style="text-align: left;">获取全文PDF</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>Wiley Online Library</strong></td>
+<td style="text-align: left;">Wiley期刊全文</td>
+<td style="text-align: left;">获取全文PDF</td>
+</tr>
+</tbody>
+</table>
+</section>
+</section>
+<section id="zotero你的第一选择" class="level2" data-number="15.3">
+<h2 data-number="15.3" class="anchored" data-anchor-id="zotero你的第一选择"><span class="header-section-number">15.3</span> Zotero：你的第一选择</h2>
+<section id="为什么选-zotero" class="level3" data-number="15.3.1">
+<h3 data-number="15.3.1" class="anchored" data-anchor-id="为什么选-zotero"><span class="header-section-number">15.3.1</span> 为什么选 Zotero？</h3>
+<p>在文献管理工具中，Zotero 是生态学和地球科学领域最广泛使用的免费开源工具。相比 EndNote 和 Mendeley，Zotero 有几个显著优势：</p>
+<ul>
+<li><strong>完全免费</strong>——没有付费墙，没有功能限制</li>
+<li><strong>开源</strong>——数据完全属于你自己，不会因为服务停止而丢失</li>
+<li><strong>浏览器插件强大</strong>——在 Google Scholar、ScienceDirect、Springer 等网站一键抓取文献信息</li>
+<li><strong>Word/LibreOffice 集成好</strong>——插件可以在 Word 中直接插入引用</li>
+<li><strong>支持 R Markdown/Quarto</strong>——通过 Better BibTeX 插件生成 BibTeX 文件</li>
+</ul>
+</section>
+<section id="安装-zotero" class="level3" data-number="15.3.2">
+<h3 data-number="15.3.2" class="anchored" data-anchor-id="安装-zotero"><span class="header-section-number">15.3.2</span> 安装 Zotero</h3>
+<p><strong>第一步：下载安装 Zotero</strong></p>
+<p>访问 https://www.zotero.org/download ，下载对应操作系统的安装包（Windows/macOS/Linux）。</p>
+<p>安装完成后，你会看到 Zotero 的主界面，主要包括左侧的文献库列表和右侧的文献条目列表。</p>
+<p><strong>第二步：安装浏览器连接器（Connector）</strong></p>
+<p>在同一个下载页面，找到浏览器连接器部分，安装对应浏览器的 Zotero Connector（支持 Chrome、Firefox、Edge、Safari）。安装完成后，你在学术网站看到文献信息时，浏览器地址栏会出现 Zotero 的图标，点击即可一键保存。</p>
+<p><strong>第三步：安装 Word 插件</strong></p>
+<p>对于 Microsoft Word 用户，在 Zotero 主界面选择「编辑」→「首选项」→「引用」，点击”安装 Word 插件”。安装后 Word 功能区会出现 Zotero 选项卡，可以在 Word 中直接插入引用和管理参考文献。</p>
+<p><strong>第四步：创建账号并同步</strong></p>
+<p>注册 Zotero 账号（免费），在 Zotero 主界面登录。同步功能可以将你的文献库备份到云端，同时支持多设备同步。建议开启坚果云或其他 WebDAV 服务作为第三方同步备份。</p>
+</section>
+<section id="zotero-快速上手" class="level3" data-number="15.3.3">
+<h3 data-number="15.3.3" class="anchored" data-anchor-id="zotero-快速上手"><span class="header-section-number">15.3.3</span> Zotero 快速上手</h3>
+<p><strong>添加文献的三种方式</strong></p>
+<p>第一种：<strong>从网站一键导入</strong></p>
+<p>当你用 Chrome 打开 Google Scholar 搜索结果页面时，点击地址栏右侧的 Zotero 图标，Zotero 会自动识别当前页面所有文献并询问你要保存哪些。这种方式适合批量导入搜索结果。</p>
+<p>第二种：<strong>从 PDF 直接抓取</strong></p>
+<p>将 PDF 文件拖入 Zotero 主界面，Zotero 会尝试自动提取 PDF 中的元数据（标题、作者、期刊、年份等）。对于有 DOI 的期刊论文，成功率很高。对于中文 PDF 或没有 DOI 的文献，可能需要手动补充信息。</p>
+<p>第三种：<strong>手动输入</strong></p>
+<p>对于无法自动识别的文献（古籍、网页资源、灰色文献等），点击 Zotero 主界面的绿色加号按钮，选择正确的文献类型（期刊文章、图书、网页等），手动填写表单。</p>
+<p><strong>组织你的文献库</strong></p>
+<p>建议使用 Zotero 的文件夹（Collections）和标签（Tags）功能组织文献：</p>
+<pre><code>我的文献库/
+├── 马尾松混交林/
+│   ├── 土壤微生物
+│   ├── 生物多样性
+│   └── 碳储量
+├── 方法论文献/
+│   ├── 土壤采样方法
+│   ├── 统计分析
+│   └── 元分析方法
+└── 重要综述/
+    ├── Biodiversity-Ecosystem Function
+    └── Soil Carbon Sequestration</code></pre>
+<p><strong>标签的使用技巧</strong></p>
+<p>除了文件夹，还可以给文献打标签（Tags）。标签比文件夹更灵活——一篇文献可以有多个标签，适合从不同维度组织。例如，一篇关于马尾松林土壤碳储量的文献，可以打上 <code>马尾松</code> <code>土壤碳</code> <code>混交林</code> <code>广西</code> 等多个标签，之后无论在哪个文件夹都能通过标签快速找到。</p>
+<p><strong>给文献做笔记</strong></p>
+<p>选中一篇文献，在右侧面板切换到「备注」或「笔记」标签页，可以写阅读笔记。建议用结构化的方式记录：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## 文献笔记：XXX (2023)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">### 基本信息</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>期刊：Journal of Ecology</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>DOI：10.1234/example.doi</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>第一作者邮箱：xxx@gxu.edu.cn</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### 研究问题</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>这篇文章研究的是什么？作者想回答什么问题？</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="fu">### 主要发现</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>第一个主要发现...</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>第二个主要发现...</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="ss">3. </span>...</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="fu">### 方法亮点</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>用了什么方法？有什么创新？</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="fu">### 对我的启发</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>这篇文献对我的研究有什么帮助？</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>可以引用哪个结论？</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>存在什么问题或局限？</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="zotero-的进阶功能" class="level3" data-number="15.3.4">
+<h3 data-number="15.3.4" class="anchored" data-anchor-id="zotero-的进阶功能"><span class="header-section-number">15.3.4</span> Zotero 的进阶功能</h3>
+<p><strong>Better BibTeX 插件</strong></p>
+<p>如果你使用 R Markdown 或 Quarto 写论文，需要生成 BibTeX（.bib）格式的文献库文件。安装 Better BibTeX 插件（https://retorque.re/zotero-better-bibtex/）后，Zotero 可以自动为每个文献库或文件夹生成 .bib 文件，并在文献信息更新时自动刷新。</p>
+<p>安装后，在 Zotero 主界面右键点击文献库或文件夹，选择「导出库」，格式选择”Better BibTeX”，勾选「更新时自动刷新」即可。</p>
+<p><strong>Zotero Group Libraries（组库）</strong></p>
+<p>Zotero 支持创建组库，允许多个用户共同管理文献库。这对于导师-学生协作或课题组共享文献非常有用。</p>
+<p>创建组库：访问 https://www.zotero.org/groups，点击「创建新组」，填写组名称（建议用课题组名称）和描述，选择隐私设置（公开/私有）。组库创建后，可以邀请成员，成员可以从组库中拖取文献到自己的文献库。</p>
+<p><strong>同步与备份</strong></p>
+<p>Zotero 免费账号提供 300MB 附件存储空间。对于大多数研究生来说，这个空间足够存放文献 PDF 和笔记。开启同步后，所有文献元数据会自动备份到 Zotero 服务器。如果需要备份 PDF，可以设置 Zotero 连接到坚果云或 WebDAV 服务，将附件同步到第三方云盘。</p>
+</section>
+</section>
+<section id="r-中的文献引用" class="level2" data-number="15.4">
+<h2 data-number="15.4" class="anchored" data-anchor-id="r-中的文献引用"><span class="header-section-number">15.4</span> R 中的文献引用</h2>
+<section id="citation-函数r-的内置引用" class="level3" data-number="15.4.1">
+<h3 data-number="15.4.1" class="anchored" data-anchor-id="citation-函数r-的内置引用"><span class="header-section-number">15.4.1</span> citation() 函数：R 的内置引用</h3>
+<p>R 本身和 R 包都有内置的引用信息。使用 <code>citation()</code> 函数可以获取 R 和 R 包的引用格式：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取 R 本身的引用</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>()</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出示例：</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># To cite R in publications use:</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co">#   R Core Team (2023). R: A language and environment for</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co">#   statistical computing. R Foundation for Statistical</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   Computing, Vienna, Austria. URL</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   https://www.R-project.org/.</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="co"># A BibTeX entry for LaTeX users is</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a><span class="co">#   @Manual{,</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a><span class="co">#     title = {R: A Language and Environment for</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a><span class="co">#       Statistical Computing},</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a><span class="co">#     author = {{R Core Team}},</span></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co">#     organization = {R Foundation for Statistical</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="co">#       Computing},</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="co">#     address = {Vienna, Austria},</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a><span class="co">#     year = {2023},</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a><span class="co">#     url = {https://www.R-project.org/},</span></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a><span class="co">#   }</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取特定 R 包的引用</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="at">package =</span> <span class="st">"tidyverse"</span>)</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="at">package =</span> <span class="st">"vegan"</span>)</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="at">package =</span> <span class="st">"lme4"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>为什么这很重要？</strong></p>
+<p>学术规范要求在使用他人开发的工具时进行适当引用。使用 <code>citation()</code> 函数获取 R 和 R 包的引用，是确保科研诚信的基本操作。在论文的”数据可用性声明”或”软件 использован”部分，通常需要列出所有使用的 R 包及其版本。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在论文中引用 tidyverse 的示例</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">citation</span>(<span class="at">package =</span> <span class="st">"tidyverse"</span>)</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出：</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Wickham et al., (2019). Welcome to the tidyverse.</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Journal of Open Source Software, 4(43), 1686.</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># https://doi.org/10.21105/joss.01686</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="refmanager-包程序化文献管理" class="level3" data-number="15.4.2">
+<h3 data-number="15.4.2" class="anchored" data-anchor-id="refmanager-包程序化文献管理"><span class="header-section-number">15.4.2</span> RefManageR 包：程序化文献管理</h3>
+<p>RefManageR 包允许在 R 中直接读取和管理 BibTeX 文献库，适合需要动态生成参考文献列表的场景。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 RefManageR</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"RefManageR"</span>)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 加载包</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(RefManageR)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取 BibTeX 文件</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设你的文献库导出到了 data/refs.bib</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> <span class="fu">ReadBib</span>(<span class="st">"data/refs.bib"</span>)</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看文献库中有多少条文献</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="fu">length</span>(refs)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出示例：[1] 47</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看第一条文献的详细信息</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 获取特定字段</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]<span class="sc">$</span>title      <span class="co"># 标题</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]<span class="sc">$</span>author     <span class="co"># 作者</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]<span class="sc">$</span>year       <span class="co"># 年份</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]<span class="sc">$</span>journal    <span class="co"># 期刊名</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>refs[[<span class="dv">1</span>]]<span class="sc">$</span>doi        <span class="co"># DOI</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>在 R Markdown/Quarto 中插入引用</strong></p>
+<p>如果你使用 R Markdown 或 Quarto 撰写报告，可以直接引用 BibTeX 文献库中的文献：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 首先读取 BibTeX 文献库</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>refs <span class="ot">&lt;-</span> <span class="fu">ReadBib</span>(<span class="st">"data/refs.bib"</span>)</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设你想引用文献库中某篇关于土壤碳储量的文章</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 先找到这篇文献的 citation key</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="fu">names</span>(refs)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出示例：</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "Smith2020" "Jones2021" "Wang2022" ...</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 Quarto 文档中，使用 @Smith2020 格式插入引用</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 在文末会自动生成参考文献列表</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>批量获取文献的 DOI 和引用信息</strong></p>
+<p>有时候你需要批量获取一组文献的 DOI 或生成标准引用格式。RefManageR 可以帮助批量处理：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 假设你有一个文献标题向量</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>titles <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Effects of nitrogen deposition on soil carbon storage"</span>,</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Biodiversity and ecosystem functioning in subtropical forests"</span>,</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Soil pore structure and water movement in forest soils"</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 尝试通过 CrossRef API 获取 DOI</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(httr)</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(jsonlite)</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>get_doi_from_title <span class="ot">&lt;-</span> <span class="cf">function</span>(title) {</span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>  url <span class="ot">&lt;-</span> <span class="fu">URLencode</span>(</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">paste0</span>(<span class="st">"https://api.crossref.org/works?query.title="</span>, title, <span class="st">"&amp;rows=1"</span>)</span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>  response <span class="ot">&lt;-</span> <span class="fu">GET</span>(url)</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">status_code</span>(response) <span class="sc">==</span> <span class="dv">200</span>) {</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>    data <span class="ot">&lt;-</span> <span class="fu">fromJSON</span>(<span class="fu">content</span>(response, <span class="at">as =</span> <span class="st">"text"</span>))</span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (data<span class="sc">$</span>message<span class="sc">$</span><span class="st">`</span><span class="at">total-results</span><span class="st">`</span> <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      <span class="fu">return</span>(data<span class="sc">$</span>message<span class="sc">$</span>items[[<span class="dv">1</span>]]<span class="sc">$</span>DOI)</span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="cn">NA</span>)</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 批量获取 DOI</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>dois <span class="ot">&lt;-</span> <span class="fu">sapply</span>(titles, get_doi_from_title)</span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(dois)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="citr-包rstudio-中的引用插入" class="level3" data-number="15.4.3">
+<h3 data-number="15.4.3" class="anchored" data-anchor-id="citr-包rstudio-中的引用插入"><span class="header-section-number">15.4.3</span> citr 包：RStudio 中的引用插入</h3>
+<p>citr 是一个 R 包，可以在 RStudio 中提供引用插入的图形界面，特别适合 R Markdown 文档的参考文献管理。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 citr</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"citr"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 RStudio 中启用</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Tools -&gt; Addins -&gt; Browse Addins -&gt; 找到 "Insert citations"</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 可以为这个功能设置快捷键，例如 Ctrl+Shift+M</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>启用后，在 R Markdown 文档中点击「Addins」→「Insert citation」，会弹出文献搜索窗口，可以搜索当前 BibTeX 文献库中的文献并一键插入引用。</p>
+</section>
+</section>
+<section id="引用格式gbt-7714-与-apa" class="level2" data-number="15.5">
+<h2 data-number="15.5" class="anchored" data-anchor-id="引用格式gbt-7714-与-apa"><span class="header-section-number">15.5</span> 引用格式：GB/T 7714 与 APA</h2>
+<section id="生态学领域常用的引用格式" class="level3" data-number="15.5.1">
+<h3 data-number="15.5.1" class="anchored" data-anchor-id="生态学领域常用的引用格式"><span class="header-section-number">15.5.1</span> 生态学领域常用的引用格式</h3>
+<p>不同学科和期刊使用不同的引用格式。生态学领域最常见的两种格式是：</p>
+<p><strong>GB/T 7714（国标格式）</strong></p>
+<p>中国国家标准，全称《信息与文献 参考文献著录规则》。国内期刊和学位论文通常要求使用 GB/T 7714 格式。其特点是顺序编码制（按引用顺序编号）和作者-年份制（哈佛格式）两种风格。</p>
+<p><strong>APA 格式（American Psychological Association）</strong></p>
+<p>美国心理学协会制定的引用格式，现已广泛应用于心理学、社会科学和生态学领域。APA 格式的特点是作者-年份制，文献列表按作者姓氏字母顺序排列。</p>
+</section>
+<section id="gbt-7714-2015-格式详解" class="level3" data-number="15.5.2">
+<h3 data-number="15.5.2" class="anchored" data-anchor-id="gbt-7714-2015-格式详解"><span class="header-section-number">15.5.2</span> GB/T 7714-2015 格式详解</h3>
+<p><strong>期刊文章</strong></p>
+<p>格式：<code>[序号] 作者. 题名[J]. 刊名, 出版年份, 卷(期): 起始页码-终止页码.</code></p>
+<p>示例：</p>
+<pre><code>[1] 张三, 李四. 氮沉降对土壤有机碳储量的影响[J]. 生态学报, 2023, 43(2): 256-268.
+[2] Wang X, Li Y, Chen J, et al. Effects of mixed forest on soil carbon sequestration in subtropical China[J]. Forest Ecology and Management, 2022, 508: 120-135.</code></pre>
+<p>注意：中文文献列出所有作者，外文文献通常列出前三位作者后加 “et al.”。</p>
+<p><strong>专著</strong></p>
+<p>格式：<code>[序号] 作者. 书名[M]. 版本(第一版不标注). 出版地: 出版社, 出版年份.</code></p>
+<p>示例：</p>
+<pre><code>[3] 李四, 王五. 生态学原理[M]. 北京: 科学出版社, 2021.
+[4] Schlesinger W H, Bernhardt E S. Biogeochemistry: An analysis of global change[M]. 3rd ed. Academic Press, 2013.</code></pre>
+<p><strong>学位论文</strong></p>
+<p>格式：<code>[序号] 作者. 题名[D]. 学位类型: [博士|硕士], 授予单位, 年份.</code></p>
+<p>示例：</p>
+<pre><code>[5] 张华. 马尾松混交林土壤微生物群落特征研究[D]. 硕士: 广西大学, 2023.</code></pre>
+<p><strong>网络资源</strong></p>
+<p>格式：<code>[序号] 作者. 题名[EB/OL]. (更新日期/发布日期)[查阅日期]. URL.</code></p>
+<p>示例：</p>
+<pre><code>[6] 国家统计局. 中国森林资源报告[EB/OL]. (2022-10-15)[2024-03-01]. http://www.forestry.gov.cn/.</code></pre>
+</section>
+<section id="apa-格式详解第七版" class="level3" data-number="15.5.3">
+<h3 data-number="15.5.3" class="anchored" data-anchor-id="apa-格式详解第七版"><span class="header-section-number">15.5.3</span> APA 格式详解（第七版）</h3>
+<p>APA 第七版是目前最新的格式规范，相比第六版有一些重要变化：</p>
+<p><strong>格式变化要点：</strong></p>
+<ul>
+<li>作者数量：1-20个作者都要列出完整名单（第六版是7个以上才列完整）</li>
+<li>年份：期刊文章必须标注具体年份</li>
+<li>DOI 格式：推荐使用短链接格式（https://doi.org/10.1234/example）</li>
+</ul>
+<p><strong>期刊文章</strong></p>
+<p>格式：<code>Author, A. A., &amp; Author, B. B. (Year). Title of article. Title of Periodical, volume(issue), page–page. https://doi.org/xxxxx</code></p>
+<p>示例：</p>
+<pre><code>Huston, M. A. (1997). Hidden treatments in ecological experiments: Re-evaluating the ecosystem function of biodiversity. Oecologia, 110(4), 449–460. https://doi.org/10.1007/s004420050180
+
+Tilman, D., Wedin, D., &amp; Knops, J. (1996). Productivity and sustainability influenced by biodiversity in grassland ecosystems. Nature, 379(6567), 718–720. https://doi.org/10.1038/379718a0</code></pre>
+<p><strong>专著</strong></p>
+<p>格式：<code>Author, A. A. (Year). Title of work: Capital letter also for subtitle (Edition ed.). Publisher.</code></p>
+<p>示例：</p>
+<pre><code>Schlesinger, W. H., &amp; Bernhardt, E. S. (2013). Biogeochemistry: An analysis of global change (3rd ed.). Academic Press.</code></pre>
+<p><strong>学位论文</strong></p>
+<p>格式：<code>Author, A. A. (Year). Title of dissertation/Thesis [Doctoral dissertation/Master's thesis, University Name]. Database or Publisher. URL</code></p>
+<p>示例：</p>
+<pre><code>Zhang, H. (2023). Soil microbial community structure in masson pine mixed forests [Master's thesis, Guangxi University]. CNKI. https://doi.org/xxxxx</code></pre>
+</section>
+<section id="zotero-中的引用格式转换" class="level3" data-number="15.5.4">
+<h3 data-number="15.5.4" class="anchored" data-anchor-id="zotero-中的引用格式转换"><span class="header-section-number">15.5.4</span> Zotero 中的引用格式转换</h3>
+<p>Zotero 支持在多种引用格式之间快速转换。在 Zotero 主界面，选择「编辑」→「首选项」→「引用」，可以添加和切换引用样式。</p>
+<p><strong>添加 GB/T 7714 格式</strong></p>
+<p>Zotero 本身没有内置 GB/T 7714 格式，需要手动添加样式文件。访问 https://www.zotero.org/styles ，搜索 “Chinese” 或具体期刊名称，找到需要的样式。</p>
+<p>添加到 Zotero 的方法：下载 .csl 文件，然后在 Zotero 中选择「编辑」→「首选项」→「引用」→「样式」→ 点击加号按钮添加下载的 .csl 文件。</p>
+<p><strong>切换文献库的引用格式</strong></p>
+<p>在 Word 中使用 Zotero 插入引用时，可以随时切换引用格式：点击 Word 功能区的 Zotero 选项卡 → 点击「文档首选项」→「样式」→ 从下拉列表中选择目标格式 → 点击确定。切换后所有引用会自动重新格式化。</p>
+</section>
+</section>
+<section id="如何高效检索学术文献" class="level2" data-number="15.6">
+<h2 data-number="15.6" class="anchored" data-anchor-id="如何高效检索学术文献"><span class="header-section-number">15.6</span> 如何高效检索学术文献</h2>
+<section id="google-scholar-的高级检索技巧" class="level3" data-number="15.6.1">
+<h3 data-number="15.6.1" class="anchored" data-anchor-id="google-scholar-的高级检索技巧"><span class="header-section-number">15.6.1</span> Google Scholar 的高级检索技巧</h3>
+<p>Google Scholar 是学术文献检索的首选工具，但大多数同学只用最基本的关键词搜索。以下技巧可以大幅提升检索效率：</p>
+<p><strong>布尔运算符</strong></p>
+<p>使用 AND、OR、NOT 控制检索逻辑：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检索同时包含"土壤碳"和"马尾松"的文献</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>土壤碳 AND 马尾松</span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 检索包含"生物多样性"或"物种多样性"的文献</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>生物多样性 OR 物种多样性</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 排除"模型"相关的结果</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>生物多样性 NOT 模型</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>短语精确检索</strong></p>
+<p>用引号包裹短语，要求结果必须包含完整短语：</p>
+<pre><code># 检索"土壤孔隙结构"的精确匹配
+"土壤孔隙结构"
+
+# 检索马尾松和土壤碳储量的共现
+"masson pine" AND "soil carbon"</code></pre>
+<p><strong>搜索特定时间范围</strong></p>
+<p>使用 <code>after:YYYY</code> 和 <code>before:YYYY</code> 限制时间范围：</p>
+<pre><code># 检索 2020 年之后发表的生物多样性论文
+biodiversity AND ecosystem functioning after:2020
+
+# 检索 2015-2020 年之间的荟萃分析
+meta-analysis AND soil carbon sequestration 2015:2020</code></pre>
+<p><strong>搜索特定作者或期刊</strong></p>
+<p>使用 <code>author:</code> 搜索特定作者的文献：</p>
+<pre><code># 搜索 Tilman 的生物多样性实验论文
+author:Tilman biodiversity experiment</code></pre>
+<p><strong>搜索 PDF 全文</strong></p>
+<p>使用 <code>filetype:pdf</code> 搜索可直接下载的 PDF：</p>
+<pre><code>"soil carbon" "masson pine" filetype:pdf</code></pre>
+</section>
+<section id="中文学术资源检索" class="level3" data-number="15.6.2">
+<h3 data-number="15.6.2" class="anchored" data-anchor-id="中文学术资源检索"><span class="header-section-number">15.6.2</span> 中文学术资源检索</h3>
+<p><strong>知网（CNKI）的检索策略</strong></p>
+<p>知网（https://www.cnki.net/）是获取中文学术资源的最主要平台，包括期刊论文、学位论文，会议论文，专利等。</p>
+<p>高级检索技巧：</p>
+<ul>
+<li>使用「主题」字段比「全文」字段更精准</li>
+<li>博士论文的参考文献是了解领域的好资源</li>
+<li>「发表时间」筛选可以追踪最新研究进展</li>
+<li>「来源类别」可以选择核心期刊（如北大核心、CSCD）</li>
+</ul>
+<p><strong>万方的特点</strong></p>
+<p>万方（https://www.wanfangdata.com.cn/）和知网有一定重叠，但也有一些独特资源：</p>
+<ul>
+<li>学位论文覆盖时间可能比知网更长</li>
+<li>某些技术报告和标准文献只有万方有</li>
+</ul>
+<p><strong>检索词的选择与扩展</strong></p>
+<p>同义词和上位词/下位词扩展是提高检索召回率的关键：</p>
+<pre><code>核心检索词：马尾松
+扩展词：湿地松、火炬松、加勒比松（都是松属但不同种）
+      马尾松林（加入"林"字）
+      Pinus massoniana（拉丁名）
+
+核心检索词：土壤有机碳
+扩展词：土壤碳、土壤碳库、土壤碳储量
+      SOC（全称缩写）
+      soil organic carbon（全称英文）</code></pre>
+</section>
+<section id="文献筛选的金字塔原则" class="level3" data-number="15.6.3">
+<h3 data-number="15.6.3" class="anchored" data-anchor-id="文献筛选的金字塔原则"><span class="header-section-number">15.6.3</span> 文献筛选的”金字塔”原则</h3>
+<p>面对大量检索结果，不要试图读完所有文献。按照以下顺序筛选：</p>
+<p><strong>第一轮：标题筛选</strong></p>
+<p>阅读所有检索结果的标题，排除明显不相关的文献。保留率通常在 30-50%。</p>
+<p><strong>第二轮：摘要筛选</strong></p>
+<p>阅读保留文献的摘要，判断是否与研究问题直接相关。保留率通常在 10-20%。</p>
+<p><strong>第三轮：全文筛选</strong></p>
+<p>对于通过摘要筛选的文献，下载并快速浏览全文。重点关注：引言部分的背景是否充分？方法是否合理？结论是否有数据支持？</p>
+<p><strong>第四轮：引用追踪</strong></p>
+<p>对于核心文献，使用 Google Scholar 的「被引用」功能，追踪后续引用这篇文献的新研究。</p>
+</section>
+</section>
+<section id="如何有效阅读学术文献" class="level2" data-number="15.7">
+<h2 data-number="15.7" class="anchored" data-anchor-id="如何有效阅读学术文献"><span class="header-section-number">15.7</span> 如何有效阅读学术文献</h2>
+<section id="泛读-vs-精读不同的文献不同的读法" class="level3" data-number="15.7.1">
+<h3 data-number="15.7.1" class="anchored" data-anchor-id="泛读-vs-精读不同的文献不同的读法"><span class="header-section-number">15.7.1</span> 泛读 vs 精读：不同的文献不同的读法</h3>
+<p><strong>泛读（Skimming）</strong></p>
+<p>适用场景：初步了解某个领域、筛选文献、追踪最新动态</p>
+<p>目标：了解文献的主要内容，判断是否值得精读</p>
+<p>时间：5-10 分钟</p>
+<p>方法：</p>
+<ol type="1">
+<li>先读标题和关键词——判断是否与你的研究相关</li>
+<li>读摘要——了解研究问题和主要结论</li>
+<li>扫一眼图表——通常能直观反映研究的主要发现</li>
+<li>看结论部分——确认作者宣称的主要贡献</li>
+</ol>
+<p><strong>精读（In-depth Reading）</strong></p>
+<p>适用场景：核心文献、与研究直接相关的方法论文献、需要引用的文献</p>
+<p>目标：完全理解研究的设计、方法和结论</p>
+<p>时间：1-3 小时</p>
+<p>方法：</p>
+<ol type="1">
+<li>读引言——理解研究背景、问题提出和假设</li>
+<li>读方法——理解实验设计、采样方法、分析方法</li>
+<li>读结果——跟随作者的思路看数据和图表</li>
+<li>读讨论——理解作者对结果的解读和局限</li>
+<li>做笔记——用结构化方式记录关键信息</li>
+</ol>
+</section>
+<section id="生态学文献的阅读框架" class="level3" data-number="15.7.2">
+<h3 data-number="15.7.2" class="anchored" data-anchor-id="生态学文献的阅读框架"><span class="header-section-number">15.7.2</span> 生态学文献的阅读框架</h3>
+<p><strong>引言（Introduction）</strong></p>
+<ul>
+<li>这篇文献要回答什么科学问题？</li>
+<li>为什么这个问题重要（研究意义）？</li>
+<li>之前的研究做了什么，有什么 gap？</li>
+<li>作者的假设是什么？</li>
+</ul>
+<p><strong>方法（Methods）</strong></p>
+<ul>
+<li>研究地点在哪里？有什么地理和生态特征？</li>
+<li>采样设计是什么？（样本量、采样时间、采样方法）</li>
+<li>用了什么分析技术？</li>
+</ul>
+<p><strong>结果（Results）</strong></p>
+<ul>
+<li>主要发现了什么？（列出关键数字）</li>
+<li>统计检验结果是什么？（p值、效应量）</li>
+<li>有哪些支撑的图表？</li>
+</ul>
+<p><strong>讨论（Discussion）</strong></p>
+<ul>
+<li>作者如何解释这些结果？</li>
+<li>与之前的研究对比，有什么异同？</li>
+<li>研究的局限性是什么？</li>
+<li>对未来研究有什么启示？</li>
+</ul>
+</section>
+<section id="文献笔记方法" class="level3" data-number="15.7.3">
+<h3 data-number="15.7.3" class="anchored" data-anchor-id="文献笔记方法"><span class="header-section-number">15.7.3</span> 文献笔记方法</h3>
+<p>康纳维尔笔记法（改良版）——将笔记页面分成三部分，左边放关键词，下边放总结和问题：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu"># 文献笔记模板：wanger2023effects</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu"># Zotero Citation Key: wang2023effects</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="fu"># DOI: 10.1016/j.foreco.2023.01.015</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="fu"># 精读日期：2024-03-15</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## 研究问题</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>...（用一句话概括）</span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a><span class="fu">## 核心发现</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="ss">1. </span>...</span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="ss">2. </span>...</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="fu">## 方法亮点</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>...</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="fu">## 对我研究的启发</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>...</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="引用检查与学术诚信" class="level2" data-number="15.8">
+<h2 data-number="15.8" class="anchored" data-anchor-id="引用检查与学术诚信"><span class="header-section-number">15.8</span> 引用检查与学术诚信</h2>
+<section id="常见引用错误" class="level3" data-number="15.8.1">
+<h3 data-number="15.8.1" class="anchored" data-anchor-id="常见引用错误"><span class="header-section-number">15.8.1</span> 常见引用错误</h3>
+<p><strong>错误一：引用了但没有对应参考文献列表条目</strong></p>
+<p>这通常是因为手动调整文档时不小心删除了参考文献列表中的条目。检查方法：在 Word 中使用 Zotero 的「重新生成参考文献列表」功能。</p>
+<p><strong>错误二：参考文献列表有条目但正文没有引用</strong></p>
+<p>这通常是因为在修改过程中删除了正文中的引用但保留了列表条目。检查方法：Word 搜索功能，检查所有参考文献列表中的序号在正文中是否都有出现。</p>
+<p><strong>错误三：引用格式不一致</strong></p>
+<p>同一篇论文中混用了不同的引用格式。解决方法：使用 Zotero 的「文档首选项」统一设置目标格式，然后用「刷新」功能一键格式化。</p>
+<p><strong>错误四：过度依赖二手引用</strong></p>
+<p>“二手引用”（secondary source）是指你引用的是某文献 A 中的观点，但这个观点最初来自另一篇文献 B。当你实际没有查阅文献 B 时，应该标注为”引自 A”，而不是直接引用 B。</p>
+</section>
+<section id="学术诚信的基本原则" class="level3" data-number="15.8.2">
+<h3 data-number="15.8.2" class="anchored" data-anchor-id="学术诚信的基本原则"><span class="header-section-number">15.8.2</span> 学术诚信的基本原则</h3>
+<p><strong>直接引用必须加引号并标注来源</strong></p>
+<p>如果完全复制他人原文（即使只是一句话），必须：</p>
+<ol type="1">
+<li>用引号标注是直接引用</li>
+<li>标注作者、年份和具体页码</li>
+<li>引用格式符合目标期刊/学位论文要求</li>
+</ol>
+<p><strong>改写（Paraphrase）也要标注</strong></p>
+<p>即使用自己的话重新表述了某个观点，没有逐字复制，也必须标注来源。改写是”在理解了原意后用自己的语言重新表述”，仍然是基于他人思想的表达，需要引用。</p>
+</section>
+</section>
+<section id="生态学重要期刊与学术资源" class="level2" data-number="15.9">
+<h2 data-number="15.9" class="anchored" data-anchor-id="生态学重要期刊与学术资源"><span class="header-section-number">15.9</span> 生态学重要期刊与学术资源</h2>
+<section id="高影响力生态学期刊" class="level3" data-number="15.9.1">
+<h3 data-number="15.9.1" class="anchored" data-anchor-id="高影响力生态学期刊"><span class="header-section-number">15.9.1</span> 高影响力生态学期刊</h3>
+<p><strong>顶级综合性生态学期刊（第一梯队）</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">期刊</th>
+<th style="text-align: left;">IF (2023)</th>
+<th style="text-align: left;">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>Science</em></td>
+<td style="text-align: left;">~63</td>
+<td style="text-align: left;">涵盖所有科学领域</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>Nature</em></td>
+<td style="text-align: left;">~65</td>
+<td style="text-align: left;">与 Science 类似</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>Nature Ecology &amp; Evolution</em></td>
+<td style="text-align: left;">~17</td>
+<td style="text-align: left;">Nature 子刊</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>Ecology Letters</em></td>
+<td style="text-align: left;">~11</td>
+<td style="text-align: left;">生态学 Letter 类</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>Trends in Ecology &amp; Evolution</em></td>
+<td style="text-align: left;">~20</td>
+<td style="text-align: left;">综述类，追踪前沿</td>
+</tr>
+</tbody>
+</table>
+<p><strong>生态学主流期刊（第二梯队）</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">期刊</th>
+<th style="text-align: left;">IF (2023)</th>
+<th style="text-align: left;">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>Ecology</em></td>
+<td style="text-align: left;">~5.3</td>
+<td style="text-align: left;">ESA 主办，生态学经典</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>Journal of Ecology</em></td>
+<td style="text-align: left;">~5.5</td>
+<td style="text-align: left;">英国生态学会，植物生态学强</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>Functional Ecology</em></td>
+<td style="text-align: left;">~5.0</td>
+<td style="text-align: left;">功能生态学</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>Journal of Applied Ecology</em></td>
+<td style="text-align: left;">~6.5</td>
+<td style="text-align: left;">应用生态学</td>
+</tr>
+</tbody>
+</table>
+<p><strong>方法学与数据期刊</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">期刊</th>
+<th style="text-align: left;">特点</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;"><em>Methods in Ecology and Evolution</em></td>
+<td style="text-align: left;">生态学方法创新</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><em>Scientific Data</em></td>
+<td style="text-align: left;">数据论文专用期刊</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;"><em>Ecology and Evolution</em></td>
+<td style="text-align: left;">开放数据/代码文章</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="生态学重要数据库" class="level3" data-number="15.9.2">
+<h3 data-number="15.9.2" class="anchored" data-anchor-id="生态学重要数据库"><span class="header-section-number">15.9.2</span> 生态学重要数据库</h3>
+<p><strong>全球生物多样性数据库</strong></p>
+<ul>
+<li><strong>GBIF</strong>：https://www.gbif.org/ ，整合全球物种分布数据</li>
+<li><strong>iNaturalist</strong>：公众科学平台，适合物种记录</li>
+<li><strong>eBird</strong>：鸟类观测数据库</li>
+</ul>
+<p><strong>气候与环境数据</strong></p>
+<ul>
+<li><strong>WorldClim</strong>：全球高分辨率气候数据</li>
+<li><strong>CHELSA</strong>：高分辨率气候层数据</li>
+<li><strong>NEON</strong>：美国生态观测网络</li>
+<li><strong>CERN（中国生态系统研究网络）</strong>：中国生态长期监测数据</li>
+</ul>
+<p><strong>数据预印本平台</strong></p>
+<ul>
+<li><strong>Biorxiv</strong>：生命科学预印本（https://www.biorxiv.org/）</li>
+<li><strong>EarthArXiv</strong>：地球科学预印本（https://eartharxiv.org/）</li>
+</ul>
+</section>
+</section>
+<section id="课后练习" class="level2" data-number="15.10">
+<h2 data-number="15.10" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">15.10</span> 课后练习</h2>
+<section id="基础题" class="level3" data-number="15.10.1">
+<h3 data-number="15.10.1" class="anchored" data-anchor-id="基础题"><span class="header-section-number">15.10.1</span> 基础题</h3>
+<p><strong>练习 1：Zotero 安装与配置</strong></p>
+<p>完成以下任务：</p>
+<ol type="a">
+<li>在你的电脑上安装 Zotero</li>
+<li>安装 Chrome/Firefox 浏览器的 Zotero Connector</li>
+<li>安装 Zotero 的 Word/LibreOffice 插件</li>
+<li>注册 Zotero 账号并登录</li>
+<li>在 Zotero 中创建一个用于本课程的文献库文件夹</li>
+</ol>
+<p><strong>练习 2：文献导入与整理</strong></p>
+<ol type="a">
+<li>在 Google Scholar 中检索”soil carbon sequestration mixed forest”相关论文，找到 5 篇你感兴趣的论文</li>
+<li>使用 Zotero Connector 将这 5 篇论文一键导入你的文献库</li>
+<li>为每篇论文补充中文标签（如「土壤碳」「混交林」等）</li>
+<li>为其中 1 篇论文写 200 字的阅读笔记</li>
+</ol>
+<p><strong>练习 3：引用格式识别</strong></p>
+<p>判断以下文献的类型（期刊文章/专著/学位论文/网络资源），并说明判断依据：</p>
+<pre><code>[1] 李明华. 森林土壤碳储量研究进展[J]. 生态学报, 2020, 40(15): 5123-5134.
+[2] 王强. 土壤生态学[M]. 北京: 高等教育出版社, 2019.
+[3] 张伟. 亚热带森林土壤碳周转特征研究[D]. 博士: 北京大学, 2021.
+[4] 国家林业和草原局. 中国森林资源报告[EB/OL]. (2022-10-15)[2023-03-20]. http://www.forestry.gov.cn/.
+[5] Chen J, Li Y, Wang X, et al. Effects of forest type on soil carbon storage in subtropical China[J]. Forest Ecology and Management, 2023, 528: 120-135.</code></pre>
+</section>
+<section id="应用题" class="level3" data-number="15.10.2">
+<h3 data-number="15.10.2" class="anchored" data-anchor-id="应用题"><span class="header-section-number">15.10.2</span> 应用题</h3>
+<p><strong>练习 4：文献检索策略设计</strong></p>
+<p>为你的课程项目或研究课题设计一套文献检索策略：</p>
+<ol type="a">
+<li>列出你的研究课题关键词（中英文，包括同义词）</li>
+<li>设计一套布尔检索式（至少 3 个检索式）</li>
+<li>选择 2 个数据库进行检索（一个英文、一个中文）</li>
+<li>使用”金字塔”筛选法，列出每轮保留和排除的文献数量</li>
+<li>最终选出 5-8 篇核心文献，给出选择理由</li>
+</ol>
+<p><strong>练习 5：R 中生成文献引用</strong></p>
+<p>完成以下任务：</p>
+<ol type="a">
+<li>在 R 中运行 <code>citation()</code> 查看 R 的引用信息</li>
+<li>安装 <code>tidyverse</code> 和 <code>vegan</code> 包，并获取它们的引用格式</li>
+<li>将 R 的引用信息复制到一个 .bib 文件中</li>
+<li>在 R 中使用 <code>RefManageR::ReadBib()</code> 读取该文件</li>
+<li>查看文献库的 citation key</li>
+</ol>
+</section>
+<section id="思考题" class="level3" data-number="15.10.3">
+<h3 data-number="15.10.3" class="anchored" data-anchor-id="思考题"><span class="header-section-number">15.10.3</span> 思考题</h3>
+<p><strong>练习 6：学术诚信反思</strong></p>
+<p>阅读以下场景，判断是否存在学术诚信问题，并说明理由：</p>
+<p>场景 A：你在写论文时，发现某篇文献的结论和你想写的内容高度相关，但你只读了摘要，没有读全文。你决定用自己的话复述摘要中的结论，但不引用这篇文献，因为你觉得”摘要不算正式发表”。</p>
+<p>场景 B：你在分析数据时，发现某篇文献的数据和自己的结果不一致。你决定不引用那篇文献，而是引用另一篇支持你结论的文献。</p>
+<p>场景 C：你在审稿时，发现某篇论文的参考文献列表中有 3 条 DOI 已经失效（链接打不开）。你在审稿意见中指出这个问题，建议作者修正。</p>
+<p>请分别分析这三个场景中的学术诚信问题，并给出正确的处理方式。</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0205-public-data.html" class="pagination-link" aria-label="生态学公共数据获取方法">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0207-meta-analysis-intro.html" class="pagination-link" aria-label="荟萃分析入门">
+        <span class="nav-page-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

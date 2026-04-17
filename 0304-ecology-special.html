@@ -1,0 +1,1161 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>20&nbsp; 生态学专项数据处理 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0305-machine-learning-preprocessing.html" rel="next">
+<link href="./0303-data-quality.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+  <script src="https://cdnjs.cloudflare.com/polyfill/v3/polyfill.min.js?features=es6"></script>
+  <script defer="" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-chtml-full.js" type="text/javascript"></script>
+
+<script type="text/javascript">
+const typesetMath = (el) => {
+  if (window.MathJax) {
+    // MathJax Typeset
+    window.MathJax.typeset([el]);
+  } else if (window.katex) {
+    // KaTeX Render
+    var mathElements = el.getElementsByClassName("math");
+    var macros = [];
+    for (var i = 0; i < mathElements.length; i++) {
+      var texText = mathElements[i].firstChild;
+      if (mathElements[i].tagName == "SPAN" && texText && texText.data) {
+        window.katex.render(texText.data, mathElements[i], {
+          displayMode: mathElements[i].classList.contains('display'),
+          throwOnError: false,
+          macros: macros,
+          fleqn: false
+        });
+      }
+    }
+  }
+}
+window.Quarto = {
+  typesetMath
+};
+</script>
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning.html">第四单元：数据预处理</a></li><li class="breadcrumb-item"><a href="./0304-ecology-special.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#生态学专项数据处理" id="toc-生态学专项数据处理" class="nav-link active" data-scroll-target="#生态学专项数据处理"><span class="header-section-number">21</span> 生态学专项数据处理</a>
+  <ul class="collapse">
+  <li><a href="#物种多度数据处理" id="toc-物种多度数据处理" class="nav-link" data-scroll-target="#物种多度数据处理"><span class="header-section-number">21.1</span> 物种多度数据处理</a>
+  <ul class="collapse">
+  <li><a href="#什么是物种多度数据" id="toc-什么是物种多度数据" class="nav-link" data-scroll-target="#什么是物种多度数据"><span class="header-section-number">21.1.1</span> 什么是物种多度数据</a></li>
+  <li><a href="#数据结构宽表-vs-长表" id="toc-数据结构宽表-vs-长表" class="nav-link" data-scroll-target="#数据结构宽表-vs-长表"><span class="header-section-number">21.1.2</span> 数据结构：宽表 vs 长表</a></li>
+  <li><a href="#r实操宽表与长表的转换" id="toc-r实操宽表与长表的转换" class="nav-link" data-scroll-target="#r实操宽表与长表的转换"><span class="header-section-number">21.1.3</span> R实操：宽表与长表的转换</a></li>
+  <li><a href="#常见问题零膨胀样本量不均物种累积" id="toc-常见问题零膨胀样本量不均物种累积" class="nav-link" data-scroll-target="#常见问题零膨胀样本量不均物种累积"><span class="header-section-number">21.1.4</span> 常见问题：零膨胀、样本量不均、物种累积</a></li>
+  <li><a href="#r实操用vegan处理物种多度矩阵" id="toc-r实操用vegan处理物种多度矩阵" class="nav-link" data-scroll-target="#r实操用vegan处理物种多度矩阵"><span class="header-section-number">21.1.5</span> R实操：用vegan处理物种多度矩阵</a></li>
+  </ul></li>
+  <li><a href="#生物多样性指数计算" id="toc-生物多样性指数计算" class="nav-link" data-scroll-target="#生物多样性指数计算"><span class="header-section-number">21.2</span> 生物多样性指数计算</a>
+  <ul class="collapse">
+  <li><a href="#alpha多样性衡量单个群落的丰富程度" id="toc-alpha多样性衡量单个群落的丰富程度" class="nav-link" data-scroll-target="#alpha多样性衡量单个群落的丰富程度"><span class="header-section-number">21.2.1</span> Alpha多样性：衡量单个群落的”丰富程度”</a></li>
+  <li><a href="#beta多样性衡量群落之间的差异程度" id="toc-beta多样性衡量群落之间的差异程度" class="nav-link" data-scroll-target="#beta多样性衡量群落之间的差异程度"><span class="header-section-number">21.2.2</span> Beta多样性：衡量群落之间的”差异程度”</a></li>
+  <li><a href="#gamma多样性概念" id="toc-gamma多样性概念" class="nav-link" data-scroll-target="#gamma多样性概念"><span class="header-section-number">21.2.3</span> Gamma多样性概念</a></li>
+  <li><a href="#稀释性曲线的原理和r实现" id="toc-稀释性曲线的原理和r实现" class="nav-link" data-scroll-target="#稀释性曲线的原理和r实现"><span class="header-section-number">21.2.4</span> 稀释性曲线的原理和R实现</a></li>
+  <li><a href="#生态学意义多样性指数告诉你什么" id="toc-生态学意义多样性指数告诉你什么" class="nav-link" data-scroll-target="#生态学意义多样性指数告诉你什么"><span class="header-section-number">21.2.5</span> 生态学意义：多样性指数告诉你什么</a></li>
+  </ul></li>
+  <li><a href="#群落矩阵分析" id="toc-群落矩阵分析" class="nav-link" data-scroll-target="#群落矩阵分析"><span class="header-section-number">21.3</span> 群落矩阵分析</a>
+  <ul class="collapse">
+  <li><a href="#群落矩阵的概念" id="toc-群落矩阵的概念" class="nav-link" data-scroll-target="#群落矩阵的概念"><span class="header-section-number">21.3.1</span> 群落矩阵的概念</a></li>
+  <li><a href="#排序方法pcacadcanmds的原理和选择" id="toc-排序方法pcacadcanmds的原理和选择" class="nav-link" data-scroll-target="#排序方法pcacadcanmds的原理和选择"><span class="header-section-number">21.3.2</span> 排序方法：PCA/CA/DCA/NMDS的原理和选择</a></li>
+  <li><a href="#间接梯度分析-vs-直接梯度分析" id="toc-间接梯度分析-vs-直接梯度分析" class="nav-link" data-scroll-target="#间接梯度分析-vs-直接梯度分析"><span class="header-section-number">21.3.3</span> 间接梯度分析 vs 直接梯度分析</a></li>
+  <li><a href="#r实操vegan包-dca-排序envfit-叠加环境因子" id="toc-r实操vegan包-dca-排序envfit-叠加环境因子" class="nav-link" data-scroll-target="#r实操vegan包-dca-排序envfit-叠加环境因子"><span class="header-section-number">21.3.4</span> R实操：vegan包 DCA 排序、envfit 叠加环境因子</a></li>
+  <li><a href="#结果解读排序图怎么看" id="toc-结果解读排序图怎么看" class="nav-link" data-scroll-target="#结果解读排序图怎么看"><span class="header-section-number">21.3.5</span> 结果解读：排序图怎么看</a></li>
+  </ul></li>
+  <li><a href="#环境因子关联分析" id="toc-环境因子关联分析" class="nav-link" data-scroll-target="#环境因子关联分析"><span class="header-section-number">21.4</span> 环境因子关联分析</a>
+  <ul class="collapse">
+  <li><a href="#物种-环境关系的研究设计" id="toc-物种-环境关系的研究设计" class="nav-link" data-scroll-target="#物种-环境关系的研究设计"><span class="header-section-number">21.4.1</span> 物种-环境关系的研究设计</a></li>
+  <li><a href="#约束排序rdacca与非约束排序的区别" id="toc-约束排序rdacca与非约束排序的区别" class="nav-link" data-scroll-target="#约束排序rdacca与非约束排序的区别"><span class="header-section-number">21.4.2</span> 约束排序（RDA/CCA）与非约束排序的区别</a></li>
+  <li><a href="#变异分解variation-partitioning空间vs环境vs随机" id="toc-变异分解variation-partitioning空间vs环境vs随机" class="nav-link" data-scroll-target="#变异分解variation-partitioning空间vs环境vs随机"><span class="header-section-number">21.4.3</span> 变异分解（Variation Partitioning）：空间vs环境vs随机</a></li>
+  <li><a href="#mantel检验和pcnm分析" id="toc-mantel检验和pcnm分析" class="nav-link" data-scroll-target="#mantel检验和pcnm分析"><span class="header-section-number">21.4.4</span> Mantel检验和PCNM分析</a></li>
+  <li><a href="#生态学案例土壤因子如何解释物种格局" id="toc-生态学案例土壤因子如何解释物种格局" class="nav-link" data-scroll-target="#生态学案例土壤因子如何解释物种格局"><span class="header-section-number">21.4.5</span> 生态学案例：土壤因子如何解释物种格局</a></li>
+  </ul></li>
+  <li><a href="#小结" id="toc-小结" class="nav-link" data-scroll-target="#小结"><span class="header-section-number">21.5</span> 小结</a></li>
+  <li><a href="#扩展更多生态学数据分析技巧" id="toc-扩展更多生态学数据分析技巧" class="nav-link" data-scroll-target="#扩展更多生态学数据分析技巧"><span class="header-section-number">21.6</span> 扩展：更多生态学数据分析技巧</a>
+  <ul class="collapse">
+  <li><a href="#物种多度分布模型" id="toc-物种多度分布模型" class="nav-link" data-scroll-target="#物种多度分布模型"><span class="header-section-number">21.6.1</span> 物种多度分布模型</a></li>
+  <li><a href="#嵌套性分析nestedness" id="toc-嵌套性分析nestedness" class="nav-link" data-scroll-target="#嵌套性分析nestedness"><span class="header-section-number">21.6.2</span> 嵌套性分析（Nestedness）</a></li>
+  <li><a href="#群落相似性的层级分解" id="toc-群落相似性的层级分解" class="nav-link" data-scroll-target="#群落相似性的层级分解"><span class="header-section-number">21.6.3</span> 群落相似性的层级分解</a></li>
+  <li><a href="#空间自相关与moran特征" id="toc-空间自相关与moran特征" class="nav-link" data-scroll-target="#空间自相关与moran特征"><span class="header-section-number">21.6.4</span> 空间自相关与Moran特征</a></li>
+  <li><a href="#真实研究案例桂西南喀斯特土壤孔隙与植物多样性" id="toc-真实研究案例桂西南喀斯特土壤孔隙与植物多样性" class="nav-link" data-scroll-target="#真实研究案例桂西南喀斯特土壤孔隙与植物多样性"><span class="header-section-number">21.6.5</span> 真实研究案例：桂西南喀斯特土壤孔隙与植物多样性</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning.html">第四单元：数据预处理</a></li><li class="breadcrumb-item"><a href="./0304-ecology-special.html"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="生态学专项数据处理" class="level1" data-number="21">
+<h1 data-number="21"><span class="header-section-number">21</span> 生态学专项数据处理</h1>
+<p>如果你在生态学实验室待过，一定见过那种布满密密麻麻数字的表格——每行是一个样点，每列是一个物种，交汇处的数字代表这个样点里那个物种的”多少”。这种表格叫物种多度矩阵，是生态学数据分析的基石。本章我们就从这块基石开始，学习生态学数据的专项处理技能。</p>
+<p>本章的学习路径：</p>
+<pre><code>物种多度数据 → 生物多样性指数 → 群落矩阵排序 → 环境因子关联</code></pre>
+<p>每一环节都回答一个具体的生态学问题，最终串联起”物种如何分布”这条主线。</p>
+<section id="物种多度数据处理" class="level2" data-number="21.1">
+<h2 data-number="21.1" class="anchored" data-anchor-id="物种多度数据处理"><span class="header-section-number">21.1</span> 物种多度数据处理</h2>
+<section id="什么是物种多度数据" class="level3" data-number="21.1.1">
+<h3 data-number="21.1.1" class="anchored" data-anchor-id="什么是物种多度数据"><span class="header-section-number">21.1.1</span> 什么是物种多度数据</h3>
+<p>物种多度（species abundance）是生态学研究中最基础的数据类型之一。你在野外布设了几个样方，数了每个样方里每种植物的株数——这就是最原始的多度数据。</p>
+<p>但”多度”这个词在不同场景下有不同的含义：</p>
+<p><strong>计数（Count）</strong>：直接数出来的个体数。植物群落调查里数每种植物的株数，鸟类调查里记录每次观测到的个体数，都是计数。计数是最原始、最没有争议的多度形式。</p>
+<p><strong>丰度（Abundance）</strong>：单位面积或体积内的个体数量。把计数除以样方面积，就得到了密度意义上的丰度。比如”每平方米有多少株草本植物”。</p>
+<p><strong>盖度（Coverage/Cover）</strong>：物种在地上垂直投影所占的比例。森林群落调查时常用盖度而不是株数——因为一棵大树和十棵小草对群落外貌的贡献完全不同。盖度通常是百分比（0-100%）。</p>
+<p><strong>生物量（Biomass）</strong>：单位面积内物种的干重。这是最能直接体现”生态功能”的指标——群落固定了多少碳、产生了多少净初级生产力，都和生物量直接挂钩。但生物量需要实地收割烘干测定，成本最高。</p>
+<p><strong>重要值（Importance Value）</strong>：植物群落学中常用的综合指标，由相对多度+相对频度+相对盖度（或相对基面积）三者相加得到，取值范围通常是0-300。这个指标的好处是把多个维度综合成一个数，缺点是损失了信息——两个重要值相同的群落，可能在多度、频度、盖度上有完全不同的组合。</p>
+<blockquote class="blockquote">
+<p><strong>数据采集提示</strong>：不同多度类型之间可以转换，但会损失信息。计数可以转丰度（除以面积），但反过来不行（你不知道每株占多大面积）。丰度和盖度之间没有固定转换关系——这取决于物种的生活型。同样的50%盖度，一棵大树的生物量可能是一片草本的几十倍。</p>
+</blockquote>
+</section>
+<section id="数据结构宽表-vs-长表" class="level3" data-number="21.1.2">
+<h3 data-number="21.1.2" class="anchored" data-anchor-id="数据结构宽表-vs-长表"><span class="header-section-number">21.1.2</span> 数据结构：宽表 vs 长表</h3>
+<p>拿到物种多度数据后，第一件事是搞清楚它的存储结构。这在很大程度上决定了后面怎么处理。</p>
+<p><strong>宽表（Wide format）</strong>：每行一个样点，每列一个物种，交汇处是多度值。这种格式人类阅读友好，Excel里看起来很整齐。生态学调查的原始记录表通常是宽表。</p>
+<p><strong>长表（Long format）</strong>：每行记录一个”样点-物种”的组合，第三列是多度值。这种格式机器友好，是统计分析的标准输入格式。</p>
+<p>生态学数据分析几乎都是用长表操作的。原因很简单：统计分析函数（lm、glm、diversity）接收的通常是长表。但野外记录往往是宽表，所以你得会转换。</p>
+</section>
+<section id="r实操宽表与长表的转换" class="level3" data-number="21.1.3">
+<h3 data-number="21.1.3" class="anchored" data-anchor-id="r实操宽表与长表的转换"><span class="header-section-number">21.1.3</span> R实操：宽表与长表的转换</h3>
+<p>模拟一个宽表，然后练习宽表转长表、长表转宽表：</p>
+<p>现在把宽表转成长表——这是生态学数据处理最常用的转换：</p>
+<p>长表转回宽表同样简单——但要注意，当你从长表变回宽表时，之前计算的<code>total_abundance</code>就丢失了（除非你重新算）：</p>
+</section>
+<section id="常见问题零膨胀样本量不均物种累积" class="level3" data-number="21.1.4">
+<h3 data-number="21.1.4" class="anchored" data-anchor-id="常见问题零膨胀样本量不均物种累积"><span class="header-section-number">21.1.4</span> 常见问题：零膨胀、样本量不均、物种累积</h3>
+<p>生态学数据有几类特有问题，处理不好会严重影响后续分析。</p>
+<p><strong>零膨胀（Zero-inflation）</strong>：这是生态学数据最常见的问题之一。想象一下——你调查了100个样点，其中70个样点里某物种的出现记录是0。但这70个”零”可能来自两种完全不同的生态机制：</p>
+<ul>
+<li><strong>结构零（Structural zero）</strong>：该物种在那些样点的生境中本来就不存在（比如沙生植物不会出现在沼泽地里）</li>
+<li><strong>随机零（Sampling zero）</strong>：该物种在那些样点的生境中理论上存在，但你调查时没检测到</li>
+</ul>
+<p>如果你不区分这两种零，直接把0当0处理，统计分析会出问题——因为你的数据看起来比实际情况更”离散”。</p>
+<p><strong>样本量不均（Unequal sample sizes）</strong>：野外调查很难做到每个样点的采样努力完全一致——采样时间长的样点记录到的物种更多，不是因为它们”生态上更多样”，而是因为你努力找了。</p>
+<p>vegan包的<code>rarefy()</code>函数可以实现基于个体的稀释性标准化：</p>
+<p><strong>物种累积（Species accumulation）</strong>：当你增加采样量时，发现的物种数会逐渐增加，但增加的速度会越来越慢——因为你越来越难发现新物种。物种累积曲线（SAC）告诉你你的采样是否”够了”。</p>
+</section>
+<section id="r实操用vegan处理物种多度矩阵" class="level3" data-number="21.1.5">
+<h3 data-number="21.1.5" class="anchored" data-anchor-id="r实操用vegan处理物种多度矩阵"><span class="header-section-number">21.1.5</span> R实操：用vegan处理物种多度矩阵</h3>
+<p>vegan是生态学统计分析的瑞士军刀。准备vegan格式的物种多度矩阵是第一步：</p>
+</section>
+</section>
+<section id="生物多样性指数计算" class="level2" data-number="21.2">
+<h2 data-number="21.2" class="anchored" data-anchor-id="生物多样性指数计算"><span class="header-section-number">21.2</span> 生物多样性指数计算</h2>
+<section id="alpha多样性衡量单个群落的丰富程度" class="level3" data-number="21.2.1">
+<h3 data-number="21.2.1" class="anchored" data-anchor-id="alpha多样性衡量单个群落的丰富程度"><span class="header-section-number">21.2.1</span> Alpha多样性：衡量单个群落的”丰富程度”</h3>
+<p>Alpha多样性回答的问题是：这个样点里有多少种生物？它们各自的个体数分配得均匀吗？</p>
+<p><strong>Shannon指数（H’）</strong>：信息论出身的指数，最常用的多样性指标之一。它的公式是：</p>
+<p><span class="math display">\[H' = -\sum_{i=1}^{S} p_i \ln(p_i)\]</span></p>
+<p>其中 <span class="math inline">\(p_i\)</span> 是物种 <span class="math inline">\(i\)</span> 的相对多度比例，S 是总物种数。</p>
+<p>Shannon指数的理论范围是 0 到 ln(S)。0代表只有一个物种；ln(S)代表所有物种完全均等。实际调查中，草地生态系统的Shannon指数通常在1-3之间，森林可能达到3-5。</p>
+<p><strong>Simpson指数</strong>：有两种形式——Simpson的D指数（D = Σp_i²）和Simpson的1-D指数。后者更常用，值越大多样性越高。</p>
+<p><strong>ACE指数和CHAO1指数</strong>：专门为物种丰富度估计的指标，不只看实际观测到的物种数，还试图估算”你实际上可能有多少种”。</p>
+<p>vegan内置了<code>diversity()</code>函数，一行代码计算各种alpha多样性指数：</p>
+<p>生态学专业多样性指数：ACE和CHAO1：</p>
+</section>
+<section id="beta多样性衡量群落之间的差异程度" class="level3" data-number="21.2.2">
+<h3 data-number="21.2.2" class="anchored" data-anchor-id="beta多样性衡量群落之间的差异程度"><span class="header-section-number">21.2.2</span> Beta多样性：衡量群落之间的”差异程度”</h3>
+<p>Beta多样性描述不同群落之间的差异——这个概念由R.H. Whittaker在1952年提出。</p>
+<p><strong>Bray-Curtis dissimilarity（BCdiss）</strong>：生态学中使用最广泛的beta多样性指数。它的公式是：</p>
+<p><span class="math display">\[BC_{ij} = \frac{2 \times \sum(\min(x_{ia}, x_{ib}))}{\sum x_{ia} + \sum x_{ib}}\]</span></p>
+<p><strong>Jaccard dissimilarity</strong>：基于物种的”有-无”数据（不考虑数量）。</p>
+<p><strong>Sorensen dissimilarity</strong>：和Jaccard类似，但是是另一种表达方式。</p>
+<blockquote class="blockquote">
+<p><strong>选哪个</strong>：Jaccard/Sorensen基于物种有无，适合研究物种分布格局。Bray-Curtis基于物种数量，适合研究群落动态和功能。</p>
+</blockquote>
+<p>vegan里用<code>vegdist()</code>计算：</p>
+</section>
+<section id="gamma多样性概念" class="level3" data-number="21.2.3">
+<h3 data-number="21.2.3" class="anchored" data-anchor-id="gamma多样性概念"><span class="header-section-number">21.2.3</span> Gamma多样性概念</h3>
+<p>Gamma多样性是比Alpha和Beta更大尺度的概念——它描述的是整个研究区域的总物种多样性。数学上，Gamma多样性 = Alpha多样性 × Beta多样性。</p>
+<p>一个区域的物种总数取决于：（1）每个样点的物种丰富度（Alpha）；（2）不同样点之间的物种差异程度（Beta）。</p>
+</section>
+<section id="稀释性曲线的原理和r实现" class="level3" data-number="21.2.4">
+<h3 data-number="21.2.4" class="anchored" data-anchor-id="稀释性曲线的原理和r实现"><span class="header-section-number">21.2.4</span> 稀释性曲线的原理和R实现</h3>
+<p>稀释性曲线是检查采样是否充分的可视化工具。假设你随机打乱样点顺序，每次加入一个新样点，记录累计发现的物种数。重复很多次取平均，就得到了一条曲线。</p>
+<ul>
+<li>曲线快速上升后趋于平缓：采样充分，基本采全了</li>
+<li>曲线持续陡峭上升：采样不足，还有很多物种没被发现</li>
+</ul>
+</section>
+<section id="生态学意义多样性指数告诉你什么" class="level3" data-number="21.2.5">
+<h3 data-number="21.2.5" class="anchored" data-anchor-id="生态学意义多样性指数告诉你什么"><span class="header-section-number">21.2.5</span> 生态学意义：多样性指数告诉你什么</h3>
+<p><strong>Shannon指数的生态学解读</strong>：Shannon指数高，可能意味着（1）物种数多；（2）物种数不多但各物种个体分配很均匀。Shannon指数低，可能是因为优势种太强，或生境条件严酷。</p>
+<p><strong>Simpson指数（1-D）的生态学解读</strong>：Simpson指数对优势种很敏感。单优林的Simpson（1-D）会很低；多物种共支配的群落会很高。</p>
+<p><strong>Beta多样性的生态学解读</strong>：Beta多样性高意味着不同样点之间的物种组成差异大，可能反映了环境梯度明显、空间隔离、或历史因素。</p>
+</section>
+</section>
+<section id="群落矩阵分析" class="level2" data-number="21.3">
+<h2 data-number="21.3" class="anchored" data-anchor-id="群落矩阵分析"><span class="header-section-number">21.3</span> 群落矩阵分析</h2>
+<section id="群落矩阵的概念" class="level3" data-number="21.3.1">
+<h3 data-number="21.3.1" class="anchored" data-anchor-id="群落矩阵的概念"><span class="header-section-number">21.3.1</span> 群落矩阵的概念</h3>
+<p>群落矩阵（community matrix）是生态学统计分析的核心数据结构。它是一个”样点 × 物种”的数值矩阵——行代表采样样点，列代表物种，交汇处的值代表该样点该物种的多度。</p>
+<p>这个矩阵是几乎所有群落生态学分析的起点：计算Alpha多样性、计算Beta多样性、排序分析、群落模型。</p>
+</section>
+<section id="排序方法pcacadcanmds的原理和选择" class="level3" data-number="21.3.2">
+<h3 data-number="21.3.2" class="anchored" data-anchor-id="排序方法pcacadcanmds的原理和选择"><span class="header-section-number">21.3.2</span> 排序方法：PCA/CA/DCA/NMDS的原理和选择</h3>
+<p>排序是生态学数据分析的核心工具。当你有几十个样点、几十甚至上百个物种时，直接看原始数据根本无法发现规律。排序的作用就是”降维”——把这些高维数据投影到2-3维空间中，同时尽量保留原始数据的结构关系。</p>
+<p><strong>PCA（主成分分析）</strong>：找到数据变异最大的方向。PCA假设数据是线性的，这对物种数据来说往往不现实。</p>
+<p><strong>CA（对应分析）</strong>：PCA的物种友好版本。CA用卡方距离，对双零不敏感——这是物种数据的重要特性。</p>
+<p><strong>DCA（去趋势对应分析）</strong>：CA的改进版，消除弓形效应，使得第一轴更好地反映环境梯度长度。</p>
+<p><strong>NMDS（非度量多维标定）</strong>：迭代寻找一个低维配置，使得这个配置计算出的距离与原始距离之间的等级顺序相关性最大化。NMDS的核心优势是灵活性——可以使用任意距离矩阵。</p>
+<blockquote class="blockquote">
+<p><strong>选择指南</strong>：DCA适合探索性的群落格局分析。NMDS适合验证性分析，当你有明确的假设或使用特定的距离指标时优先用它。PCA适合物种数据已经过良好转化的情况（很少见）。</p>
+</blockquote>
+<p>vegan里实现这些排序：</p>
+</section>
+<section id="间接梯度分析-vs-直接梯度分析" class="level3" data-number="21.3.3">
+<h3 data-number="21.3.3" class="anchored" data-anchor-id="间接梯度分析-vs-直接梯度分析"><span class="header-section-number">21.3.3</span> 间接梯度分析 vs 直接梯度分析</h3>
+<p><strong>间接梯度分析（Unconstrained ordination）</strong>：只使用群落数据本身进行排序，不引入任何环境变量。PCA、CA、DCA、NMDS都是间接梯度分析。它们告诉你”数据中最大的变异结构是什么”，但不解释”为什么会这样”。</p>
+<p><strong>直接梯度分析（Constrained ordination）</strong>：在排序过程中直接引入环境变量，同时研究物种组成随环境的变化。这类方法包括RDA（冗余分析）和CCA（典范对应分析）。</p>
+<p>简单来说：间接梯度分析 = 看看数据里有什么格局（探索性）。直接梯度分析 = 这个格局和环境有什么关系（验证性+解释性）。</p>
+</section>
+<section id="r实操vegan包-dca-排序envfit-叠加环境因子" class="level3" data-number="21.3.4">
+<h3 data-number="21.3.4" class="anchored" data-anchor-id="r实操vegan包-dca-排序envfit-叠加环境因子"><span class="header-section-number">21.3.4</span> R实操：vegan包 DCA 排序、envfit 叠加环境因子</h3>
+<p>DCA排序本身是间接梯度分析，但如果我们想知道哪些环境因子和这个排序结构有关，可以用<code>envfit()</code>函数把环境向量投影到排序图上。</p>
+</section>
+<section id="结果解读排序图怎么看" class="level3" data-number="21.3.5">
+<h3 data-number="21.3.5" class="anchored" data-anchor-id="结果解读排序图怎么看"><span class="header-section-number">21.3.5</span> 结果解读：排序图怎么看</h3>
+<p>排序图是生态学论文里最常见的图之一。</p>
+<p><strong>DCA排序图的解读</strong>：</p>
+<ul>
+<li>每个点代表一个样点</li>
+<li>相似的样点在图上距离近（物种组成相似）</li>
+<li>物种得分落在样点附近，表示该物种在该区域多度最高</li>
+<li>轴的刻度单位是SD（standard deviations），4 SD大致代表一个完整的物种周转</li>
+</ul>
+</section>
+</section>
+<section id="环境因子关联分析" class="level2" data-number="21.4">
+<h2 data-number="21.4" class="anchored" data-anchor-id="环境因子关联分析"><span class="header-section-number">21.4</span> 环境因子关联分析</h2>
+<section id="物种-环境关系的研究设计" class="level3" data-number="21.4.1">
+<h3 data-number="21.4.1" class="anchored" data-anchor-id="物种-环境关系的研究设计"><span class="header-section-number">21.4.1</span> 物种-环境关系的研究设计</h3>
+<p>研究物种-环境关系是群落生态学的核心问题之一。你需要明确：</p>
+<ul>
+<li>研究问题是什么？（哪些环境因子影响物种分布？影响的程度如何？）</li>
+<li>环境数据如何获取？（野外测定、公开数据库、遥感反演）</li>
+<li>统计分析方法是什么？（直接梯度分析、变差分解、空间模型）</li>
+</ul>
+</section>
+<section id="约束排序rdacca与非约束排序的区别" class="level3" data-number="21.4.2">
+<h3 data-number="21.4.2" class="anchored" data-anchor-id="约束排序rdacca与非约束排序的区别"><span class="header-section-number">21.4.2</span> 约束排序（RDA/CCA）与非约束排序的区别</h3>
+<p>非约束排序（DCA、NMDS）只展示数据中存在的格局，不关联环境因子。</p>
+<p>约束排序（RDA、CCA）则直接把环境因子作为约束条件，分析环境因子能解释多少群落变异。</p>
+<ul>
+<li><strong>RDA（冗余分析）</strong>：约束轴是环境变量的线性组合。适合物种响应是线性的情况。</li>
+<li><strong>CCA（典范对应分析）</strong>：约束轴是环境变量的单峰组合。适合物种响应是单峰的情况。</li>
+</ul>
+<p>如何选择？看DCA第一轴的梯度长度（axis length）：</p>
+<ul>
+<li><blockquote class="blockquote">
+<p>4 SD：使用CCA</p>
+</blockquote></li>
+<li>&lt;3 SD：使用RDA</li>
+<li>3-4 SD：两者都可以</li>
+</ul>
+<p>vegan里做RDA/CCA：</p>
+</section>
+<section id="变异分解variation-partitioning空间vs环境vs随机" class="level3" data-number="21.4.3">
+<h3 data-number="21.4.3" class="anchored" data-anchor-id="变异分解variation-partitioning空间vs环境vs随机"><span class="header-section-number">21.4.3</span> 变异分解（Variation Partitioning）：空间vs环境vs随机</h3>
+<p>Variation Partitioning是解释群落变异来源的强大工具。它可以把总变异分解为：</p>
+<ul>
+<li>环境解释的变异</li>
+<li>空间结构解释的变异</li>
+<li>空间×环境共同解释的变异</li>
+<li>残余（随机或未测量的因素）</li>
+</ul>
+<p>vegan的<code>varpart()</code>函数可以实现变异分解：</p>
+</section>
+<section id="mantel检验和pcnm分析" class="level3" data-number="21.4.4">
+<h3 data-number="21.4.4" class="anchored" data-anchor-id="mantel检验和pcnm分析"><span class="header-section-number">21.4.4</span> Mantel检验和PCNM分析</h3>
+<p><strong>Mantel检验</strong>：检验两个距离矩阵之间的相关性。比如：群落相似性矩阵 vs 地理距离矩阵。如果显著正相关，说明地理距离越远，物种组成差异越大（距离衰减规律）。</p>
+<p><strong>PCNM（Principal Coordinates of Neighbour Matrices）</strong>：生成一系列代表不同空间尺度的空间变量（MEMs），用于捕捉群落变异的空间结构。</p>
+</section>
+<section id="生态学案例土壤因子如何解释物种格局" class="level3" data-number="21.4.5">
+<h3 data-number="21.4.5" class="anchored" data-anchor-id="生态学案例土壤因子如何解释物种格局"><span class="header-section-number">21.4.5</span> 生态学案例：土壤因子如何解释物种格局</h3>
+<p>以马尾松混交林研究为例，说明如何把环境因子关联分析应用到真实研究中：</p>
+<p><strong>研究背景</strong>：在桂西南喀斯特地区设置样地，研究不同林分类型（马尾松纯林、马尾松×阔叶树混交林、阔叶纯林）的土壤孔隙特征和植物多样性。</p>
+<p><strong>数据</strong>：</p>
+<ul>
+<li>植物群落调查：物种多度矩阵（样点 × 物种）</li>
+<li>土壤因子：容重、孔隙度、含水量、有机质、pH</li>
+<li>空间坐标：每个样点的GPS坐标</li>
+</ul>
+<p><strong>分析流程</strong>：</p>
+<ol type="1">
+<li>计算Alpha多样性（Shannon、Simpson、丰富度）</li>
+<li>计算Beta多样性（Bray-Curtis）</li>
+<li>DCA排序探索群落格局</li>
+<li>envfit叠加土壤因子</li>
+<li>RDA/CCA量化土壤因子的解释力</li>
+<li>Variation Partitioning分解空间和土壤的贡献</li>
+</ol>
+</section>
+</section>
+<section id="小结" class="level2" data-number="21.5">
+<h2 data-number="21.5" class="anchored" data-anchor-id="小结"><span class="header-section-number">21.5</span> 小结</h2>
+<p>本章介绍了生态学数据分析的四大核心技能：</p>
+<ol type="1">
+<li><strong>物种多度数据处理</strong>：宽表长表转换、零膨胀识别、样本量标准化</li>
+<li><strong>生物多样性指数</strong>：Alpha（Shannon、Simpson、ACE、CHAO1）、Beta（Bray-Curtis、Jaccard）、Gamma</li>
+<li><strong>群落矩阵排序</strong>：DCA/NMDS间接梯度分析、RDA/CCA直接梯度分析</li>
+<li><strong>环境因子关联</strong>：envfit叠加、约束排序、变异分解、Mantel检验</li>
+</ol>
+<p>这些方法串联起来，回答的核心问题是：<strong>物种如何分布，以及为什么这样分布</strong>。</p>
+<blockquote class="blockquote">
+<p><strong>扩展阅读</strong>：</p>
+<ul>
+<li>Legendre, P., &amp; Legendre, L. (2012). <em>Numerical Ecology</em> (3rd ed.). Elsevier. — 生态学数量分析的圣经</li>
+<li>Anderson, M. J., et al.&nbsp;(2011). Navigating the multiple meanings of beta diversity. <em>Ecology Letters</em>, 14, 719-738. — Beta多样性的权威综述</li>
+<li>Borcard, D., Gillet, F., &amp; Legendre, P. (2018). <em>Numerical Ecology with R</em> (2nd ed.). Springer. — R语言实现数量生态学</li>
+</ul>
+</blockquote>
+</section>
+<section id="扩展更多生态学数据分析技巧" class="level2" data-number="21.6">
+<h2 data-number="21.6" class="anchored" data-anchor-id="扩展更多生态学数据分析技巧"><span class="header-section-number">21.6</span> 扩展：更多生态学数据分析技巧</h2>
+<section id="物种多度分布模型" class="level3" data-number="21.6.1">
+<h3 data-number="21.6.1" class="anchored" data-anchor-id="物种多度分布模型"><span class="header-section-number">21.6.1</span> 物种多度分布模型</h3>
+<p>真实的群落中，物种多度往往服从特定的分布格局。最常见的是<strong>对数正态分布（Log-normal distribution）</strong>——大多数物种是罕见的，只有少数物种是常见的。这和我们的生活经验很像：大多数人收入一般，极少数人很有钱。</p>
+<p>生态学中检验物种多度分布的模型包括：</p>
+<ul>
+<li><strong>对数级数分布（Log-series）</strong>：适合物种数少、样本小的调查</li>
+<li><strong>对数正态分布（Log-normal）</strong>：适合物种丰富的大型调查</li>
+<li><strong>分割线模型（Broken stick）</strong>：假设资源随机分配给各物种</li>
+</ul>
+<p>vegan可以用<code>radfit()</code>拟合各种物种多度分布模型：</p>
+</section>
+<section id="嵌套性分析nestedness" class="level3" data-number="21.6.2">
+<h3 data-number="21.6.2" class="anchored" data-anchor-id="嵌套性分析nestedness"><span class="header-section-number">21.6.2</span> 嵌套性分析（Nestedness）</h3>
+<p>嵌套性是描述生物群落组成结构的重要概念。一个群落如果嵌套于另一个群落，意味着：小群落的物种组成是大群落的子集。这种格局常见于岛屿和栖息地片段化研究。</p>
+<p>vegan可以用<code>nestedness()</code>函数计算嵌套性：</p>
+</section>
+<section id="群落相似性的层级分解" class="level3" data-number="21.6.3">
+<h3 data-number="21.6.3" class="anchored" data-anchor-id="群落相似性的层级分解"><span class="header-section-number">21.6.3</span> 群落相似性的层级分解</h3>
+<p>群落间的Bray-Curtis差异可以分解为<strong>周转（turnover）</strong>和<strong>嵌套（nestedness）</strong>两个组分。这个分解对于理解群落差异的生态学机制非常重要。</p>
+<ul>
+<li><strong>周转</strong>：一个群落有而另一个群落没有的物种（物种替代）</li>
+<li><strong>嵌套</strong>：一个群落的物种是另一个群落的子集（物种丧失）</li>
+</ul>
+<p>vegan的<code>betadisper()</code>可以用来检验群落格局：</p>
+</section>
+<section id="空间自相关与moran特征" class="level3" data-number="21.6.4">
+<h3 data-number="21.6.4" class="anchored" data-anchor-id="空间自相关与moran特征"><span class="header-section-number">21.6.4</span> 空间自相关与Moran特征</h3>
+<p>群落数据通常存在空间自相关——距离近的样点往往更相似。这违反了传统统计检验的独立性假设。Moran特征向量地图（MEMs）可以捕捉不同尺度的空间结构。</p>
+</section>
+<section id="真实研究案例桂西南喀斯特土壤孔隙与植物多样性" class="level3" data-number="21.6.5">
+<h3 data-number="21.6.5" class="anchored" data-anchor-id="真实研究案例桂西南喀斯特土壤孔隙与植物多样性"><span class="header-section-number">21.6.5</span> 真实研究案例：桂西南喀斯特土壤孔隙与植物多样性</h3>
+<p>以你的研究为例，马尾松混交林的土壤孔隙特征如何影响林下植物多样性？</p>
+<p><strong>数据</strong>：</p>
+<ul>
+<li>植物群落：15个30m×30m样地，每个样地调查林下草本层的物种组成</li>
+<li>土壤孔隙：每个样地5个采样点，测定容重、总孔隙度、毛管孔隙度、非毛管孔隙度</li>
+<li>土壤理化：有机碳、全氮、pH、全磷</li>
+</ul>
+<p><strong>分析思路</strong>：</p>
+<ol type="1">
+<li>土壤孔隙数据的预处理：缺失值填补、异常值检验</li>
+<li>物种多度矩阵：Hellinger转化</li>
+<li>DCA排序：探索植物群落格局</li>
+<li>envfit叠加土壤孔隙因子</li>
+<li>RDA：量化土壤孔隙因子对群落变异的解释率</li>
+<li>Variation Partitioning：分解土壤因子和空间因子的贡献</li>
+</ol>
+<p>关键问题是：土壤孔隙特征能否解释林下植物多样性的空间格局？如果能，哪些孔隙指标最重要？</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0303-data-quality.html" class="pagination-link" aria-label="一致性检验（Consistency Check）">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0305-machine-learning-preprocessing.html" class="pagination-link" aria-label="机器学习预处理">
+        <span class="nav-page-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

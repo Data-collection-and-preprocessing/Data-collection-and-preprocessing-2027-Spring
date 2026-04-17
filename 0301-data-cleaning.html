@@ -1,0 +1,1822 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>17&nbsp; 数据清洗 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0302-feature-engineering.html" rel="next">
+<link href="./0208-python-data-collection.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning.html">第四单元：数据预处理</a></li><li class="breadcrumb-item"><a href="./0301-data-cleaning.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#数据清洗" id="toc-数据清洗" class="nav-link active" data-scroll-target="#数据清洗"><span class="header-section-number">18</span> 数据清洗</a>
+  <ul class="collapse">
+  <li><a href="#示例数据" id="toc-示例数据" class="nav-link" data-scroll-target="#示例数据"><span class="header-section-number">18.1</span> 示例数据</a>
+  <ul class="collapse">
+  <li><a href="#数据来源" id="toc-数据来源" class="nav-link" data-scroll-target="#数据来源"><span class="header-section-number">18.1.1</span> 数据来源</a></li>
+  <li><a href="#模拟数据生成" id="toc-模拟数据生成" class="nav-link" data-scroll-target="#模拟数据生成"><span class="header-section-number">18.1.2</span> 模拟数据生成</a></li>
+  </ul></li>
+  <li><a href="#第一步了解你的数据" id="toc-第一步了解你的数据" class="nav-link" data-scroll-target="#第一步了解你的数据"><span class="header-section-number">18.2</span> 第一步:了解你的数据</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0301-data-cleaning.html">第四单元：数据预处理</a></li><li class="breadcrumb-item"><a href="./0301-data-cleaning.html"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="数据清洗" class="level1" data-number="18">
+<h1 data-number="18"><span class="header-section-number">18</span> 数据清洗</h1>
+<p>真实世界的数据从来都不是”干净”的。缺失值、异常值、格式不一致、重复记录……这些问题在生态学数据中尤为常见。数据清洗是数据分析的第一步,也是最重要的一步–垃圾进,垃圾出(Garbage In, Garbage Out)。</p>
+<section id="示例数据" class="level2" data-number="18.1">
+<h2 data-number="18.1" class="anchored" data-anchor-id="示例数据"><span class="header-section-number">18.1</span> 示例数据</h2>
+<p>我们使用一个基于真实研究参数模拟的土壤调查数据集来演示数据清洗的各个步骤。</p>
+<section id="数据来源" class="level3" data-number="18.1.1">
+<h3 data-number="18.1.1" class="anchored" data-anchor-id="数据来源"><span class="header-section-number">18.1.1</span> 数据来源</h3>
+<blockquote class="blockquote">
+<p><strong>数据来源</strong>:Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … &amp; Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. <em>Journal of Geophysical Research: Biogeosciences</em>, 122(11), 2849-2864. DOI: <a href="https://doi.org/10.1002/2016jg003683">10.1002/2016JG003683</a></p>
+<p><strong>研究背景</strong>:在中国西南喀斯特地区,利用”空间换时间”方法,研究了白云岩和石灰岩两种岩性下弃耕地演替过程中土壤碳氮含量的变化。共125个样地,涵盖耕地、草地、灌丛和次生林四种土地利用类型。</p>
+</blockquote>
+<p><strong>数据集基本信息</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th>项目</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>研究区域</td>
+<td>中国西南喀斯特地区(广西、贵州)</td>
+</tr>
+<tr class="even">
+<td>样地数量</td>
+<td>125个样地</td>
+</tr>
+<tr class="odd">
+<td>岩性类型</td>
+<td>白云岩 / 石灰岩</td>
+</tr>
+<tr class="even">
+<td>土地利用</td>
+<td>耕地、草地、灌丛、次生林</td>
+</tr>
+<tr class="odd">
+<td>土层深度</td>
+<td>0-10 cm, 10-20 cm, 20-30 cm</td>
+</tr>
+<tr class="even">
+<td>测定指标</td>
+<td>土壤有机碳(SOC)、全氮(TN)、pH、可交换钙</td>
+</tr>
+</tbody>
+</table>
+</section>
+<section id="模拟数据生成" class="level3" data-number="18.1.2">
+<h3 data-number="18.1.2" class="anchored" data-anchor-id="模拟数据生成"><span class="header-section-number">18.1.2</span> 模拟数据生成</h3>
+<p>以下数据基于该研究的实际参数范围模拟,用于演示数据清洗流程:</p>
+</section>
+</section>
+<section id="第一步了解你的数据" class="level2" data-number="18.2">
+<h2 data-number="18.2" class="anchored" data-anchor-id="第一步了解你的数据"><span class="header-section-number">18.2</span> 第一步:了解你的数据</h2>
+<p>在动手清洗之前,先全面了解数据的基本情况:</p>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>数据字典
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>数据字典是描述数据集中每个变量含义、取值范围和数据类型的元数据文档。在生态学研究中，一个完善的数据字典是数据共享和重复利用的基础，也是论文方法学部分的重要内容。</p>
+<p><strong>为什么要建立数据字典？</strong> 当你把数据分享给合作者或将数据上传到公共数据库（如 GBIF）时，数据字典帮助他人理解每个变量的含义。没有数据字典，别人拿到数据时只能靠猜，不仅效率低下，还容易产生误解。</p>
+<p><strong>数据字典的核心要素</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">要素</th>
+<th style="text-align: left;">说明</th>
+<th style="text-align: left;">示例</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">变量名</td>
+<td style="text-align: left;">字段的英文或拼音缩写</td>
+<td style="text-align: left;">site_id, soc, tn</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">含义</td>
+<td style="text-align: left;">变量的中文描述</td>
+<td style="text-align: left;">土壤有机碳含量</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">单位</td>
+<td style="text-align: left;">测量单位</td>
+<td style="text-align: left;">g/kg, cmol/kg</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">合理范围</td>
+<td style="text-align: left;">正常取值范围</td>
+<td style="text-align: left;">pH: 3.5-9.5</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">数据类型</td>
+<td style="text-align: left;">数值/分类/日期</td>
+<td style="text-align: left;">numeric, character</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">缺失值标记</td>
+<td style="text-align: left;">NA 如何定义</td>
+<td style="text-align: left;">-999 表示未测定</td>
+</tr>
+</tbody>
+</table>
+<p><strong>在 R 中管理数据字典</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取数据字典</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>dict <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"data/data_dictionary.xlsx"</span>)</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看所有变量</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>dict</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 检验数据集是否符合数据字典</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>expert_ranges <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">ph =</span> <span class="fu">c</span>(<span class="fl">3.5</span>, <span class="fl">9.5</span>),</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">soc =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">tn =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">ca =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)</span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 检测超出合理范围的异常值</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (var_name <span class="cf">in</span> <span class="fu">names</span>(expert_ranges)) {</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>  range_vec <span class="ot">&lt;-</span> expert_ranges[[var_name]]</span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  outliers <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(.data[[var_name]] <span class="sc">&lt;</span> range_vec[<span class="dv">1</span>] <span class="sc">|</span> .data[[var_name]] <span class="sc">&gt;</span> range_vec[<span class="dv">2</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(site_id, <span class="fu">all_of</span>(var_name))</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(outliers) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(var_name, <span class="st">"有"</span>, <span class="fu">nrow</span>(outliers), <span class="st">"个值超出范围</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(outliers)</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某团队在提交数据到国家生态科学数据中心时，审核人员指出数据字典缺失，导致数据被退回。团队补充了完整的数据字典后，数据被接受并公开。现在该数据集已被引用 23 次，成为同类研究的基准数据。这个案例说明：<strong>数据字典不是可有可无的文档，而是数据共享的”通行证”</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+<section id="处理重复值" class="level2" data-number="18.3">
+<h2 data-number="18.3" class="anchored" data-anchor-id="处理重复值"><span class="header-section-number">18.3</span> 处理重复值</h2>
+</section>
+<section id="处理异常值" class="level2" data-number="18.4">
+<h2 data-number="18.4" class="anchored" data-anchor-id="处理异常值"><span class="header-section-number">18.4</span> 处理异常值</h2>
+<div class="callout callout-style-default callout-important callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Important</span>为什么先处理异常值？
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>在数据清洗流程中，处理异常值和缺失值的顺序至关重要。许多初学者会直觉地先填充缺失值，但这是一个常见的错误。正确的顺序应该是：<strong>先移除/修正异常值，再填充缺失值</strong>。这个原则背后有深刻的统计学逻辑。</p>
+<p><strong>异常值对统计量的“污染”效应</strong>：</p>
+<p>异常值会严重扰乱数据的中心趋势和离散程度。具体来说：</p>
+<ol type="1">
+<li><p><strong>均值偏移</strong>：一个极端异常值可以将均值拉向不合理的方向。例如，如果土壤pH值数据中有一个错误记录为150（正常范围为4-9），计算出的均值将远高于真实水平。</p></li>
+<li><p><strong>标准差虚高</strong>：异常值会大幅增加数据的方差和标准差，让数据看起来比实际更加离散。这会影响后续的统计检验（如t检验、方差分析）的结果。</p></li>
+<li><p><strong>相关性失真</strong>：在多变量分析中，异常值会扭曲变量间的相关关系，导致错误的回归系数或相关系数。</p></li>
+</ol>
+<p><strong>错误顺序的后果</strong>：</p>
+<p>如果先填充缺失值，再处理异常值，会发生以下问题：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 错误示例：先填充再处理异常值</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>soil_wrong <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">soc =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(soc), <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), soc))  <span class="co"># 先填充</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 此时的均值已经被异常值（如150）“污染”</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 填充值不是真实的中心值，而是偏高的值</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 正确示例：先处理异常值再填充</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>soil_correct <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(soc <span class="sc">&gt;</span> <span class="dv">0</span> <span class="sc">&amp;</span> soc <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span>  <span class="co"># 先移除异常值</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">soc =</span> <span class="fu">ifelse</span>(<span class="fu">is.na</span>(soc), <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), soc))  <span class="co"># 再填充</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 此时的均值是基于正常数据计算的，更接近真实值</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong>：</p>
+<p>在一项植物群落调查中，某样地的物种丰富度被错误记录为999（实际应为9）。如果先用均值填充其他缺失值，计算出的均值为85种（包含异常值999），远高于真实的平均水平12种。这样填充的缺失值就会是85种，完全不合理。而如果先移除异常值999，再计算均值，得到的12种，用这个值填充缺失值才是合理的。</p>
+<p><strong>实际操作流程</strong>：</p>
+<ol type="1">
+<li><strong>第一步：识别异常值</strong>（箱线图、IQR方法、专业知识判断）</li>
+<li><strong>第二步：处理异常值</strong>（删除、替换为缺失值、或修正）</li>
+<li><strong>第三步：识别缺失值模式</strong>（随机缺失、系统性缺失）</li>
+<li><strong>第四步：填充缺失值</strong>（均值、中位数、回归预测等）</li>
+</ol>
+<p><strong>例外情况</strong>：</p>
+<p>如果你使用的是<strong>中位数填充</strong>而非均值填充，异常值对中位数的影响较小，顺序可以灵活调整。但为了保持流程的一致性和可解释性，仍然建议先处理异常值。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</div>
+</div>
+<section id="识别异常值" class="level3" data-number="18.4.1">
+<h3 data-number="18.4.1" class="anchored" data-anchor-id="识别异常值"><span class="header-section-number">18.4.1</span> 识别异常值</h3>
+<p>识别异常值是数据清洗的第一步。在正式处理之前，首先要发现哪些值可能是异常的。常用的方法包括：基于统计学的 IQR 方法和 Z-score 方法，基于专业知识的合理范围判断，以及可视化方法。</p>
+<p><strong>箱线图法</strong></p>
+<p>箱线图是识别单变量异常值的直观工具。在 R 中使用 ggplot2 可以快速生成：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 箱线图识别异常值</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"lightblue"</span>, <span class="at">outlier.color =</span> <span class="st">"red"</span>, <span class="at">outlier.shape =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"数值变量箱线图（红点为潜在异常值）"</span>) <span class="sc">+</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>箱线图中，超出箱体上下边缘（Q1-1.5xIQR 和 Q3+1.5xIQR）的点会被标记为异常值（红点）。</p>
+<p><strong>Z-score 法</strong></p>
+<p>Z-score 表示某个值偏离均值的标准差倍数。通常 |Z| &gt; 3 的值被视为潜在异常值：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Z-score 方法检测异常值</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>detect_outliers_zscore <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">threshold =</span> <span class="dv">3</span>) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  z_scores <span class="ot">&lt;-</span> <span class="fu">abs</span>((x <span class="sc">-</span> <span class="fu">mean</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(x, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(z_scores <span class="sc">&gt;</span> threshold)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 对所有数值变量应用</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>soil_marked <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_z =</span> <span class="fu">abs</span>((soc <span class="sc">-</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">tn_z =</span> <span class="fu">abs</span>((tn <span class="sc">-</span> <span class="fu">mean</span>(tn, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(tn, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">ph_z =</span> <span class="fu">abs</span>((ph <span class="sc">-</span> <span class="fu">mean</span>(ph, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(ph, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">ca_z =</span> <span class="fu">abs</span>((ca <span class="sc">-</span> <span class="fu">mean</span>(ca, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(ca, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)),</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_outlier =</span> soc_z <span class="sc">&gt;</span> <span class="dv">3</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">tn_outlier =</span> tn_z <span class="sc">&gt;</span> <span class="dv">3</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">ph_outlier =</span> ph_z <span class="sc">&gt;</span> <span class="dv">3</span>,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">ca_outlier =</span> ca_z <span class="sc">&gt;</span> <span class="dv">3</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看异常值汇总</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>outlier_summary <span class="ot">&lt;-</span> soil_marked <span class="sc">|&gt;</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_outliers =</span> <span class="fu">sum</span>(soc_outlier, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">tn_outliers =</span> <span class="fu">sum</span>(tn_outlier, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    <span class="at">ph_outliers =</span> <span class="fu">sum</span>(ph_outlier, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">ca_outliers =</span> <span class="fu">sum</span>(ca_outlier, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(outlier_summary)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>基于专业知识的合理范围</strong></p>
+<p>统计学方法只是辅助，最终判断需要结合专业知识。例如，土壤 pH 值在 3.5-9.5 范围之外几乎不可能：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 专业知识判断</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>expert_ranges <span class="ot">&lt;-</span> <span class="fu">list</span>(</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">ph =</span> <span class="fu">c</span>(<span class="fl">3.5</span>, <span class="fl">9.5</span>),</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">soc =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">80</span>),</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">tn =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">ca =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">60</span>)</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 检测超出专业知识范围的异常值</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (var_name <span class="cf">in</span> <span class="fu">names</span>(expert_ranges)) {</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>  range_vec <span class="ot">&lt;-</span> expert_ranges[[var_name]]</span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  outliers <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(.data[[var_name]] <span class="sc">&lt;</span> range_vec[<span class="dv">1</span>] <span class="sc">|</span> .data[[var_name]] <span class="sc">&gt;</span> range_vec[<span class="dv">2</span>]) <span class="sc">|&gt;</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(site_id, <span class="fu">all_of</span>(var_name))</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">nrow</span>(outliers) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(var_name, <span class="st">"超出范围 ["</span>, range_vec[<span class="dv">1</span>], <span class="st">"-"</span>, range_vec[<span class="dv">2</span>], <span class="st">"] 的样点：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(outliers)</span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某植物多样性调查中，Z-score 方法识别出某样点物种数为 999，而正常范围在 10-80 之间。进一步调查发现，这是录入员手指滑键导致的输入错误。统计学异常检测帮助团队在数据使用前发现了这个错误，避免了错误的分析结果。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="iqr-方法" class="level3" data-number="18.4.2">
+<h3 data-number="18.4.2" class="anchored" data-anchor-id="iqr-方法"><span class="header-section-number">18.4.2</span> IQR 方法</h3>
+<p>IQR（四分位距）方法是识别数值型变量异常值最常用的统计方法。它的核心思想是：用数据的中间 50% 来定义”正常范围”，超出这个范围的值被视为潜在异常值。</p>
+<p><strong>IQR 的计算公式</strong></p>
+<pre><code>Q1 = 第25百分位数（下四分位数）
+Q3 = 第75百分位数（上四分位数）
+IQR = Q3 - Q1
+
+异常值判定：
+下界 = Q1 - 1.5 × IQR
+上界 = Q3 + 1.5 × IQR</code></pre>
+<p>超出 [下界, 上界] 范围的值即为异常值。</p>
+<p><strong>在 R 中的实现</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义 IQR 异常值检测函数</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>detect_outliers_iqr <span class="ot">&lt;-</span> <span class="cf">function</span>(x, <span class="at">k =</span> <span class="fl">1.5</span>) {</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  q1 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fl">0.25</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  q3 <span class="ot">&lt;-</span> <span class="fu">quantile</span>(x, <span class="at">probs =</span> <span class="fl">0.75</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  iqr <span class="ot">&lt;-</span> q3 <span class="sc">-</span> q1</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  lower <span class="ot">&lt;-</span> q1 <span class="sc">-</span> k <span class="sc">*</span> iqr</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  upper <span class="ot">&lt;-</span> q3 <span class="sc">+</span> k <span class="sc">*</span> iqr</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(x <span class="sc">&lt;</span> lower <span class="sc">|</span> x <span class="sc">&gt;</span> upper)</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 对 SOC 应用 IQR 方法</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>soc_outliers <span class="ot">&lt;-</span> <span class="fu">detect_outliers_iqr</span>(soil<span class="sc">$</span>soc)</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"检测到"</span>, <span class="fu">sum</span>(soc_outliers, <span class="at">na.rm =</span> <span class="cn">TRUE</span>), <span class="st">"个 SOC 异常值</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看异常值详情</span></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="fu">detect_outliers_iqr</span>(soc)) <span class="sc">|&gt;</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, soc, land_use)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>k 值的调整</strong></p>
+<p>k = 1.5 是默认值，适用于大多数情况。但对于生态学数据，可以根据实际情况调整：</p>
+<ul>
+<li><strong>k = 1.5</strong>：标准保守检测，检测约 0.7% 的数据为异常值</li>
+<li><strong>k = 3</strong>：极端值检测，检测约 0.002% 的数据</li>
+<li><strong>k = 1.0</strong>：更敏感的检测，适合噪声较大的野外数据</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 不同 k 值的比较</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">outlier_1.5 =</span> <span class="fu">detect_outliers_iqr</span>(soc, <span class="at">k =</span> <span class="fl">1.5</span>),</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">outlier_1.0 =</span> <span class="fu">detect_outliers_iqr</span>(soc, <span class="at">k =</span> <span class="fl">1.0</span>),</span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">outlier_3.0 =</span> <span class="fu">detect_outliers_iqr</span>(soc, <span class="at">k =</span> <span class="fl">3.0</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">outliers_1.5 =</span> <span class="fu">sum</span>(outlier_1<span class="fl">.5</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">outliers_1.0 =</span> <span class="fu">sum</span>(outlier_1<span class="fl">.0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">outliers_3.0 =</span> <span class="fu">sum</span>(outlier_3<span class="fl">.0</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某植物多样性调查中，研究者使用 IQR 方法（k=1.5）检测物种丰富度异常值。结果发现，同一个样点上记录的物种数为 999——这显然是录入错误（多打了一个9）。通过 IQR 方法，这个异常值被成功识别并修正为 99。这个案例说明：<strong>IQR 方法能有效检测录入错误导致的异常值</strong>。</p>
+<p><strong>注意事项</strong></p>
+<p>IQR 方法假设数据大致对称分布。对于严重偏态的数据（如很多零值的计数数据），可能需要先进行变换（如 log(x+1)）再应用 IQR 方法，或者使用基于分位数的其他方法。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="处理异常值-1" class="level3" data-number="18.4.3">
+<h3 data-number="18.4.3" class="anchored" data-anchor-id="处理异常值-1"><span class="header-section-number">18.4.3</span> 处理异常值</h3>
+<p>识别出异常值后，需要决定如何处理。处理方式取决于异常值的成因：如果是数据录入错误，应该修正；如果是真实的极端值，应该保留并记录；如果是测量误差，应该标记或删除。</p>
+<p><strong>常见的异常值处理策略</strong></p>
+<ol type="1">
+<li><strong>修正</strong>：如果是明显的录入错误（如 999、-999），直接修正为正确值</li>
+<li><strong>标记为缺失</strong>：保留原始值，转换为 NA，并在备注中说明原因</li>
+<li><strong>截断</strong>：将极端值替换为合理边界值（不删除，但限制范围）</li>
+<li><strong>删除行</strong>：如果异常值无法解释，且样本量充足，可以删除整行</li>
+<li><strong>保留</strong>：如果是真实的生态现象（如喀斯特地区的高钙含量），应保留并讨论</li>
+</ol>
+<p><strong>在 R 中的实现</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 策略1：修正明显的录入错误</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>soil_fixed <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">dbh =</span> <span class="fu">if_else</span>(dbh <span class="sc">&gt;</span> <span class="dv">500</span>, dbh <span class="sc">/</span> <span class="dv">10</span>, dbh))</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 策略2：标记为缺失值（保留原始记录）</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>soil_flagged <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_flag =</span> <span class="fu">if_else</span>(soc <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> soc <span class="sc">&gt;</span> <span class="dv">100</span>, <span class="st">"outlier"</span>, <span class="cn">NA_character_</span>),</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_clean =</span> <span class="fu">if_else</span>(soc <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> soc <span class="sc">&gt;</span> <span class="dv">100</span>, <span class="cn">NA_real_</span>, soc)</span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 策略3：截断到合理范围</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>soil_trimmed <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">soc_trimmed =</span> <span class="fu">pmax</span>(<span class="dv">0</span>, <span class="fu">pmin</span>(<span class="dv">80</span>, soc)))</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 策略4：使用分组统计量处理</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>soil_grouped <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_z =</span> (soc <span class="sc">-</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">/</span> <span class="fu">sd</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_clean =</span> <span class="fu">if_else</span>(<span class="fu">abs</span>(soc_z) <span class="sc">&gt;</span> <span class="dv">3</span>, <span class="cn">NA_real_</span>, soc)</span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>处理后的验证</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看处理结果</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>soil_comprehensive <span class="sc">|&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(clean_flag)) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(site_id, land_use, soc, soc_clean, clean_flag)</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 对比处理前后的统计量</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">处理前统计：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(soil<span class="sc">$</span>soc))</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">处理后统计：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(<span class="fu">summary</span>(soil_comprehensive<span class="sc">$</span>soc_clean))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某土壤碳汇研究中，研究者发现部分样点的 SOC 值高达 150 g/kg，远超正常范围。通过追溯原始记录发现，这些样点的数据是将”15.0”误录为”150”。研究者将这类异常值标记为 NA，在报告中注明”3个样点因录入错误导致数据缺失”。这种透明的处理方式获得了审稿人的认可。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="喀斯特土壤特殊背景" class="level3" data-number="18.4.4">
+<h3 data-number="18.4.4" class="anchored" data-anchor-id="喀斯特土壤特殊背景"><span class="header-section-number">18.4.4</span> 喀斯特土壤特殊背景</h3>
+<p>根据 Li et al.&nbsp;(2017) 的研究: - 喀斯特地区土壤SOC一般在5-40 g/kg之间 - pH值通常在5.0-7.5之间(中性偏酸) - 可交换钙含量与岩性密切相关 - 负值或极端高值通常是测量或录入错误</p>
+</section>
+</section>
+</div>
+</div>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>异常值 ≠ 错误值
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>这一节需要特别强调一个常见误区：异常值不等于错误值。在生态学研究中，异常值可能反映真实的生态现象，处理不当反而会掩盖重要发现。</p>
+<p><strong>三种不同性质的”异常值”</strong></p>
+<ol type="1">
+<li><strong>数据录入错误</strong>：这是真正的错误，需要修正或删除
+<ul>
+<li>示例：土壤有机碳 150 g/kg（应为 15.0 g/kg）</li>
+<li>特征：明显超出物理可能范围</li>
+</ul></li>
+<li><strong>测量误差</strong>：设备故障或操作失误导致，需要评估影响
+<ul>
+<li>示例：某次测量中仪器未校准，导致读数系统性偏高</li>
+<li>特征：可能呈现某种模式（如集中在某批次）</li>
+</ul></li>
+<li><strong>真实的生态变异</strong>：这是宝贵的数据，反映了真实的生态现象
+<ul>
+<li>示例：喀斯特石灰岩地区土壤钙含量极高（可达 60 cmol/kg）</li>
+<li>特征：有真实的生态学解释</li>
+</ul></li>
+</ol>
+<p><strong>如何区分？</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤1：检查是否超出物理可能范围</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>physical_impossible <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(soc <span class="sc">&lt;</span> <span class="dv">0</span> <span class="sc">|</span> soc <span class="sc">&gt;</span> <span class="dv">100</span>)  <span class="co"># 物理上不可能</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 步骤2：检查是否超出合理生态学范围但可能有合理解释</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>unusual_ecological <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(soc <span class="sc">&gt;</span> <span class="dv">80</span>) <span class="sc">|&gt;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">possible_reason =</span> <span class="fu">case_when</span>(</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    lithology <span class="sc">==</span> <span class="st">"石灰岩"</span> <span class="sc">~</span> <span class="st">"石灰岩地区SOC可能较高"</span>,</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    land_use <span class="sc">==</span> <span class="st">"次生林"</span> <span class="sc">~</span> <span class="st">"次生林SOC积累较多"</span>,</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span> <span class="sc">~</span> <span class="st">"需进一步调查"</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  ))</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"超出物理可能范围（疑似录入错误）：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(physical_impossible)</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">超出合理范围但可能有生态学解释：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(unusual_ecological)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>处理决策树</strong></p>
+<p>发现异常值后，按照以下流程判断：是否超出物理可能范围？如果是，则是录入错误；如果不是，则考虑是否有生态学合理解释；如果仍无法判断，进行敏感性分析。</p>
+<p><strong>敏感性分析</strong></p>
+<p>当你不确定某个值是否应该保留时，可以进行敏感性分析：分别在使用和不使用该值的情况下运行分析，比较结果是否一致。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 敏感性分析示例</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析1：包含可疑值</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>result_with <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_soc =</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 分析2：排除可疑值</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>result_without <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(soc <span class="sc">&lt;</span> <span class="dv">100</span>) <span class="sc">|&gt;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_soc =</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 比较结果</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>comparison <span class="ot">&lt;-</span> result_with <span class="sc">|&gt;</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(result_without, <span class="at">by =</span> <span class="st">"land_use"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_with"</span>, <span class="st">"_without"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">diff =</span> mean_soc_with <span class="sc">-</span> mean_soc_without)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"敏感性分析：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(comparison)</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">如果差异小于5%，说明结果对异常值不敏感</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某区域土壤碳储量研究中，统计方法检测到一个极端高值（85 g/kg）。研究者没有简单删除，而是查阅了该样点的原始记录：原来这是一个喀斯特石山区，土层薄但有机质含量高，这个值是真实的。保留该数据后，研究的结论更具代表性。审稿人对此给予高度评价。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+<section id="处理缺失值" class="level2" data-number="18.5">
+<h2 data-number="18.5" class="anchored" data-anchor-id="处理缺失值"><span class="header-section-number">18.5</span> 处理缺失值</h2>
+<section id="识别缺失值" class="level3" data-number="18.5.1">
+<h3 data-number="18.5.1" class="anchored" data-anchor-id="识别缺失值"><span class="header-section-number">18.5.1</span> 识别缺失值</h3>
+<p>在处理异常值之后，下一步是系统性地识别数据中的缺失值。仅仅知道有多少缺失值是不够的，还需要了解缺失值的分布模式和成因。</p>
+<p><strong>识别缺失值的基本方法</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法1：逐列统计缺失值数量</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">is.na</span>(.)))) <span class="sc">|&gt;</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"n_missing"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_missing <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(n_missing))</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法2：计算缺失比例</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">mean</span>(<span class="fu">is.na</span>(.)) <span class="sc">*</span> <span class="dv">100</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"pct_missing"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(pct_missing <span class="sc">&gt;</span> <span class="dv">0</span>)</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 方法3：使用 naniar 包</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a><span class="fu">miss_var_summary</span>(soil)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>为什么会缺失？</strong></p>
+<p>在检查缺失值时，需要思考：<strong>为什么这些值会缺失？</strong></p>
+<ul>
+<li><strong>随机缺失（MAR）</strong>：与其他变量相关，但本身与值无关</li>
+<li><strong>完全随机缺失（MCAR）</strong>：与任何变量都无关，纯属偶然</li>
+<li><strong>非随机缺失（MNAR）</strong>：与缺失值本身相关</li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查缺失是否与某些变量相关</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="at">soc_missing =</span> <span class="fu">is.na</span>(soc),</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="at">ph_group =</span> <span class="fu">ntile</span>(ph, <span class="dv">3</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(ph_group) <span class="sc">|&gt;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_total =</span> <span class="fu">n</span>(),</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_soc_missing =</span> <span class="fu">sum</span>(soc_missing),</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_missing =</span> <span class="fu">mean</span>(soc_missing) <span class="sc">*</span> <span class="dv">100</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某长期生态监测研究中，研究者发现 SOC 的缺失值集中在2019年的数据中。进一步调查发现，那一年使用的土壤碳分析仪出现了故障，部分样品无法测定。这就是典型的<strong>MCAR</strong>——缺失与任何生态学变量无关。通过检查缺失模式，研究者避免了错误的统计推断。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="可视化缺失模式" class="level3" data-number="18.5.2">
+<h3 data-number="18.5.2" class="anchored" data-anchor-id="可视化缺失模式"><span class="header-section-number">18.5.2</span> 可视化缺失模式</h3>
+<p>除了数值统计，可视化是理解缺失模式的重要工具。通过图形可以直观地发现缺失值的空间分布、时间趋势和变量间关联。</p>
+<p><strong>常用的缺失值可视化方法</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(naniar)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 缺失值热力图</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">row_id =</span> <span class="fu">row_number</span>()) <span class="sc">|&gt;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="sc">-</span><span class="fu">c</span>(site_id, land_use, lithology, depth, date_raw),</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>               <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">is_missing =</span> <span class="fu">is.na</span>(value)) <span class="sc">|&gt;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> variable, <span class="at">y =</span> row_id, <span class="at">fill =</span> is_missing)) <span class="sc">+</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>(<span class="at">color =</span> <span class="st">"white"</span>, <span class="at">linewidth =</span> <span class="fl">0.2</span>) <span class="sc">+</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_fill_manual</span>(<span class="at">values =</span> <span class="fu">c</span>(<span class="st">"lightblue"</span>, <span class="st">"red"</span>), <span class="at">labels =</span> <span class="fu">c</span>(<span class="st">"有值"</span>, <span class="st">"缺失"</span>)) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"缺失值分布热力图"</span>, <span class="at">x =</span> <span class="st">"变量"</span>, <span class="at">y =</span> <span class="st">"样点编号"</span>, <span class="at">fill =</span> <span class="st">""</span>) <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb15-15"><a href="#cb15-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-16"><a href="#cb15-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. UpSet 图（适合多变量缺失分析）</span></span>
+<span id="cb15-17"><a href="#cb15-17" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_upset</span>(soil <span class="sc">|&gt;</span> <span class="fu">select</span>(soc, tn, ph, ca))</span>
+<span id="cb15-18"><a href="#cb15-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-19"><a href="#cb15-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 缺失与变量的关系</span></span>
+<span id="cb15-20"><a href="#cb15-20" aria-hidden="true" tabindex="-1"></a><span class="fu">gg_miss_var</span>(soil, <span class="at">facet =</span> land_use) <span class="sc">+</span></span>
+<span id="cb15-21"><a href="#cb15-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"不同土地利用类型的缺失情况"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某森林动态监测研究中，研究者通过缺失值热力图发现：pH 和 SOC 的缺失值高度重叠——几乎所有缺失 pH 的样点同时也缺失 SOC。进一步调查发现，这两种指标来自同一次实验室分析。通过可视化快速定位问题，研究者采取了针对性的重新分析方法，避免了不必要的数据删除。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="缺失值模式分析" class="level3" data-number="18.5.3">
+<h3 data-number="18.5.3" class="anchored" data-anchor-id="缺失值模式分析"><span class="header-section-number">18.5.3</span> 缺失值模式分析</h3>
+<p>仅仅知道有多少缺失值是不够的，还需要了解缺失值的<strong>模式（pattern）</strong>——即哪些变量倾向于同时缺失、缺失是否与某些已观测变量有关。理解缺失模式对于选择正确的填充方法至关重要。</p>
+<p><strong>三种经典的缺失机制</strong>：</p>
+<ol type="1">
+<li><p><strong>完全随机缺失（MCAR, Missing Completely at Random）</strong></p>
+<p>缺失与任何变量都无关，纯属偶然。例如，野外采样时某仪器突然故障，导致当天所有样本的pH值都缺失。在这种情况下，删除缺失记录不会引入偏倚，但会损失样本量。</p></li>
+<li><p><strong>随机缺失（MAR, Missing at Random）</strong></p>
+<p>缺失与已观测变量相关，但与未观测变量无关。例如，在本数据集中，石灰岩地区的样本可能更容易缺失可交换钙数据（因为测量方法不同）。这种情况下，可以利用已观测变量（岩性）来帮助填充。</p></li>
+<li><p><strong>非随机缺失（MNAR, Missing not at Random）</strong></p>
+<p>缺失与未观测变量本身相关。例如，土壤有机碳含量极高的样本可能在实验室分析时被遗漏（因为超出了标准曲线的范围）。这种情况下，简单的填充方法会引入系统性偏倚。</p></li>
+</ol>
+<p><strong>使用 naniar 包分析缺失模式</strong>：</p>
+<p><strong>生态学案例</strong>：</p>
+<p>在一项长期森林样地研究中，研究者发现有些样本的叶片氮含量数据缺失。进一步分析发现，这些缺失的样本主要集中在2019年的冬季采样期。查阅采样记录发现，那年冬天使用的叶氮分析仪出现了故障，导致部分样品无法测定。这就是典型的<strong>MCAR</strong>——缺失与任何生物学变量无关，只与采样技术问题相关。</p>
+<p>但如果缺失的样本主要集中在高温季节，且都是落叶树种，则可能是<strong>MNAR</strong>——因为夏季落叶树种没有叶片可供采样。这种情况下，简单地用均值填充会低估氮含量的季节变异。</p>
+<p><strong>upset图解读</strong>：</p>
+<p>naniar包的<code>gg_miss_upset()</code>函数可以展示多变量缺失的组合模式。每个垂直的条形图表示同时缺失的变量组合，连接的点表示这些变量同时缺失。例如，如果SOC和TN的点被连接起来，说明这两个变量倾向于同时缺失——这可能是因为它们来自同一次实验室分析。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="处理策略" class="level3" data-number="18.5.4">
+<h3 data-number="18.5.4" class="anchored"><span class="header-section-number">18.5.4</span> 处理策略</h3>
+<p>根据缺失的原因和比例,选择不同的处理方式:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">策略</th>
+<th style="text-align: left;">适用场景</th>
+<th style="text-align: left;">R 实现</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">删除行</td>
+<td style="text-align: left;">缺失比例低(&lt;5%),随机缺失</td>
+<td style="text-align: left;"><code>drop_na()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">删除列</td>
+<td style="text-align: left;">某列缺失比例过高(&gt;50%)</td>
+<td style="text-align: left;"><code>select(-col)</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">均值/中位数填充</td>
+<td style="text-align: left;">数值型,缺失比例适中</td>
+<td style="text-align: left;"><code>replace_na()</code></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">分组填充</td>
+<td style="text-align: left;">缺失值与分组有关</td>
+<td style="text-align: left;"><code>group_by() + fill()</code></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">标记为单独类别</td>
+<td style="text-align: left;">分类变量</td>
+<td style="text-align: left;"><code>replace_na(list(x = "未知"))</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>在本数据集中</strong>: - SOC、TN、pH、Ca的缺失都是随机缺失(MAR) - 缺失比例都在可接受范围内(&lt;10%) - 由于异常值已处理,均值和中位数差异不大,使用中位数填充</p>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>缺失值处理的注意事项
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>缺失值处理是数据清洗中最需要谨慎的环节之一。不当的处理方式可能引入系统性偏倚，导致错误的结论。</p>
+<p><strong>核心原则：理解缺失机制再处理</strong></p>
+<p>在选择缺失值处理方法之前，必须先理解数据为什么会缺失。不同的缺失机制需要不同的处理策略：</p>
+<p><strong>MCAR（完全随机缺失）</strong> - 定义：缺失与任何变量都无关，纯属偶然 - 例子：某天实验室突然停电，导致当天所有样品数据缺失 - 适合方法：列表删除（listwise deletion）对参数估计无偏，但会损失样本量</p>
+<p><strong>MAR（随机缺失）</strong> - 定义：缺失与已观测变量相关，但与未观测变量无关 - 例子：低收入调查对象更不愿意报告收入，但收入缺失与教育程度相关 - 适合方法：多重插补（Multiple Imputation）</p>
+<p><strong>MNAR（非随机缺失）</strong> - 定义：缺失与未观测变量本身相关 - 例子：重病患者更可能缺失体检数据 - 适合方法：选择模型（Selection Model）或模式混合模型（Pattern Mixture Model）</p>
+<p><strong>在 R 中实现多重插补</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(mice)</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查缺失模式</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">md.pattern</span>(soil)</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化缺失关系</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(VIM)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">aggr</span>(soil, <span class="at">col =</span> <span class="fu">c</span>(<span class="st">"navyblue"</span>, <span class="st">"red"</span>), <span class="at">numbers =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 多重插补（生成5个完整数据集）</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>imp_data <span class="ot">&lt;-</span> <span class="fu">mice</span>(soil, <span class="at">m =</span> <span class="dv">5</span>, <span class="at">method =</span> <span class="st">"pmm"</span>, <span class="at">seed =</span> <span class="dv">2027</span>)</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看插补结果</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(imp_data)</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 对每个插补数据集进行分析</span></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>fit <span class="ot">&lt;-</span> <span class="fu">with</span>(imp_data, <span class="fu">lm</span>(soc <span class="sc">~</span> land_use <span class="sc">+</span> ph))</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a><span class="co"># 汇总结果（Pool 合并）</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a>pooled <span class="ot">&lt;-</span> <span class="fu">pool</span>(fit)</span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(pooled)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>绝对不能做的事</strong></p>
+<ul>
+<li>用 0 填充缺失的浓度数据（0 通常不是合理的自然值）</li>
+<li>用均值填充后不报告填充比例</li>
+<li>删除所有含缺失值的行后不说明样本量变化</li>
+</ul>
+<p><strong>报告要求</strong></p>
+<p>在论文方法部分，必须明确报告：各变量的缺失比例、选择的处理方法及理由、如使用插补需报告插补次数和汇总方法、以及敏感性分析结果（如有）。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 报告缺失情况的代码模板</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>missing_report <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">everything</span>(), <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">is.na</span>(.)))) <span class="sc">|&gt;</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"n_missing"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="at">pct_missing =</span> <span class="fu">round</span>(n_missing <span class="sc">/</span> <span class="fu">nrow</span>(soil) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>),</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="at">n_valid =</span> <span class="fu">nrow</span>(soil) <span class="sc">-</span> n_missing</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(n_missing <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(pct_missing))</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"缺失值报告：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(missing_report)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某 meta 分析研究在处理缺失值时，研究团队对每种常用的缺失值处理方法都进行了敏感性分析。结果发现，使用均值填充和多重插补的结论方向一致，但效应量大小有显著差异。最终论文选择了更保守的多重插补结果，并在讨论部分专门说明了这一选择的影响。这个透明的处理方式得到了审稿人的认可。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+<section id="统一数据格式" class="level2" data-number="18.6">
+<h2 data-number="18.6" class="anchored" data-anchor-id="统一数据格式"><span class="header-section-number">18.6</span> 统一数据格式</h2>
+<section id="日期格式统一" class="level3" data-number="18.6.1">
+<h3 data-number="18.6.1" class="anchored" data-anchor-id="日期格式统一"><span class="header-section-number">18.6.1</span> 日期格式统一</h3>
+<p>在生态学数据收集中，日期格式不一致是常见的数据质量问题。不同采样员可能使用不同的日期格式，如”2024-03-15”、“2024/03/15”、“15-Mar-2024”等。日期格式不统一会严重影响后续的时间序列分析。</p>
+<p><strong>常见的日期格式问题</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">格式类型</th>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">问题</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">年-月-日（ISO）</td>
+<td style="text-align: left;">2024-03-15</td>
+<td style="text-align: left;">标准格式</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">年/月/日</td>
+<td style="text-align: left;">2024/03/15</td>
+<td style="text-align: left;">与 ISO 类似</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">日-月-年</td>
+<td style="text-align: left;">15-Mar-2024</td>
+<td style="text-align: left;">需要特殊解析</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">月/日/年</td>
+<td style="text-align: left;">03/15/2024</td>
+<td style="text-align: left;">美国常用格式</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">中文格式</td>
+<td style="text-align: left;">2024年3月15日</td>
+<td style="text-align: left;">需要特殊处理</td>
+</tr>
+</tbody>
+</table>
+<p><strong>在 R 中统一日期格式</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 原始日期数据（包含多种格式）</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>date_raw <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"2024-03-15"</span>, <span class="st">"2024/03/16"</span>, <span class="st">"15-Mar-2024"</span>, <span class="st">"2024-03-17"</span>)</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># parse_date_time 处理多种格式</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>date_parsed <span class="ot">&lt;-</span> <span class="fu">parse_date_time</span>(date_raw, <span class="at">orders =</span> <span class="fu">c</span>(<span class="st">"ymd"</span>, <span class="st">"dby"</span>, <span class="st">"mdy"</span>))</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"解析结果：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(date_parsed)</span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 提取日期成分</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a>    <span class="at">date_parsed =</span> <span class="fu">parse_date_time</span>(date_raw, <span class="at">orders =</span> <span class="fu">c</span>(<span class="st">"ymd"</span>, <span class="st">"dby"</span>, <span class="st">"mdy"</span>)),</span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a>    <span class="at">year =</span> <span class="fu">year</span>(date_parsed),</span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">month =</span> <span class="fu">month</span>(date_parsed),</span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="at">day =</span> <span class="fu">day</span>(date_parsed),</span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">doy =</span> <span class="fu">yday</span>(date_parsed)</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>  )</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某研究团队在整理10年野外观测数据时，发现不同年份的日期格式完全不同：2015年用”2015/03/15”，2016-2018年用”15-Mar-2015”，2019年用”Mar-15-2015”。他们用 lubridate 的 parse_date_time 函数批量解析，成功将所有日期统一为标准格式，最终用于时间序列分析，揭示了土壤碳储量10年间的变化趋势。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="分类变量标准化" class="level3" data-number="18.6.2">
+<h3 data-number="18.6.2" class="anchored" data-anchor-id="分类变量标准化"><span class="header-section-number">18.6.2</span> 分类变量标准化</h3>
+<p>分类变量（如土地利用类型、物种名称、采样区等）在不同来源的数据中可能使用不同的编码方式。例如，“次生林”可能被记录为”次生林”、“次生林分”、“SSF”、“Secondary forest”等。统一分类变量的编码是数据清洗的重要步骤。</p>
+<p><strong>常见的分类变量问题</strong></p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">问题类型</th>
+<th style="text-align: left;">示例</th>
+<th style="text-align: left;">影响</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">同义不同名</td>
+<td style="text-align: left;">“次生林” vs “次生林分”</td>
+<td style="text-align: left;">被视为不同类别</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">拼写差异</td>
+<td style="text-align: left;">“草地” vs “草 地”</td>
+<td style="text-align: left;">空格导致匹配失败</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">大小写</td>
+<td style="text-align: left;">“Forest” vs “forest”</td>
+<td style="text-align: left;">被视为不同类别</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">缩写混用</td>
+<td style="text-align: left;">“灌丛” vs “灌木丛”</td>
+<td style="text-align: left;">需要统一标准</td>
+</tr>
+</tbody>
+</table>
+<p><strong>在 R 中标准化分类变量</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义标准分类编码表</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>land_use_std <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>raw, <span class="sc">~</span>standard,</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">"次生林"</span>, <span class="st">"次生林"</span>,</span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"次生林分"</span>, <span class="st">"次生林"</span>,</span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"SSF"</span>, <span class="st">"次生林"</span>,</span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"Secondary forest"</span>, <span class="st">"次生林"</span>,</span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"天然林"</span>, <span class="st">"天然林"</span>,</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"天然林分"</span>, <span class="st">"天然林"</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 应用标准化</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>soil <span class="ot">&lt;-</span> soil <span class="sc">|&gt;</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">left_join</span>(land_use_std, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"land_use"</span> <span class="ot">=</span> <span class="st">"raw"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(<span class="at">land_use_std =</span> <span class="fu">if_else</span>(<span class="fu">is.na</span>(standard), land_use, standard))</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查是否还有未匹配的类别</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>soil <span class="sc">|&gt;</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use_std) <span class="sc">|&gt;</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某 meta 分析研究在合并不同数据集时，发现各国学者对”森林”类型的分类完全不同：巴西学者用”Floresta Secundaria”，中国学者用”次生林”，欧洲学者用”Secondary forest”。研究者建立了一个包含120个同义词的对照表，成功将所有数据统一到7个标准分类，极大地提高了 meta 分析的可靠性。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="数据类型转换" class="level2" data-number="18.7">
+<h2 data-number="18.7" class="anchored" data-anchor-id="数据类型转换"><span class="header-section-number">18.7</span> 数据类型转换</h2>
+</section>
+<section id="完整的数据清洗流水线" class="level2" data-number="18.8">
+<h2 data-number="18.8" class="anchored" data-anchor-id="完整的数据清洗流水线"><span class="header-section-number">18.8</span> 完整的数据清洗流水线</h2>
+<p>将以上步骤整合为一个完整的流水线:</p>
+</section>
+<section id="清洗前后对比报告" class="level2" data-number="18.9">
+<h2 data-number="18.9" class="anchored" data-anchor-id="清洗前后对比报告"><span class="header-section-number">18.9</span> 清洗前后对比报告</h2>
+</section>
+<section id="清洗后数据验证" class="level2" data-number="18.10">
+<h2 data-number="18.10" class="anchored" data-anchor-id="清洗后数据验证"><span class="header-section-number">18.10</span> 清洗后数据验证</h2>
+<section id="按土地利用类型汇总" class="level3" data-number="18.10.1">
+<h3 data-number="18.10.1" class="anchored" data-anchor-id="按土地利用类型汇总"><span class="header-section-number">18.10.1</span> 按土地利用类型汇总</h3>
+<p>清洗后的数据，通常需要按分组变量进行汇总统计。土地利用类型是最常用的分组变量之一，因为它直接影响土壤理化性质。</p>
+<p><strong>按分组进行描述性统计</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 按土地利用类型汇总数值变量</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>summary_by_group <span class="ot">&lt;-</span> soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">.cols =</span> <span class="fu">c</span>(soc, tn, ph, ca),</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">.fns =</span> <span class="fu">list</span>(</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">n =</span> <span class="sc">~</span><span class="fu">sum</span>(<span class="sc">!</span><span class="fu">is.na</span>(.)),</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">mean =</span> <span class="sc">~</span><span class="fu">mean</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="at">sd =</span> <span class="sc">~</span><span class="fu">sd</span>(., <span class="at">na.rm =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>      ),</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>      <span class="at">.names =</span> <span class="st">"{col}_{fn}"</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">|&gt;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ungroup</span>()</span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"各土地利用类型的 SOC 均值比较：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(summary_by_group <span class="sc">|&gt;</span> <span class="fu">select</span>(land_use, soc_n, soc_mean, soc_sd))</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>组间差异检验</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 单因素方差分析（ANOVA）</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>aov_result <span class="ot">&lt;-</span> <span class="fu">aov</span>(soc <span class="sc">~</span> land_use, <span class="at">data =</span> soil_clean)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a><span class="fu">summary</span>(aov_result)</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Kruskal-Wallis 检验（非参数替代）</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="fu">kruskal.test</span>(soc <span class="sc">~</span> land_use, <span class="at">data =</span> soil_clean)</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 事后检验（Tukey HSD）</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>tukey_result <span class="ot">&lt;-</span> <span class="fu">TukeyHSD</span>(aov_result)</span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(tukey_result)</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggpubr)</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="fu">ggboxplot</span>(soil_clean, <span class="at">x =</span> <span class="st">"land_use"</span>, <span class="at">y =</span> <span class="st">"soc"</span>,</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>          <span class="at">color =</span> <span class="st">"land_use"</span>, <span class="at">palette =</span> <span class="st">"jco"</span>,</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>          <span class="at">add =</span> <span class="st">"jitter"</span>) <span class="sc">+</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">stat_compare_means</span>(<span class="at">method =</span> <span class="st">"kruskal.test"</span>) <span class="sc">+</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"不同土地利用类型的土壤有机碳含量比较"</span>,</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>       <span class="at">y =</span> <span class="st">"SOC (g/kg)"</span>, <span class="at">x =</span> <span class="st">"土地利用类型"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>在某区域土地利用变化研究中，研究者比较了耕地、草地、灌丛和次生林的土壤有机碳含量。结果显示：次生林的 SOC 均值（25.4 g/kg）显著高于耕地（8.5 g/kg），这与已有研究结论一致。通过组间差异检验，研究者为”保护现有森林以维持土壤碳汇功能”这一建议提供了数据支持。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="验证清洗结果" class="level3" data-number="18.10.2">
+<h3 data-number="18.10.2" class="anchored" data-anchor-id="验证清洗结果"><span class="header-section-number">18.10.2</span> 验证清洗结果</h3>
+<p>数据清洗不是做完就结束了，还需要验证清洗结果是否符合预期。这包括：数据分布是否合理、与已有知识是否一致、是否引入了新问题。</p>
+<p><strong>与外部知识的对比</strong></p>
+<p>将清洗后的数据与已发表研究中的数据进行比较，验证是否符合基本规律：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 与 Li et al. (2017) 的研究结果对比</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"清洗后数据与文献对比：</span><span class="sc">\n\n</span><span class="st">"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co"># SOC 含量规律：耕地 &lt; 草地 &lt; 灌丛 &lt; 次生林</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>observed_order <span class="ot">&lt;-</span> soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_soc =</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">arrange</span>(mean_soc)</span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"各土地利用类型 SOC 均值排序：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(observed_order)</span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查是否符合预期规律</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>expected_order <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"耕地"</span>, <span class="st">"草地"</span>, <span class="st">"灌丛"</span>, <span class="st">"次生林"</span>)</span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>actual_order <span class="ot">&lt;-</span> observed_order<span class="sc">$</span>land_use</span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">是否符合文献规律（耕地 &lt; 草地 &lt; 灌丛 &lt; 次生林）："</span>,</span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ifelse</span>(<span class="fu">identical</span>(actual_order, expected_order), <span class="st">"是"</span>, <span class="st">"否"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="co"># 岩性与 SOC 关系</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">不同岩性地区 SOC 均值：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>lithology_comparison <span class="ot">&lt;-</span> soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(lithology) <span class="sc">|&gt;</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">summarise</span>(<span class="at">mean_soc =</span> <span class="fu">mean</span>(soc, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))</span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(lithology_comparison)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>数据分布检验</strong></p>
+<p>清洗后的数据分布应该合理，不应该出现人为制造的”伪规律”：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查各变量的分布</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(<span class="fu">where</span>(is.numeric)) <span class="sc">|&gt;</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"variable"</span>, <span class="at">values_to =</span> <span class="st">"value"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> value)) <span class="sc">+</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_histogram</span>(<span class="at">bins =</span> <span class="dv">30</span>, <span class="at">fill =</span> <span class="st">"steelblue"</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">facet_wrap</span>(<span class="sc">~</span>variable, <span class="at">scales =</span> <span class="st">"free"</span>) <span class="sc">+</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"清洗后数值变量分布检验"</span>) <span class="sc">+</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>()</span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 检验正态性</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (var_name <span class="cf">in</span> <span class="fu">c</span>(<span class="st">"soc"</span>, <span class="st">"tn"</span>, <span class="st">"ph"</span>)) {</span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>  p_val <span class="ot">&lt;-</span> <span class="fu">shapiro.test</span>(soil_clean[[var_name]])<span class="sc">$</span>p.value</span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(var_name, <span class="st">"正态性检验 p-value:"</span>, <span class="fu">round</span>(p_val, <span class="dv">4</span>))</span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="fu">ifelse</span>(p_val <span class="sc">&lt;</span> <span class="fl">0.05</span>, <span class="st">" 非正态"</span>, <span class="st">" 正态"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>变量间相关性检验</strong></p>
+<p>清洗后的变量间关系应该符合生态学常识：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(corrplot)</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 计算相关矩阵</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>numeric_vars <span class="ot">&lt;-</span> soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">select</span>(soc, tn, ph, ca) <span class="sc">|&gt;</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cor</span>(<span class="at">use =</span> <span class="st">"pairwise.complete.obs"</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 可视化相关矩阵</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a><span class="fu">corrplot</span>(numeric_vars, <span class="at">method =</span> <span class="st">"ellipse"</span>, <span class="at">type =</span> <span class="st">"upper"</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"SOC 与 TN 相关系数："</span>, <span class="fu">round</span>(<span class="fu">cor</span>(soil_clean<span class="sc">$</span>soc, soil_clean<span class="sc">$</span>tn, <span class="at">use =</span> <span class="st">"pairwise"</span>), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"SOC 与 Ca 相关系数："</span>, <span class="fu">round</span>(<span class="fu">cor</span>(soil_clean<span class="sc">$</span>soc, soil_clean<span class="sc">$</span>ca, <span class="at">use =</span> <span class="st">"pairwise"</span>), <span class="dv">3</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"预期：SOC 与 TN、Ca 应呈正相关（有机质积累伴随氮和钙增加）</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>完整性检验</strong></p>
+<p>清洗后的数据应该没有影响分析完整性的问题：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 样本量检验</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"清洗前后样本量：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"原始数据："</span>, <span class="fu">nrow</span>(soil), <span class="st">"行</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"清洗后数据："</span>, <span class="fu">nrow</span>(soil_clean), <span class="st">"行</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"损失比例："</span>, <span class="fu">round</span>((<span class="dv">1</span> <span class="sc">-</span> <span class="fu">nrow</span>(soil_clean)<span class="sc">/</span><span class="fu">nrow</span>(soil)) <span class="sc">*</span> <span class="dv">100</span>, <span class="dv">1</span>), <span class="st">"%</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 各组样本量是否足够</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>g_by_group <span class="ot">&lt;-</span> soil_clean <span class="sc">|&gt;</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">group_by</span>(land_use) <span class="sc">|&gt;</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">count</span>()</span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">各土地利用类型样本量：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="fu">print</span>(g_by_group)</span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 最低样本量检验（每组至少5个）</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>min_n <span class="ot">&lt;-</span> <span class="fu">min</span>(g_by_group<span class="sc">$</span>n)</span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">最小样本量："</span>, min_n)</span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> (min_n <span class="sc">&gt;=</span> <span class="dv">5</span>) {</span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"（满足基本统计检验要求）</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-19"><a href="#cb25-19" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb25-20"><a href="#cb25-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(<span class="st">"（样本量不足，建议重新采样或合并组别）</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb25-21"><a href="#cb25-21" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某研究团队在完成数据清洗后，照例与已发表数据对比。结果发现清洗后 SOC 含量与预期相反（耕地 &gt; 次生林）。进一步排查发现，清洗过程中误删了次生林的大部分数据，导致该组均值偏高。修正后，结论恢复正常。这个案例说明：<strong>验证步骤不是形式，而是发现错误的最后防线</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="课后练习" class="level2" data-number="18.11">
+<h2 data-number="18.11" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">18.11</span> 课后练习</h2>
+<ol type="1">
+<li>下载 Li et al.&nbsp;(2017) 的原始数据(如有),或从以下来源获取真实数据:
+<ul>
+<li>中国科学院广西环江喀斯特农田生态系统国家野外科学观测研究站</li>
+<li>Dryad 数据平台(https://datadryad.org)</li>
+</ul></li>
+<li>检查数据中的缺失值、异常值和格式问题</li>
+<li>编写一个完整的数据清洗流水线</li>
+<li>对比清洗前后的数据质量(缺失值数量、异常值数量、数据类型)</li>
+<li>将清洗脚本和清洗报告提交到 GitHub</li>
+</ol>
+</section>
+<section id="参考文献" class="level2" data-number="18.12">
+<h2 data-number="18.12" class="anchored" data-anchor-id="参考文献"><span class="header-section-number">18.12</span> 参考文献</h2>
+<p>Li, D., Wen, L., Yang, L., Luo, P., Xiao, W., Chen, H., … &amp; Wang, K. (2017). Dynamics of soil organic carbon and nitrogen following agricultural abandonment in a karst region. <em>Journal of Geophysical Research: Biogeosciences</em>, 122(11), 2849-2864. DOI: <a href="https://doi.org/10.1002/2016jg003683">10.1002/2016JG003683</a></p>
+
+
+</section>
+</div>
+</div>
+</section>
+</section>
+</div>
+</div>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0208-python-data-collection.html" class="pagination-link" aria-label="Python 数据采集">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0302-feature-engineering.html" class="pagination-link" aria-label="数据转换与特征工程">
+        <span class="nav-page-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

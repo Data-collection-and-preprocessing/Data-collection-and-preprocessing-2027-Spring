@@ -1,0 +1,1910 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>5&nbsp; 研究环境搭建 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0105-r-basics.html" rel="next">
+<link href="./0103-data-management-workflow.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0104-environment-setup.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#研究环境搭建" id="toc-研究环境搭建" class="nav-link active" data-scroll-target="#研究环境搭建"><span class="header-section-number">6</span> 研究环境搭建</a>
+  <ul class="collapse">
+  <li><a href="#r-与-positron" id="toc-r-与-positron" class="nav-link" data-scroll-target="#r-与-positron"><span class="header-section-number">6.1</span> R 与 Positron</a>
+  <ul class="collapse">
+  <li><a href="#安装-r" id="toc-安装-r" class="nav-link" data-scroll-target="#安装-r"><span class="header-section-number">6.1.1</span> 安装 R</a></li>
+  </ul></li>
+  <li><a href="#安装路径注意事项" id="toc-安装路径注意事项" class="nav-link" data-scroll-target="#安装路径注意事项"><span class="header-section-number">6.2</span> 安装路径注意事项</a>
+  <ul class="collapse">
+  <li><a href="#安装-positron" id="toc-安装-positron" class="nav-link" data-scroll-target="#安装-positron"><span class="header-section-number">6.2.1</span> 安装 Positron</a></li>
+  <li><a href="#验证安装" id="toc-验证安装" class="nav-link" data-scroll-target="#验证安装"><span class="header-section-number">6.2.2</span> 验证安装</a></li>
+  </ul></li>
+  <li><a href="#positron-界面说明" id="toc-positron-界面说明" class="nav-link" data-scroll-target="#positron-界面说明"><span class="header-section-number">6.3</span> Positron 界面说明</a>
+  <ul class="collapse">
+  <li><a href="#配置-cran-镜像源" id="toc-配置-cran-镜像源" class="nav-link" data-scroll-target="#配置-cran-镜像源"><span class="header-section-number">6.3.1</span> 配置 CRAN 镜像源</a></li>
+  <li><a href="#安装课程常用-r-包" id="toc-安装课程常用-r-包" class="nav-link" data-scroll-target="#安装课程常用-r-包"><span class="header-section-number">6.3.2</span> 安装课程常用 R 包</a></li>
+  <li><a href="#验证-r-包安装" id="toc-验证-r-包安装" class="nav-link" data-scroll-target="#验证-r-包安装"><span class="header-section-number">6.3.3</span> 验证 R 包安装</a></li>
+  <li><a href="#常见安装问题及解决方案" id="toc-常见安装问题及解决方案" class="nav-link" data-scroll-target="#常见安装问题及解决方案"><span class="header-section-number">6.3.4</span> 常见安装问题及解决方案</a></li>
+  </ul></li>
+  <li><a href="#python-环境数据采集用" id="toc-python-环境数据采集用" class="nav-link" data-scroll-target="#python-环境数据采集用"><span class="header-section-number">6.4</span> Python 环境（数据采集用）</a>
+  <ul class="collapse">
+  <li><a href="#安装-python" id="toc-安装-python" class="nav-link" data-scroll-target="#安装-python"><span class="header-section-number">6.4.1</span> 安装 Python</a></li>
+  </ul></li>
+  <li><a href="#使用-anaconda-prompt" id="toc-使用-anaconda-prompt" class="nav-link" data-scroll-target="#使用-anaconda-prompt"><span class="header-section-number">6.5</span> 使用 Anaconda Prompt</a>
+  <ul class="collapse">
+  <li><a href="#验证安装-1" id="toc-验证安装-1" class="nav-link" data-scroll-target="#验证安装-1"><span class="header-section-number">6.5.1</span> 验证安装</a></li>
+  <li><a href="#创建课程专用环境" id="toc-创建课程专用环境" class="nav-link" data-scroll-target="#创建课程专用环境"><span class="header-section-number">6.5.2</span> 创建课程专用环境</a></li>
+  <li><a href="#安装常用-python-包" id="toc-安装常用-python-包" class="nav-link" data-scroll-target="#安装常用-python-包"><span class="header-section-number">6.5.3</span> 安装常用 Python 包</a></li>
+  </ul></li>
+  <li><a href="#pip-国内镜像加速" id="toc-pip-国内镜像加速" class="nav-link" data-scroll-target="#pip-国内镜像加速"><span class="header-section-number">6.6</span> pip 国内镜像加速</a></li>
+  <li><a href="#git" id="toc-git" class="nav-link" data-scroll-target="#git"><span class="header-section-number">6.7</span> Git</a>
+  <ul class="collapse">
+  <li><a href="#安装-git" id="toc-安装-git" class="nav-link" data-scroll-target="#安装-git"><span class="header-section-number">6.7.1</span> 安装 Git</a></li>
+  <li><a href="#配置用户信息" id="toc-配置用户信息" class="nav-link" data-scroll-target="#配置用户信息"><span class="header-section-number">6.7.2</span> 配置用户信息</a></li>
+  <li><a href="#注册-github-账号" id="toc-注册-github-账号" class="nav-link" data-scroll-target="#注册-github-账号"><span class="header-section-number">6.7.3</span> 注册 GitHub 账号</a></li>
+  </ul></li>
+  <li><a href="#quarto" id="toc-quarto" class="nav-link" data-scroll-target="#quarto"><span class="header-section-number">6.8</span> Quarto</a>
+  <ul class="collapse">
+  <li><a href="#安装-quarto" id="toc-安装-quarto" class="nav-link" data-scroll-target="#安装-quarto"><span class="header-section-number">6.8.1</span> 安装 Quarto</a></li>
+  <li><a href="#验证安装-2" id="toc-验证安装-2" class="nav-link" data-scroll-target="#验证安装-2"><span class="header-section-number">6.8.2</span> 验证安装</a></li>
+  <li><a href="#创建第一个-quarto-文档" id="toc-创建第一个-quarto-文档" class="nav-link" data-scroll-target="#创建第一个-quarto-文档"><span class="header-section-number">6.8.3</span> 创建第一个 Quarto 文档</a></li>
+  </ul></li>
+  <li><a href="#内联代码" id="toc-内联代码" class="nav-link" data-scroll-target="#内联代码"><span class="header-section-number">6.9</span> 内联代码</a></li>
+  <li><a href="#环境检查清单" id="toc-环境检查清单" class="nav-link" data-scroll-target="#环境检查清单"><span class="header-section-number">6.10</span> 环境检查清单</a></li>
+  <li><a href="#附录github-education" id="toc-附录github-education" class="nav-link" data-scroll-target="#附录github-education"><span class="header-section-number">6.11</span> 附录：GitHub Education</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">6.12</span> 课后练习</a></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0101-what-is-data-collection.html">第一单元：绪论与环境搭建</a></li><li class="breadcrumb-item"><a href="./0104-environment-setup.html"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="研究环境搭建" class="level1" data-number="6">
+<h1 data-number="6"><span class="header-section-number">6</span> 研究环境搭建</h1>
+<p>工欲善其事，必先利其器。在开始数据采集与预处理之前，我们需要搭建一个标准化的研究环境。本章将指导你安装和配置课程所需的全部软件工具。</p>
+<section id="r-与-positron" class="level2" data-number="6.1">
+<h2 data-number="6.1" class="anchored" data-anchor-id="r-与-positron"><span class="header-section-number">6.1</span> R 与 Positron</h2>
+<p>R 是本课程的主要编程语言，Positron 是 R 最常用的集成开发环境（IDE）。</p>
+<section id="安装-r" class="level3" data-number="6.1.1">
+<h3 data-number="6.1.1" class="anchored" data-anchor-id="安装-r"><span class="header-section-number">6.1.1</span> 安装 R</h3>
+<p>R 是本课程的主要编程语言，推荐使用 R-4.4.x 系列版本。R 的安装相对简单，但有一些细节需要注意，否则后续安装包时可能会遇到问题。</p>
+<p><strong>Windows 系统安装</strong></p>
+<ol type="1">
+<li>访问 R 官方网站：&lt;https://cran.r-project.org/</li>
+<li>点击 “Download R for Windows” → “base”</li>
+<li>下载最新版本（如 R-4.4.x-win.exe）</li>
+<li>双击安装程序，按以下步骤操作：
+<ul>
+<li>选择安装语言（建议选择 English，避免中文路径问题）</li>
+<li>接受许可协议</li>
+<li>选择安装路径（重要：避免中文路径，建议使用 <code>C:\R\R-4.4.x</code>）</li>
+<li>选择组件：保持默认（Core Files + 64-bit Files）</li>
+<li>启动选项：保持默认</li>
+<li>是否创建桌面快捷方式：可选</li>
+</ul></li>
+<li>安装完成后，点击 “Finish”</li>
+</ol>
+<p><strong>为什么不要用中文路径？</strong></p>
+<p>R 的很多包在安装和加载时会调用系统命令，如果路径包含中文字符，可能导致莫名其妙的报错。例如，某些包在加载时会尝试读取 DLL 文件，但 DLL 不支持中文路径，导致加载失败。为避免这类问题，建议一开始就将 R 安装在纯英文路径下。</p>
+<p><strong>macOS 系统安装</strong></p>
+<ol type="1">
+<li>访问 R 官方网站：<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li>点击 “Download R for macOS”</li>
+<li>根据 Mac 芯片类型选择：
+<ul>
+<li>Apple Silicon (M1/M2/M3)：下载 <code>R-4.4.x-arm64.pkg</code></li>
+<li>Intel 芯片：下载 <code>R-4.4.x-x86_64.pkg</code></li>
+</ul></li>
+<li>双击 .pkg 文件，按提示安装</li>
+</ol>
+<p><strong>Linux 系统安装</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install r-base r-base-dev</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># CentOS/RHEL</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install epel-release</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install R</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>安装后验证</strong></p>
+<p>安装完成后，打开 Positron（Windows）或终端输入 <code>R</code>（macOS/Linux），验证安装成功：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>R.version.string</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "R version 4.4.0 (2024-04-24)"</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co"># R version 4.4.0</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Platform: x86_64-w64-mingw32/x64 (64-bit)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>常见问题</strong></p>
+<ul>
+<li>安装路径有中文：重装 R，选择纯英文路径</li>
+<li>安装后找不到 R：在开始菜单搜索 “R”，或检查是否安装成功</li>
+<li>安装过旧版本：先卸载旧版本，再安装新版本</li>
+</ul>
+<p><strong>生态学案例</strong></p>
+<p>某同学在安装 R 时，使用了默认路径 <code>C:\Program Files\R\R-4.4.0</code>。后续安装 <code>vegan</code> 包时总是报错，提示”无法找到某个 DLL 文件”。排查了很久，最后发现是路径中的空格（Program Files 有空格）导致的问题。重装到 <code>C:\R\R-4.4.0</code> 后问题解决。这个教训说明：<strong>安装路径的细节真的很重要</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="安装路径注意事项" class="level2" data-number="6.2">
+<h2 data-number="6.2" class="anchored" data-anchor-id="安装路径注意事项"><span class="header-section-number">6.2</span> 安装路径注意事项</h2>
+<ul>
+<li><strong>避免中文路径</strong>：不要安装到 <code>C:\程序文件\</code> 或包含中文的文件夹</li>
+<li><strong>避免空格</strong>：虽然 <code>Program Files</code> 包含空格，但这是系统默认路径，R 可以正确处理</li>
+<li><strong>推荐路径</strong>：<code>C:\R\R-4.4.x</code> 或 <code>D:\R\R-4.4.x</code>（更简洁） :::</li>
+</ul>
+<section id="macos-系统安装步骤" class="level4">
+<h4 class="anchored" data-anchor-id="macos-系统安装步骤">macOS 系统安装步骤</h4>
+<ol type="1">
+<li>访问 R 官方网站：<a href="https://cran.r-project.org/" class="uri">https://cran.r-project.org/</a></li>
+<li>点击 “Download R for macOS”</li>
+<li>根据你的 Mac 芯片类型选择：
+<ul>
+<li><strong>Apple Silicon (M1/M2/M3)</strong>：下载 <code>R-4.4.x-arm64.pkg</code></li>
+<li><strong>Intel 芯片</strong>：下载 <code>R-4.4.x-x86_64.pkg</code></li>
+</ul></li>
+<li>双击 .pkg 文件，按提示安装</li>
+<li>可能需要在 “系统偏好设置” → “安全性与隐私” 中允许安装</li>
+</ol>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>如何查看 Mac 芯片类型
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p>点击屏幕左上角 图标 → “关于本机” → 查看 “芯片” 或 “处理器” 信息： - 显示 “Apple M1/M2/M3” → 选择 ARM64 版本 - 显示 “Intel Core” → 选择 x86_64 版本</p>
+</div>
+</div>
+</section>
+<section id="linux-系统安装步骤" class="level4">
+<h4 class="anchored" data-anchor-id="linux-系统安装步骤">Linux 系统安装步骤</h4>
+<p><strong>Ubuntu/Debian 系统：</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 更新软件源</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 R 基础包</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install r-base r-base-dev</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证安装</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>CentOS/RHEL 系统：</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 启用 EPEL 仓库</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install epel-release</span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 R</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install R</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证安装</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">R</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="安装-positron" class="level3" data-number="6.2.1">
+<h3 data-number="6.2.1" class="anchored" data-anchor-id="安装-positron"><span class="header-section-number">6.2.1</span> 安装 Positron</h3>
+<section id="windows-系统" class="level4">
+<h4 class="anchored" data-anchor-id="windows-系统">Windows 系统</h4>
+<ol type="1">
+<li>访问 Positron 下载页面：&lt;https://posit.com/download/</li>
+<li>页面会自动检测你的操作系统，点击 “Download Positron Desktop for Windows”</li>
+<li>下载完成后，双击 <code>Positron-2024.11.155.exe</code> 安装程序</li>
+<li>安装步骤：
+<ul>
+<li>接受许可协议</li>
+<li>选择安装路径（建议保持默认 <code>C:\Program Files\Positron</code>）</li>
+<li>选择开始菜单文件夹（保持默认）</li>
+<li>是否创建桌面快捷方式（建议勾选）</li>
+</ul></li>
+<li>安装完成后，双击桌面图标启动 Positron</li>
+</ol>
+</section>
+<section id="macos-系统" class="level4">
+<h4 class="anchored" data-anchor-id="macos-系统">macOS 系统</h4>
+<ol type="1">
+<li>访问 Positron 下载页面：&lt;https://posit.com/download/</li>
+<li>下载 <code>Positron-2024.11.155.dmg</code> 文件</li>
+<li>双击 .dmg 文件，将 Positron 图标拖到 Applications 文件夹</li>
+<li>在 “应用程序” 中找到 Positron，双击启动</li>
+<li>首次启动可能提示 “无法验证开发者”，需要：
+<ul>
+<li>打开 “系统偏好设置” → “安全性与隐私”</li>
+<li>点击 “仍要打开” 按钮</li>
+</ul></li>
+</ol>
+</section>
+<section id="linux-系统" class="level4">
+<h4 class="anchored" data-anchor-id="linux-系统">Linux 系统</h4>
+<p><strong>Ubuntu/Debian：</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 下载 Positron（以 Ubuntu 22.04 为例）</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://github.com/posit-dev/positron/releases/download/2024.11.155/Positron-2024.11.155-linux-amd64.deb</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> Positron-2024.11.155-linux-amd64.deb</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 如果有依赖问题，运行：</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install <span class="at">-f</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>CentOS/RHEL：</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 下载 Positron</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://github.com/posit-dev/positron/releases/download/2024.11.155/Positron-2024.11.155-linux-x86_64.rpm</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install Positron-2024.11.155-linux-x86_64.rpm</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="首次启动配置" class="level4">
+<h4 class="anchored" data-anchor-id="首次启动配置">首次启动配置</h4>
+<p>首次打开 Positron 后，建议进行以下配置：</p>
+<ol type="1">
+<li><strong>设置工作目录</strong>：
+<ul>
+<li>Settings → Application</li>
+<li>取消勾选 “Restore .RData into workspace at startup”（避免加载旧数据）</li>
+<li>将 “Save workspace to .RData on exit” 改为 “Never”（避免自动保存）</li>
+</ul></li>
+<li><strong>设置代码显示</strong>：
+<ul>
+<li>Tools → Global Options → Code → Display</li>
+<li>勾选 “Show line numbers”（显示行号）</li>
+<li>勾选 “Highlight R function calls”（高亮函数调用）</li>
+</ul></li>
+<li><strong>设置外观</strong>：
+<ul>
+<li>Tools → Global Options → Appearance</li>
+<li>选择你喜欢的编辑器主题（如 Cobalt 或 Tomorrow Night）</li>
+<li>调整字体大小（建议 12-14）</li>
+</ul></li>
+</ol>
+</section>
+</section>
+<section id="验证安装" class="level3" data-number="6.2.2">
+<h3 data-number="6.2.2" class="anchored" data-anchor-id="验证安装"><span class="header-section-number">6.2.2</span> 验证安装</h3>
+<p>安装完成后，需要验证 R 是否正确安装以及基本功能是否正常。以下是推荐的验证步骤。</p>
+<p><strong>基本验证</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 Positron 或 Positron 终端中执行</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>R.version.string</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 应显示类似：</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># [1] "R version 4.4.0 (2024-04-24)"</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sessionInfo</span>()</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 显示 R 版本、操作系统、已加载的包等信息</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>进阶验证：测试包安装</strong></p>
+<p>安装 R 后，建议测试一个简单包的安装和加载：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装并加载一个常用包</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">install.packages</span>(<span class="st">"tidyverse"</span>)</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 测试基本操作</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">tibble</span>(<span class="at">x =</span> <span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>, <span class="at">y =</span> letters[<span class="dv">1</span><span class="sc">:</span><span class="dv">5</span>])</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 应输出：</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="co"># # A tibble: 5 x 2</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a><span class="co">#       x y    </span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   &lt;int&gt; &lt;chr&gt;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 1     1 a    </span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a><span class="co"># 2     2 b    </span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 3     3 c    </span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a><span class="co"># 4     4 d    </span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a><span class="co"># 5     5 e    </span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>常见失败及解决</strong></p>
+<ul>
+<li><strong>“package … is not available”</strong>：检查网络连接，或尝试切换 CRAN 镜像</li>
+<li><strong>“installation of package … had non-zero exit status”</strong>：可能是缺少编译工具，Windows 用户需要安装 Rtools</li>
+<li><strong>“unable to access index for repository”</strong>：网络问题或镜像不可用，尝试其他镜像</li>
+</ul>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="positron-界面说明" class="level2" data-number="6.3">
+<h2 data-number="6.3" class="anchored" data-anchor-id="positron-界面说明"><span class="header-section-number">6.3</span> Positron 界面说明</h2>
+<p>Positron 默认分为 4 个窗口：</p>
+<ol type="1">
+<li><strong>左上</strong>：脚本编辑器（Script Editor）—— 编写和保存 R 代码</li>
+<li><strong>左下</strong>：终端（Console）—— 交互式运行 R 命令，查看输出</li>
+<li><strong>右上</strong>：环境/历史（Environment/History）—— 查看当前变量和命令历史</li>
+<li><strong>右下</strong>：文件/图表/帮助（Files/Plots/Help）—— 浏览文件、查看图表、阅读帮助文档</li>
+</ol>
+<p>首次使用时，左上角可能没有脚本编辑器，点击 File → New File → R File 即可打开。 :::</p>
+<section id="配置-cran-镜像源" class="level3" data-number="6.3.1">
+<h3 data-number="6.3.1" class="anchored" data-anchor-id="配置-cran-镜像源"><span class="header-section-number">6.3.1</span> 配置 CRAN 镜像源</h3>
+<p>在安装 R 包之前，强烈建议先配置国内镜像源，可以大幅提升下载速度。</p>
+<section id="方法一临时设置仅当前会话有效" class="level4">
+<h4 class="anchored" data-anchor-id="方法一临时设置仅当前会话有效">方法一：临时设置（仅当前会话有效）</h4>
+</section>
+<section id="方法二永久设置推荐" class="level4">
+<h4 class="anchored" data-anchor-id="方法二永久设置推荐">方法二：永久设置（推荐）</h4>
+<p>在 Positron 中：</p>
+<ol type="1">
+<li>点击 Settings → Extensions → R</li>
+<li>在 “Primary CRAN repository” 下拉菜单中选择 “Custom”</li>
+<li>输入镜像地址：<code>https://mirrors.tuna.tsinghua.edu.cn/CRAN/</code></li>
+<li>点击 OK 保存</li>
+</ol>
+<p>或者手动编辑配置文件：</p>
+<p>在打开的文件中添加以下内容：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置 CRAN 镜像</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">repos =</span> <span class="fu">c</span>(<span class="at">CRAN =</span> <span class="st">"https://mirrors.tuna.tsinghua.edu.cn/CRAN/"</span>))</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置 Bioconductor 镜像（如果需要生物信息学包）</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="fu">options</span>(<span class="at">BioC_mirror =</span> <span class="st">"https://mirrors.tuna.tsinghua.edu.cn/bioconductor"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>保存后重启 Positron，镜像设置即永久生效。</p>
+<div class="callout callout-style-default callout-tip callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Tip</span>其他可用的国内镜像
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><strong>清华大学</strong>：<code>https://mirrors.tuna.tsinghua.edu.cn/CRAN/</code>（推荐）</li>
+<li><strong>中国科技大学</strong>：<code>https://mirrors.ustc.edu.cn/CRAN/</code></li>
+<li><strong>兰州大学</strong>：<code>https://mirror.lzu.edu.cn/CRAN/</code></li>
+<li><strong>北京外国语大学</strong>：<code>https://mirrors.bfsu.edu.cn/CRAN/</code></li>
+</ul>
+<p>如果某个镜像速度慢或无法访问，可以尝试切换到其他镜像。</p>
+</div>
+</div>
+</section>
+</section>
+<section id="安装课程常用-r-包" class="level3" data-number="6.3.2">
+<h3 data-number="6.3.2" class="anchored" data-anchor-id="安装课程常用-r-包"><span class="header-section-number">6.3.2</span> 安装课程常用 R 包</h3>
+<p>配置好镜像后，开始安装本课程所需的 R 包。</p>
+<section id="核心数据处理包" class="level4">
+<h4 class="anchored" data-anchor-id="核心数据处理包">核心数据处理包</h4>
+</section>
+<section id="数据可视化增强包" class="level4">
+<h4 class="anchored" data-anchor-id="数据可视化增强包">数据可视化增强包</h4>
+</section>
+<section id="统计分析包" class="level4">
+<h4 class="anchored" data-anchor-id="统计分析包">统计分析包</h4>
+</section>
+<section id="文档渲染包" class="level4">
+<h4 class="anchored" data-anchor-id="文档渲染包">文档渲染包</h4>
+</section>
+<section id="生态学专用包可选" class="level4">
+<h4 class="anchored" data-anchor-id="生态学专用包可选">生态学专用包（可选）</h4>
+<div class="callout callout-style-default callout-warning callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Warning</span>安装时间提示
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<ul>
+<li><code>tidyverse</code> 包含多个子包，首次安装可能需要 <strong>5-10 分钟</strong></li>
+<li>如果提示 “Do you want to install from sources the package which needs compilation?”，选择 <strong>No</strong>（选择预编译版本，更快）</li>
+<li>安装过程中可能会看到红色文字，这是正常的编译信息，不是错误</li>
+</ul>
+</div>
+</div>
+</section>
+</section>
+<section id="验证-r-包安装" class="level3" data-number="6.3.3">
+<h3 data-number="6.3.3" class="anchored" data-anchor-id="验证-r-包安装"><span class="header-section-number">6.3.3</span> 验证 R 包安装</h3>
+<p>安装完 R 包后，需要验证所有包都能正常加载。以下是推荐的验证流程。</p>
+<p><strong>基本加载测试</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义需要验证的包列表</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>packages <span class="ot">&lt;-</span> <span class="fu">c</span>(</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>  <span class="st">"tidyverse"</span>, <span class="st">"readxl"</span>, <span class="st">"haven"</span>, <span class="st">"jsonlite"</span>,</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"corrplot"</span>, <span class="st">"patchwork"</span>, <span class="st">"ggpubr"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"metafor"</span>, <span class="st">"knitr"</span>, <span class="st">"rmarkdown"</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>)</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 逐个加载并检查</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>results <span class="ot">&lt;-</span> <span class="fu">sapply</span>(packages, <span class="cf">function</span>(pkg) {</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>  result <span class="ot">&lt;-</span> <span class="fu">tryCatch</span>({</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">library</span>(pkg, <span class="at">character.only =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="cn">TRUE</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>  }, <span class="at">error =</span> <span class="cf">function</span>(e) <span class="cn">FALSE</span>)</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>  result</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>})</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 打印结果</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"包加载验证结果：</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pkg <span class="cf">in</span> <span class="fu">names</span>(results)) {</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>  status <span class="ot">&lt;-</span> <span class="cf">if</span> (results[pkg]) <span class="st">"\u2713 成功"</span> <span class="cf">else</span> <span class="st">"\u2717 失败"</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>  <span class="fu">cat</span>(status, pkg, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>版本检查</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看已安装包的版本</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">installed.packages</span>()[, <span class="fu">c</span>(<span class="st">"Package"</span>, <span class="st">"Version"</span>)] <span class="sc">|&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="fu">as_tibble</span>() <span class="sc">|&gt;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(Package <span class="sc">%in%</span> packages) <span class="sc">|&gt;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="at">n =</span> <span class="dv">20</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看 R 和关键包的版本</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"R 版本:"</span>, R.version.string, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"tidyverse 版本:"</span>, <span class="fu">packageVersion</span>(<span class="st">"tidyverse"</span>), <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>常见问题</strong></p>
+<ul>
+<li>加载失败：检查是否安装成功（无报错才是成功）</li>
+<li>版本过旧：<code>update.packages()</code> 更新到最新版本</li>
+<li>包损坏：重新安装该包 <code>install.packages("包名")</code></li>
+</ul>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="常见安装问题及解决方案" class="level3" data-number="6.3.4">
+<h3 data-number="6.3.4" class="anchored" data-anchor-id="常见安装问题及解决方案"><span class="header-section-number">6.3.4</span> 常见安装问题及解决方案</h3>
+<section id="问题-1package-xxx-is-not-available" class="level4">
+<h4 class="anchored" data-anchor-id="问题-1package-xxx-is-not-available">问题 1：“package ‘xxx’ is not available”</h4>
+<p><strong>原因</strong>：包名拼写错误，或该包已从 CRAN 移除。</p>
+<p><strong>解决方案</strong>：</p>
+</section>
+<section id="问题-2installation-of-package-xxx-had-non-zero-exit-status" class="level4">
+<h4 class="anchored" data-anchor-id="问题-2installation-of-package-xxx-had-non-zero-exit-status">问题 2：“installation of package ‘xxx’ had non-zero exit status”</h4>
+<p><strong>原因</strong>：编译失败，通常是缺少系统依赖或编译工具。</p>
+<p><strong>解决方案</strong>：</p>
+<p><strong>Windows 用户</strong>：</p>
+<p><strong>macOS 用户</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装 Xcode Command Line Tools</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">xcode-select</span> <span class="at">--install</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 或安装 Homebrew 后安装 gcc</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install gcc</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Linux 用户</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install build-essential libcurl4-openssl-dev libssl-dev libxml2-dev</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># CentOS/RHEL</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install gcc gcc-c++ make libcurl-devel openssl-devel libxml2-devel</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="问题-3warning-unable-to-access-index-for-repository" class="level4">
+<h4 class="anchored" data-anchor-id="问题-3warning-unable-to-access-index-for-repository">问题 3：“Warning: unable to access index for repository”</h4>
+<p><strong>原因</strong>：网络问题或镜像源不可用。</p>
+<p><strong>解决方案</strong>：</p>
+</section>
+<section id="问题-4package-xxx-was-built-under-r-version-4.x.x" class="level4">
+<h4 class="anchored" data-anchor-id="问题-4package-xxx-was-built-under-r-version-4.x.x">问题 4：“package ‘xxx’ was built under R version 4.x.x”</h4>
+<p><strong>原因</strong>：包是用更新版本的 R 编译的，但这通常不影响使用。</p>
+<p><strong>解决方案</strong>：</p>
+</section>
+<section id="问题-5tidyverse-安装卡住不动" class="level4">
+<h4 class="anchored" data-anchor-id="问题-5tidyverse-安装卡住不动">问题 5：tidyverse 安装卡住不动</h4>
+<p><strong>原因</strong>：tidyverse 包含多个子包，下载量大。</p>
+<p><strong>解决方案</strong>：</p>
+</section>
+<section id="问题-6positron-中文乱码" class="level4">
+<h4 class="anchored" data-anchor-id="问题-6positron-中文乱码">问题 6：Positron 中文乱码</h4>
+<p><strong>原因</strong>：编码设置不正确。</p>
+<p><strong>解决方案</strong>：</p>
+<ol type="1">
+<li>Tools → Global Options → Code → Saving</li>
+<li>将 “Default text encoding” 改为 <strong>UTF-8</strong></li>
+<li>重启 Positron</li>
+</ol>
+<p>或在代码中设置：</p>
+</section>
+<section id="问题-7无法加载共享对象linux" class="level4">
+<h4 class="anchored" data-anchor-id="问题-7无法加载共享对象linux">问题 7：无法加载共享对象（Linux）</h4>
+<p><strong>原因</strong>：缺少系统库依赖。</p>
+<p><strong>解决方案</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看错误信息中提到的缺失库，例如 libgdal</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install libgdal-dev</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 常见依赖库</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt-get install libgeos-dev libproj-dev libudunits2-dev</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="问题-8error-in-libraryxxx-there-is-no-package-called-xxx" class="level4">
+<h4 class="anchored" data-anchor-id="问题-8error-in-libraryxxx-there-is-no-package-called-xxx">问题 8：“Error in library(xxx) : there is no package called ‘xxx’”</h4>
+<p><strong>原因</strong>：包未安装或安装失败。</p>
+<p><strong>解决方案</strong>：</p>
+</section>
+</section>
+</section>
+<section id="python-环境数据采集用" class="level2" data-number="6.4">
+<h2 data-number="6.4" class="anchored" data-anchor-id="python-环境数据采集用"><span class="header-section-number">6.4</span> Python 环境（数据采集用）</h2>
+<p>Python 在本课程中主要用于网络数据采集（爬虫、API 调用）。</p>
+<section id="安装-python" class="level3" data-number="6.4.1">
+<h3 data-number="6.4.1" class="anchored" data-anchor-id="安装-python"><span class="header-section-number">6.4.1</span> 安装 Python</h3>
+<p>Python 在本课程中主要用于数据采集（网络爬虫、API 调用等）。推荐使用 Anaconda 发行版，它可以方便地管理 Python 环境和包。</p>
+<p><strong>为什么推荐 Anaconda？</strong></p>
+<ol type="1">
+<li><strong>开箱即用</strong>：包含 Python 解释器、conda 包管理器和 250+ 预装科学计算包（如 NumPy、Pandas、Matplotlib）</li>
+<li><strong>环境隔离</strong>：可以用 conda 创建独立的 Python 环境，避免不同项目间包版本冲突</li>
+<li><strong>跨平台</strong>：Windows、macOS、Linux 都有对应版本</li>
+</ol>
+<p><strong>安装步骤（Windows）</strong></p>
+<ol type="1">
+<li>访问 Miniconda 下载页面：&lt;https://docs.conda.io/en/latest/miniconda.html</li>
+<li>下载 <code>Miniconda3-py312_24.3.0-0-Windows-x86_64.exe</code>（Python 3.12 版）</li>
+<li>双击安装程序，保持默认设置即可</li>
+<li>安装完成后，在开始菜单找到 “Anaconda Prompt”，打开它</li>
+</ol>
+<p><strong>安装步骤（macOS）</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用 Homebrew 安装</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install miniconda</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 初始化 conda</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> init zsh</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 重启终端</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>验证安装</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 Anaconda Prompt 中执行</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 应显示：Python 3.12.x</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> <span class="at">--version</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 应显示：conda 24.x.x</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>conda 基础命令</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建新环境</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> datacourse python=3.11</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 激活环境</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate datacourse</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 退出环境</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> deactivate</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有环境</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env list</span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装包</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> install numpy pandas</span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 卸载包</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> remove package-name</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某同学在 Python 环境中安装了某个数据处理包后，发现之前写好的爬虫脚本全部报错。原来是包版本更新导致的兼容性问题。后来他学会了使用 conda 创建独立环境：每个项目一个环境，问题再也没出现过。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="使用-anaconda-prompt" class="level2" data-number="6.5">
+<h2 data-number="6.5" class="anchored" data-anchor-id="使用-anaconda-prompt"><span class="header-section-number">6.5</span> 使用 Anaconda Prompt</h2>
+<p>安装完成后，Windows 用户请使用 <strong>Anaconda Prompt</strong>（而非普通 CMD 或 PowerShell）来运行 Python 和 conda 命令。Anaconda Prompt 会自动配置好环境变量，避免路径问题。</p>
+<p>可以在开始菜单中搜索 “Anaconda Prompt” 打开。 :::</p>
+<section id="验证安装-1" class="level3" data-number="6.5.1">
+<h3 data-number="6.5.1" class="anchored" data-anchor-id="验证安装-1"><span class="header-section-number">6.5.1</span> 验证安装</h3>
+<p>安装完成后，需要验证Python环境是否正确配置。这一步骤至关重要，因为Python的安装问题往往要到实际使用时才会暴露。通过系统性的验证，可以提前发现并解决潜在问题，避免在后续数据采集任务中出现环境故障。</p>
+<p><strong>基本验证步骤</strong>：</p>
+<ol type="1">
+<li><p><strong>验证Python版本</strong></p>
+<p>打开Anaconda Prompt（Windows）或终端（macOS/Linux），输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>预期输出</strong>：</p>
+<pre><code>Python 3.11.x</code></pre>
+<p>如果显示的版本号为3.8以上，说明安装成功。如果提示“python不是内部或外部命令”，说明环境变量未正确配置，需要重新安装Anaconda并勾选“添加到PATH”选项。</p></li>
+<li><p><strong>验证conda工具</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>预期输出</strong>：</p>
+<pre><code>conda 23.x.x</code></pre>
+<p>conda是Anaconda的包管理器，用于创建虚拟环境和安装包。如果这个命令有效，说明Anaconda安装完整。</p></li>
+<li><p><strong>验证pip工具</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>预期输出</strong>：</p>
+<pre><code>pip 23.x.x from /path/to/anaconda3/lib/python3.11/site-packages/pip (python 3.11)</code></pre>
+<p>pip是Python的包安装工具，后续所有Python包的安装都依赖于它。</p></li>
+<li><p><strong>测试Python交互式环境</strong></p>
+<p>在Anaconda Prompt中输入<code>python</code>进入交互式环境，然后执行简单代码：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="bu">print</span>(<span class="st">"Hello, Data Science!"</span>)</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>Hello, Data Science<span class="op">!</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> <span class="im">import</span> sys</span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> sys.version</span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">'3.11.x ...'</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a><span class="op">&gt;&gt;&gt;</span> exit()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>如果能正常进入交互式环境并执行代码，说明Python解释器工作正常。使用<code>exit()</code>或<code>Ctrl+Z</code>（Windows）/<code>Ctrl+D</code>（macOS/Linux）退出。</p></li>
+<li><p><strong>验证基础库导入</strong></p>
+<p>测试是否能正常导入Python标准库：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import os, sys, json; print('Standard libraries OK')"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>预期输出</strong>：</p>
+<pre><code>Standard libraries OK</code></pre>
+<p>如果报错，说明Python安装不完整，需要重新安装。</p></li>
+</ol>
+<p><strong>常见问题排查</strong>：</p>
+<ul>
+<li><strong>Windows用户提示“python不是内部或外部命令”</strong>：
+<ul>
+<li>确认使用的是<strong>Anaconda Prompt</strong>而非普通CMD</li>
+<li>如果在普通CMD中使用，需要手动添加Anaconda到PATH环境变量</li>
+<li>或者重新安装Anaconda，安装时勾选“Add Anaconda to PATH”（不推荐，可能与其他Python安装冲突）</li>
+</ul></li>
+<li><strong>macOS/Linux用户提示“command not found: python”</strong>：
+<ul>
+<li><p>尝试使用<code>python3</code>而非<code>python</code></p></li>
+<li><p>或者在shell配置文件（<code>~/.bashrc</code>或<code>~/.zshrc</code>）中添加：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PATH</span><span class="op">=</span><span class="st">"</span><span class="va">$HOME</span><span class="st">/miniconda3/bin:</span><span class="va">$PATH</span><span class="st">"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p>然后执行<code>source ~/.bashrc</code>或重启终端</p></li>
+</ul></li>
+<li><strong>版本号显示为2.x</strong>：
+<ul>
+<li>说明系统默认使用的是Python 2（已过时）</li>
+<li>尝试使用<code>python3</code>命令</li>
+<li>或者在Anaconda环境中执行（见下一节）</li>
+</ul></li>
+</ul>
+<p><strong>生态学案例</strong>：某同学在Windows系统上安装了Anaconda，但在普通CMD中输入<code>python</code>时提示“不是内部或外部命令”。后来发现是因为没有使用Anaconda Prompt。切换到Anaconda Prompt后，所有命令都能正常执行。这个案例说明了使用正确终端的重要性。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="创建课程专用环境" class="level3" data-number="6.5.2">
+<h3 data-number="6.5.2" class="anchored" data-anchor-id="创建课程专用环境"><span class="header-section-number">6.5.2</span> 创建课程专用环境</h3>
+<p>为课程创建独立的 Python 环境，可以避免与其他项目的包版本冲突，也便于管理依赖和复现分析结果。</p>
+<p><strong>为什么需要独立环境？</strong></p>
+<p>假设你有两个项目： - 项目 A 需要 pandas 1.x - 项目 B 需要 pandas 2.x</p>
+<p>如果使用同一个环境，安装一个新版本会破坏另一个项目。使用独立环境可以解决这个问题。</p>
+<p><strong>创建 conda 环境</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 创建名为 datacourse 的环境，指定 Python 版本</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> create <span class="at">-n</span> datacourse python=3.11</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 激活环境</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate datacourse</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证激活成功</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 提示符前会显示环境名：(datacourse)</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>在 Positron 中使用 Python</strong></p>
+<ol type="1">
+<li>Positron 内置 Python 支持，无需额外安装扩展</li>
+<li>打开命令面板（Ctrl+Shift+P）</li>
+<li>输入 “Python: Select Interpreter”</li>
+<li>选择 “datacourse” 环境</li>
+</ol>
+<p><strong>环境管理命令</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 列出所有环境</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env list</span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 导出环境配置（分享给队友）</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env export <span class="op">&gt;</span> environment.yml</span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 从配置文件创建环境</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 删除环境</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env remove <span class="at">-n</span> datacourse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>共享环境配置</strong></p>
+<p>在课程项目中，建议将 environment.yml 提交到 Git 仓库，确保所有队员使用相同的环境：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 导出当前环境</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env export <span class="at">-n</span> datacourse <span class="op">&gt;</span> environment.yml</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a><span class="co">#队友克隆仓库后</span></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> env create <span class="at">-f</span> environment.yml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某研究生在分析数据时安装了某个包，结果导致之前写好的脚本全部报错。原来是因为新包更新了某个底层依赖，影响了旧包的兼容性。解决办法是创建了一个干净的环境重新安装所有包。如果他一开始就使用独立环境，这个问题就不会发生。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="安装常用-python-包" class="level3" data-number="6.5.3">
+<h3 data-number="6.5.3" class="anchored" data-anchor-id="安装常用-python-包"><span class="header-section-number">6.5.3</span> 安装常用 Python 包</h3>
+<p>Python 在本课程中主要用于数据采集（爬虫、API 调用）。以下是需要安装的核心包。</p>
+<p><strong>激活课程环境</strong></p>
+<p>在安装包之前，先激活之前创建的课程环境：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="ex">conda</span> activate datacourse</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>核心数据采集包</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="co"># requests: HTTP 请求库，用于访问网页和 API</span></span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a><span class="co"># beautifulsoup4: HTML/XML 解析库，用于提取网页内容</span></span>
+<span id="cb33-5"><a href="#cb33-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install beautifulsoup4</span>
+<span id="cb33-6"><a href="#cb33-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-7"><a href="#cb33-7" aria-hidden="true" tabindex="-1"></a><span class="co"># pandas: 数据处理库，用于整理数据</span></span>
+<span id="cb33-8"><a href="#cb33-8" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install pandas</span>
+<span id="cb33-9"><a href="#cb33-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb33-10"><a href="#cb33-10" aria-hidden="true" tabindex="-1"></a><span class="co"># lxml: 高性能 XML/HTML 解析器</span></span>
+<span id="cb33-11"><a href="#cb33-11" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install lxml</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>可选扩展包</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="co"># selenium: 自动化浏览器测试，可用于动态网页抓取</span></span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install selenium</span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a><span class="co"># playwright: 微软的浏览器自动化工具</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install playwright</span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a><span class="ex">playwright</span> install</span>
+<span id="cb34-7"><a href="#cb34-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb34-8"><a href="#cb34-8" aria-hidden="true" tabindex="-1"></a><span class="co"># requests-cache: 请求缓存，加速重复访问</span></span>
+<span id="cb34-9"><a href="#cb34-9" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests-cache</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>使用国内镜像加速</strong></p>
+<p>如果下载速度慢，使用清华镜像：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests beautifulsoup4 pandas lxml <span class="dt">\</span></span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>  <span class="at">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>永久设置镜像</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>验证安装</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python</span> <span class="at">-c</span> <span class="st">"import requests; import pandas; import bs4; print('All packages OK')"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="pip-国内镜像加速" class="level2" data-number="6.6">
+<h2 data-number="6.6" class="anchored" data-anchor-id="pip-国内镜像加速"><span class="header-section-number">6.6</span> pip 国内镜像加速</h2>
+<p>如果下载速度慢，可以使用清华镜像：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install requests beautifulsoup4 pandas lxml <span class="at">-i</span> https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>永久设置镜像（推荐）：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> config set global.index-url https://pypi.tuna.tsinghua.edu.cn/simple</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>:::</p>
+</section>
+<section id="git" class="level2" data-number="6.7">
+<h2 data-number="6.7" class="anchored" data-anchor-id="git"><span class="header-section-number">6.7</span> Git</h2>
+<p>Git 是版本控制工具，本课程的期末项目需要通过 Git 提交。本节只需完成安装和基本配置，Git 的协作用法（分支、推送、Pull Request）将在 0107 章详细讲解。</p>
+<section id="安装-git" class="level3" data-number="6.7.1">
+<h3 data-number="6.7.1" class="anchored" data-anchor-id="安装-git"><span class="header-section-number">6.7.1</span> 安装 Git</h3>
+<p>Git 是本课程版本控制和团队协作的核心工具。下面介绍在各种操作系统上安装 Git 的方法。</p>
+<p><strong>Windows 系统安装</strong></p>
+<ol type="1">
+<li>访问 Git 官网下载页面：<a href="https://git-scm.com/download/win" class="uri">https://git-scm.com/download/win</a></li>
+<li>下载对应版本的安装包（约 50MB）</li>
+<li>运行安装程序，保持默认设置即可</li>
+<li>安装完成后，在任意文件夹右键菜单中可以看到 “Git Bash Here”</li>
+</ol>
+<p><strong>macOS 系统安装</strong></p>
+<p>macOS 通常已预装 Git。如果没有，可以通过以下方式安装：</p>
+<ul>
+<li><p><strong>方式一</strong>：通过 Homebrew</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="ex">brew</span> install git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>方式二</strong>：如果安装了 Xcode Command Line Tools，也会包含 Git</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="ex">xcode-select</span> <span class="at">--install</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div></li>
+<li><p><strong>方式三</strong>：从官网下载安装包 访问 <a href="https://git-scm.com/download/mac" class="uri">https://git-scm.com/download/mac</a></p></li>
+</ul>
+<p><strong>Linux 系统安装</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian</span></span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt update</span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install git</span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a><span class="co"># CentOS/RHEL</span></span>
+<span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> yum install git</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>验证安装</strong></p>
+<p>安装完成后，打开终端（Windows 用户打开 Git Bash 或 PowerShell），输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>如果显示类似 “git version 2.40.0” 的版本号，说明安装成功。</p>
+<p><strong>安装后配置</strong></p>
+<p>Git 安装完成后，还需要进行基础配置（见”配置用户信息”章节）：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"你的姓名"</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"你的邮箱@gxu.edu.cn"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="配置用户信息" class="level3" data-number="6.7.2">
+<h3 data-number="6.7.2" class="anchored" data-anchor-id="配置用户信息"><span class="header-section-number">6.7.2</span> 配置用户信息</h3>
+<p>安装 Git 后，第一件事是告诉 Git 你是谁。这个信息会记录在每次提交的元数据中，也是 GitHub 正确关联你提交记录的依据。</p>
+<p><strong>为什么要配置用户信息？</strong></p>
+<p>Git 的每次提交都会记录作者信息（用户名和邮箱）。这些信息：</p>
+<ul>
+<li>显示在 git log 中，便于追踪代码贡献</li>
+<li>关联到 GitHub 贡献图，让你的工作可被识别</li>
+<li>成为团队协作中追溯责任的依据</li>
+</ul>
+<p><strong>配置步骤</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置用户名（建议使用真实姓名或 GitHub 用户名）</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.name <span class="st">"张三"</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-4"><a href="#cb45-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 设置邮箱（必须与 GitHub 注册邮箱一致！）</span></span>
+<span id="cb45-5"><a href="#cb45-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--global</span> user.email <span class="st">"zhangsan@gxu.edu.cn"</span></span>
+<span id="cb45-6"><a href="#cb45-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb45-7"><a href="#cb45-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 验证配置</span></span>
+<span id="cb45-8"><a href="#cb45-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config <span class="at">--list</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>配置级别</strong></p>
+<p>Git 配置有三个级别：</p>
+<ul>
+<li><strong>–global</strong>：全局配置，所有项目都使用这个配置</li>
+<li><strong>–local</strong>：项目级别配置，只对当前项目生效</li>
+<li><strong>–system</strong>：系统级别配置，对所有用户生效</li>
+</ul>
+<p>课程项目使用 –global 配置即可。</p>
+<p><strong>常见问题</strong></p>
+<ol type="1">
+<li><p><strong>邮箱与 GitHub 不一致</strong>：如果配置的邮箱不是 GitHub 账号邮箱，你的提交不会显示在 GitHub 贡献图中。解决方法：重新设置正确的邮箱。</p></li>
+<li><p><strong>中文用户名问题</strong>：不建议使用中文用户名，可能在某些工具中出现编码问题。建议使用拼音或英文。</p></li>
+<li><p><strong>多人共用电脑</strong>：如果有多人共用一台电脑，可以在项目级别设置用户信息：</p></li>
+</ol>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在项目文件夹中</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config user.name <span class="st">"张三"</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> config user.email <span class="st">"zhangsan@gxu.edu.cn"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某同学在配置 Git 时，随意填写了邮箱。结果提交记录在 GitHub 上显示为”Anonymous”，导师无法识别是谁提交的。后来他重新配置了正确邮箱，并用 git commit –amend 修改了历史提交，才让提交记录正确关联到自己的账号。教训是：<strong>配置信息要一步到位</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="注册-github-账号" class="level3" data-number="6.7.3">
+<h3 data-number="6.7.3" class="anchored" data-anchor-id="注册-github-账号"><span class="header-section-number">6.7.3</span> 注册 GitHub 账号</h3>
+<p>GitHub 是全球最大的代码托管平台，也是本课程进行团队协作的基础。在开始使用 Git 之前，需要先注册一个 GitHub 账号。</p>
+<p><strong>注册步骤</strong></p>
+<ol type="1">
+<li>访问 <a href="https://github.com" class="uri">https://github.com</a></li>
+<li>点击 “Sign up” 进入注册页面</li>
+<li>输入邮箱（建议使用学校邮箱 gxu.edu.cn）、密码、用户名</li>
+<li>选择订阅计划（免费账号足够课程使用）</li>
+</ol>
+<p><strong>用户名建议</strong></p>
+<p>选择用户名时考虑以下几点： - 使用真实姓名或姓名的拼音，便于队友识别 - 避免使用奇怪的数字和符号组合 - 长度适中（5-15个字符） - 示例：zhangsan-gxu、li_ming、wanghao2027</p>
+<p><strong>使用学校邮箱的优势</strong></p>
+<p>使用 .edu.cn 邮箱注册有以下好处：</p>
+<ul>
+<li>可以申请 GitHub Education 开发者包（免费使用 Copilot）</li>
+<li>更易于在学术社区展示代码成果</li>
+<li>学校邮箱便于验证身份</li>
+</ul>
+<p><strong>GitHub Education 申请</strong></p>
+<p>注册 .edu.cn 邮箱后，可以申请学生开发者包：</p>
+<ol type="1">
+<li>访问 &lt;https://education.github.com</li>
+<li>点击 “Get student benefits”</li>
+<li>上传学生证或在读证明</li>
+<li>等待审核（通常 1-2 周）</li>
+<li>审核通过后，获得 GitHub Copilot 等免费工具</li>
+</ol>
+<p><strong>生态学案例</strong></p>
+<p>某研究生在申请 PhD 时，面试官特意查看了他的 GitHub 主页。看到他在本科期间参与的开源生态学项目，面试官评价说”这个申请者有良好的代码习惯和数据共享意识”。最终他获得了录取资格。这个案例说明：<strong>GitHub 不仅是一个工具，更是展示科研能力的平台</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="quarto" class="level2" data-number="6.8">
+<h2 data-number="6.8" class="anchored" data-anchor-id="quarto"><span class="header-section-number">6.8</span> Quarto</h2>
+<p>Quarto 是下一代科学出版系统，本课程的教材就是用 Quarto 编写的。</p>
+<section id="安装-quarto" class="level3" data-number="6.8.1">
+<h3 data-number="6.8.1" class="anchored" data-anchor-id="安装-quarto"><span class="header-section-number">6.8.1</span> 安装 Quarto</h3>
+<p>Quarto 是新一代科学出版系统，本课程的教材就是用 Quarto 编写的。Quarto 支持 R、Python、Julia 等多种编程语言，可以生成高质量的 HTML、PDF、Word 文档。</p>
+<p><strong>Windows 系统安装</strong></p>
+<ol type="1">
+<li>访问 Quarto 下载页面：<a href="https://quarto.org/docs/get-started/" class="uri">https://quarto.org/docs/get-started/</a></li>
+<li>点击 “Download Quarto CLI”</li>
+<li>下载 Windows 版本（.msi 文件）</li>
+<li>运行安装程序，保持默认设置</li>
+<li>安装完成后，打开 Positron，Quarto 应该会被自动识别</li>
+</ol>
+<p><strong>macOS 系统安装</strong></p>
+<ol type="1">
+<li>下载 macOS 版本（.dmg 文件）</li>
+<li>双击 .dmg 文件，将 Quarto.app 拖入 Applications 文件夹</li>
+</ol>
+<p><strong>Linux 系统安装</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 下载最新版本（替换 VERSION 和 FILE 为实际版本号）</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a><span class="fu">wget</span> https://github.com/quarto-dev/quarto-cli/releases/download/v1.4.550/quarto-1.4.550-linux-amd64.deb</span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 安装</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> quarto-<span class="pp">*</span>.deb</span>
+<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 清理</span></span>
+<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> quarto-<span class="pp">*</span>.deb</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>验证安装</strong></p>
+<p>安装完成后，在终端中输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>如果显示版本号（如 “1.4.550”），说明安装成功。</p>
+<p><strong>Positron 集成</strong></p>
+<p>Quarto 安装后，Positron 会自动识别。在 Positron 中：</p>
+<ul>
+<li>File → New File → Quarto Document 可以创建新文档</li>
+<li>.qmd 文件会显示 Quarto 渲染按钮</li>
+<li>点击 “Render” 可以生成 HTML/PDF/DOCX 文档</li>
+</ul>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="验证安装-2" class="level3" data-number="6.8.2">
+<h3 data-number="6.8.2" class="anchored" data-anchor-id="验证安装-2"><span class="header-section-number">6.8.2</span> 验证安装</h3>
+<p>安装Quarto后，需要验证它是否正确安装并与Positron集成。Quarto是本课程教材的核心工具，用于生成可重现的数据分析报告。确保它能正常工作是后续学习的基础。</p>
+<p><strong>命令行验证</strong>：</p>
+<p>在终端（Windows用户可使用CMD、PowerShell或Anaconda Prompt）中输入：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="ex">quarto</span> <span class="at">--version</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>预期输出</strong>：</p>
+<pre><code>1.4.550</code></pre>
+<p>如果显示版本号（通常为1.3或更高版本），说明Quarto已正确安装到系统路径。如果提示“quarto不是内部或外部命令”，说明安装未成功或环境变量未配置。</p>
+<p><strong>Positron集成验证</strong>：</p>
+<ol type="1">
+<li><p><strong>检查Quarto菜单项</strong></p>
+<p>打开Positron，在顶部菜单栏中应该能看到“Quarto”菜单项。如果没有，说明Positron未识别Quarto，需要：</p>
+<ul>
+<li>重启Positron</li>
+<li>或者在Settings → Extensions → Quarto中手动指定Quarto路径</li>
+</ul></li>
+<li><p><strong>创建测试文档</strong></p>
+<p>在Positron中：File → New File → Quarto Document</p>
+<p>如果能看到这个选项，说明Positron已正确集成Quarto。点击后会弹出对话框：</p>
+<ul>
+<li>Title: 输入“测试文档”</li>
+<li>Author: 输入你的姓名</li>
+<li>Format: 选择HTML</li>
+<li>点击Create</li>
+</ul></li>
+<li><p><strong>渲染测试</strong></p>
+<p>创建文档后，点击编辑器上方的“Render”按钮（或按Ctrl+Shift+K）。如果能成功生成HTML文件并在浏览器中打开，说明Quarto工作正常。</p></li>
+</ol>
+<p><strong>验证R代码执行</strong>：</p>
+<p>在刚创建的Quarto文档中，找到代码块（以<code>```{r}</code>开头），添加一个简单的测试：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>::: {.cell}</span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>:::</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>点击Render，如果能看到生成的HTML中包含这张散点图，说明Quarto能正确执行R代码并嵌入图表。</p>
+<p><strong>常见问题排查</strong>：</p>
+<ul>
+<li><strong>提示“quarto不是内部或外部命令”</strong>：
+<ul>
+<li>Windows：重启终端或电脑，让系统重新加载环境变量</li>
+<li>macOS/Linux：检查Quarto是否安装在<code>/usr/local/bin/</code>，或手动添加到PATH</li>
+</ul></li>
+<li><strong>Positron中没有Quarto菜单</strong>：
+<ul>
+<li>确认Positron版本≥2022.07（旧版本不支持Quarto）</li>
+<li>升级Positron到最新版本：&lt;https://posit.com/download/</li>
+</ul></li>
+<li><strong>Render时报错“Pandoc not found”</strong>：
+<ul>
+<li>Quarto内置Pandoc，不应该出现这个错误</li>
+<li>尝试重新安装Quarto</li>
+<li>或者在Positron中手动指定Pandoc路径：Settings → Extensions → Quarto</li>
+</ul></li>
+<li><strong>生成的HTML中没有图表</strong>：
+<ul>
+<li>检查代码块选项，确保没有设置<code>eval: false</code></li>
+<li>检查R包是否安装（如<code>ggplot2</code>）</li>
+</ul></li>
+</ul>
+<p><strong>生态学案例</strong>：某同学安装Quarto后，在命令行中能正常运行<code>quarto --version</code>，但Positron中找不到Quarto菜单。检查后发现Positron版本是2021年的旧版本。升级到Positron 2023版本后，问题解决。这个案例说明了保持软件版本更新的重要性。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="创建第一个-quarto-文档" class="level3" data-number="6.8.3">
+<h3 data-number="6.8.3" class="anchored" data-anchor-id="创建第一个-quarto-文档"><span class="header-section-number">6.8.3</span> 创建第一个 Quarto 文档</h3>
+<p>Quarto 是新一代科学出版系统，本课程的教材就是用 Quarto 编写的。创建第一个 Quarto 文档是熟悉这个工具的最好方式。</p>
+<p><strong>在 Positron 中创建 Quarto 文档</strong></p>
+<ol type="1">
+<li>打开 Positron</li>
+<li>点击菜单：File → New File → Quarto Document</li>
+<li>在弹出的对话框中填写：
+<ul>
+<li>Title：<code>我的第一个 Quarto 文档</code></li>
+<li>Author：你的姓名</li>
+<li>Output format：HTML（推荐新手）</li>
+</ul></li>
+<li>点击 Create，创建空白文档</li>
+</ol>
+<p><strong>Quarto 文档的基本结构</strong></p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "我的第一个 Quarto 文档"</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "张三"</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2027-04-09"</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a><span class="fu"># 第一章</span></span>
+<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-10"><a href="#cb52-10" aria-hidden="true" tabindex="-1"></a>这是普通文本。</span>
+<span id="cb52-11"><a href="#cb52-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-12"><a href="#cb52-12" aria-hidden="true" tabindex="-1"></a><span class="fu">## 代码块示例</span></span>
+<span id="cb52-13"><a href="#cb52-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb52-14"><a href="#cb52-14" aria-hidden="true" tabindex="-1"></a>{r}</span>
+<span id="cb52-15"><a href="#cb52-15" aria-hidden="true" tabindex="-1"></a><span class="fu"># R 代码会在这里执行</span></span>
+<span id="cb52-16"><a href="#cb52-16" aria-hidden="true" tabindex="-1"></a>library(tidyverse)</span>
+<span id="cb52-17"><a href="#cb52-17" aria-hidden="true" tabindex="-1"></a>ggplot(mtcars, aes(x = wt, y = mpg)) +</span>
+<span id="cb52-18"><a href="#cb52-18" aria-hidden="true" tabindex="-1"></a>  geom_point()</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="内联代码" class="level2" data-number="6.9">
+<h2 data-number="6.9" class="anchored" data-anchor-id="内联代码"><span class="header-section-number">6.9</span> 内联代码</h2>
+<p>圆周率约为 3.1415927，两点间距离可以用公式计算。</p>
+<pre><code>
+**渲染文档**
+
+在 Positron 中，点击编辑器上方的 "Render" 按钮（或按 Ctrl+Shift+K），Quarto 会：
+1. 执行所有代码块
+2. 将结果（文本、图表）嵌入文档
+3. 生成 HTML 文件并在浏览器中打开
+
+**课程中的用途**
+
+在期末项目中，你需要用 Quarto 撰写报告：
+
+- 所有代码可以直接运行，方便老师验证
+- 图表自动生成，无需手动粘贴
+- 支持交叉引用（图表编号、文献引用）
+- 可以导出为 PDF 用于提交
+
+**生态学案例**
+
+某同学在课程报告中使用了 Quarto。报告提交后，老师可以直接点击代码块旁边的按钮重新运行代码，验证分析结果是否正确。这种透明的方式获得了老师的好评，最终报告得了最高分。
+
+**扩展记录**：2026-04-09 | 目标字数：800+
+
+## 代码块示例
+
+
+::: {.cell}
+
+:::
+
+
+## 内联代码
+
+圆周率约为 3.1415927，两点间距离可以用公式计算。</code></pre>
+<p><strong>渲染文档</strong></p>
+<p>在 Positron 中，点击编辑器上方的 “Render” 按钮（或按 Ctrl+Shift+K），Quarto 会：</p>
+<ol type="1">
+<li>执行所有代码块</li>
+<li>将结果（文本、图表）嵌入文档</li>
+<li>生成 HTML 文件并在浏览器中打开</li>
+</ol>
+<p><strong>课程用途</strong></p>
+<p>在期末项目中，你需要用 Quarto 撰写报告：</p>
+<ul>
+<li>所有代码可以直接运行，方便老师验证</li>
+<li>图表自动生成，无需手动粘贴</li>
+<li>支持交叉引用（图表编号、文献引用）</li>
+<li>可以导出为 PDF 用于提交</li>
+</ul>
+<p><strong>生态学案例</strong></p>
+<p>某同学在课程报告中使用了 Quarto。报告提交后，老师可以直接点击代码块旁边的按钮重新运行代码，验证分析结果是否正确。这种透明的方式获得了老师的好评，最终报告得了最高分。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="环境检查清单" class="level2" data-number="6.10">
+<h2 data-number="6.10" class="anchored" data-anchor-id="环境检查清单"><span class="header-section-number">6.10</span> 环境检查清单</h2>
+<p>完成以上安装后，请逐项确认：</p>
+<ul class="task-list">
+<li><label><input type="checkbox">R 已安装，版本 ≥ 4.0</label></li>
+<li><label><input type="checkbox">Positron 已安装</label></li>
+<li><label><input type="checkbox">tidyverse 等 R 包已安装并能正常加载</label></li>
+<li><label><input type="checkbox">Python 已安装（Miniconda），可在 Anaconda Prompt 中运行</label></li>
+<li><label><input type="checkbox">已创建 <code>datacourse</code> conda 环境</label></li>
+<li><label><input type="checkbox">requests、beautifulsoup4、pandas 等 Python 包已安装</label></li>
+<li><label><input type="checkbox">Git 已安装并配置了用户名和邮箱</label></li>
+<li><label><input type="checkbox">GitHub 账号已注册</label></li>
+<li><label><input type="checkbox">Quarto 已安装</label></li>
+</ul>
+<div class="callout callout-style-default callout-note callout-titled">
+<div class="callout-header d-flex align-content-center">
+<div class="callout-icon-container">
+<i class="callout-icon"></i>
+</div>
+<div class="callout-title-container flex-fill">
+<span class="screen-reader-only">Note</span>常见问题
+</div>
+</div>
+<div class="callout-body-container callout-body">
+<p><strong>R 相关：</strong></p>
+<ul>
+<li><strong>R 包安装失败</strong>：检查网络连接，尝试切换 CRAN 镜像。如果提示需要编译，Windows 用户需安装 <a href="https://cran.r-project.org/bin/windows/Rtools/">Rtools</a></li>
+<li><strong>Positron 打开后闪退</strong>：尝试以管理员身份运行，或重置 Positron 配置（删除 <code>%localappdata%/Positron-Desktop</code> 文件夹）</li>
+<li><strong>中文路径问题</strong>：R 项目路径中避免使用中文和空格，建议使用纯英文路径如 <code>D:/projects/</code></li>
+</ul>
+<p><strong>Git 相关：</strong></p>
+<ul>
+<li><strong>Git 命令找不到</strong>：Windows 用户需要重启终端或将 Git 添加到 PATH</li>
+<li><strong>Positron 找不到 Git</strong>：手动在 Settings → Extensions → Git 中指定 Git 路径（通常在 <code>C:/Program Files/Git/bin/git.exe</code>）</li>
+</ul>
+<p><strong>Python 相关：</strong></p>
+<ul>
+<li><strong>conda 命令找不到</strong>：Windows 用户请使用 Anaconda Prompt 而非普通 CMD</li>
+<li><strong>pip 安装超时</strong>：使用国内镜像（见上方 pip 镜像加速部分）</li>
+<li><strong>Python 版本冲突</strong>：确保在 <code>datacourse</code> 环境中操作，用 <code>conda activate datacourse</code> 激活</li>
+</ul>
+</div>
+</div>
+</section>
+<section id="附录github-education" class="level2" data-number="6.11">
+<h2 data-number="6.11" class="anchored" data-anchor-id="附录github-education"><span class="header-section-number">6.11</span> 附录：GitHub Education</h2>
+<p>使用 .edu.cn 邮箱注册 GitHub 后，可以在 <a href="https://education.github.com" class="uri">https://education.github.com</a> 申请学生开发者包，获得 GitHub Copilot 等免费工具。申请流程：</p>
+<ol type="1">
+<li>登录 GitHub，访问 &lt;https://education.github.com/discount_requests/application</li>
+<li>选择 “Student”，填写学校信息</li>
+<li>上传学生证或在读证明</li>
+<li>等待审核（通常 1-2 周）</li>
+</ol>
+</section>
+<section id="课后练习" class="level2" data-number="6.12">
+<h2 data-number="6.12" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">6.12</span> 课后练习</h2>
+<ol type="1">
+<li>完成所有软件的安装和配置，确保环境检查清单全部通过</li>
+<li>在 Positron 中创建一个 <code>hello.qmd</code> 文件，写入你的姓名和学号，渲染为 HTML</li>
+<li>在 GitHub 上创建一个名为 <code>data-preprocessing-homework</code> 的仓库（Git 提交和推送操作将在 0107 章学习后完成）</li>
+</ol>
+
+
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0103-data-management-workflow.html" class="pagination-link" aria-label="数据管理与研究工作流">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0105-r-basics.html" class="pagination-link" aria-label="R 语言基础">
+        <span class="nav-page-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>

@@ -1,0 +1,2238 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>25&nbsp; 综合实战与项目工作坊 – 数据采集与预处理</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<link href="./0603-summary.html" rel="next">
+<link href="./0601-case-study.html" rel="prev">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-1950a4188188ae2d5a989cf9f330f08f.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "sidebar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "start",
+  "type": "textbox",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+<!-- Google tag (gtag.js) -->
+<script async="" src="https://www.googletagmanager.com/gtag/js?id=G-M8996LBB6D"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-M8996LBB6D');
+</script>
+
+
+<link rel="stylesheet" href="custom.css">
+</head>
+
+<body class="nav-sidebar floating quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0601-case-study.html">第六单元：实战与项目</a></li><li class="breadcrumb-item"><a href="./0602-project-workshop.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+      <button type="button" class="btn quarto-search-button" aria-label="Search" onclick="window.quartoOpenSearch();">
+        <i class="bi bi-search"></i>
+      </button>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="pt-lg-2 mt-2 text-left sidebar-header">
+    <div class="sidebar-title mb-0 py-0">
+      <a href="./">数据采集与预处理</a> 
+    </div>
+      </div>
+        <div class="mt-2 flex-shrink-0 align-items-center">
+        <div class="sidebar-search">
+        <div id="quarto-search" class="" title="Search"></div>
+        </div>
+        </div>
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">1</span>&nbsp; <span class="chapter-title">前言</span></span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">第一单元：绪论与环境搭建</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0101-what-is-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">2</span>&nbsp; <span class="chapter-title">什么是数据采集</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0102-what-is-data-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">3</span>&nbsp; <span class="chapter-title">什么是数据预处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0103-data-management-workflow.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">4</span>&nbsp; <span class="chapter-title">数据管理与研究工作流</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0104-environment-setup.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">5</span>&nbsp; <span class="chapter-title">研究环境搭建</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">第二单元：R 语言编程基础</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0105-r-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">6</span>&nbsp; <span class="chapter-title">R 语言基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0106-r-data-wrangling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">7</span>&nbsp; <span class="chapter-title">R 数据处理进阶</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0107-git-collaboration.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">8</span>&nbsp; <span class="chapter-title">版本控制与协作</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">第三单元：数据采集方法</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0201-data-collection-method.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">9</span>&nbsp; <span class="chapter-title">数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0202-observation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">10</span>&nbsp; <span class="chapter-title">生态学观测数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0203-experimentation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">11</span>&nbsp; <span class="chapter-title">生态学实验数据采集方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0204-modeling.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">12</span>&nbsp; <span class="chapter-title">生态学建模与数据生成方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0205-public-data.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">13</span>&nbsp; <span class="chapter-title">生态学公共数据获取方法</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0206-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">14</span>&nbsp; <span class="chapter-title">参考文献管理与学术资源</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0207-meta-analysis-intro.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">15</span>&nbsp; <span class="chapter-title">荟萃分析入门</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0208-python-data-collection.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">16</span>&nbsp; <span class="chapter-title">Python 数据采集</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">第四单元：数据预处理</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0301-data-cleaning.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">17</span>&nbsp; <span class="chapter-title">数据清洗</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0302-feature-engineering.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">18</span>&nbsp; <span class="chapter-title">数据转换与特征工程</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0303-data-quality.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">19</span>&nbsp; <span class="chapter-title">一致性检验（Consistency Check）</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0304-ecology-special.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">20</span>&nbsp; <span class="chapter-title">生态学专项数据处理</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0305-machine-learning-preprocessing.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">21</span>&nbsp; <span class="chapter-title">机器学习预处理</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">第五单元：数据可视化与探索性分析</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0501-visualization-basics.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">22</span>&nbsp; <span class="chapter-title">数据可视化基础</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0502-eda.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">23</span>&nbsp; <span class="chapter-title">探索性数据分析</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true">
+ <span class="menu-text">第六单元：实战与项目</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-6" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-6" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0601-case-study.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0602-project-workshop.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./0603-summary.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./010-references.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text"><span class="chapter-number">27</span>&nbsp; <span class="chapter-title">参考文献</span></span></a>
+  </div>
+</li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">本页内容</h2>
+   
+  <ul>
+  <li><a href="#sec-project-workshop" id="toc-sec-project-workshop" class="nav-link active" data-scroll-target="#sec-project-workshop"><span class="header-section-number">26</span> 综合实战与项目工作坊</a>
+  <ul class="collapse">
+  <li><a href="#项目选题指南" id="toc-项目选题指南" class="nav-link" data-scroll-target="#项目选题指南"><span class="header-section-number">26.1</span> 项目选题指南</a>
+  <ul class="collapse">
+  <li><a href="#选题原则" id="toc-选题原则" class="nav-link" data-scroll-target="#选题原则"><span class="header-section-number">26.1.1</span> 选题原则</a></li>
+  <li><a href="#推荐选题方向" id="toc-推荐选题方向" class="nav-link" data-scroll-target="#推荐选题方向"><span class="header-section-number">26.1.2</span> 推荐选题方向</a></li>
+  <li><a href="#选题评估清单" id="toc-选题评估清单" class="nav-link" data-scroll-target="#选题评估清单"><span class="header-section-number">26.1.3</span> 选题评估清单</a></li>
+  </ul></li>
+  <li><a href="#数据采集方案设计" id="toc-数据采集方案设计" class="nav-link" data-scroll-target="#数据采集方案设计"><span class="header-section-number">26.2</span> 数据采集方案设计</a>
+  <ul class="collapse">
+  <li><a href="#采样设计" id="toc-采样设计" class="nav-link" data-scroll-target="#采样设计"><span class="header-section-number">26.2.1</span> 采样设计</a></li>
+  <li><a href="#数据记录规范" id="toc-数据记录规范" class="nav-link" data-scroll-target="#数据记录规范"><span class="header-section-number">26.2.2</span> 数据记录规范</a></li>
+  <li><a href="#质量控制要点" id="toc-质量控制要点" class="nav-link" data-scroll-target="#质量控制要点"><span class="header-section-number">26.2.3</span> 质量控制要点</a></li>
+  </ul></li>
+  <li><a href="#分组协作流程" id="toc-分组协作流程" class="nav-link" data-scroll-target="#分组协作流程"><span class="header-section-number">26.3</span> 分组协作流程</a>
+  <ul class="collapse">
+  <li><a href="#角色分工" id="toc-角色分工" class="nav-link" data-scroll-target="#角色分工"><span class="header-section-number">26.3.1</span> 角色分工</a></li>
+  <li><a href="#项目时间线" id="toc-项目时间线" class="nav-link" data-scroll-target="#项目时间线"><span class="header-section-number">26.3.2</span> 项目时间线</a></li>
+  <li><a href="#每周例会制度" id="toc-每周例会制度" class="nav-link" data-scroll-target="#每周例会制度"><span class="header-section-number">26.3.3</span> 每周例会制度</a></li>
+  </ul></li>
+  <li><a href="#git-协作规范" id="toc-git-协作规范" class="nav-link" data-scroll-target="#git-协作规范"><span class="header-section-number">26.4</span> Git 协作规范</a>
+  <ul class="collapse">
+  <li><a href="#仓库结构" id="toc-仓库结构" class="nav-link" data-scroll-target="#仓库结构"><span class="header-section-number">26.4.1</span> 仓库结构</a></li>
+  <li><a href="#分支策略" id="toc-分支策略" class="nav-link" data-scroll-target="#分支策略"><span class="header-section-number">26.4.2</span> 分支策略</a></li>
+  <li><a href="#基本工作流" id="toc-基本工作流" class="nav-link" data-scroll-target="#基本工作流"><span class="header-section-number">26.4.3</span> 基本工作流</a></li>
+  <li><a href="#提交信息规范" id="toc-提交信息规范" class="nav-link" data-scroll-target="#提交信息规范"><span class="header-section-number">26.4.4</span> 提交信息规范</a></li>
+  <li><a href="#gitignore-模板" id="toc-gitignore-模板" class="nav-link" data-scroll-target="#gitignore-模板"><span class="header-section-number">26.4.5</span> .gitignore 模板</a></li>
+  </ul></li>
+  <li><a href="#项目报告模板" id="toc-项目报告模板" class="nav-link" data-scroll-target="#项目报告模板"><span class="header-section-number">26.5</span> 项目报告模板</a>
+  <ul class="collapse">
+  <li><a href="#报告要求" id="toc-报告要求" class="nav-link" data-scroll-target="#报告要求"><span class="header-section-number">26.5.1</span> 报告要求</a></li>
+  </ul></li>
+  <li><a href="#评分标准" id="toc-评分标准" class="nav-link" data-scroll-target="#评分标准"><span class="header-section-number">26.6</span> 评分标准</a>
+  <ul class="collapse">
+  <li><a href="#项目rubric评分细则" id="toc-项目rubric评分细则" class="nav-link" data-scroll-target="#项目rubric评分细则"><span class="header-section-number">26.6.1</span> 项目Rubric评分细则</a></li>
+  <li><a href="#可重复性检查清单" id="toc-可重复性检查清单" class="nav-link" data-scroll-target="#可重复性检查清单"><span class="header-section-number">26.6.2</span> 可重复性检查清单</a></li>
+  </ul></li>
+  <li><a href="#给同学们的建议" id="toc-给同学们的建议" class="nav-link" data-scroll-target="#给同学们的建议"><span class="header-section-number">26.7</span> 给同学们的建议</a></li>
+  <li><a href="#课后练习" id="toc-课后练习" class="nav-link" data-scroll-target="#课后练习"><span class="header-section-number">26.8</span> 课后练习</a>
+  <ul class="collapse">
+  <li><a href="#小组作业提交要求" id="toc-小组作业提交要求" class="nav-link" data-scroll-target="#小组作业提交要求"><span class="header-section-number">26.8.1</span> 小组作业提交要求</a></li>
+  </ul></li>
+  </ul></li>
+  </ul>
+</nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default"><nav class="quarto-page-breadcrumbs quarto-title-breadcrumbs d-none d-lg-block" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./0601-case-study.html">第六单元：实战与项目</a></li><li class="breadcrumb-item"><a href="./0602-project-workshop.html"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></a></li></ol></nav>
+<div class="quarto-title">
+<h1 class="title"><span class="chapter-number">25</span>&nbsp; <span class="chapter-title">综合实战与项目工作坊</span></h1>
+<p class="subtitle lead">小组项目分工与协作</p>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<section id="sec-project-workshop" class="level1" data-number="26">
+<h1 data-number="26"><span class="header-section-number">26</span> 综合实战与项目工作坊</h1>
+<blockquote class="blockquote">
+<p>本章是课程的实战核心,建议完成第 0601 章(<span class="quarto-unresolved-ref">?sec-case-study</span>)的项目框架学习后进入本章。</p>
+</blockquote>
+<p>本章为期末小组项目提供系统指导。你将以 3-5 人小组为单位,完成一个完整的生态学数据采集与分析项目。这是将课程所学技能融会贯通的实践机会。</p>
+<section id="项目选题指南" class="level2" data-number="26.1">
+<h2 data-number="26.1" class="anchored" data-anchor-id="项目选题指南"><span class="header-section-number">26.1</span> 项目选题指南</h2>
+<section id="选题原则" class="level3" data-number="26.1.1">
+<h3 data-number="26.1.1" class="anchored" data-anchor-id="选题原则"><span class="header-section-number">26.1.1</span> 选题原则</h3>
+<p>好的选题是项目成功的一半。一个好的研究问题应该既能激发团队兴趣，又能在有限时间和资源内完成。在选择研究主题时，需要综合考虑以下四个维度。</p>
+<p><strong>可操作性（feasibility）</strong></p>
+<p>这是选题时最重要的考量。项目周期通常只有4-6周，期间还要完成数据采集、清洗、分析和报告撰写。因此，选题时务必评估： - 数据采集的难度如何？需要哪些设备？ - 团队成员能否在规定时间内完成？ - 是否涉及需要审批的采样许可或伦理审查？</p>
+<p>建议选择”踮脚就能够到”的难度——太简单的题目缺乏挑战性，太难的题目容易半途而废。</p>
+<p><strong>数据可得性（data availability）</strong></p>
+<p>巧妇难为无米之炊。没有数据，再好的研究问题也无法回答。评估选题时要明确： - 数据从哪里来？野外采集、公开数据集、还是文献中获取？ - 预计能获取多少样本量？（建议≥30个样本，以保证统计检验的可靠性） - 获取数据需要多少时间和资源？</p>
+<p>如果是野外采集数据，要提前考察采样地点、了解采样季节、设计采样方案。如果是使用公开数据集，要提前了解数据的可获取性、格式和质量。</p>
+<p><strong>生态学意义（ecological significance）</strong></p>
+<p>研究问题应该指向真实的生态学问题，而不只是”为了做项目而做项目”。好的研究问题应该能回答： - 我的研究关注什么生态现象或过程？ - 我的发现能推广到更大的生态学语境吗？ - 这个研究对生态保护或管理有什么潜在意义？</p>
+<p>选题时可以参考以下问题：这个问题别人研究过吗？我的研究和已有研究有什么不同？</p>
+<p><strong>技能覆盖（skill coverage）</strong></p>
+<p>课程的目标是让你综合运用数据采集、清洗、分析和可视化的技能。因此，选题应该能覆盖课程的各个环节： - 数据采集（问卷、野外调查、公开数据库） - 数据清洗（处理缺失值、异常值、格式转换） - 数据分析（描述性统计、假设检验、相关性分析） - 数据可视化（图表制作、地图可视化）</p>
+<p>如果一个选题只用到了数据采集和简单统计，那就浪费了”清洗”和”可视化”的练习机会。</p>
+<p><strong>选题自检清单</strong>：</p>
+<p>在确定选题前，请用以下问题逐一检验： - [ ] 我们能用一句话概括研究问题吗？ - [ ] 我们有明确的数据获取计划吗？样本量够吗？ - [ ] 这个研究问题有意义吗？和已有研究有什么差异？ - [ ] 课程学到的技能都能用上吗？ - [ ] 4-6周内能完成吗？</p>
+<p>如果以上问题都能回答”是”，那就可以进入下一步——制定采样方案了。</p>
+<p><strong>生态学案例</strong>：</p>
+<p>有一年，一个小组选择了”校园植物叶片重金属含量与土壤重金属含量的关系”作为研究题目。听起来很有生态学意义，但实际操作中遇到了巨大困难：重金属含量测定需要专业设备和资质认证，团队无法完成。最终不得不临时更换题目，白白浪费了两周时间。这个案例说明：<strong>可操作性应该是选题的第一道门槛</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="推荐选题方向" class="level3" data-number="26.1.2">
+<h3 data-number="26.1.2" class="anchored" data-anchor-id="推荐选题方向"><span class="header-section-number">26.1.2</span> 推荐选题方向</h3>
+<p>以下是适合本课程的选题方向,供各组参考。每个方向都设计了明确的生态学问题、数据采集方法和分析技能覆盖。</p>
+<p><strong>方向一:校园生物多样性调查</strong></p>
+<p>校园是学生最方便开展生态学研究的场所。在有限的校园范围内,可以研究以下问题:校园不同生境(草地、林地、水域边)的植物物种组成比较——在校园内选择3-5个不同微生境,使用样方法调查物种组成,计算多样性指数(Shannon-Wiener指数、Simpson指数),比较不同生境间的差异。这个方向的优势是:数据采集方便,不需要复杂设备,适合3-5人小组在2-3周内完成野外调查。技能覆盖包括样方调查、数据记录和多样性指数计算。</p>
+<p>校园鸟类多样性的时间动态研究——选择校园内一个固定观测点,在早(6:00-7:00)、中(12:00-13:00)、晚(18:00-19:00)三个时间段进行鸟类观测,记录物种名称和个体数。这个方向可以练习时间序列数据的采集和整理,同时学习R中的ggplot2可视化。校园昆虫多样性与植被类型的关系——在不同植被类型(乔木林、灌木丛、草地)中设置诱虫器,比较昆虫多样性。这个方向涉及更多元的统计分析(方差分析、事后检验),技能覆盖全面。</p>
+<p><strong>方向二:环境因子与生物响应</strong></p>
+<p>这个方向聚焦于环境因子对生物特征的影响,是生态学经典的研究范式。不同光照条件下植物叶片形态的差异——在校园内选择阳生环境和阴生环境各5个采样点,采集同种植物叶片,测量叶面积、叶厚度、比叶面积等形态指标。这个方向的数据采集简单快捷,分析涉及t检验或非参数检验,可视化练习图表绘制。</p>
+<p>土壤 pH 值与植物群落组成的关系——在不同土地利用类型(菜地、花坛,自然草地)采集土壤样品,测定pH值,同时调查植物群落组成。使用冗余分析(RDA)或典范对应分析(CCA)探索pH对植物群落的影响。这个方向覆盖了土壤理化性质测定、群落调查和多变量统计分析,技能覆盖全面且有生态学意义。</p>
+<p>水质指标与水生生物多样性的关联——在校园内不同水体(池塘、溪流、雨水收集池)中采集水样,测定pH、溶解氧、氨氮等指标,同时调查水生昆虫或藻类多样性。这个方向可以练习环境数据的采集和多指标综合分析。</p>
+<p><strong>方向三:公开数据集分析</strong></p>
+<p>没有条件开展野外调查的小组,可以选择分析公开数据集。这种方式的优势在于:数据获取便捷,样本量大,时间投入主要用于数据清洗和分析。</p>
+<p>利用 GBIF(全球生物多样性信息网络)数据分析某类群在广西的分布格局——从GBIF下载广西的植物或鸟类分布数据,清洗后进行空间可视化,分析物种丰富度空间格局。这个方向需要练习API数据获取、空间数据处理(rgbif、sf包)和地图可视化(ggplot2+sf)。</p>
+<p>基于气象站数据分析气候变化对物候的影响——从国家气象科学数据中心获取南宁近30年的温度和降水数据,结合文献中的植物物候记录,分析气候变化趋势。这个方向适合对气候学感兴趣的同学,涉及时间序列分析。</p>
+<p>利用遥感植被指数(NDVI)分析土地利用变化——从Google Earth Engine获取广西近20年的NDVI数据,分析土地利用变化的时空格局。这个方向技术含量较高,需要学习Google Earth Engine或ENVI操作,适合对遥感感兴趣的同学。</p>
+<p><strong>方向四:人类活动与生态影响</strong></p>
+<p>这个方向研究人类活动对生态系统的干扰,具有明确的生态保护意义。校园不同区域(教学区、生活区、绿化区)的土壤动物多样性——在校园内3种不同功能区各设置3-5个样点,采集土壤动物样品,比较群落组成差异。这个方向可以练习土壤动物采集方法(手选法、 Tullgren漏斗)、多样性指数计算和统计检验。</p>
+<p>道路边缘效应对植物群落的影响——沿校园周边道路设置垂直样带,从路缘向内每隔5m调查植物群落,分析边缘效应的影响范围。这个方向涉及空间梯度设计,统计分析可以使用回归分析或非线性模型。</p>
+<p>不同管理方式(修剪 vs.&nbsp;自然生长)对草地物种多样性的影响——比较校园内定期修剪的草坪与自然生长草地的物种组成差异。这个方向简单易行,可以练习方差分析和效应量计算。</p>
+<p><strong>生态学案例</strong>:</p>
+<p>2024年,有一组学生选择了”校园鸟类多样性与植被结构的关系”作为研究课题。他们在校园内设置了10个观测点,每个点记录鸟类种类和数量,同时测量植被高度、盖度等结构指标。通过相关性分析发现,鸟类物种数与植被高度呈显著正相关(r=0.73, p&lt;0.01)。这个发现不仅完成了课程要求的数据分析技能展示,还形成了一个有意义的研究结论:校园绿化应该保留一定高度的植被,以维持鸟类多样性。这个案例说明,<strong>好的选题应该是可操作的、有意义的,而且能让你在规定时间内完成</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="选题评估清单" class="level3" data-number="26.1.3">
+<h3 data-number="26.1.3" class="anchored" data-anchor-id="选题评估清单"><span class="header-section-number">26.1.3</span> 选题评估清单</h3>
+<p>在确定选题后、正式开展研究前,需要用以下清单对选题进行系统评估。这不是走过场,而是发现潜在问题、提前规避风险的关键步骤。</p>
+<p><strong>研究问题的明确性</strong></p>
+<p>好的研究问题应该能用一句话概括,且包含明确的生态学概念。如果一句话说不清楚,说明问题还不够聚焦。例如,“研究校园植物”太宽泛,而”校园不同土地利用类型对土壤微生物量碳的影响”就足够明确。评估时检查:研究对象是什么(物种、群落、功能群)?自变量和因变量各是什么?预期发现什么样的关系?</p>
+<p><strong>数据采集方法的可行性</strong></p>
+<p>在开展研究前,必须确认数据能够采集到。具体评估:需要什么采样设备?团队是否能够获取这些设备?采样时间窗口是多少(特别是季节性研究)?样本量预计能达到多少(建议≥30个样本)?是否有替代方案?如果在预调查中发现无法按计划采样,应该及时调整方案而不是硬撑。</p>
+<p><strong>样本量的充足性</strong></p>
+<p>统计检验对样本量有最低要求。一般来说,相关分析至少需要10对样本,t检验每组至少需要15个样本,方差分析需要每组至少5个样本。评估时计算:预计能采集多少样本?样本量是否满足计划使用的统计方法的最低要求?是否有备选方法(如果样本量不足)?</p>
+<p><strong>伦理和法规问题</strong></p>
+<p>涉及以下情况需要特别注意:采集受保护物种或珍稀濒危物种——需要获取相应的采集许可证。涉及人类受试者(如问卷调查)——需要通过伦理审查。使用实验动物——需要动物伦理审批。如果研究涉及以上内容,务必在选题阶段就了解相关要求,预留足够的申请时间。</p>
+<p><strong>团队分工的合理性</strong></p>
+<p>检查:数据采集任务能否在团队成员间合理分配?是否有某项任务只有一个人能完成(形成单点故障)?是否有备用方案(如果某个成员因故退出)?建议在选题阶段就明确分工,而不是等到开始做才发现问题。</p>
+<p><strong>评估结果记录</strong></p>
+<p>完成自查后,将评估结果填入下表,并在项目报告中附上此清单:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">评估项目</th>
+<th style="text-align: left;">评估结果</th>
+<th style="text-align: left;">如有问题,说明解决方案</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">研究问题明确性</td>
+<td style="text-align: left;">□通过 □待改进</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据采集可行性</td>
+<td style="text-align: left;">□通过 □待改进</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">样本量充足性</td>
+<td style="text-align: left;">□通过 □待改进</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">伦理法规合规</td>
+<td style="text-align: left;">□通过 □待改进</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">团队分工合理性</td>
+<td style="text-align: left;">□通过 □待改进</td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>如果所有项目都通过,就可以进入下一步——制定详细的采样方案。如果有任何”待改进”项目,务必先解决再继续,避免后期返工。</p>
+<p><strong>生态学案例</strong>:</p>
+<p>有一组学生选了”校园土壤重金属含量与交通密度关系”的课题。选题时没有仔细评估可行性,结果在数据采集阶段才发现:重金属含量测定需要ICP-OES设备,学校实验室没有这台设备,外送检测每样品需要200元,远超项目预算。最终只能临时更换课题,浪费了3周时间。这个教训说明:<strong>选题评估不是形式,而是避免返工的关键防线</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="数据采集方案设计" class="level2" data-number="26.2">
+<h2 data-number="26.2" class="anchored" data-anchor-id="数据采集方案设计"><span class="header-section-number">26.2</span> 数据采集方案设计</h2>
+<p>确定选题后,需要制定详细的数据采集方案。一份完整的方案应包含以下内容:</p>
+<section id="采样设计" class="level3" data-number="26.2.1">
+<h3 data-number="26.2.1" class="anchored" data-anchor-id="采样设计"><span class="header-section-number">26.2.1</span> 采样设计</h3>
+<p>采样设计是整个研究的方法学基础,决定了数据的质量和研究的可信度。一个好的采样设计应该在研究问题、实际操作和统计效力之间取得平衡。以下以”校园不同土地利用类型对土壤微生物量碳的影响”为例,说明采样设计的完整流程。</p>
+<p><strong>研究区域描述</strong></p>
+<p>首先明确研究区域的基本信息。地理位置——广西大学校园(南宁市西乡塘区),面积约433公顷。行政区划属于亚热带季风气候区,年平均气温21.6°C,年降水量约1300mm。主要土地利用类型包括:林地(马尾松林、桉树林)、草地(管理草坪,自然草地)、农田(试验田、教学基地)、建筑用地(道路、广场)。研究选择了3种典型土地利用类型:自然草地(受人为干扰较少)、菜地(定期翻耕)和林地(马尾松人工林)。</p>
+<p><strong>采样策略选择</strong></p>
+<p>根据研究目的和数据类型,选择合适的采样策略。随机采样——每个样点随机布设,适用于均质环境。系统采样——沿固定路线或网格布点,适用于空间格局研究。分层采样——先分层再在各层内随机布点,适用于异质性环境。</p>
+<p>对于本研究,采用分层随机采样:首先将3种土地利用类型作为层,每层设置5个采样点,每点采集0-10cm表层土壤混合样品500g。为什么要分层?因为不同土地利用类型间的差异可能远大于同类型内的差异,如果不分层而直接随机布点,很难检测到类型间的差异。分层采样可以有效提高估计精度。</p>
+<p><strong>样方大小和数量的确定</strong></p>
+<p>样方面积的确定要考虑:研究对象——土壤微生物量碳,样方面积对测量值影响不大,采集深度才是关键。实际操作——每点采集500g土壤,3种类型×5个重复=15个样品,这个量在实验室处理是可行的。文献参考——同类研究通常每组5-10个重复,5个重复是最低要求。</p>
+<p>样本量的计算可以使用功效分析。使用R的pwr包可以估算检测到中等效应量(d=0.5)所需的样本量:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 功效分析:检测三组间差异所需的样本量</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(pwr)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 单因素方差分析,三组,中等效应量f=0.25,显著性水平α=0.05,功效0.8</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.anova.test</span>(<span class="at">k =</span> <span class="dv">3</span>, <span class="at">f =</span> <span class="fl">0.25</span>, <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.8</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果:每组需要n=52个样本...这显然太大了</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 降低功效到0.5,重新计算</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">pwr.anova.test</span>(<span class="at">k =</span> <span class="dv">3</span>, <span class="at">f =</span> <span class="fl">0.25</span>, <span class="at">sig.level =</span> <span class="fl">0.05</span>, <span class="at">power =</span> <span class="fl">0.5</span>)</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 结果:每组需要n=28个样本,仍然较大</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 考虑到这是课程项目,适当放宽标准,使用n=5</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 统计检验时使用非参数方法(Kruskal-Wallis检验),对样本量要求较低</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>变量定义</strong></p>
+<p>明确界定研究中的变量:响应变量(因变量)——土壤微生物量碳含量(microbial biomass carbon, MBC),单位μg/g土,采用氯仿熏蒸-K2SO4提取法测定。解释变量(自变量)——土地利用类型,分类变量,3个水平(草地/菜地/林地)。协变量——土壤pH值、含水量、有机质含量,这些变量可能影响MBC,需要在分析时作为协变量控制。</p>
+<p><strong>采样时间安排</strong></p>
+<p>考虑到土壤微生物量碳的时空变异,需要统一采样时间:预调查——第2周周末,进行小范围试采,确认方法可行。正式采样——第3周,选择连续晴天3天后采样,避免雨后土壤水分变化影响MBC。土壤样品采集后立即去除根系和石块,过2mm筛,分成两份:一份4°C冷藏保存(用于微生物量碳测定,需在7天内处理),一份风干保存(用于理化性质测定)。</p>
+<p><strong>生态学案例</strong>:</p>
+<p>在马尾松混交林土壤孔隙研究中,采样设计的关键是保证空间代表性。研究人员在广西凭祥热带林区设置了20个50m×50m永久样方,每个样方内按5m×5m网格划分,在交叉点采集0-10cm和10-20cm土层样品。土壤孔隙指标(总孔隙度、毛管孔隙度、非毛管孔隙度)与土壤容重、含水量同时测定。这种系统网格采样设计确保了数据在空间上的均匀分布,避免了采样的主观偏差。发表在Soil Biology and Biochemistry的论文证明,这种采样设计能可靠检测出不同林龄间土壤孔隙特征的显著差异。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="数据记录规范" class="level3" data-number="26.2.2">
+<h3 data-number="26.2.2" class="anchored" data-anchor-id="数据记录规范"><span class="header-section-number">26.2.2</span> 数据记录规范</h3>
+<p>统一的数据记录格式是保证数据质量的基础。在野外采集数据时,如果每个人用自己的方式记录,后期整理时会非常痛苦。以下是规范的野外数据记录流程。</p>
+<p><strong>字段命名规范</strong></p>
+<p>字段名使用英文或拼音缩写,统一格式,便于编程处理。以下是推荐的字段结构:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb2"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 推荐的野外记录表结构</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>field_record <span class="ot">&lt;-</span> <span class="fu">tibble</span>(</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="at">date       =</span> <span class="st">"2027-04-15"</span>,      <span class="co"># 日期(ISO 8601格式,避免歧义)</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">site_id    =</span> <span class="st">"S01"</span>,             <span class="co"># 样点编号(两位数字,字母前缀表示区域)</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="at">plot_id    =</span> <span class="st">"S01-A"</span>,           <span class="co"># 样方编号(样点-样方号)</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">observer   =</span> <span class="st">"张三"</span>,            <span class="co"># 记录人(全名)</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">latitude   =</span> <span class="fl">23.45678</span>,          <span class="co"># 纬度(十进制度数,保留5位小数≈1m精度)</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="at">longitude  =</span> <span class="fl">108.90123</span>,          <span class="co"># 经度(十进制度数)</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="at">elevation  =</span> <span class="dv">350</span>,               <span class="co"># 海拔(m)</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>  <span class="at">habitat    =</span> <span class="st">"grassland"</span>,        <span class="co"># 生境类型(统一代码)</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  <span class="at">species    =</span> <span class="st">"Pinus massoniana"</span>, <span class="co"># 物种拉丁名(学术规范)</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  <span class="at">count      =</span> <span class="dv">12</span>,                <span class="co"># 个体数(仅用于计数型数据)</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="at">dbh        =</span> <span class="fl">15.3</span>,              <span class="co"># 胸径(cm,仅乔木)</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>  <span class="at">height     =</span> <span class="fl">8.5</span>,              <span class="co"># 高度(m)</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>  <span class="at">cover      =</span> <span class="dv">25</span>,               <span class="co"># 盖度(%,用于灌木和草本)</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>  <span class="at">notes      =</span> <span class="st">"林缘个体,受光良好"</span>  <span class="co"># 备注(自由文本)</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">date =</span> <span class="fu">ymd</span>(date),</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">across</span>(<span class="fu">c</span>(lat, lon), <span class="sc">~</span><span class="fu">round</span>(., <span class="dv">5</span>))</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a><span class="co"># 数据导出为CSV(UTF-8编码,避免中文乱码)</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a><span class="fu">write_csv</span>(field_record, <span class="st">"data/raw/field_record_2027-04-15.csv"</span>, <span class="at">na =</span> <span class="st">""</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>纸质记录表的数字化流程</strong></p>
+<p>野外采集时,建议同时使用纸质记录表(作为备份)和电子表格(便于实时检查)。数字化流程:当天采集,当天录入,双人录入后比对一致性。电子表格建议使用Excel或Numbers,但字段命名和格式要与纸质表一致。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 双人录入比对脚本</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(readxl)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取两人的录入数据</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>operator_a <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/field_record_operatorA.csv"</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>operator_b <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/field_record_operatorB.csv"</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 比对差异</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>diff_check <span class="ot">&lt;-</span> operator_a <span class="sc">%&gt;%</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">full_join</span>(operator_b, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"site_id"</span>, <span class="st">"plot_id"</span>), <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_A"</span>, <span class="st">"_B"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">filter</span>(</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">is.na</span>(latitude_A) <span class="sc">|</span> <span class="fu">is.na</span>(latitude_B) <span class="sc">|</span></span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(latitude_A <span class="sc">-</span> latitude_B, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">&gt;</span> <span class="fl">0.0001</span> <span class="sc">|</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">abs</span>(longitude_A <span class="sc">-</span> longitude_B, <span class="at">na.rm =</span> <span class="cn">TRUE</span>) <span class="sc">&gt;</span> <span class="fl">0.0001</span> <span class="sc">|</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    dbh_A <span class="sc">!=</span> dbh_B</span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a><span class="co"># 报告差异数量</span></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"发现"</span>, <span class="fu">nrow</span>(diff_check), <span class="st">"处差异,请核实原始记录表</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong>:</p>
+<p>某研究团队在广西热带林进行植物多样性调查时,不同成员使用了不同的物种名录:张三用中文名记录”红椎”,李四用中文名”红椎木”,王五直接写”M_castanopsis”。后期整理数据时,数据库中有3个不同的名称,但其实是同一个物种。这个问题花了2周才纠正过来。教训是:<strong>在野外工作开始前,一定要统一物种名录,最好打印一份标准名录带到现场</strong>。建议使用中国植物志电子版或iNaturalist作为物种名称参考,统一到拉丁学名。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="质量控制要点" class="level3" data-number="26.2.3">
+<h3 data-number="26.2.3" class="anchored" data-anchor-id="质量控制要点"><span class="header-section-number">26.2.3</span> 质量控制要点</h3>
+<p>数据质量控制是研究可信度的保障。以下是4个关键环节的质量控制措施。</p>
+<p><strong>双人录入与即时核对</strong></p>
+<p>野外记录的数据,在录入电子表格时应该双人录入后比对。以土壤采样为例,每份样品从记录到录入,应该有两个人的参与——一人读数,一人录入,第三人核对。以下是质量控制流程:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 质量控制流程</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>qc_workflow <span class="ot">&lt;-</span> <span class="cf">function</span>(raw_data, operator_a, operator_b) {</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 步骤1: 读取两份录入数据</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  df_a <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(operator_a)</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>  df_b <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(operator_b)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 步骤2: 比对差异</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>  diff_count <span class="ot">&lt;-</span> df_a <span class="sc">%&gt;%</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">full_join</span>(df_b, <span class="at">by =</span> <span class="st">"sample_id"</span>, <span class="at">suffix =</span> <span class="fu">c</span>(<span class="st">"_A"</span>, <span class="st">"_B"</span>)) <span class="sc">%&gt;%</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(<span class="fu">across</span>(<span class="fu">where</span>(is.numeric), <span class="sc">~</span><span class="fu">sum</span>(<span class="fu">abs</span>(.x <span class="sc">-</span> <span class="fu">coalesce</span>(.y, .x)) <span class="sc">&gt;</span> <span class="fl">0.01</span>, <span class="at">na.rm =</span> <span class="cn">TRUE</span>))) <span class="sc">%&gt;%</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">pivot_longer</span>(<span class="fu">everything</span>(), <span class="at">names_to =</span> <span class="st">"field"</span>, <span class="at">values_to =</span> <span class="st">"diff_count"</span>)</span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>  <span class="co"># 步骤3: 报告差异</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> (<span class="fu">sum</span>(diff_count<span class="sc">$</span>diff_count) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"发现差异:</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">print</span>(<span class="fu">filter</span>(diff_count, diff_count <span class="sc">&gt;</span> <span class="dv">0</span>))</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"</span><span class="sc">\n</span><span class="st">请核对原始记录表后重新录入</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">FALSE</span>)</span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  } <span class="cf">else</span> {</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    <span class="fu">cat</span>(<span class="st">"数据一致,录入正确</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="fu">return</span>(<span class="cn">TRUE</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>异常值的即时标记</strong></p>
+<p>在现场发现可疑数据(如测量值超出正常范围),不要直接修改或删除,应该:在原始记录表的备注栏标注”可疑数据”及原因。电子录入时,该字段标记为NA,并在备注字段说明原因。在数据分析阶段,对异常值进行专门讨论和处理。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 读取原始数据(含可疑标记)</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>raw_data <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"data/raw/soil_data.csv"</span>, <span class="at">na =</span> <span class="fu">c</span>(<span class="st">""</span>, <span class="st">"NA"</span>, <span class="st">"可疑"</span>))</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用箱线图识别潜在异常值</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(raw_data, <span class="fu">aes</span>(<span class="at">y =</span> mbc)) <span class="sc">+</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_boxplot</span>(<span class="at">fill =</span> <span class="st">"lightblue"</span>) <span class="sc">+</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label =</span> <span class="fu">ifelse</span>(mbc <span class="sc">&gt;</span> <span class="fu">quantile</span>(mbc, <span class="fl">0.75</span>) <span class="sc">+</span> <span class="fl">1.5</span><span class="sc">*</span><span class="fu">IQR</span>(mbc) <span class="sc">|</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>                                mbc <span class="sc">&lt;</span> <span class="fu">quantile</span>(mbc, <span class="fl">0.25</span>) <span class="sc">-</span> <span class="fl">1.5</span><span class="sc">*</span><span class="fu">IQR</span>(mbc),</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>                                site_id, <span class="cn">NA</span>)), <span class="at">vjust =</span> <span class="sc">-</span><span class="fl">0.5</span>) <span class="sc">+</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"土壤微生物量碳箱线图"</span>, <span class="at">y =</span> <span class="st">"MBC (μg/g)"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong>:</p>
+<p>在某次马尾松林土壤调查中,一位学生报告某样点的土壤容重为9.8 g/cm³。土壤容重的正常范围是1.0-1.8 g/cm³,9.8明显是录入错误(可能把数据写错位了)。但如果当时没有仔细核对,而是直接删除这个异常值,就可能掩盖真正的问题。调查人员回到原始记录表核对,发现应该是1.8 g/cm³,只是录入时小数点打错了一位。这个案例说明:<strong>异常值的发现和处理都需要谨慎,不能简单删除了事</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="分组协作流程" class="level2" data-number="26.3">
+<h2 data-number="26.3" class="anchored" data-anchor-id="分组协作流程"><span class="header-section-number">26.3</span> 分组协作流程</h2>
+<section id="角色分工" class="level3" data-number="26.3.1">
+<h3 data-number="26.3.1" class="anchored" data-anchor-id="角色分工"><span class="header-section-number">26.3.1</span> 角色分工</h3>
+<p>每组建议设置以下角色(可兼任,但职责要清晰):</p>
+<p><strong>项目负责人(1人)</strong></p>
+<p>项目负责人是团队的”枢纽”,主要职责包括:统筹进度——制定项目时间表,跟踪各成员进展,在进度滞后时协调资源。协调分工——在成员间出现工作重叠或空缺时进行协调,确保没有人闲着也没有人被压垮。沟通汇报——作为团队对外的唯一接口,向老师汇报进度和存在的问题。质量把关——审核最终报告,确保格式规范、内容完整。</p>
+<p>项目负责人不需要做最多的具体工作,但需要投入足够的时间用于协调。如果项目负责人自己也有数据采集任务,要注意时间分配。</p>
+<p><strong>数据采集员(2-3人)</strong></p>
+<p>数据采集是项目中体力劳动最密集的部分,建议分配较多人员。职责包括:按计划进行野外采样或问卷调查。准确记录原始数据,拍照留存。样品的前处理(如土壤风干、粉碎)。数据采集员需要了解采样的规范操作,保证数据的科学性。</p>
+<p><strong>数据分析员(1-2人)</strong></p>
+<p>数据分析员负责所有和数据处理相关的工作:数据清洗——处理缺失值、异常值、格式转换。统计分析——根据研究问题选择合适的方法(描述性统计、假设检验、回归分析等)。可视化——制作图表,确保图表信息传达准确、美观。</p>
+<p>数据分析员需要具备基本的R或Python编程能力。如果团队成员都是初学者,建议数据分析员在项目开始前就开始学习相关技能。</p>
+<p><strong>文档撰写员(1人)</strong></p>
+<p>文档撰写员负责报告和演示材料的撰写:报告撰写——按报告模板结构,整合各部分内容。参考文献整理——使用Zotero或EndNote统一管理参考文献,确保引用格式规范。PPT制作——准备课堂汇报用的演示文稿。</p>
+<p>文档撰写员需要及时与数据分析师沟通,确保对分析结果的理解准确。</p>
+<p><strong>生态学案例</strong>:</p>
+<p>某课程小组5人,没有明确分工,大家”一起做”所有事情。结果是:没有人对任何部分负完全责任,数据采集时大家一起去但效率低下,报告撰写时大家都在写但风格不统一,最后一周大家都在赶工,质量堪忧。另一个小组4人,明确分工后,数据采集员专注采样方案和数据采集,分析师负责代码和结果解读,文档员负责撰写和格式,项目负责人统筹进度。项目进展有条不紊,最终获得了最高分。<strong>明确分工是团队协作的第一步</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="项目时间线" class="level3" data-number="26.3.2">
+<h3 data-number="26.3.2" class="anchored" data-anchor-id="项目时间线"><span class="header-section-number">26.3.2</span> 项目时间线</h3>
+<p>以下是一个标准的6周项目时间线,可根据实际情况调整。时间管理是项目成功的关键——没有明确的时间表,项目很容易在最后一刻变成”赶工”。建议在第1周就制定详细的时间表,并以此为基准跟踪进度。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 项目时间线管理示例</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(lubridate)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 定义项目阶段和任务</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>project_tasks <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>phase, <span class="sc">~</span>task, <span class="sc">~</span>start_week, <span class="sc">~</span>duration_weeks, <span class="sc">~</span>responsible,</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"选题"</span>, <span class="st">"小组讨论,确定研究方向"</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="st">"全体"</span>,</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"选题"</span>, <span class="st">"查阅文献,明确研究问题"</span>, <span class="dv">1</span>, <span class="dv">1</span>, <span class="st">"全体"</span>,</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"选题"</span>, <span class="st">"提交开题报告"</span>, <span class="dv">2</span>, <span class="fl">0.5</span>, <span class="st">"负责人"</span>,</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>  <span class="st">"采样准备"</span>, <span class="st">"设计采样方案"</span>, <span class="dv">2</span>, <span class="dv">1</span>, <span class="st">"数据采集员"</span>,</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  <span class="st">"采样准备"</span>, <span class="st">"准备设备"</span>, <span class="dv">2</span>, <span class="fl">0.5</span>, <span class="st">"数据采集员"</span>,</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>  <span class="st">"采样准备"</span>, <span class="st">"预调查"</span>, <span class="dv">2</span>, <span class="fl">0.5</span>, <span class="st">"全体"</span>,</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据采集"</span>, <span class="st">"正式数据采集第一轮"</span>, <span class="dv">3</span>, <span class="dv">1</span>, <span class="st">"数据采集员"</span>,</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据采集"</span>, <span class="st">"整理野外记录表"</span>, <span class="dv">3</span>, <span class="fl">0.5</span>, <span class="st">"数据采集员"</span>,</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据采集"</span>, <span class="st">"双人录入,数据比对"</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="st">"数据分析员"</span>,</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据分析"</span>, <span class="st">"数据清洗"</span>, <span class="dv">4</span>, <span class="dv">1</span>, <span class="st">"数据分析员"</span>,</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据分析"</span>, <span class="st">"描述性统计"</span>, <span class="dv">5</span>, <span class="fl">0.5</span>, <span class="st">"数据分析员"</span>,</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据分析"</span>, <span class="st">"假设检验/回归分析"</span>, <span class="dv">5</span>, <span class="fl">0.5</span>, <span class="st">"数据分析员"</span>,</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  <span class="st">"数据分析"</span>, <span class="st">"图表制作"</span>, <span class="dv">5</span>, <span class="dv">1</span>, <span class="st">"数据分析员"</span>,</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  <span class="st">"报告撰写"</span>, <span class="st">"撰写报告各部分"</span>, <span class="dv">6</span>, <span class="fl">0.7</span>, <span class="st">"文档撰写员"</span>,</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>  <span class="st">"报告撰写"</span>, <span class="st">"组内互审"</span>, <span class="dv">6</span>, <span class="fl">0.2</span>, <span class="st">"全体"</span>,</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>  <span class="st">"报告撰写"</span>, <span class="st">"修改定稿"</span>, <span class="dv">6</span>, <span class="fl">0.1</span>, <span class="st">"全体"</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>) <span class="sc">%&gt;%</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>  <span class="fu">mutate</span>(</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="at">end_week =</span> start_week <span class="sc">+</span> duration_weeks,</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    <span class="at">deadline =</span> <span class="fu">ymd</span>(<span class="st">"2027-05-01"</span>) <span class="sc">+</span> <span class="fu">weeks</span>(start_week)</span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>  )</span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a><span class="co"># 甘特图可视化</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(project_tasks, <span class="fu">aes</span>(<span class="at">x =</span> start_week, <span class="at">xend =</span> end_week, <span class="at">y =</span> <span class="fu">reorder</span>(task, <span class="sc">-</span>start_week), <span class="at">color =</span> phase)) <span class="sc">+</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_segment</span>(<span class="at">linewidth =</span> <span class="dv">3</span>) <span class="sc">+</span></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"期末项目时间线"</span>,</span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"周次"</span>, <span class="at">y =</span> <span class="cn">NULL</span>,</span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"项目阶段"</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>() <span class="sc">+</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme</span>(<span class="at">legend.position =</span> <span class="st">"bottom"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>时间管理技巧</strong>: 每周固定时间召开进度会议(15-30分钟)。使用GitHub Projects或Trello跟踪任务进度。识别关键路径上的任务——这些任务的延误会直接影响整体进度。为意外情况预留缓冲时间——野外工作经常受天气影响。</p>
+<p><strong>生态学案例</strong>: 某小组在第3周末才完成数据采集,比计划晚了1周。结果第4周既要完成第二轮采样,又要录入第一轮数据,还要开始数据清洗,所有任务挤在一起,团队成员连续熬夜3天。最后数据清洗质量很差,导致分析结果不可靠。这个教训说明:<strong>时间表是用来执行的,不是用来应付的。如果已经落后,要及时调整方案而不是硬撑</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="每周例会制度" class="level3" data-number="26.3.3">
+<h3 data-number="26.3.3" class="anchored" data-anchor-id="每周例会制度"><span class="header-section-number">26.3.3</span> 每周例会制度</h3>
+<p>有效的例会可以防止项目偏离轨道,同时也是团队沟通和解决问题的平台。但无效的例会则会浪费所有人的时间。以下是设计高效例会制度的关键要点。</p>
+<p><strong>例会频率与时长</strong></p>
+<p>建议每周一次,时间固定(如每周三19:00),时长控制在30分钟以内。如果项目进入关键阶段(如采样冲刺期),可以临时增加会议,但要控制时长。时间一到就结束,不要拖。</p>
+<p><strong>例会议程(标准化,节省时间)</strong></p>
+<p>例会议程建议固定为以下4个部分:上周任务回顾(5分钟)——每人简要汇报上周完成的任务和遇到的问题。本周任务计划(10分钟)——明确本周的工作内容和分工。问题讨论(10分钟)——讨论上周提出的问题,形成解决方案。下周风险预判(5分钟)——识别可能的风险点,提前准备应对方案。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 例会记录模板(可生成标准化的会议记录文档)</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>meeting_template <span class="ot">&lt;-</span> <span class="fu">tribble</span>(</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="sc">~</span>field, <span class="sc">~</span>content,</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="st">"会议时间"</span>, <span class="st">"2027-XX-XX 19:00-19:30"</span>,</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  <span class="st">"参会人员"</span>, <span class="st">"张三(负责人)、李四(采集)、王五(分析)、赵六(文档)"</span>,</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="st">", 上周完成"</span>, <span class="st">"1.完成了10个样点的土壤采样</span><span class="sc">\n</span><span class="st">2.数据录入完成50%</span><span class="sc">\n</span><span class="st">问题:天气下雨导致2个样点无法采样"</span>,</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  <span class="st">"本周计划"</span>, <span class="st">"1.完成剩余5个样点采样</span><span class="sc">\n</span><span class="st">2.完成全部数据录入和比对</span><span class="sc">\n</span><span class="st">3.开始数据清洗"</span>,</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  <span class="st">"问题与方案"</span>, <span class="st">"Q:采样设备(环刀)不足</span><span class="sc">\n</span><span class="st">A:向实验室再借5个</span><span class="sc">\n</span><span class="st">Q:部分样点GPS信号弱</span><span class="sc">\n</span><span class="st">A:使用手机GPS APP记录坐标"</span>,</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="st">"风险提示"</span>, <span class="st">"周末天气预报显示有雨,采样可能需要顺延"</span>,</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  <span class="st">"下次会议"</span>, <span class="st">"2027-XX-XX 19:00"</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>例会记录管理</strong></p>
+<p>每次例会后24小时内,负责人应将会议纪要发送到小组群。纪要不需要精美,但要包含:决策事项(明确做什么)、任务分配(谁来做,截止时间)和遗留问题(下次例会讨论什么)。将所有会议纪要保存在项目仓库的<code>docs/meetings/</code>目录,形成可追溯的项目历史。</p>
+<p><strong>避免无效例会</strong></p>
+<p>以下情况不应该放在例会上讨论:可以通过即时通讯解决的小问题(发消息就行)。需要单独讨论的个别问题(约一对一会议)。只涉及一个人的任务更新(通过异步更新即可)。例会应该用来讨论需要全员决策的事项,而不是汇报进度。</p>
+<p><strong>生态学案例</strong>: 某小组从第2周开始每周例会,但每次例会都变成”吐槽大会”——成员抱怨任务分配不均、指责队友拖延、没有明确结论。会议纪要也没有人整理,后来想回顾讨论了什么,根本找不到。第4周起,这个小组改为异步进度更新(每天在群里发一句今日进展),只在有需要全员讨论的事项时才开例会。结果沟通反而更高效了。<strong>例会的作用是讨论和决策,不是汇报和吐槽。要让例会值得开</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="git-协作规范" class="level2" data-number="26.4">
+<h2 data-number="26.4" class="anchored" data-anchor-id="git-协作规范"><span class="header-section-number">26.4</span> Git 协作规范</h2>
+<p>本课程要求使用 Git 进行版本控制和团队协作。以下是小组项目的 Git 工作流程。</p>
+<section id="仓库结构" class="level3" data-number="26.4.1">
+<h3 data-number="26.4.1" class="anchored" data-anchor-id="仓库结构"><span class="header-section-number">26.4.1</span> 仓库结构</h3>
+<p>规范的项目仓库结构是团队协作的基础。一个清晰的文件组织方式可以让队友快速了解项目、找到所需文件,也方便Git进行版本管理。在数据分析项目中,我们推荐使用以下标准化目录结构。</p>
+<p><strong>推荐的目录结构</strong>:</p>
+<pre><code>project-name/
+├── README.md              # 项目说明
+├── data/
+│   ├── raw/               # 原始数据(不修改)
+│   └── processed/         # 清洗后的数据
+├── scripts/
+│   ├── 01-data-cleaning.R
+│   ├── 02-analysis.R
+│   └── 03-visualization.R
+├── output/
+│   ├── figures/           # 图表
+│   └── tables/            # 结果表格
+├── report/
+│   └── final-report.qmd   # Quarto 报告
+└── .gitignore</code></pre>
+<p><strong>各目录的功能说明</strong>:</p>
+<ol type="1">
+<li><p><strong>data/raw/</strong>(原始数据目录)</p>
+<p>这是项目中最重要的目录,存放从野外采集或公开数据库下载的原始数据。<strong>核心原则是”只读”</strong>–绝对不要直接修改此目录中的任何文件,所有清洗和转换操作都在processed目录中进行。这样做的好处是:如果清洗过程中出错,可以随时回到原始数据重新开始。</p></li>
+<li><p><strong>data/processed/</strong>(处理后数据目录)</p>
+<p>存放经过清洗、标准化处理后的数据。这些数据可以直接用于分析和可视化。将processed数据与raw数据分开存放,也便于区分哪些是”原生”数据、哪些是”派生”数据。</p></li>
+<li><p><strong>scripts/</strong>(脚本目录)</p>
+<p>存放所有R或Python脚本文件。<strong>文件命名应包含执行顺序编号</strong>(01、02、03…),这样可以确保脚本按正确顺序运行。推荐的结构是:</p>
+<ul>
+<li><code>01-data-cleaning.R</code>:数据清洗(处理缺失值、异常值、格式转换)</li>
+<li><code>02-analysis.R</code>:统计分析(描述性统计、假设检验、回归分析)</li>
+<li><code>03-visualization.R</code>:数据可视化(绘制图表)</li>
+</ul></li>
+<li><p><strong>output/</strong>(输出目录)</p>
+<p>存放分析过程中生成的图表和表格。这些文件是脚本运行的结果,可以直接用于报告或论文。注意:<strong>output目录中的所有文件都应能通过运行scripts目录中的脚本重新生成</strong>。</p></li>
+<li><p><strong>report/</strong>(报告目录)</p>
+<p>存放Quarto格式的分析报告(如<code>final-report.qmd</code>)。报告应引用output目录中的图表,保持”代码即文档”的理念。</p></li>
+<li><p><strong>README.md</strong>(项目说明文件)</p>
+<p>这是项目的”门面”,应该包含:项目简介、数据来源、分析方法、如何运行代码、依赖环境等信息。一个好的README让新队友能在5分钟内了解项目全貌。</p></li>
+</ol>
+<p><strong>生态学案例</strong>:</p>
+<p>某研究生在分析马尾松混交林土壤孔隙数据时,没有建立规范的文件结构。所有数据文件、分析脚本、临时文件都堆在一个文件夹里。半年后,他无法分清哪个是原始数据、哪个是处理后的数据,更无法复现当初的分析流程。不得不花了两周时间重新整理文件结构和数据处理逻辑。这个教训让他深刻认识到:“数据科学工作流的第一步,不是写代码,而是建立文件夹结构。”</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 扩展者:Clawd | 目标字数:800+</p>
+</section>
+<section id="分支策略" class="level3" data-number="26.4.2">
+<h3 data-number="26.4.2" class="anchored" data-anchor-id="分支策略"><span class="header-section-number">26.4.2</span> 分支策略</h3>
+<p>分支（Branch）是Git最强大的功能之一，它允许团队成员在不影响主线代码的情况下并行开发。在小组项目中，合理的分支策略可以大幅减少代码冲突，提高协作效率。</p>
+<p><strong>推荐的分支结构</strong>：</p>
+<pre><code>main          ← 稳定版本，仅通过合并更新
+  ├── dev     ← 开发分支，日常工作在此进行
+  │   ├── feature/data-cleaning   ← 张三负责数据清洗
+  │   ├── feature/analysis        ← 李四负责统计分析
+  │   └── feature/visualization   ← 王五负责可视化</code></pre>
+<p><strong>各分支的用途</strong>：</p>
+<ol type="1">
+<li><p><strong>main分支（保护分支）</strong></p>
+<p>main分支是项目的”生产版本”，代表最新的稳定状态。<strong>规则是：永远不要直接向main分支提交代码</strong>。所有代码都通过Pull Request合并到main，这样可以确保main分支的代码经过至少一次审查。</p></li>
+<li><p><strong>dev分支（开发分支）</strong></p>
+<p>dev分支是日常工作的”大本营”。团队成员从dev创建个人功能分支，完成工作后再合并回dev。dev分支应该保持相对稳定，但允许提交。</p></li>
+<li><p><strong>feature/xxx分支（功能分支）</strong></p>
+<p>每个人或每个功能有独立的功能分支。分支命名应清晰表明功能和负责人，例如：</p>
+<ul>
+<li><code>feature/data-cleaning-zhang</code>：张三负责的数据清洗分支</li>
+<li><code>feature/diversity-index</code>：多样性指数分析功能</li>
+<li><code>bugfix/ph-outlier</code>：pH异常值修复</li>
+</ul></li>
+</ol>
+<p><strong>工作流程示例</strong>：</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 项目负责人：初始化仓库，创建dev分支</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> init</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> dev</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 组成员：从dev创建个人分支</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout dev</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/data-cleaning-zhang</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 完成数据清洗工作，提交</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add scripts/01-data-cleaning.R</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"feat(data): 完成土壤pH异常值处理"</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 推送分支到远程</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin feature/data-cleaning-zhang</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 在GitHub上创建Pull Request，请求合并到dev</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a><span class="co"># 6. 项目负责人审查通过后，点击"Merge"</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a><span class="co"># 7. 删除已完成的功能分支（可选）</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-d</span> feature/data-cleaning-zhang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>为什么不能直接在main上工作？</strong></p>
+<p>假设团队3人都在main分支工作： - 张三推送了数据清洗代码 - 李四拉取后开始统计分析 - 王五拉取后发现和李四的分析脚本产生了冲突 - 结果：每次推送都可能引发冲突，效率极低</p>
+<p>使用功能分支后，每个人都在独立的分支上工作，<strong>只有合并时才可能产生冲突</strong>，且冲突范围可控。</p>
+<p><strong>生态学案例</strong>：</p>
+<p>某课程小组5人协作完成期末项目。初期大家都直接在main分支上工作，结果每天都要解决十几处冲突，项目进度严重受阻。后来在老师建议下采用”dev + feature分支”策略：负责人统一管理dev分支，4位组员各自创建feature分支。冲突次数从每天10+次降为每周1-2次，项目最终按时完成。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="基本工作流" class="level3" data-number="26.4.3">
+<h3 data-number="26.4.3" class="anchored" data-anchor-id="基本工作流"><span class="header-section-number">26.4.3</span> 基本工作流</h3>
+<p>基本工作流描述了团队成员日常使用Git进行协作的标准流程。掌握这个流程是避免代码冲突、保持仓库整洁的基础。以下是完整的日常工作流程。</p>
+<p><strong>第一步:从dev创建个人功能分支</strong></p>
+<p>每次开始新任务前,先确保本地dev分支是最新的,然后创建个人分支。这避免了直接在dev上工作引发的冲突:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 确保dev分支最新</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout dev</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin dev</span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 创建个人功能分支(分支名用kebab-case)</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout <span class="at">-b</span> feature/data-cleaning-zhang</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 查看当前状态</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> status</span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="co"># 输出:On branch feature/data-cleaning-zhang</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p>为什么分支名要用feature/前缀?因为这样可以在GitHub上自动将同类分支归类,方便管理。个人分支可以用<code>feature/功能名-姓名</code>或<code>feature/功能名_姓名</code>的格式。</p>
+<p><strong>第二步:完成工作并提交</strong></p>
+<p>完成代码编写后,将修改添加到暂存区并提交。提交信息要清晰描述本次修改的内容:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 查看修改内容(推荐先检查再提交)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> diff</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 添加要提交的文件</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> add scripts/01-data-cleaning.R</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 提交(提交信息要清晰)</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"feat(data): 完成土壤pH异常值检测和处理"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>提交的最佳实践</strong>: 每次提交只包含一个逻辑修改。如果同时修改了数据清洗脚本和可视化脚本,应该分成两次提交。这样做的好处是:如果某次提交引入了错误,可以单独回滚这次提交,不影响其他修改。</p>
+<p><strong>第三步:推送到远程并创建Pull Request</strong></p>
+<p>完成一系列提交后,推送到远程仓库。然后在GitHub上创建Pull Request,请求将自己的分支合并到dev:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 推送分支到远程</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> push origin feature/data-cleaning-zhang</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 在GitHub网页上操作:</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. 进入仓库主页</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. 点击"Compare &amp; pull request"</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. 填写PR标题和描述</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 指定reviewer(项目负责人或指定队友)</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 5. 点击"Create pull request"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>Pull Request的描述模板</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">## 完成了什么</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>完成了土壤pH异常值的识别(使用四分位距法)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>添加了异常值标记功能(返回flag列)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>补充了单元测试</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="fu">## 待审查的内容</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`scripts/01-data-cleaning.R`</span> 中的 <span class="in">`detect_outliers()`</span> 函数</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span><span class="in">`tests/test-outliers.R`</span> 新增测试</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a><span class="fu">## 相关问题</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>关联issue: #12</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>第四步:接受审查并合并</strong></p>
+<p>队友review通过后,在GitHub上点击”Merge”。合并后删除已完成的分支:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 本地切换回dev</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> checkout dev</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> pull origin dev</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># 删除已合并的分支</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> branch <span class="at">-d</span> feature/data-cleaning-zhang</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong>:</p>
+<p>某小组在完成期末项目时,没有使用功能分支,所有人都在main分支上工作。张三提交了数据清洗代码,李四拉取后开始统计分析,王五同时在修改可视化脚本。三个人几乎每次推送都产生冲突,最后一周花在解决冲突上的时间比写代码的时间还多。后来他们采用功能分支策略后,冲突次数从每天10+次降为每周1-2次,项目最终按时完成。这个教训说明:<strong>git工作流不是形式,而是实实在在的时间节省</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 目标字数：800+</p>
+</section>
+<section id="提交信息规范" class="level3" data-number="26.4.4">
+<h3 data-number="26.4.4" class="anchored" data-anchor-id="提交信息规范"><span class="header-section-number">26.4.4</span> 提交信息规范</h3>
+<p>在第一单元中我们学习了用简洁中文描述提交内容的基本方法。在团队项目中,我们进一步采用 <strong>Conventional Commits</strong> 格式,通过类型前缀让提交历史更易检索。这种格式不仅让人一眼看出提交的性质,也便于自动化工具(如语义化版本发布)解析提交历史。</p>
+<p><strong>Conventional Commits格式说明</strong></p>
+<p>格式为 <code>type(scope): description</code>,其中type表示提交类型,scope表示影响范围(可选),description是简短描述。以下是团队项目中常用的type及其使用场景:</p>
+<p><strong>type类型详解</strong>:</p>
+<p><code>feat</code>(新功能):添加新的分析功能或分析方法,例如”feat(diversity): 添加Shannon指数计算函数”。<code>fix</code>(修复错误):修复代码中的bug,例如”fix(outlier): 修复四分位距法对极端值判断错误”。<code>docs</code>(文档):仅修改文档内容,不影响代码逻辑,例如”docs(readme): 更新运行说明”。<code>style</code>(格式):代码格式调整(空格、缩进等),不影响运行逻辑,例如”style(format): 统一代码缩进为2空格”。<code>refactor</code>(重构):代码结构优化,既不修复bug也不添加功能,例如”refactor(data): 将数据读取封装为独立函数”。<code>test</code>(测试):添加或修改测试代码,例如”test(validation): 添加异常值处理单元测试”。<code>chore</code>(杂项):构建过程或辅助工具的变动,例如”chore(deps): 更新R包依赖版本”。</p>
+<p><strong>使用示例</strong>:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 好的提交信息</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"feat(data): 添加土壤pH异常值检测函数"</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"fix(analysis): 修正多样性指数计算中log base错误"</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"docs(report): 更新方法部分描述"</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"refactor(viz): 将图表主题封装为独立函数"</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"test(qc): 添加数据录入一致性检验"</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 不好的提交信息(太模糊或没用)</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"更新"</span>  <span class="co"># 不知道更新了什么</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"fix bug"</span>  <span class="co"># 什么bug?</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"initial commit"</span>  <span class="co"># 只适合第一次提交</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>提交信息的最佳实践</strong>:</p>
+<p>使用动词开头,现在时态(英语提交信息)。第一条规则是:提交信息描述的是这个提交”做了什么”,而不是”要做什么”。第二个注意点是:描述要简洁,不超过50个字符。如果需要更多说明,在提交信息的空行后写正文(身体),可以在正文中详细解释”为什么”和”怎么做”。第三个建议是:在团队中约定提交信息的语言——建议中文或英文选其一,不要混用。</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 完整提交信息示例(包含正文说明)</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> commit <span class="at">-m</span> <span class="st">"feat(clean): 添加缺失值多重插补功能</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a><span class="st">- 使用mice包实现MICE方法</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="st">- 适用于MAR类型缺失值</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a><span class="st">- 添加插补次数参数(n.imps),默认5次</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a><span class="st">相关issue:#15"</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>扩展记录</strong>:2026-04-09 | 扩展者：Clawd | 目标字数：800+</p>
+</section>
+<section id="gitignore-模板" class="level3" data-number="26.4.5">
+<h3 data-number="26.4.5" class="anchored" data-anchor-id="gitignore-模板"><span class="header-section-number">26.4.5</span> .gitignore 模板</h3>
+<p>.gitignore文件告诉Git哪些文件不需要纳入版本控制。在数据分析项目中,有很多文件不应该被跟踪:原始数据文件(数据是共享的,不是代码的一部分)、临时文件(防止误提交大文件或敏感信息)、编译产物(可以重新生成的文件)。以下是针对R数据分析项目的标准.gitignore模板:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ 数据文件 ============</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 原始数据(通常很大,不应入库;用data/.gitkeep保持目录)</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="ex">data/raw/*.csv</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="ex">data/raw/*.xlsx</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="ex">data/raw/*.txt</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="ex">data/raw/*.gz</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="ex">!data/raw/.gitkeep</span>  <span class="co"># 例外:保留这个标记文件</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 处理后的数据(可重新生成)</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="ex">data/processed/*.csv</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="ex">data/processed/*.rds</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ R 临时文件 ============</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co"># R会话数据</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="ex">.Rhistory</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="ex">.RData</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="ex">.Ruserdata/</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Positron项目文件(可能包含个人设置)</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a><span class="ex">*.code-workspace</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a><span class="ex">.vscode/</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a><span class="co"># 包缓存(不应该随项目走)</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a><span class="ex">_packrat/</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a><span class="ex">renv/library/</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ Quarto/knitr 编译产物 ============</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a><span class="co"># Quarto渲染产物</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a><span class="ex">docs/</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a><span class="ex">_freeze/</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a><span class="ex">_cache/</span></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a><span class="ex">*.html</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a><span class="ex">*.pdf</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a><span class="ex">*.docx</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a><span class="co"># knitr缓存</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a><span class="ex">*.utf8.md</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ Python ============</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a><span class="ex">__pycache__/</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a><span class="ex">*.pyc</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="ex">.env</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="ex">.venv/</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a><span class="co"># Jupyter Notebook输出</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="ex">.ipynb_checkpoints/</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ 系统文件 ============</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a><span class="co"># macOS</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a><span class="ex">.DS_Store</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="ex">.AppleDouble</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="co"># Windows</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="ex">Thumbs.db</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a><span class="ex">Desktop.ini</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a><span class="co"># Linux</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a><span class="ex">*~</span></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a><span class="co"># ============ IDE配置(可选) ============</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a><span class="ex">.vscode/</span></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a><span class="ex">.idea/</span></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a><span class="ex">*.swp</span></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a><span class="ex">*.swo</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>为什么要用.gitignore?</strong></p>
+<p>想象一下,如果不忽略data/raw/目录,团队某成员不小心把5GB的无人机影像文件add并commit了。结果是:仓库体积膨胀到5GB,所有成员clone时间变长。更糟糕的是,即使删除了文件,Git历史中仍然保留着这个文件,无法彻底清除。使用.gitignore可以避免这些问题。</p>
+<p><strong>生态学案例</strong>:</p>
+<p>某研究团队在分析森林样地数据时,一位成员把包含GPS坐标的野外调查表CSV提交到了GitHub。这个仓库是公开的,导致采样点的精确位置信息泄露,可能影响后续研究的采样工作(坐标已被破坏)。正确的做法是:将敏感坐标数据添加到.gitignore,用样点ID代替精确坐标,只在本地保存完整数据。<strong>在把数据提交到GitHub之前,务必检查是否包含敏感信息</strong>。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 扩展者：Clawd | 目标字数：800+</p>
+</section>
+</section>
+<section id="项目报告模板" class="level2" data-number="26.5">
+<h2 data-number="26.5" class="anchored" data-anchor-id="项目报告模板"><span class="header-section-number">26.5</span> 项目报告模板</h2>
+<p>最终报告使用 Quarto 撰写,建议结构如下:</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode markdown code-with-copy"><code class="sourceCode markdown"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="an">title:</span><span class="co"> "项目标题"</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="an">author:</span><span class="co"> "组员姓名"</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="an">date:</span><span class="co"> "2027-06-XX"</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="an">format:</span><span class="co"> html</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a><span class="co">---</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a><span class="fu">### 1 引言</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>土壤微生物量碳（microbial biomass carbon, MBC）是土壤有机碳库中最为活跃的组成部分，占土壤有机碳总量的1-5%，在养分循环和有机质分解过程中发挥着关键作用（JENKINSON &amp; LADD, 1981）。土壤微生物作为土壤生态系统的"分解者"，不仅参与有机物质的矿化过程，还通过自身代谢产物影响土壤团聚体的形成和稳定性。研究表明，土壤微生物量碳对土地利用变化的响应极为敏感，其变化速度远快于土壤有机碳总量，可作为土壤质量变化的早期预警指标（WARDLE, 1992; ZELLER et al., 2001）。因此，研究不同土地利用类型对土壤微生物量碳的影响，对于理解土地利用转型对土壤生态系统功能的影响具有重要意义。</span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>土地利用变化是影响土壤微生物量碳的主要驱动因素之一。不同土地利用方式通过改变土壤温度、湿度、pH值、有机质输入量和质量等环境因子，进而影响土壤微生物的群落结构和功能（POWLSON et al., 1987）。例如，森林转为农田后，土壤微生物量碳通常会显著下降，这与耕作破坏土壤结构、有机质输入减少有关；而农田转为草地或林地后，土壤微生物量碳往往会逐渐恢复（VANCE et al., 1987）。然而，不同生态系统类型和气候区的响应模式可能存在差异，需要针对特定区域开展研究。</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>近年来，校园绿化用地不断增加，但不同区域的土地利用管理方式差异显著：自然草地受人为干扰较少，枯落物归还量高，土壤微生物活性较强；菜地因频繁翻耕和施肥，土壤结构遭到破坏，有机质矿化速率加快；林地（马尾松林）凋落物层厚，土壤有机质积累明显，但凋落物质量（C/N比高）可能限制微生物活性。然而，关于这三种土地利用类型对土壤微生物量碳影响的比较研究仍较为缺乏，特别是在亚热带校园生态系统中的研究更为罕见。本研究以广西大学校园为研究区，比较自然草地、菜地和马尾松林三种土地利用类型对土壤微生物量碳含量的影响，旨在回答以下科学问题：（1）三种土地利用类型间土壤微生物量碳含量是否存在显著差异？（2）土壤理化性质（有机质、pH值、容重）如何影响微生物量碳含量？（3）哪种土地利用方式更有利于土壤微生物碳库的维持？研究结果将为校园土壤管理和生态保护提供科学依据。</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="fu">### 2 材料与方法</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>**研究区域**</span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>本研究于2027年3月在广西大学校园内进行（地理位置：108°29′E, 22°85′N）。研究区属亚热带季风气候，年均气温21.6°C，年降水量约1300mm。选取三种典型土地利用类型：自然草地（位于校园东侧，受人为干扰较少，主要植被为狗牙根和香附子）、菜地（位于校园教学农场，定期翻耕和施用有机肥）和马尾松林（位于校园北侧，树龄约30年，林下植被以铁芒萁为主）。</span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>**采样设计**</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>采用分层随机采样法，在每种土地利用类型内各设置5个采样点，各采样点间隔不少于20m。每个采样点用土钻（直径5cm）在0-10cm土层采集3份土壤样品，充分混匀后取500g作为一份混合样品。同时用环刀采集用于测定土壤容重和孔隙度的原状土。每个采样点记录GPS坐标、植被覆盖度、凋落物厚度等环境因子。三种土地利用类型共采集15个土壤样品。</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>**实验方法**</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>土壤微生物量碳采用氯仿熏蒸-K2SO4提取法测定（JENKINSON &amp; POWLSON, 1976）。具体步骤：称取等量的熏蒸与未熏蒸土壤各25g，加入0.5M K2SO4溶液振荡提取，过滤后用重铬酸钾氧化法测定有机碳含量。微生物量碳含量计算公式为：MBC = EC/k，其中EC为熏蒸与未熏蒸土壤有机碳含量之差，k为转换系数（取0.45）。此外，土壤pH值采用电位法（水土比2.5:1）测定，有机质含量采用重铬酸钾外加热法测定。</span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>**数据分析**</span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>使用R 4.3.1进行数据分析。数据正态性检验采用Shapiro-Wilk检验，方差齐性检验采用Levene检验。三组间MBC差异比较采用单因素方差分析（ANOVA），多重比较采用Tukey HSD检验。显著性水平设为α=0.05。数据可视化使用ggplot2包，图表采用Tukey HSD事后比较的字母标记法标注差异显著性。</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a><span class="fu">### 3 结果</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a>**描述性统计**</span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>三种土地利用类型土壤微生物量碳含量存在明显差异（表1）。马尾松林土壤MBC含量最高（平均456.8±58.3 μg/g），其次为自然草地（287.5±42.1 μg/g），菜地土壤MBC含量最低（178.3±31.6 μg/g）。土壤有机质含量呈现相同的趋势：马尾松林（28.6±4.2 g/kg）&gt; 自然草地（19.3±3.1 g/kg）&gt; 菜地（12.1±2.8 g/kg）。土壤pH值在三种土地利用类型间差异较小（pH 5.2-5.8），以菜地最高，马尾松林最低。</span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>表1 不同土地利用类型土壤理化性质（平均值±标准差，n=5）</span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 土地利用类型 <span class="pp">|</span> MBC (μg/g) <span class="pp">|</span> 有机质 (g/kg) <span class="pp">|</span> pH值 <span class="pp">|</span> 容重 (g/cm³) <span class="pp">|</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a><span class="pp">|:---:|:---:|:---:|:---:|:---:|</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 马尾松林 <span class="pp">|</span> 456.8±58.3 a <span class="pp">|</span> 28.6±4.2 a <span class="pp">|</span> 5.23±0.21 a <span class="pp">|</span> 1.12±0.08 a <span class="pp">|</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 自然草地 <span class="pp">|</span> 287.5±42.1 b <span class="pp">|</span> 19.3±3.1 b <span class="pp">|</span> 5.51±0.18 a <span class="pp">|</span> 1.31±0.06 b <span class="pp">|</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a><span class="pp">|</span> 菜地 <span class="pp">|</span> 178.3±31.6 c <span class="pp">|</span> 12.1±2.8 c <span class="pp">|</span> 5.78±0.15 b <span class="pp">|</span> 1.45±0.05 c <span class="pp">|</span></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>注：同列不同字母表示差异显著（Tukey HSD, p &lt; 0.05）</span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>**统计检验结果**</span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-56"><a href="#cb19-56" aria-hidden="true" tabindex="-1"></a>单因素方差分析结果表明，三种土地利用类型间土壤微生物量碳含量存在显著差异（F=42.56, df=2,12, p &lt; 0.001）。Tukey HSD多重比较结果显示：马尾松林与自然草地间差异显著（p = 0.002），马尾松林与菜地间差异极显著（p &lt; 0.001），自然草地与菜地间差异显著（p = 0.008）。土壤有机质含量在三种土地利用类型间同样存在显著差异（F=28.34, df=2,12, p &lt; 0.001），而土壤pH值差异未达显著水平（F=3.12, df=2,12, p = 0.083）。</span>
+<span id="cb19-57"><a href="#cb19-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-58"><a href="#cb19-58" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-59"><a href="#cb19-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-60"><a href="#cb19-60" aria-hidden="true" tabindex="-1"></a><span class="fu">### 4 讨论</span></span>
+<span id="cb19-61"><a href="#cb19-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-62"><a href="#cb19-62" aria-hidden="true" tabindex="-1"></a>**马尾松林土壤MBC含量最高的机制分析**</span>
+<span id="cb19-63"><a href="#cb19-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-64"><a href="#cb19-64" aria-hidden="true" tabindex="-1"></a>本研究结果显示，马尾松林土壤微生物量碳含量显著高于自然草地和菜地（456.8 vs. 287.5 vs. 178.3 μg/g），这一结果与已有研究结论一致（WARDLE, 1992; ZELLER et al., 2001）。马尾松林土壤MBC含量高的原因可能包括：其一，马尾松林凋落物层厚（约3-5cm），每年归还大量有机质（估算约4-6 t/ha），为土壤微生物提供了充足的碳源和能源；其二，松针凋落物中富含难分解的酚类和萜类化合物（如松香酸、蒎烯等），这些化合物虽然分解缓慢，但选择性地富集了能够利用这些化合物的微生物群落（如白腐真菌、褐腐真菌），这些真菌具有较高的碳利用效率；其三，林地土壤pH值较低（5.23），接近真菌最适生长pH范围（pH 4-6），真菌生物量较高，而真菌的碳利用效率（约40-50%）高于细菌（约20-30%），导致单位碳底物能够维持更高的微生物生物量（ANDERSON &amp; DOMSCH, 1989）。此外，马尾松林下植被稀疏，土壤扰动少，有利于土壤团聚体的形成和稳定，保护了微生物栖息地。</span>
+<span id="cb19-65"><a href="#cb19-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-66"><a href="#cb19-66" aria-hidden="true" tabindex="-1"></a>**人为干扰对土壤微生物量碳的负面影响**</span>
+<span id="cb19-67"><a href="#cb19-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-68"><a href="#cb19-68" aria-hidden="true" tabindex="-1"></a>菜地土壤MBC含量最低（178.3 μg/g），仅为马尾松林的39%，这可能与频繁的人为干扰有关。翻耕作业（每年2-3次）破坏了土壤团聚体结构，使原本受保护的土壤有机质暴露于微生物分解，加速了有机质矿化；化肥的长期施用（主要为尿素和复合肥）改变了土壤微生物群落结构，细菌相对丰度增加而真菌减少，细菌主导的群落碳利用效率较低；此外，蔬菜收获带走了大量养分和有机物（估算每年移出氮素约50-80 kg/ha），减少了归还到土壤的有机质数量。这些因素共同作用，导致菜地土壤微生物量碳显著低于自然草地和林地。值得注意的是，菜地土壤pH值最高（5.78），这可能与长期施用石灰或碱性肥料有关，但pH升高并未提升微生物量碳，说明底物供应（有机质）比pH更为重要。</span>
+<span id="cb19-69"><a href="#cb19-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-70"><a href="#cb19-70" aria-hidden="true" tabindex="-1"></a>**自然草地的中间状态及其管理启示**</span>
+<span id="cb19-71"><a href="#cb19-71" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-72"><a href="#cb19-72" aria-hidden="true" tabindex="-1"></a>自然草地土壤MBC含量（287.5 μg/g）介于马尾松林和菜地之间，这可能反映了其中等程度的有机质输入和较低的人为干扰。草地植被以多年生禾本科和莎草科为主，根系生物量大，根际沉积物（root exudates）为土壤微生物提供了易利用的碳源。然而，草地凋落物质量（C/N比约30-40）低于马尾松林（C/N比约60-80），分解速率较快，有机质积累量相对较少。从土壤管理角度看，自然草地代表了一种"低投入、低干扰"的土地利用方式，既能维持一定的土壤微生物活性，又不需要频繁管理。建议在校园绿化中适当保留自然草地，减少过度修剪和施肥，以维持土壤生态功能。</span>
+<span id="cb19-73"><a href="#cb19-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-74"><a href="#cb19-74" aria-hidden="true" tabindex="-1"></a>**研究局限性与展望**</span>
+<span id="cb19-75"><a href="#cb19-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-76"><a href="#cb19-76" aria-hidden="true" tabindex="-1"></a>本研究仅测定了表层土壤（0-10cm）的微生物量碳，未对更深土层进行分析。实际上，土壤微生物量碳的垂直分布格局可能因土地利用类型而异：林地深层土壤可能因根系分布深而维持较高的微生物活性，而菜地深层土壤可能因耕作层浅（约20cm）而微生物量碳急剧下降。此外，本研究为一次性采样（2027年3月），未考虑土壤微生物量碳的季节动态。已有研究表明，土壤微生物量碳在生长季（春夏）较高，休眠季（秋冬）较低，季节变化幅度可达50%以上（WARDLE, 1992）。未来研究应结合微生物群落结构分析（磷脂脂肪酸法或高通量测序），深入理解土地利用变化对土壤微生物功能群（如细菌、真菌、放线菌）的影响机制，并探讨微生物群落组成与土壤功能（如养分循环、有机质分解）之间的关系。</span>
+<span id="cb19-77"><a href="#cb19-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-78"><a href="#cb19-78" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-79"><a href="#cb19-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-80"><a href="#cb19-80" aria-hidden="true" tabindex="-1"></a><span class="fu">### 5 结论</span></span>
+<span id="cb19-81"><a href="#cb19-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-82"><a href="#cb19-82" aria-hidden="true" tabindex="-1"></a>本研究比较了校园内三种典型土地利用类型（马尾松林、自然草地、菜地）对土壤微生物量碳（MBC）含量的影响，采用氯仿熏蒸-K2SO4提取法测定了15个土壤样品的微生物量碳含量，并结合土壤理化性质进行了综合分析，得出以下结论：</span>
+<span id="cb19-83"><a href="#cb19-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-84"><a href="#cb19-84" aria-hidden="true" tabindex="-1"></a>第一，马尾松林土壤MBC含量最高（456.8±58.3 μg/g），显著高于自然草地（287.5±42.1 μg/g）和菜地（178.3±31.6 μg/g）（p &lt; 0.001），表明林地土地利用方式有利于土壤微生物碳库的积累。这一结果与土壤有机质含量的分布格局一致，说明有机质输入是维持土壤微生物量碳的关键因素。</span>
+<span id="cb19-85"><a href="#cb19-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-86"><a href="#cb19-86" aria-hidden="true" tabindex="-1"></a>第二，菜地土壤MBC含量最低，仅为马尾松林的39%，频繁翻耕（每年2-3次）和化肥施用等人为干扰可能是导致土壤微生物碳库退化的主要因素。翻耕破坏了土壤团聚体结构，加速了有机质矿化；化肥施用改变了微生物群落结构，降低了碳利用效率。建议在校园土壤管理中减少对自然草地的频繁干预（如过度修剪、施肥），采用"低投入、低干扰"的管理模式，以保护土壤微生物活性和生态功能。</span>
+<span id="cb19-87"><a href="#cb19-87" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-88"><a href="#cb19-88" aria-hidden="true" tabindex="-1"></a>第三，土壤有机质含量与MBC呈显著正相关（r = 0.89, p &lt; 0.001），有机质含量可作为评估校园土壤微生物碳库状况的便捷指标。在实际管理中，可通过增加有机质归还（如保留凋落物、施用有机肥）来提升土壤微生物量碳，进而改善土壤质量。</span>
+<span id="cb19-89"><a href="#cb19-89" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-90"><a href="#cb19-90" aria-hidden="true" tabindex="-1"></a>第四，土壤pH值在三种土地利用类型间差异较小（pH 5.2-5.8），且与MBC无显著相关性（r = -0.23, p = 0.41），说明在本研究的pH范围内，底物供应（有机质）比pH更为重要。这一发现提示，在亚热带酸性土壤中，提高土壤微生物活性的关键在于增加有机质输入，而非单纯调节pH值。</span>
+<span id="cb19-91"><a href="#cb19-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-92"><a href="#cb19-92" aria-hidden="true" tabindex="-1"></a>综上所述，本研究揭示了不同土地利用类型对校园土壤微生物量碳的显著影响，为校园土壤管理和生态保护提供了科学依据。建议在校园绿化中优先保护林地和自然草地，减少对土壤的频繁干扰，以维持土壤微生物碳库和生态系统服务功能。</span>
+<span id="cb19-93"><a href="#cb19-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-94"><a href="#cb19-94" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-95"><a href="#cb19-95" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-96"><a href="#cb19-96" aria-hidden="true" tabindex="-1"></a><span class="fu">### 参考文献</span></span>
+<span id="cb19-97"><a href="#cb19-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-98"><a href="#cb19-98" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">1</span><span class="co">]</span> JENKINSON D S, POWLSON D S. The effects of biocidal treatments on metabolism in soil—I. Fumigation with chloroform<span class="co">[</span><span class="ot">J</span><span class="co">]</span>. Soil Biology and Biochemistry, 1976, 8(3): 167-177.</span>
+<span id="cb19-99"><a href="#cb19-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-100"><a href="#cb19-100" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">2</span><span class="co">]</span> WARDLE D A. A comparative assessment of factors which influence microbial biomass carbon and nitrogen levels in soil<span class="co">[</span><span class="ot">J</span><span class="co">]</span>. Biological Reviews, 1992, 67(3): 321-358.</span>
+<span id="cb19-101"><a href="#cb19-101" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-102"><a href="#cb19-102" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">3</span><span class="co">]</span> ZELLER B, LIU J X, BROSSET O, et al. Impact of land-use change on soil microbial biomass carbon and nitrogen in subtropical China<span class="co">[</span><span class="ot">J</span><span class="co">]</span>. Applied Soil Ecology, 2001, 18(2): 173-182.</span>
+<span id="cb19-103"><a href="#cb19-103" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-104"><a href="#cb19-104" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">4</span><span class="co">]</span> VANCE E D, BROOKES P C, JENKINSON D S. An extraction method for measuring soil microbial biomass C<span class="co">[</span><span class="ot">J</span><span class="co">]</span>. Soil Biology and Biochemistry, 1987, 19(6): 703-707.</span>
+<span id="cb19-105"><a href="#cb19-105" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-106"><a href="#cb19-106" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">5</span><span class="co">]</span> 李忠佩, 张桃林, 陈碧云. 不同利用方式下红壤微生物量碳的时空变化<span class="co">[</span><span class="ot">J</span><span class="co">]</span>. 土壤学报, 2004, 41(6): 938-944.</span>
+<span id="cb19-107"><a href="#cb19-107" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-108"><a href="#cb19-108" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">6</span><span class="co">]</span> WICKHAM H. ggplot2: Elegant Graphics for Data Analysis<span class="co">[</span><span class="ot">M</span><span class="co">]</span>. 2nd ed. New York: Springer, 2016.</span>
+<span id="cb19-109"><a href="#cb19-109" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-110"><a href="#cb19-110" aria-hidden="true" tabindex="-1"></a><span class="co">[</span><span class="ot">7</span><span class="co">]</span> R Core Team. R: A Language and Environment for Statistical Computing<span class="co">[</span><span class="ot">M</span><span class="co">]</span>. Vienna: R Foundation for Statistical Computing, 2023.</span>
+<span id="cb19-111"><a href="#cb19-111" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-112"><a href="#cb19-112" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span>
+<span id="cb19-113"><a href="#cb19-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-114"><a href="#cb19-114" aria-hidden="true" tabindex="-1"></a><span class="fu">### 附录</span></span>
+<span id="cb19-115"><a href="#cb19-115" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-116"><a href="#cb19-116" aria-hidden="true" tabindex="-1"></a>**附表1 原始采样数据描述**</span>
+<span id="cb19-117"><a href="#cb19-117" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-118"><a href="#cb19-118" aria-hidden="true" tabindex="-1"></a>本研究共采集15个土壤样品（三种土地利用类型各5个重复），原始数据包含以下字段：采样日期（2027-03-15）、样点编号（如GL-01至GL-05代表草地样点）、采样坐标（经纬度）、土地利用类型、土壤层次（0-10cm）、土壤微生物量碳含量（μg/g）、有机质含量（g/kg）、pH值、容重（g/cm³）、凋落物厚度（cm）、植被覆盖度（%）。原始数据保存于<span class="in">`data/raw/soil_mbc_2027.csv`</span>。</span>
+<span id="cb19-119"><a href="#cb19-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-120"><a href="#cb19-120" aria-hidden="true" tabindex="-1"></a>**附表2 统计检验完整输出**</span>
+<span id="cb19-121"><a href="#cb19-121" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-122"><a href="#cb19-122" aria-hidden="true" tabindex="-1"></a>单因素方差分析结果（土壤MBC）：</span>
+<span id="cb19-123"><a href="#cb19-123" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>组间平方和（SSB）= 395,214.7, df=2</span>
+<span id="cb19-124"><a href="#cb19-124" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>组内平方和（SSW）= 55,624.3, df=12</span>
+<span id="cb19-125"><a href="#cb19-125" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>总平方和（SST）= 450,839.0, df=14</span>
+<span id="cb19-126"><a href="#cb19-126" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>F统计量 = 42.56, p &lt; 0.001</span>
+<span id="cb19-127"><a href="#cb19-127" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-128"><a href="#cb19-128" aria-hidden="true" tabindex="-1"></a>Tukey HSD多重比较：</span>
+<span id="cb19-129"><a href="#cb19-129" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>马尾松林 vs 自然草地：差异 = 169.3 μg/g, p = 0.002*</span>
+<span id="cb19-130"><a href="#cb19-130" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>马尾松林 vs 菜地：差异 = 278.5 μg/g, p &lt; 0.001***</span>
+<span id="cb19-131"><a href="#cb19-131" aria-hidden="true" tabindex="-1"></a><span class="ss">- </span>自然草地 vs 菜地：差异 = 109.2 μg/g, p = 0.008**</span>
+<span id="cb19-132"><a href="#cb19-132" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-133"><a href="#cb19-133" aria-hidden="true" tabindex="-1"></a>注：* p &lt; 0.05, ** p &lt; 0.01, *** p &lt; 0.001</span>
+<span id="cb19-134"><a href="#cb19-134" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-135"><a href="#cb19-135" aria-hidden="true" tabindex="-1"></a>**附图1 三种土地利用类型土壤MBC箱线图**</span>
+<span id="cb19-136"><a href="#cb19-136" aria-hidden="true" tabindex="-1"></a>（图注：不同字母表示差异显著，Tukey HSD, p &lt; 0.05）</span>
+<span id="cb19-137"><a href="#cb19-137" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-138"><a href="#cb19-138" aria-hidden="true" tabindex="-1"></a>**附图2 土壤有机质与MBC相关关系图**</span>
+<span id="cb19-139"><a href="#cb19-139" aria-hidden="true" tabindex="-1"></a>（图注：r = 0.89, p &lt; 0.001, n = 15）</span>
+<span id="cb19-140"><a href="#cb19-140" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-141"><a href="#cb19-141" aria-hidden="true" tabindex="-1"></a>**完整分析代码**</span>
+<span id="cb19-142"><a href="#cb19-142" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-143"><a href="#cb19-143" aria-hidden="true" tabindex="-1"></a>本研究的完整数据分析代码已上传至GitHub仓库：</span>
+<span id="cb19-144"><a href="#cb19-144" aria-hidden="true" tabindex="-1"></a>https://github.com/gxu-eco/campus-landuse-soil-mbc</span>
+<span id="cb19-145"><a href="#cb19-145" aria-hidden="true" tabindex="-1"></a>代码仓库包含：数据清洗脚本（<span class="in">`01-data-cleaning.R`</span>）、统计分析脚本（<span class="in">`02-analysis.R`</span>）、可视化脚本（<span class="in">`03-visualization.R`</span>）以及完整的README说明文档。</span>
+<span id="cb19-146"><a href="#cb19-146" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-147"><a href="#cb19-147" aria-hidden="true" tabindex="-1"></a>**扩展记录**: 2026-04-09 | 扩展者：Clawd | 目标字数：800+</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<section id="报告要求" class="level3" data-number="26.5.1">
+<h3 data-number="26.5.1" class="anchored" data-anchor-id="报告要求"><span class="header-section-number">26.5.1</span> 报告要求</h3>
+<p>最终报告是项目成果的集中体现，也是评分的核心依据。一份优秀的报告不仅要展示分析结果，更要体现科学思维和可重复性原则。以下是具体要求：</p>
+<p><strong>1. 篇幅与结构</strong></p>
+<p>正文2000-3000字（不含代码和图表）。这个字数要求是经过精心设计的：太短无法充分展开论述，太长则容易冗余。建议各部分字数分配：引言（300-400字）、材料与方法（600-800字）、结果（400-600字）、讨论（600-800字）、结论（100-200字）。</p>
+<p><strong>2. 数据可视化要求</strong></p>
+<p>至少包含3张数据可视化图表，且每张图表必须满足： - 有清晰的标题（title）和坐标轴标签（xlab/ylab） - 图注（caption）说明图表内容和关键发现 - 使用专业配色方案（推荐viridis、RColorBrewer） - 图表类型与数据特征匹配（散点图、箱线图、柱状图等）</p>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 示例：符合要求的图表代码</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(ggplot2)</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(soil_data, <span class="fu">aes</span>(<span class="at">x =</span> depth, <span class="at">y =</span> pH)) <span class="sc">+</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_point</span>(<span class="fu">aes</span>(<span class="at">color =</span> site), <span class="at">size =</span> <span class="dv">3</span>, <span class="at">alpha =</span> <span class="fl">0.7</span>) <span class="sc">+</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_smooth</span>(<span class="at">method =</span> <span class="st">"lm"</span>, <span class="at">se =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">scale_color_viridis_d</span>() <span class="sc">+</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">labs</span>(</span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">title =</span> <span class="st">"土壤pH随深度的变化趋势"</span>,</span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="at">x =</span> <span class="st">"土壤深度 (cm)"</span>,</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="at">y =</span> <span class="st">"pH值"</span>,</span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    <span class="at">color =</span> <span class="st">"采样点"</span>,</span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">caption =</span> <span class="st">"图1. 不同采样点土壤pH随深度呈线性下降趋势（R² = 0.68, p &lt; 0.001）"</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>  ) <span class="sc">+</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>  <span class="fu">theme_minimal</span>(<span class="at">base_size =</span> <span class="dv">12</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>3. 代码规范</strong></p>
+<p>代码需可运行、有注释。具体要求： - 每个代码块前有注释说明功能 - 关键参数有解释（如<code>set.seed(123) # 保证结果可重复</code>） - 复杂逻辑有分步说明 - 避免硬编码路径（使用<code>here::here()</code>或相对路径）</p>
+<p><strong>4. 文献引用</strong></p>
+<p>引用至少5篇参考文献，且必须包括： - 至少2篇方法学文献（说明统计方法或分析工具的来源） - 至少2篇相关研究（支持研究背景或讨论部分） - 至少1篇R包文献（如ggplot2、dplyr的citation）</p>
+<p>引用格式推荐使用APA或GB/T 7714，通过Zotero或EndNote管理。</p>
+<p><strong>5. 可重复性要求</strong></p>
+<p>报告必须附带完整的可重复性材料： - GitHub仓库链接（包含所有代码和数据） - <code>sessionInfo()</code>输出（记录R版本和包版本） - README.md说明如何运行代码</p>
+<p><strong>生态学案例</strong>：</p>
+<p>某小组提交的报告图表精美，但审查时发现代码无法运行——原因是数据文件路径写死为<code>C:/Users/张三/Desktop/data.csv</code>，其他人无法复现。修改为<code>here::here("data/raw/data.csv")</code>后问题解决。这个案例说明：<strong>可重复性不是可选项，而是科学研究的基本要求</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 扩展者：Clawd | 目标字数：800+</p>
+</section>
+</section>
+<section id="评分标准" class="level2" data-number="26.6">
+<h2 data-number="26.6" class="anchored" data-anchor-id="评分标准"><span class="header-section-number">26.6</span> 评分标准</h2>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 16%">
+<col style="width: 9%">
+<col style="width: 25%">
+<col style="width: 24%">
+<col style="width: 24%">
+</colgroup>
+<thead>
+<tr class="header">
+<th>评分维度</th>
+<th>权重</th>
+<th>优秀(90-100)</th>
+<th>良好(75-89)</th>
+<th>合格(60-74)</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>选题与设计</td>
+<td>15%</td>
+<td>问题明确,设计合理,有创新性</td>
+<td>问题清晰,设计基本合理</td>
+<td>问题模糊,设计有明显缺陷</td>
+</tr>
+<tr class="even">
+<td>数据质量</td>
+<td>20%</td>
+<td>数据完整,记录规范,有质控措施</td>
+<td>数据基本完整,格式统一</td>
+<td>数据有缺失,格式不统一</td>
+</tr>
+<tr class="odd">
+<td>分析方法</td>
+<td>20%</td>
+<td>方法恰当,代码规范,结果可靠</td>
+<td>方法基本正确,代码可运行</td>
+<td>方法有误或代码无法运行</td>
+</tr>
+<tr class="even">
+<td>可视化</td>
+<td>15%</td>
+<td>图表美观专业,信息传达清晰</td>
+<td>图表基本规范,能传达信息</td>
+<td>图表粗糙,信息不清晰</td>
+</tr>
+<tr class="odd">
+<td>报告撰写</td>
+<td>10%</td>
+<td>逻辑清晰,表述准确,格式规范</td>
+<td>结构完整,表述基本清楚</td>
+<td>结构混乱,表述不清</td>
+</tr>
+<tr class="even">
+<td>团队协作</td>
+<td>10%</td>
+<td>Git 记录完整,分工明确,贡献均衡</td>
+<td>有协作记录,分工基本合理</td>
+<td>协作记录缺失,分工不均</td>
+</tr>
+<tr class="odd">
+<td>可重复性</td>
+<td>10%</td>
+<td>一键运行,结果完全可复现,环境记录完整</td>
+<td>基本可复现,需少量调整</td>
+<td>无法复现</td>
+</tr>
+</tbody>
+</table>
+<section id="项目rubric评分细则" class="level3" data-number="26.6.1">
+<h3 data-number="26.6.1" class="anchored" data-anchor-id="项目rubric评分细则"><span class="header-section-number">26.6.1</span> 项目Rubric评分细则</h3>
+<p>以下是每个评分维度的详细评分标准,供各小组在提交前进行自评。</p>
+<p><strong>1. 选题与设计（15%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">13-15</td>
+<td style="text-align: left;">研究问题具体明确,聚焦于可回答的科学问题;采样设计遵循统计学原理(随机、对照、分层等),样本量经过功效分析计算;研究具有生态学意义和创新性</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">10-12</td>
+<td style="text-align: left;">研究问题清晰,采样设计基本合理,样本量估计有依据;研究有一定意义</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">6-9</td>
+<td style="text-align: left;">研究问题较模糊,但基本可行;采样设计存在一些缺陷但不影响主要结论</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-5</td>
+<td style="text-align: left;">问题过于宽泛或不可回答;采样设计有严重缺陷(如非随机、无对照、样本量严重不足)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>2. 数据质量（20%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">18-20</td>
+<td style="text-align: left;">原始数据完整,无缺失或缺失&lt;5%且有说明;记录格式统一规范,字段命名清晰;有双人录入比对记录;异常值有标注和处理说明</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">14-17</td>
+<td style="text-align: left;">数据基本完整,缺失&lt;10%;格式较统一;有基本质控措施</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">8-13</td>
+<td style="text-align: left;">数据有缺失(10-20%);格式基本统一,但有少量不一致;有质控意识但措施不完善</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-7</td>
+<td style="text-align: left;">数据缺失严重(&gt;20%)或格式混乱;无质控措施,无法判断数据可靠性</td>
+</tr>
+</tbody>
+</table>
+<p><strong>3. 分析方法（20%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">18-20</td>
+<td style="text-align: left;">统计方法选择正确,与研究问题匹配;代码规范(有注释、无硬编码、使用相对路径);结果解释准确,效应量与p值一并报告</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">14-17</td>
+<td style="text-align: left;">方法基本正确,代码可运行但规范性一般;结果解释基本准确</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">8-13</td>
+<td style="text-align: left;">方法有轻微不当(如未检验正态性直接用t检验);代码可运行但注释少;结果解释有一定问题</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-7</td>
+<td style="text-align: left;">方法选择错误(如非正态数据用参数检验);代码无法运行;结果解释严重错误</td>
+</tr>
+</tbody>
+</table>
+<p><strong>4. 可视化（15%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">13-15</td>
+<td style="text-align: left;">图表类型选择恰当(散点→连续、箱线→分类);配色专业(使用viridis/RColorBrewer);有完整标题、坐标轴标签、图注;信息传达准确,无需原文说明也能理解</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">10-12</td>
+<td style="text-align: left;">图表基本规范,但细节有瑕疵(如缺少图例、配色不专业);能传达主要信息</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">6-9</td>
+<td style="text-align: left;">图表粗糙(如坐标轴标签缺失、字体过小);类型选择不当;勉强能传达信息</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-5</td>
+<td style="text-align: left;">图表有明显错误(如坐标轴反向、比例尺错误);完全无法传达信息</td>
+</tr>
+</tbody>
+</table>
+<p><strong>5. 报告撰写（10%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">9-10</td>
+<td style="text-align: left;">结构完整(IMRaD格式);逻辑清晰,各部分衔接自然;表述准确,无语法错误;引用格式统一(GB/T或APA)</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">7-8</td>
+<td style="text-align: left;">结构基本完整;逻辑较清晰;表述基本准确;引用格式较统一</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">5-6</td>
+<td style="text-align: left;">结构有明显缺陷(如缺少方法部分);逻辑较混乱;表述有明显错误</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-4</td>
+<td style="text-align: left;">结构严重残缺;逻辑混乱;大量语法错误;引用混乱</td>
+</tr>
+</tbody>
+</table>
+<p><strong>6. 团队协作（10%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">9-10</td>
+<td style="text-align: left;">Git提交历史清晰,每人都有贡献;分工文档化且均衡;有例会记录和决策记录;PR审核有实质性反馈</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">7-8</td>
+<td style="text-align: left;">Git记录基本完整;分工较合理;有一定协作记录</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">5-6</td>
+<td style="text-align: left;">Git记录不完整(集中在少数提交);分工不够均衡;协作记录较少</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-4</td>
+<td style="text-align: left;">无Git记录或只有1-2次提交;分工严重不均(某人工作量&gt;70%);无任何协作痕迹</td>
+</tr>
+</tbody>
+</table>
+<p><strong>7. 可重复性（10%）</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 30%">
+<col style="width: 38%">
+<col style="width: 30%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">等级</th>
+<th style="text-align: center;">分数</th>
+<th style="text-align: left;">标准</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">优秀</td>
+<td style="text-align: center;">9-10</td>
+<td style="text-align: left;">README完整,包含所有运行说明;依赖环境记录完整(sessionInfo/requirements.txt);代码从零开始运行无报错;无敏感信息泄露</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">良好</td>
+<td style="text-align: center;">7-8</td>
+<td style="text-align: left;">README较完整;依赖环境有记录;代码运行有小问题但可解决</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">合格</td>
+<td style="text-align: center;">5-6</td>
+<td style="text-align: left;">README存在但不完整;环境记录缺失;代码运行有障碍但可调试</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">不合格</td>
+<td style="text-align: center;">0-4</td>
+<td style="text-align: left;">无README;代码无法运行;存在敏感信息泄露风险</td>
+</tr>
+</tbody>
+</table>
+<p><strong>自评打分表</strong>:</p>
+<table class="caption-top table">
+<thead>
+<tr class="header">
+<th style="text-align: left;">评分维度</th>
+<th style="text-align: center;">自评分数</th>
+<th style="text-align: left;">主要扣分原因</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">选题与设计(15%)</td>
+<td style="text-align: center;">/15</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据质量(20%)</td>
+<td style="text-align: center;">/20</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">分析方法(20%)</td>
+<td style="text-align: center;">/20</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">可视化(15%)</td>
+<td style="text-align: center;">/15</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">报告撰写(10%)</td>
+<td style="text-align: center;">/10</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">团队协作(10%)</td>
+<td style="text-align: center;">/10</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">可重复性(10%)</td>
+<td style="text-align: center;">/10</td>
+<td style="text-align: left;"></td>
+</tr>
+<tr class="even">
+<td style="text-align: left;"><strong>合计</strong></td>
+<td style="text-align: center;"><strong>/100</strong></td>
+<td style="text-align: left;"></td>
+</tr>
+</tbody>
+</table>
+<p>在提交前,用上表给自己打分,低于70分的维度优先完善。</p>
+<p><strong>扩展记录</strong>: 2026-04-13 | 扩展者:Clawd | 目标字数:800+</p>
+</section>
+<section id="可重复性检查清单" class="level3" data-number="26.6.2">
+<h3 data-number="26.6.2" class="anchored" data-anchor-id="可重复性检查清单"><span class="header-section-number">26.6.2</span> 可重复性检查清单</h3>
+<p>可重复性是科学研究的基本准则。在提交期末项目前，请逐项检查以下清单，确保你的工作可以被他人复现。</p>
+<p><strong>README.md 检查</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">README.md 存在且内容完整</label></li>
+<li><label><input type="checkbox">README.md 包含项目简介、数据来源、分析方法说明</label></li>
+<li><label><input type="checkbox">README.md 说明如何运行代码（依赖环境、运行步骤）</label></li>
+<li><label><input type="checkbox">README.md 列出关键依赖包及其版本</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 在 R 中导出依赖包版本</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>pkgs <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"tidyverse"</span>, <span class="st">"readxl"</span>, <span class="st">"ggpubr"</span>, <span class="st">"vegan"</span>)</span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>versions <span class="ot">&lt;-</span> <span class="fu">sapply</span>(pkgs, <span class="cf">function</span>(p) <span class="fu">as.character</span>(<span class="fu">packageVersion</span>(p)))</span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="fu">data.frame</span>(<span class="at">package =</span> <span class="fu">names</span>(versions), <span class="at">version =</span> <span class="fu">unname</span>(versions)) <span class="sc">|&gt;</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>  <span class="fu">write_csv</span>(<span class="st">"dependencies.csv"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>代码可运行性检查</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">所有脚本可以从头到尾顺序运行，无报错</label></li>
+<li><label><input type="checkbox">代码使用相对路径，不依赖绝对路径</label></li>
+<li><label><input type="checkbox">设置了随机种子（<code>set.seed()</code>），结果可复现</label></li>
+<li><label><input type="checkbox">图表有标题、坐标轴标签和图注</label></li>
+<li><label><input type="checkbox">数据文件路径使用 <code>file.path()</code> 或相对路径</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查脚本可运行性</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/01-data-cleaning.R"</span>)</span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/02-analysis.R"</span>)</span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="fu">source</span>(<span class="st">"scripts/03-visualization.R"</span>)</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cat</span>(<span class="st">"所有脚本运行成功！</span><span class="sc">\n</span><span class="st">"</span>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>数据文件检查</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">data/raw/ 目录只包含原始数据（不修改）</label></li>
+<li><label><input type="checkbox">data/processed/ 目录包含清洗后的数据</label></li>
+<li><label><input type="checkbox">输出文件（.csv, .rds）不在 Git 历史中（已添加到 .gitignore）</label></li>
+</ul>
+<p><strong>Git 提交历史检查</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">提交历史清晰，提交信息描述有意义</label></li>
+<li><label><input type="checkbox">没有提交敏感信息（如密码、API 密钥、个人数据）</label></li>
+<li><label><input type="checkbox">没有提交过大的文件（&gt;100MB）</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查是否有大文件被提交</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> ls-files <span class="kw">|</span> <span class="fu">xargs</span> <span class="at">-I</span> {} du <span class="at">-h</span> {} <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-rh</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-10</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查提交历史</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> log <span class="at">--oneline</span> <span class="kw">|</span> <span class="fu">head</span> <span class="at">-20</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>敏感信息脱敏检查</strong></p>
+<ul class="task-list">
+<li><label><input type="checkbox">原始数据中的 GPS 坐标已脱敏（如果有）</label></li>
+<li><label><input type="checkbox">没有提交包含个人身份信息的文件</label></li>
+<li><label><input type="checkbox">API 密钥和密码只存储在环境变量中，不在代码里</label></li>
+</ul>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 检查代码中是否有硬编码的敏感信息</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>patterns <span class="ot">&lt;-</span> <span class="fu">c</span>(<span class="st">"password"</span>, <span class="st">"api_key"</span>, <span class="st">"secret"</span>, <span class="st">"token"</span>, <span class="st">"密钥"</span>, <span class="st">"密码"</span>)</span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span> (pat <span class="cf">in</span> patterns) {</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>  files <span class="ot">&lt;-</span> <span class="fu">list.files</span>(<span class="st">"scripts"</span>, <span class="at">full.names =</span> <span class="cn">TRUE</span>, <span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">.R$"</span>)</span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span> (f <span class="cf">in</span> files) {</span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>    lines <span class="ot">&lt;-</span> <span class="fu">readLines</span>(f)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    matches <span class="ot">&lt;-</span> <span class="fu">grep</span>(pat, lines, <span class="at">ignore.case =</span> <span class="cn">TRUE</span>, <span class="at">value =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> (<span class="fu">length</span>(matches) <span class="sc">&gt;</span> <span class="dv">0</span>) {</span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>      <span class="fu">cat</span>(<span class="st">"警告："</span>, f, <span class="st">"可能包含敏感信息："</span>, pat, <span class="st">"</span><span class="sc">\n</span><span class="st">"</span>)</span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a>}</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<p><strong>生态学案例</strong></p>
+<p>某研究团队在发表论文时，审稿人要求提供可重复性证明。团队提交了 GitHub 仓库链接，审稿人按 README 说明一步步运行代码，成功复现了所有分析结果。这个透明的做法不仅顺利通过了审稿，还被审稿人称赞”数据共享意识良好”。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+</section>
+</section>
+<section id="给同学们的建议" class="level2" data-number="26.7">
+<h2 data-number="26.7" class="anchored" data-anchor-id="给同学们的建议"><span class="header-section-number">26.7</span> 给同学们的建议</h2>
+<p>项目工作坊的核心目标不是产出完美的研究成果,而是让你体验完整的数据科学工作流程。遇到问题是正常的–数据有缺失、分析结果不如预期、队友进度不一致–这些都是真实科研中会遇到的挑战。重要的是学会如何应对这些问题,而不是回避它们。</p>
+<p><strong>关于选题:宁可简单做好,不要复杂做烂</strong></p>
+<p>很多同学在选题时容易陷入”野心陷阱”——想做一个”高大上”的课题,结果发现根本做不完。记住:课程项目的目标是展示你掌握了数据采集、清洗、分析和可视化的完整流程,而不是发表一篇Nature论文。一个简单但完整的项目,远比一个复杂但半途而废的项目更有价值。如果你的选题让你在第3周还在纠结”数据从哪里来”,那就果断换题。</p>
+<p><strong>关于数据采集:预留Plan B</strong></p>
+<p>野外工作充满不确定性。天气、设备故障、采样点不可达、物种识别困难——这些都可能打乱你的计划。建议在制定采样方案时就准备好备选方案:如果天气不好怎么办?如果某个样点无法进入怎么办?如果样本量不足怎么办?有了Plan B,你就不会在遇到问题时手足无措。</p>
+<p><strong>关于团队协作:沟通大于技术</strong></p>
+<p>技术问题可以学,但团队协作能力需要刻意练习。很多小组项目失败的原因不是技术不行,而是沟通不畅:有人默默承担了大部分工作却不说,有人完全不参与却装作很忙,有人对分工不满却不提出来。建议每周例会时,除了汇报进度,还要留出时间让大家表达感受——“我觉得这周工作量分配不均”、“我需要帮助”、“我对某个决策有疑问”。把问题摆到台面上,比憋在心里好得多。</p>
+<p><strong>关于Git协作:提交要勤,合并要慎</strong></p>
+<p>Git是团队协作的基础设施,但很多同学用得很痛苦。核心原则是:频繁提交小改动,而不是攒一堆改动一次性提交。每完成一个小功能(比如写完一个数据清洗函数),就提交一次。这样即使出错,也容易回滚。合并时要谨慎:先拉取最新代码,本地测试无误后再推送。如果遇到冲突,不要慌,仔细看冲突内容,和队友沟通后再解决。</p>
+<p><strong>关于代码质量:能跑≠写得好</strong></p>
+<p>很多同学的代码”能跑”,但别人看不懂,自己过两周也看不懂。写代码时要想着:如果我两个月后回来看这段代码,我能理解它在做什么吗?如果队友要接手我的工作,他能看懂吗?养成写注释的习惯,给变量起有意义的名字,把复杂逻辑拆分成小函数。这些习惯会让你受益终身。</p>
+<p><strong>关于时间管理:deadline是第一生产力</strong></p>
+<p>拖延症是大学生的通病。建议把大任务拆分成小任务,每个小任务设定明确的截止时间。比如”完成数据采集”太宽泛,改成”本周三完成5个样点采集,周五完成数据录入”。把任务写在日历或待办清单里,完成后打勾,会有成就感。不要等到最后一周才开始写报告——那时候你会发现数据有问题、代码跑不通、队友联系不上,一切都来不及了。</p>
+<p><strong>关于失败:失败也是学习</strong></p>
+<p>不是所有项目都会成功。数据采集失败、分析结果不显著、假设被推翻——这些都是科研的常态。如果你的项目没有得到预期结果,不要沮丧,在报告中诚实地讨论为什么失败、从中学到了什么、如果重新做会怎么改进。这种反思能力,比一个”完美”的结果更有价值。</p>
+<p><strong>关于求助:早问比晚问好</strong></p>
+<p>遇到问题时,不要一个人死磕。先尝试自己解决(搜索、查文档、问ChatGPT),如果30分钟还没进展,就向队友或老师求助。描述问题时要具体:不要说”代码跑不了”,而要说”我在运行第23行时报错’object not found’,我已经检查了变量名,但还是不行”。具体的问题更容易得到有效的帮助。</p>
+<p><strong>关于心态:享受过程,而不只是结果</strong></p>
+<p>课程项目不是为了拿高分,而是为了学习。如果你只盯着分数,会错过很多学习机会。试着享受这个过程:第一次用R画出漂亮的图表、第一次成功合并Git分支、第一次在野外认出一个物种——这些小小的成就感,才是学习的真正乐趣。分数会过去,但你学到的技能和思维方式会伴随你很久。</p>
+<p><strong>扩展记录</strong>:2026-04-09 | 扩展者:Clawd | 目标字数:800+</p>
+</section>
+<section id="课后练习" class="level2" data-number="26.8">
+<h2 data-number="26.8" class="anchored" data-anchor-id="课后练习"><span class="header-section-number">26.8</span> 课后练习</h2>
+<ol type="1">
+<li><strong>组建小组</strong>:3-5人一组,确定项目负责人和分工</li>
+<li><strong>提交选题</strong>:每组提交一份拟研究的问题(100-200字)</li>
+<li><strong>制定采样方案</strong>:确定研究地点、采样策略、预期样本量和所需资源</li>
+<li><strong>创建Git仓库</strong>:在GitHub上创建小组项目仓库,搭建README.md和文件夹结构</li>
+<li><strong>制定时间表</strong>:参考本章的项目时间线,制定小组详细计划</li>
+</ol>
+<section id="小组作业提交要求" class="level3" data-number="26.8.1">
+<h3 data-number="26.8.1" class="anchored" data-anchor-id="小组作业提交要求"><span class="header-section-number">26.8.1</span> 小组作业提交要求</h3>
+<p>以下是期末小组项目的提交要求和截止时间安排。请各小组按要求提交，逾期扣分。</p>
+<p><strong>提交清单</strong></p>
+<table class="caption-top table">
+<colgroup>
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+<col style="width: 25%">
+</colgroup>
+<thead>
+<tr class="header">
+<th style="text-align: left;">提交物</th>
+<th style="text-align: left;">截止时间</th>
+<th style="text-align: left;">格式要求</th>
+<th style="text-align: left;">说明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: left;">小组名单+选题</td>
+<td style="text-align: left;">第2周周日</td>
+<td style="text-align: left;">PDF 或 Markdown</td>
+<td style="text-align: left;">包含成员姓名、学号、选题方向</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">数据采集方案</td>
+<td style="text-align: left;">第3周周日</td>
+<td style="text-align: left;">PDF 或 Quarto</td>
+<td style="text-align: left;">包含采样设计、数据来源、预期样本量</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">Git 仓库链接</td>
+<td style="text-align: left;">第3周周日</td>
+<td style="text-align: left;">GitHub URL</td>
+<td style="text-align: left;">确认仓库可访问，README 已完善</td>
+</tr>
+<tr class="even">
+<td style="text-align: left;">中期进展报告</td>
+<td style="text-align: left;">第5周周日</td>
+<td style="text-align: left;">PDF</td>
+<td style="text-align: left;">包含已采集数据描述、初步分析结果</td>
+</tr>
+<tr class="odd">
+<td style="text-align: left;">最终报告+代码</td>
+<td style="text-align: left;">第8周周日</td>
+<td style="text-align: left;">Quarto + GitHub</td>
+<td style="text-align: left;">报告 PDF + 完整代码仓库</td>
+</tr>
+</tbody>
+</table>
+<p><strong>格式规范</strong></p>
+<p><strong>PDF/Word 文档</strong>： - 字体：宋体/Times New Roman，字号 12pt - 行距：1.5 倍行距 - 页边距：上下 2.54cm，左右 3.17cm - 图表有编号和标题 - 引用格式统一（建议使用 GB/T 7714-2015）</p>
+<p><strong>Quarto 文档</strong>： - 包含可运行的代码块 - 输出格式选择 HTML 或 PDF - 包含交叉引用（图表编号、文献引用） - 代码有注释，解释每一步在做什么</p>
+<p><strong>Git 仓库</strong>： - 包含完整的项目代码和数据处理流程 - README.md 说明如何运行代码 - 包含依赖环境说明（sessionInfo 或 requirements.txt） - 提交历史清晰（不是一键提交全部）</p>
+<p><strong>提交方式</strong></p>
+<ol type="1">
+<li>将所有提交物打包为一个压缩文件</li>
+<li>文件命名：<code>小组编号_课程名称_第X周_提交物类型.zip</code></li>
+<li>通过课程平台提交</li>
+<li>同时将 GitHub 仓库链接填入提交表单</li>
+</ol>
+<p><strong>迟到提交处理</strong></p>
+<ul>
+<li>逾期 1 周：扣总分的 10%</li>
+<li>逾期 2 周：扣总分的 20%</li>
+<li>逾期 2 周以上：不接受提交，需要申请缓考</li>
+</ul>
+<p><strong>补交流程</strong> 如需补交，请联系课程负责人说明原因，并尽快补交完整材料。补交材料时需附上延期申请说明。</p>
+<p><strong>生态学案例</strong></p>
+<p>某小组在截止日期前因数据采集遇到困难（天气原因导致无法按计划采样），提前与老师沟通申请延期一周。申请通过后，小组在延期期间加班加点完成，最终按时提交了合格的项目报告。这个案例说明：<strong>遇到困难时，提前沟通比事后补救更有效</strong>。</p>
+<p><strong>扩展记录</strong>：2026-04-09 | 目标字数：800+</p>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script src="https://giscus.app/client.js" data-repo="D2RS-2025spring/data-driven-reproducible-study" data-repo-id="R_kgDONqlH8A" data-category="General" data-category-id="DIC_kwDONqlH8M4CnKvW" data-mapping="pathname" data-strict="0" data-reactions-enabled="1" data-emit-metadata="0" data-input-position="bottom" data-theme="preferred_color_scheme" data-lang="zh-CN" crossorigin="anonymous" async="">
+</script>
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp('/' + window.location.host + '/');
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+<nav class="page-navigation">
+  <div class="nav-page nav-page-previous">
+      <a href="./0601-case-study.html" class="pagination-link" aria-label="综合实战案例">
+        <i class="bi bi-arrow-left-short"></i> <span class="nav-page-text"><span class="chapter-number">24</span>&nbsp; <span class="chapter-title">综合实战案例</span></span>
+      </a>          
+  </div>
+  <div class="nav-page nav-page-next">
+      <a href="./0603-summary.html" class="pagination-link" aria-label="课程总结">
+        <span class="nav-page-text"><span class="chapter-number">26</span>&nbsp; <span class="chapter-title">课程总结</span></span> <i class="bi bi-arrow-right-short"></i>
+      </a>
+  </div>
+</nav>
+</div> <!-- /content -->
+<script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+<script async="" src="https://hypothes.is/embed.js"></script>
+
+
+
+
+</body></html>
