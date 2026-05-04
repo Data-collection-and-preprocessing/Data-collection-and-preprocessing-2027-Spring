@@ -320,6 +320,17 @@ options(BioC_mirror = "https://mirrors.tuna.tsinghua.edu.cn/bioconductor")
 
 配置好镜像后，开始安装本课程所需的 R 包。
 
+#### 视频教程推荐
+
+如果觉得文字教程不够直观，推荐观看以下 Bilibili 视频教程作为补充：
+
+- [R包相关必学知识](https://www.bilibili.com/video/BV13tw2zBEek/)：涵盖 R 包安装、本地安装旧版本、导入 csv/txt/excel、导出数据、ggplot2 绘图技巧等
+- [R语言包安装流程详解](https://www.bilibili.com/video/BV1Cs6eBvE4U/)：系统讲解 R 语言包的完整安装流程
+
+::: {.callout-note}
+视频教程可作为入门辅助，建议配合本文档一起学习。
+:::
+
 #### 核心数据处理包
 
 ```{r}
